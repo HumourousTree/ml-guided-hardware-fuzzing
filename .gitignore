@@ -1,0 +1,108 @@
+# Byte-compiled / compiled / pickle files
+.pyc
+.pyo
+__pycache__/
+*.pyd
+*.so
+
+# VCS
+.svn/
+
+# IDE
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/tasks.json
+!.vscode/launch.json
+.idea/
+*.swp
+*.swo
+*~
+
+# Virtual Environment
+venv/
+ENV/
+env/
+
+# Python
+*.egg-info/
+dist/
+build/
+*.egg
+.eggs/
+
+# Distribution / packaging
+Python*.egg-info/
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# PyRE2 logs
+.pyre/
+
+# macOS
+.DS_Store
+.AppleDouble
+
+# Python specific
+.hypothesis/
+.coverage
+htmlcov/
+.tox/
+.nox/
+.mypy_cache/
+.ruff_cache/
+pytest_cache/
+.meson/
+
+# Environment variables (Windows)
+*.bak
+*.old
+
+# Runtime telemetry and campaign controls
+logs/
+*.log
+
+# Test corpus: retain the curated JSON seed programs, not generated campaigns.
+test_corpus/*.txt
+test_corpus/*.bin
+test_corpus/high_yield/
+
+# Generated test data
+generated_data/
+corpus_backups/
+
+# Hardware-specific outputs
+hw_design/*.vcd
+hw_design/*.db
+hw_design/*.csv
+hw_design/*.txt
+hw_design/.active_bugs.json
+obj_dir/
+sim_build/
+*.fst
+*.vvp
+*.vcd
+*.wlf
+*.xml
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Sw reference compiled files
+sw_reference/*.so
+sw_reference/*.pyc
+
+# Temporary files
+*.tmp
+*.temp
+*~
+.tmp/

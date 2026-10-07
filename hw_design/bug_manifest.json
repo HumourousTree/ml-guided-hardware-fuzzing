@@ -1,0 +1,52 @@
+{
+  "approx_multiplier": {
+    "name": "Pentium-Style Approximate Multiplier",
+    "level": "L1",
+    "subsystem": "multiplier",
+    "description": "Subtle corner-case multiplier failure: When rs1 nibble [11:8]==4'h9 and rs2 nibble [7:4]==4'hC, bit 5 of the 32-bit product is inverted. Exact on 99.9% of arithmetic inputs.",
+    "target_file": "hw_design/picorv32_mutable.sv",
+    "line_marker": "assign pcpi_rd = shift_out ? (EXTRA_MUL_FFS ? rd_q : rd) >> 32 : (EXTRA_MUL_FFS ? rd_q : rd);",
+    "replacement": "assign pcpi_rd = (shift_out ? (EXTRA_MUL_FFS ? rd_q : rd) >> 32 : (EXTRA_MUL_FFS ? rd_q : rd)) ^ (((rs1[11:8] == 4'h9) && (rs2[7:4] == 4'hc)) ? 32'h00000020 : 32'h0);",
+    "expected_symptom": "Mismatch on rd_wdata during MUL/MULH for targeted operand pairs (e.g., rs1=0x900, rs2=0x0c0)."
+  },
+  "alu_operator_xor_or": {
+    "name": "ALU Operator Mutation (XOR -> OR)",
+    "level": "L1",
+    "subsystem": "alu",
+    "description": "Mutates bitwise XOR to bitwise OR when reg_op2 is a negative immediate (reg_op2[31] == 1).",
+    "target_file": "hw_design/picorv32_mutable.sv",
+    "line_marker": "alu_out = reg_op1 ^ reg_op2;",
+    "replacement": "alu_out = reg_op2[31] ? (reg_op1 | reg_op2) : (reg_op1 ^ reg_op2);",
+    "expected_symptom": "Mismatch on rd_wdata for XORI/XOR with sign-extended negative immediates."
+  },
+  "branch_inversion_blt": {
+    "name": "Branch Signed Comparison Inversion",
+    "level": "L2",
+    "subsystem": "branch",
+    "description": "Inverts signed BLT/BGE comparison when comparing negative boundary operands with positive operands (signed overflow edge case).",
+    "target_file": "hw_design/picorv32_mutable.sv",
+    "line_marker": "alu_lts = $signed(reg_op1) < $signed(reg_op2);",
+    "replacement": "alu_lts = (reg_op1[31] && !reg_op2[31]) ? 1'b0 : ($signed(reg_op1) < $signed(reg_op2));",
+    "expected_symptom": "Control-flow divergence (pc_wdata mismatch) on BLT when rs1 is negative and rs2 is non-negative."
+  },
+  "writeback_forwarding_drop": {
+    "name": "Register Writeback Hazard Drop",
+    "level": "L2",
+    "subsystem": "regfile",
+    "description": "Drops register writeback to destination register x5 when immediately followed by instruction reading x5.",
+    "target_file": "hw_design/picorv32_mutable.sv",
+    "line_marker": "cpuregs[latched_rd] <= cpuregs_wrdata;",
+    "replacement": "cpuregs[latched_rd] <= (latched_rd == 5 && decoded_rs1 == 5) ? cpuregs[latched_rd] : cpuregs_wrdata;",
+    "expected_symptom": "Stale register value read from x5 on back-to-back dependency chain."
+  },
+  "mem_handshake_drop": {
+    "name": "Memory Handshake Protocol Drop",
+    "level": "L3",
+    "subsystem": "memory",
+    "description": "Memory controller drops write strobe ack and stalls when writing unaligned halfwords back-to-back.",
+    "target_file": "hw_design/picorv32_mutable.sv",
+    "line_marker": "assign mem_la_write = resetn && !mem_state && mem_do_wdata;",
+    "replacement": "assign mem_la_write = resetn && !mem_state && mem_do_wdata && !(reg_op1[1:0] == 2'b10 && mem_wordsize == 1);",
+    "expected_symptom": "Uncompleted memory write transfer or dropped mem_wstrb on unaligned 16-bit halfword stores."
+  }
+}

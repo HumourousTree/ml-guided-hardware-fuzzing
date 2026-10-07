@@ -1,0 +1,62 @@
+[
+  {
+    "id": "rv32i-seed-001-alu-edge",
+    "description": "ALU arithmetic and logical operations with boundary immediates and shifts",
+    "base": "0x00000000",
+    "words": [
+      "0x7ff00093",
+      "0x80000113",
+      "0x002081b3",
+      "0x40208233",
+      "0xfff0c293",
+      "0x3ff16313",
+      "0x0000f393",
+      "0x00409413",
+      "0x00245493",
+      "0x40315513",
+      "0x001125b3",
+      "0x0020b633",
+      "0x00000013"
+    ]
+  },
+  {
+    "id": "rv32i-seed-002-mem-deps",
+    "description": "Memory store and load dependency chains (sw/lw/sh/lh/sb/lb)",
+    "base": "0x00000000",
+    "words": [
+      "0x000000b7",
+      "0x10008093",
+      "0x05a00113",
+      "0x0020a023",
+      "0x0000a183",
+      "0x12300213",
+      "0x00409223",
+      "0x00409283",
+      "0x07f00313",
+      "0x00608423",
+      "0x00808383",
+      "0x00518433",
+      "0x00000013"
+    ]
+  },
+  {
+    "id": "rv32i-seed-003-branch-jump",
+    "description": "Control flow branch resolution (beq/bne/blt) and jump target links (jal)",
+    "base": "0x00000000",
+    "words": [
+      "0x00a00093",
+      "0x01400113",
+      "0x00208863",
+      "0x00209463",
+      "0x06300193",
+      "0x00100193",
+      "0x0020c463",
+      "0x06300213",
+      "0x00200213",
+      "0x008002ef",
+      "0x06300313",
+      "0x00300313",
+      "0x00000013"
+    ]
+  }
+]
