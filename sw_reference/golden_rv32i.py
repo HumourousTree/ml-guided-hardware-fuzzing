@@ -1,4 +1,12 @@
-"""Immutable, dependency-free RV32I architectural reference for lockstep checks."""
+"""Immutable, dependency-free RV32IM architectural reference for lockstep checks.
+
+The model is *architectural*: it reports the effective (possibly unaligned)
+memory address of a load/store.  Any RVFI presentation convention of the DUT
+(e.g. PicoRV32 reports a word-aligned ``mem_addr`` and expresses the byte lane
+through ``mem_rmask``/``mem_wmask``) is applied by the scoreboard in
+``harness.riscv_cosim`` and is documented there, so that this file never has to
+change when the DUT convention is clarified.
+"""
 
 MASK32 = 0xFFFF_FFFF
 
@@ -17,8 +25,14 @@ def sext(value: int, width: int) -> int:
     return value - (1 << width) if value & (1 << (width - 1)) else value
 
 
+def _div_trunc(a: int, b: int) -> int:
+    """Signed integer division rounding toward zero (exact, no floating point)."""
+    q = abs(a) // abs(b)
+    return -q if (a < 0) != (b < 0) else q
+
+
 class RV32IReference:
-    """Pure Python RV32I ISA golden reference model. NEVER MUTATED."""
+    """Pure Python RV32IM ISA golden reference model."""
 
     def __init__(self, words: list[int], base: int = 0):
         self.pc = u32(base)
@@ -27,12 +41,23 @@ class RV32IReference:
         for index, word in enumerate(words):
             self._store_raw(base + index * 4, 4, word)
 
+    def clone(self) -> "RV32IReference":
+        """Independent copy of the architectural state (used by the delta debugger)."""
+        other = RV32IReference.__new__(RV32IReference)
+        other.pc = self.pc
+        other.regs = list(self.regs)
+        other.mem = dict(self.mem)
+        return other
+
     def _load_raw(self, address: int, size: int) -> int:
         return sum(self.mem.get(u32(address + offset), 0) << (8 * offset) for offset in range(size))
 
     def _store_raw(self, address: int, size: int, value: int) -> None:
         for offset in range(size):
             self.mem[u32(address + offset)] = (value >> (8 * offset)) & 0xFF
+
+    def peek_insn(self) -> int:
+        return self._load_raw(self.pc, 4)
 
     def step(self) -> dict:
         pc = self.pc
@@ -100,14 +125,14 @@ class RV32IReference:
                     sa, sb = s32(a), s32(b)
                     if sb == 0: value = 0xFFFFFFFF
                     elif sa == -0x80000000 and sb == -1: value = 0x80000000
-                    else: value = u32(int(sa / sb))
+                    else: value = u32(_div_trunc(sa, sb))
                 elif funct3 == 5:  # DIVU (unsigned / unsigned)
                     value = 0xFFFFFFFF if b == 0 else u32(a // b)
                 elif funct3 == 6:  # REM (signed remainder)
                     sa, sb = s32(a), s32(b)
                     if sb == 0: value = u32(sa)
                     elif sa == -0x80000000 and sb == -1: value = 0
-                    else: value = u32(sa - int(sa / sb) * sb)
+                    else: value = u32(sa - _div_trunc(sa, sb) * sb)
                 elif funct3 == 7:  # REMU (unsigned remainder)
                     value = u32(a) if b == 0 else u32(a % b)
             else:
@@ -165,7 +190,7 @@ class RV32IReference:
 # ── Non-intrusive Functional Coverage Tracker ────────────────────────────────
 
 class CoverageTracker:
-    """Independent coverage analysis helper that samples execution traces without mutating the ISS."""
+    """Independent coverage helper that samples execution traces without mutating the ISS."""
 
     INSN_TYPES = ["ALU_REG", "MUL_DIV", "ALU_IMM", "BRANCH", "JUMP", "LOAD", "STORE", "LUI_AUIPC"]
     REGISTER_PATTERNS = ["all_zeros", "all_ones", "walking_ones", "walking_zeros", "alternating_bits", "boundary_extremes", "arbitrary_data"]
@@ -175,7 +200,13 @@ class CoverageTracker:
         self.pattern_counts = {p: 0 for p in self.REGISTER_PATTERNS}
         self.total_instructions = 0
 
-    def sample_instruction(self, insn: int, rd_val: int = 0) -> None:
+    def sample_instruction(self, insn: int, rd_val: int = 0, wrote_rd: bool = True) -> None:
+        """Record one retired instruction.
+
+        ``wrote_rd`` must be False for instructions that write no register
+        (stores, branches, writes to x0); their ``rd_val`` of 0 is *not* an
+        observed all-zeros operand pattern and would otherwise inflate it.
+        """
         opcode = insn & 0x7F
         funct7 = (insn >> 25) & 0x7F
         if opcode == 0x33:
@@ -191,6 +222,8 @@ class CoverageTracker:
         elif opcode in (0x37, 0x17): self.insn_type_counts["LUI_AUIPC"] += 1
         self.total_instructions += 1
 
+        if not wrote_rd:
+            return
         val = u32(rd_val)
         if val == 0: self.pattern_counts["all_zeros"] += 1
         elif val == 0xFFFFFFFF: self.pattern_counts["all_ones"] += 1

@@ -1,0 +1,53 @@
+# Virtual Environment - exclude entirely from context
+venv/
+ENV/
+env/
+
+# Python cache
+__pycache__/
+*.pyc
+.pyo
+.pycache/
+
+# IDE settings (we manage our own)
+.vscode/settings.json
+.vscode/extensions.json
+.idea/
+
+# Logs - keep context clean
+logs/
+*.log
+
+# Large test corpus files (not needed for most tasks)
+test_corpus/*.txt
+test_corpus/*.bin
+test_corpus/*.json
+
+# Generated outputs that aren't source
+hw_design/*.vcd
+hw_design/*.db
+hw_design/*.csv
+hw_design/*.txt
+
+# Compiled sw reference files
+sw_reference/*.so
+sw_reference/*.pyc
+
+# Distribution files
+dist/
+build/
+*.egg-info/
+
+# Coverage and test artifacts
+.coverage
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+.hypothesis/
+
+# Temporary files
+*.tmp
+*.temp
+*~
+.tmp/
+node_modules/

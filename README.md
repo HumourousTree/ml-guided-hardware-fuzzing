@@ -1,49 +1,29 @@
-# ML Guided Hardware Fuzzing
+# ML Guided Hardware Fuzzing (v0.2, audited)
 
-This workspace now runs a single simple dashboard-driven PicoRV32 campaign.
+LLM-guided differential fuzzing, delta-debugging and block-patch repair of the PicoRV32 RISC-V core.
+Lockstep RVFI comparison of Verilator-compiled RTL against a pure-Python RV32IM model.
 
-## What it does
-
-- Runs a lockstep RV32I comparison loop using a local software reference.
-- Uses algorithm fuzzing every n iterations (default n = 8) to mutate test programs without calling Gemini.
-- If a comparison fails, it blindly requests a Gemini RTL rewrite for the mutable wrapper.
-- If n = 1, Gemini is called every iteration.
-
-## Files used by dashboard mode
-
-- dashboard.py
-- harness/pico_campaign.py
-- harness/riscv_cosim.py
-- sw_reference/golden_rv32i.py
-- hw_design/picorv32_mutable.sv
-- test_corpus/rv32i_programs.json
-
-## Run
-
-From WSL:
-
+## Quick start
 ```bash
 source venv/bin/activate
 python3 -m pip install -r requirements.txt
+python3 tools/apply_fixes.py                   # one-off: restores upstream mem_la_addr, patches dashboard.py
+python3 -m unittest discover -s tests -t .     # software-DUT tests (3 need the RTL files)
+python3 -m harness.run_experiments --experiment E0   # control: upstream RTL must be 100% matching
 streamlit run dashboard.py --server.address 0.0.0.0 --server.port 8501
 ```
 
-From PowerShell:
+## How a campaign works
+1. Every iteration the corpus (3 pinned seeds + up to 3 generated programs) is mutated locally and validated.
+   Every Nth iteration Gemini adds a program instead (seeded local fallback if the API fails).
+2. Each program runs on the RTL and on the ISS; retirements are compared in lockstep. Missing/extra
+   retirements count as failures.
+3. On a genuine mismatch: slice to a reproducer (dynamic trace + state/memory preload), confirm it fails,
+   ddmin it, localise candidate RTL blocks, ask Gemini for `// REPLACE LINES a-b` patches, lint, check the
+   reproducer and growth prefixes, then accept only if the whole suite has no regression and fewer failures.
 
-```powershell
-.\start_dashboard.ps1
-```
+## Environment
+`GEMINI_API_KEY`, `GEMINI_MODEL`, `GEMINI_FALLBACK_MODEL`, `PICO_REPAIR_MODE=localized|monolithic`,
+`PICO_GOLDEN_RECOVERY=1` (allow restoring golden RTL on failure; reported separately, never a "repair").
 
-## Dashboard controls
-
-- Run continuously until stopped
-- Time budget / max iterations
-- Algorithm fuzz every n iterations (default 8)
-- Seed
-- Start / Stop / Refresh / Clear history and reset
-
-## Notes
-
-- Set GEMINI_API_KEY in your environment to enable Gemini calls.
-- The mutable RTL file is hw_design/picorv32_mutable.sv.
-- Telemetry is written to logs/pico_campaign_telemetry.json.
+Telemetry: `logs/pico_campaign_telemetry.json`. See `CHANGES.md` for the audit.

@@ -427,8 +427,8 @@ def render_dashboard():
         fail_k = delta_debug.get("failure_index_k", first_mismatch.get("retire_order") if first_mismatch else "N/A")
         m_col1.metric("First Failure Index K", str(fail_k))
         
-        failing_disasm = delta_debug.get("failing_instruction_disasm") or first_mismatch.get("insn_disasm", "Unknown")
-        failing_hex = delta_debug.get("failing_instruction_hex") or first_mismatch.get("insn_hex", "")
+        failing_disasm = delta_debug.get("failing_instruction_disasm") or (first_mismatch or {}).get("insn_disasm", "Unknown")
+        failing_hex = delta_debug.get("failing_instruction_hex") or (first_mismatch or {}).get("insn_hex", "")
         m_col2.metric("Failing Instruction", f"{failing_disasm} ({failing_hex})")
         
         reproducer_len = delta_debug.get("minimal_program_length", "N/A")
@@ -500,8 +500,8 @@ def render_dashboard():
             "Lockstep Status": "Pass" if it.get("comparison_ok") else "Divergence",
             "Match Rate": f"{it.get('match_rate_pct', 100.0)}%",
             "CPI": f"{it.get('avg_cpi', 0.0):.2f}",
-            "RTL Coverage": f"{it.get('rtl_coverage_pct', 0.0)}%",
-            "ISS Coverage": f"{it.get('iss_coverage_pct', 0.0)}%",
+            "Unified Coverage": f"{it.get('unified_coverage_pct', 0.0)}%",
+            "Functional Coverage": f"{it.get('functional_coverage_pct', 0.0)}%",
             "Retired": it.get("retired_total"),
             "Valid Tests": it.get("valid_testcases", it.get("program_count", 0)),
             "Invalid Filtered": it.get("invalid_testcases", 0),

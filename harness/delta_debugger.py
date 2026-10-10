@@ -1,28 +1,46 @@
-"""Adaptive Delta-Debugging Protocol for instruction slicing, state pre-loading, and root-cause isolation."""
+"""Delta-debugging, RTL fault localisation and patch plumbing.
 
-import json
-from pathlib import Path
+Differences from the first prototype (see CHANGES.md for the full list):
+
+* The register snapshot used by the reproducer is taken *after* instruction
+  K-3 (K-2 steps).  The prototype took it one instruction too early.
+* The reproducer is built from the *dynamic* ISS trace, not from static
+  ``words[K-2:K+1]``.  Static indexing is wrong as soon as a taken branch or
+  jump precedes the failure.  Memory words read by the window are pre-loaded.
+* ``ddmin_reproducer`` really minimises the reproducer against the DUT.  The
+  old "shrink schedule" only printed target sizes and never removed anything.
+* ``localize_rtl_fault`` anchors on the real datapath statements (it used to
+  match a decoder line for branch faults) and returns several candidate blocks.
+* The LLM now returns *block patches* that are spliced into the RTL instead of
+  being asked to regenerate a 3,000-line file from a 60-line excerpt.
+"""
+
+import re
+from typing import Callable
+
 from sw_reference.golden_rv32i import RV32IReference
+
+NOP = 0x00000013
 
 
 def _as_int(value) -> int:
-    """Convert hex string or int to int32."""
+    """Convert hex string or int to int."""
     return int(value, 0) if isinstance(value, str) else int(value)
 
 
 def _u32(value: int) -> int:
-    """Mask to 32 bits."""
     return value & 0xFFFFFFFF
 
 
 def _s32(value: int) -> int:
-    """Signed 32-bit integer."""
     value &= 0xFFFFFFFF
     return value - 0x100000000 if value & 0x80000000 else value
 
 
+# ── Disassembler ─────────────────────────────────────────────────────────────
+
 def disassemble_rv32i(insn: int) -> str:
-    """Lightweight disassembler for RV32I instructions to assist diagnostics."""
+    """Lightweight RV32IM disassembler used for diagnostics and prompts."""
     insn = _u32(insn)
     opcode = insn & 0x7F
     rd = (insn >> 7) & 31
@@ -55,7 +73,7 @@ def disassemble_rv32i(insn: int) -> str:
         b_ops = {0: "beq", 1: "bne", 4: "blt", 5: "bge", 6: "bltu", 7: "bgeu"}
         return f"{b_ops.get(funct3, 'branch')} x{rs1}, x{rs2}, {b_imm}"
     elif opcode == 0x13:
-        if insn == 0x00000013:
+        if insn == NOP:
             return "nop"
         shamt = (insn >> 20) & 31
         op_map = {
@@ -94,14 +112,14 @@ def disassemble_rv32i(insn: int) -> str:
     return f"raw 0x{insn:08x}"
 
 
-# ── Instruction Generators ──────────────────────────────────────────────────
+# ── Instruction generators ───────────────────────────────────────────────────
 
 def _li_instruction(rd: int, value: int) -> int | tuple[int, int]:
-    """Generate Load Immediate using ADDI and LUI for a full 32-bit value."""
+    """Load-immediate: one ADDI for 12-bit values, otherwise LUI+ADDI."""
     value = _u32(value)
     if -2048 <= _s32(value) <= 2047:
         imm = value & 0xFFF
-        return ((imm & 0xFFF) << 20) | (0 << 15) | (0 << 12) | (rd << 7) | 0x13
+        return (imm << 20) | (0 << 15) | (0 << 12) | (rd << 7) | 0x13
 
     upper = (value >> 12) & 0xFFFFF
     lower = value & 0xFFF
@@ -114,147 +132,274 @@ def _li_instruction(rd: int, value: int) -> int | tuple[int, int]:
     return (lui, addi)
 
 
-def _generate_li_preamble(target_state: dict, base_addr: int = 0x0, nonzero_only: bool = True) -> list[int]:
-    """
-    Generate a setup preamble of LI instructions to pre-load register state.
-    target_state: dict mapping register name 'x1' through 'x31' to their values.
-    Returns: list of instruction words (31 instructions or less).
-    """
-    instructions = []
-    for reg_num in range(1, 32):
-        reg_name = f"x{reg_num}"
-        value = _as_int(target_state.get(reg_name, 0))
-        if nonzero_only and value == 0:
-            continue
-        li_res = _li_instruction(reg_num, value)
-        if isinstance(li_res, tuple):
-            instructions.extend(li_res)
-        else:
-            instructions.append(li_res)
+def _li_words(rd: int, value: int) -> list[int]:
+    res = _li_instruction(rd, value)
+    return list(res) if isinstance(res, tuple) else [res]
 
+
+def _sw(rs2: int, rs1: int, imm: int) -> int:
+    imm &= 0xFFF
+    return (((imm >> 5) & 0x7F) << 25) | (rs2 << 20) | (rs1 << 15) | (2 << 12) | ((imm & 0x1F) << 7) | 0x23
+
+
+def _generate_li_preamble(target_state: dict, base_addr: int = 0x0, nonzero_only: bool = True,
+                          force_regs: tuple[int, ...] = ()) -> list[int]:
+    """LI preamble restoring x1..x31 (at most 62 instructions: LUI+ADDI per register).
+
+    ``force_regs`` are written even when their target value is zero (needed
+    when scratch registers were clobbered by a memory pre-load).
+    """
+    instructions: list[int] = []
+    for reg_num in range(1, 32):
+        value = _as_int(target_state.get(f"x{reg_num}", 0))
+        if nonzero_only and value == 0 and reg_num not in force_regs:
+            continue
+        instructions.extend(_li_words(reg_num, value))
     return instructions
 
 
-# ── Pinpoint and Slice ───────────────────────────────────────────────────────
+# ── Pinpoint and slice ───────────────────────────────────────────────────────
 
 def find_first_mismatch_index(comparison_result: dict) -> int | None:
-    """
-    Step 1: Identify the exact instruction retirement order K where first mismatch occurs.
-    Returns K (0-indexed), or None if no mismatch.
-    """
+    """Retirement index K of the first mismatch (0-based), or None."""
     mismatches = comparison_result.get("mismatches", [])
     if not mismatches:
         return None
-    first = mismatches[0]
-    return first.get("retire_order", 0)
+    return mismatches[0].get("retire_order", 0)
 
 
-def extract_register_state_at_instruction(program: dict, instruction_index: int) -> dict:
-    """
-    Step 3: Run the Python ISS up to instruction_index and return exact ground-truth register state.
-    Returns: dict mapping 'x0' through 'x31' to their values.
-    """
+def extract_register_state_at_instruction(program: dict, num_steps: int) -> dict:
+    """Run the ISS for ``num_steps`` retirements and return x0..x31 *after* them."""
     words = [_as_int(w) for w in program.get("words", [])]
     base = _as_int(program.get("base", 0))
-
     reference = RV32IReference(words, base)
-    # Run exactly instruction_index steps so we capture the state *before*
-    # the instruction at instruction_index executes (pre-execution snapshot).
-    for _ in range(max(0, instruction_index)):
+    for _ in range(max(0, num_steps)):
         try:
             reference.step()
         except (ValueError, KeyError):
             break
+    return {f"x{i}": _u32(reference.regs[i]) for i in range(32)}
 
-    state = {f"x{i}": _u32(reference.regs[i]) for i in range(32)}
-    return state
+
+def _words_to_hex(words: list[int]) -> list[str]:
+    return [f"0x{w & 0xFFFFFFFF:08x}" for w in words]
+
+
+def _prefix_fallback(program: dict, words: list[int], base: int, K: int,
+                     validator: Callable[[dict], bool] | None) -> tuple[dict, str]:
+    """Static prefix covering every instruction executed up to and including K."""
+    ref = RV32IReference(words, base)
+    max_idx = 0
+    for _ in range(K + 1):
+        idx = (ref.pc - base) // 4
+        max_idx = max(max_idx, idx)
+        try:
+            ref.step()
+        except ValueError:
+            break
+    selected = words[:min(len(words), max_idx + 1)]
+    if not selected or selected[-1] != NOP:
+        selected.append(NOP)
+    cand = {
+        "id": f"{program.get('id', 'prog')}-prefix-k{K}",
+        "description": f"Static prefix through the instruction executed at retirement {K}",
+        "base": program.get("base", "0x00000000"),
+        "words": _words_to_hex(selected),
+    }
+    if validator is None or validator(cand):
+        return cand, "prefix_fallback"
+    return program, "original"
 
 
 def slice_to_minimal_reproducer(
     program: dict,
     comparison_result: dict,
     keep_hazard_context: bool = True,
+    validator: Callable[[dict], bool] | None = None,
 ) -> tuple[dict, int | None, dict]:
-    """
-    Adaptive Delta-Debugging Slicing Protocol:
-    Step 1: Pinpoint first failure index K
-    Step 2: Discard instructions K+1 up to N
-    Step 3: Pre-load architectural register state x1-x31 from Python ISS at index K-3
-    Step 4: Keep instructions K-2 and K-1 in exact original form right before K
-    
-    Returns:
-        (minimal_reproducer_dict, first_failure_index_K, extracted_state_at_K_minus_3)
+    """Slice a failing program to ``preamble + window + NOP``.
+
+    1. K = first mismatching retirement.
+    2. Run the ISS: ``s = K-2`` (hazard context) and keep the *dynamic*
+       instructions retired at steps s..K-1 plus the failing instruction K.
+       If they are not a straight-line sequence (a taken branch/jump occurred)
+       a static prefix is returned instead.
+    3. Pre-load architectural state as it was *before step s* (= after K-3):
+       memory words read by the window, then x1..x31.
+    4. ``validator`` (e.g. ``riscv_cosim.validate_program``) must accept the
+       result, otherwise fall back to the prefix.
+
+    Returns ``(reproducer, K, register_state_before_window)``.
     """
     words = [_as_int(w) for w in program.get("words", [])]
     base = _as_int(program.get("base", 0))
 
     K = find_first_mismatch_index(comparison_result)
-    if K is None or K >= len(words):
+    if K is None:
         return program, None, {}
 
-    # Step 3: Extract register state at K-3
-    state_index = K - 3
-    target_state = extract_register_state_at_instruction(program, state_index)
+    s = max(0, K - 2) if keep_hazard_context else K
 
-    # Step 3: Generate LI preamble
-    preamble_words = _generate_li_preamble(target_state, base, nonzero_only=True)
+    ref = RV32IReference(words, base)
+    events: list[dict] = []
+    ref_s = None
+    ok = True
+    for i in range(K):
+        if i == s:
+            ref_s = ref.clone()
+        try:
+            events.append(ref.step())
+        except ValueError:
+            ok = False
+            break
+    if not ok:
+        reproducer, mode = _prefix_fallback(program, words, base, K, validator)
+        reproducer["metadata"] = {"mode": mode, "failure_index_k": K}
+        return reproducer, K, {}
+    if ref_s is None:
+        ref_s = ref.clone()
 
-    # Step 4: Preserve hazard context (K-2, K-1) and target instruction K
-    hazard_start = max(0, K - 2) if keep_hazard_context else K
-    hazard_and_target_words = words[hazard_start:K + 1]
+    fail_pc = ref.pc
+    fail_insn = ref.peek_insn()
+    pcs = [ev["pc_rdata"] for ev in events[s:K]] + [fail_pc]
+    window = [ev["insn"] for ev in events[s:K]] + [fail_insn]
+    state_before = {f"x{i}": _u32(ref_s.regs[i]) for i in range(32)}
 
-    # Combined sequence: Preamble + Hazard Context + Target Instruction K + NOP
-    combined_words = list(preamble_words) + list(hazard_and_target_words)
-    if combined_words and combined_words[-1] != 0x00000013:
-        combined_words.append(0x00000013)
+    straight = all(b - a == 4 for a, b in zip(pcs, pcs[1:]))
+    if not straight:
+        reproducer, mode = _prefix_fallback(program, words, base, K, validator)
+        reproducer["metadata"] = {"mode": mode, "failure_index_k": K, "reason": "non-sequential window"}
+        return reproducer, K, state_before
 
-    failing_insn_raw = words[K] if K < len(words) else 0
-    failing_disasm = disassemble_rv32i(failing_insn_raw)
+    # Memory words the window will read.
+    mem_words: dict[int, int] = {}
+    probe = ref_s.clone()
+    for _ in range(len(window)):
+        try:
+            ev = probe.step()
+        except ValueError:
+            break
+        if ev["mem_rmask"]:
+            addr = ev["mem_addr"] & ~3
+            val = ref_s._load_raw(addr, 4)
+            if val:
+                mem_words[addr] = val
 
-    minimal_reproducer = {
+    mem_pre: list[int] = []
+    for addr, val in sorted(mem_words.items()):
+        mem_pre += _li_words(1, addr) + _li_words(2, val) + [_sw(2, 1, 0)]
+    reg_pre = _generate_li_preamble(state_before, base, nonzero_only=True,
+                                    force_regs=(1, 2) if mem_pre else ())
+
+    combined = mem_pre + reg_pre + window + [NOP]
+    failing_disasm = disassemble_rv32i(fail_insn)
+    reproducer = {
         "id": f"{program.get('id', 'prog')}-delta-debug-k{K}",
-        "description": f"Minimal reproducer for instruction {K} ({failing_disasm}): preamble ({len(preamble_words)} instrs) + hazard context + target instruction {K}",
+        "description": (f"Minimal reproducer for retirement {K} ({failing_disasm}): "
+                        f"{len(mem_pre)} memory + {len(reg_pre)} register preload instrs + "
+                        f"{len(window) - 1} hazard-context instrs + target"),
         "base": program.get("base", "0x00000000"),
-        "words": [f"0x{w:08x}" for w in combined_words],
+        "words": _words_to_hex(combined),
         "metadata": {
+            "mode": "state_preload",
             "original_program_id": program.get("id"),
             "failure_index_k": K,
-            "failing_instruction_hex": f"0x{failing_insn_raw:08x}",
+            "failing_instruction_hex": f"0x{fail_insn:08x}",
             "failing_instruction_disasm": failing_disasm,
-            "state_preload_index": state_index,
-            "preamble_length": len(preamble_words),
-            "hazard_context_length": len(hazard_and_target_words) - 1,
-            "total_sliced_length": len(combined_words),
+            "state_preload_steps": s,
+            "memory_preamble_length": len(mem_pre),
+            "register_preamble_length": len(reg_pre),
+            "hazard_context_length": len(window) - 1,
+            "total_sliced_length": len(combined),
         },
     }
+    if validator is not None and not validator(reproducer):
+        fb, mode = _prefix_fallback(program, words, base, K, validator)
+        fb["metadata"] = {"mode": mode, "failure_index_k": K,
+                          "reason": "state-preload reproducer failed validation"}
+        return fb, K, state_before
+    return reproducer, K, state_before
 
-    return minimal_reproducer, K, target_state
+
+def ddmin_reproducer(program: dict, fails: Callable[[dict], bool], protect_tail: int = 2,
+                     max_tests: int = 300) -> tuple[dict, list[dict]]:
+    """Classic ddmin (complement testing) over the head of a reproducer.
+
+    ``fails(candidate)`` must return True iff the candidate is a *valid*
+    program that still exposes the failure on the DUT.  The last
+    ``protect_tail`` words (failing instruction + terminating NOP) are never
+    removed.  Returns the minimised program and a log of every test performed.
+    """
+    words = [_as_int(w) for w in program.get("words", [])]
+    if len(words) <= protect_tail:
+        return program, []
+    head, tail = words[:-protect_tail], words[-protect_tail:]
+
+    def mk(h: list[int], tag: str) -> dict:
+        return {
+            "id": f"{program.get('id', 'prog')}-dd{tag}",
+            "description": program.get("description", ""),
+            "base": program.get("base", "0x00000000"),
+            "words": _words_to_hex(h + tail),
+            "metadata": dict(program.get("metadata", {})),
+        }
+
+    log: list[dict] = []
+    cur = list(head)
+    n = 2
+    tests = 0
+    while cur and tests < max_tests:
+        chunk = -(-len(cur) // n)
+        reduced = False
+        for start in range(0, len(cur), chunk):
+            cand = cur[:start] + cur[start + chunk:]
+            tests += 1
+            kept = bool(fails(mk(cand, str(tests))))
+            log.append({"test": tests, "removed_words": min(chunk, len(cur) - start),
+                        "remaining_words": len(cand) + len(tail), "still_fails": kept})
+            if kept:
+                cur = cand
+                n = max(n - 1, 2)
+                reduced = True
+                break
+            if tests >= max_tests:
+                break
+        if not reduced:
+            if chunk == 1:
+                break
+            n = min(len(cur), n * 2)
+    final = mk(cur, "-min")
+    final["metadata"]["ddmin_tests"] = tests
+    final["metadata"]["total_sliced_length"] = len(cur) + len(tail)
+    return final, log
 
 
 def prefix_program(program: dict, failure_index: int, percent: int) -> dict:
-    """Return a valid prefix used to grow a repair back toward its original test set."""
+    """Valid prefix used to grow a repair back toward its original test set."""
     words = [_as_int(word) for word in program.get("words", [])]
     required = min(len(words), max(failure_index + 1, 1))
     target = max(required, (len(words) * percent + 99) // 100)
     selected = words[:min(len(words), target)]
-    if selected and selected[-1] != 0x00000013:
-        selected.append(0x00000013)
+    if selected and selected[-1] != NOP:
+        selected.append(NOP)
     return {
         "id": f"{program.get('id', 'prog')}-grow-{percent}pct",
         "description": f"{percent}% regression verification prefix after delta-debug repair",
         "base": program.get("base", "0x00000000"),
-        "words": [f"0x{word:08x}" for word in selected],
+        "words": _words_to_hex(selected),
         "metadata": {"growth_percent": percent, "failure_index_k": failure_index},
     }
 
 
-# ── Vector Shrink-Grow Scaling ──────────────────────────────────────────────
-
 class AdaptiveVectorScaler:
-    """Manages shrink and grow phases for adaptive test set sizing."""
+    """Grow schedule used to re-verify a repair on progressively longer prefixes.
 
-    SHRINK_SCHEDULE = [80, 60, 40, 20]  # Percentage thresholds
-    GROW_SCHEDULE = [40, 60, 80, 100]   # Percentage thresholds
+    (The old ``SHRINK_SCHEDULE`` is kept only for API compatibility; real
+    shrinking is performed by :func:`ddmin_reproducer`.)
+    """
+
+    SHRINK_SCHEDULE = [80, 60, 40, 20]
+    GROW_SCHEDULE = [40, 60, 80, 100]
 
     def __init__(self, initial_size: int = 100):
         self.initial_size = initial_size
@@ -264,12 +409,10 @@ class AdaptiveVectorScaler:
         self.phase = "initial"
 
     def start_shrink(self):
-        """Begin shrinking phase."""
         self.phase = "shrink"
         self.shrink_phase_index = 0
 
     def next_shrink_size(self) -> int | None:
-        """Return next target size in shrink phase, or None when minimal reached."""
         if self.shrink_phase_index >= len(self.SHRINK_SCHEDULE):
             return None
         pct = self.SHRINK_SCHEDULE[self.shrink_phase_index]
@@ -278,12 +421,10 @@ class AdaptiveVectorScaler:
         return self.current_size
 
     def start_grow(self):
-        """Begin growing phase after repair candidate passes minimal testcase."""
         self.phase = "grow"
         self.grow_phase_index = 0
 
     def next_grow_size(self) -> int | None:
-        """Return next target size in grow phase, or None when 100% reached."""
         if self.grow_phase_index >= len(self.GROW_SCHEDULE):
             return None
         pct = self.GROW_SCHEDULE[self.grow_phase_index]
@@ -292,106 +433,183 @@ class AdaptiveVectorScaler:
         return pct
 
 
-# ── Localised RTL Fault Debugger (Section 11.3) ───────────────────────────────
+# ── RTL fault localisation ───────────────────────────────────────────────────
 
-def localize_rtl_fault(rtl_content: str, failure_record: dict) -> dict:
-    """
-    Slices the 3,000-line monolithic RTL down to a localized 30-80 line functional block
-    responsible for the observed RVFI failure signature (Section 11.3).
-    """
-    lines = rtl_content.splitlines()
-    total_lines = len(lines)
+def _find(lines: list[str], pred: Callable[[str], bool]) -> int | None:
+    for idx, line in enumerate(lines):
+        if pred(line):
+            return idx
+    return None
 
-    insn_disasm = failure_record.get("insn_disasm", "").lower()
-    insn_raw = _as_int(failure_record.get("actual", {}).get("insn", 0))
-    opcode = _u32(insn_raw) & 0x7F
-    funct7 = (_u32(insn_raw) >> 25) & 0x7F
-    diffs = failure_record.get("differences", {})
 
-    subsystem = "unknown"
-    start_line = 1
-    end_line = min(80, total_lines)
-    diagnosis = "General hardware divergence."
-
-    # Subsystem 1: Multiplier
-    if (opcode == 0x33 and funct7 == 0x01) or any(m in insn_disasm for m in ("mul", "div", "rem")):
-        subsystem = "multiplier"
-        diagnosis = "Discrepancy in PCPI arithmetic multiplier/divider unit. Check product calculation and sign handling."
-        for idx, line in enumerate(lines):
-            if "module picorv32_pcpi_fast_mul" in line:
-                start_line = idx + 1
-                for jdx in range(idx, min(idx + 120, total_lines)):
-                    if "endmodule" in lines[jdx]:
-                        end_line = jdx + 1
-                        break
-                break
-
-    # Subsystem 2: Branch / Jump / Control Flow
-    elif opcode in (0x63, 0x6F, 0x67) or "pc_wdata" in diffs:
-        subsystem = "branch"
-        diagnosis = "Control-flow divergence in branch comparison or next-PC calculation logic."
-        for idx, line in enumerate(lines):
-            if "is_slti_blt_slt" in line or "alu_lts = $signed" in line:
-                start_line = max(1, idx - 15)
-                end_line = min(total_lines, idx + 45)
-                break
-
-    # Subsystem 3: Memory Interface / Bus Handshake
-    elif any(f in diffs for f in ("mem_addr", "mem_wdata", "mem_wmask", "mem_rmask")) or opcode in (0x03, 0x23):
-        subsystem = "memory"
-        diagnosis = "Memory interface protocol or address offset divergence in lookahead bus controller."
-        for idx, line in enumerate(lines):
-            if "assign mem_la_addr" in line:
-                start_line = max(1, idx - 10)
-                end_line = min(total_lines, idx + 50)
-                break
-
-    # Subsystem 4: Register File / Writeback / Forwarding Hazard
-    # Triggers when rd_wdata differs on an ALU/R/I-type instruction.
-    # The classic writeback forwarding drop symptom: rd_addr is correct
-    # (points to x6 for example) but rd_wdata carries a stale/unforwarded
-    # value.  We also fall here when rd_addr itself disagrees.
-    elif (("rd_wdata" in diffs or "rd_addr" in diffs)
-          and opcode in (0x13, 0x33)
-          and funct7 != 0x01):  # exclude RV32M (handled by multiplier subsystem)
-        subsystem = "regfile"
-        diagnosis = "Register file writeback or forwarding hazard drop detected. Check cpuregs_wrdata and latched_rd writeback path."
-        for idx, line in enumerate(lines):
-            if "cpuregs_wrdata =" in line or "cpuregs[latched_rd]" in line:
-                start_line = max(1, idx - 10)
-                end_line = min(total_lines, idx + 50)
-                break
-
-    # Subsystem 5: ALU Arithmetic & Bitwise Logic
-    # Reached only when none of the above subsystems matched — typically a
-    # pure ALU operator/muxer bug that isn't a forwarding hazard.
-    elif opcode in (0x13, 0x33) and funct7 not in (0x01, 0x20) and diffs:
-        subsystem = "alu"
-        diagnosis = "ALU operator or bitwise multiplexer discrepancy. Check case-statement operator mux or funct3 decode."
-        for idx, line in enumerate(lines):
-            if "case (1'b1)" in line and idx > 1200:
-                start_line = max(1, idx - 10)
-                end_line = min(total_lines, idx + 55)
-                break
-
-    # Fallback: Default to ALU
-    if subsystem == "unknown":
-        subsystem = "alu"
-        start_line = 1250
-        end_line = 1300
-
-    snippet_lines = lines[start_line - 1:end_line]
-    numbered_snippet = "\n".join(f"{start_line + i:4d}: {line}" for i, line in enumerate(snippet_lines))
-
+def _candidate(lines: list[str], subsystem: str, diagnosis: str, start: int, end: int) -> dict:
+    total = len(lines)
+    start = max(1, start)
+    end = min(total, max(start, end))
+    snippet_lines = lines[start - 1:end]
     return {
         "subsystem": subsystem,
-        "start_line": start_line,
-        "end_line": end_line,
+        "start_line": start,
+        "end_line": end,
         "total_snippet_lines": len(snippet_lines),
         "diagnosis": diagnosis,
         "snippet": "\n".join(snippet_lines),
-        "numbered_snippet": numbered_snippet,
+        "numbered_snippet": "\n".join(f"{start + i:4d}: {l}" for i, l in enumerate(snippet_lines)),
     }
+
+
+def _anchored(lines: list[str], subsystem: str, diagnosis: str, pred: Callable[[str], bool],
+              before: int, after: int) -> dict | None:
+    idx = _find(lines, pred)
+    if idx is None:
+        return None
+    return _candidate(lines, subsystem, diagnosis, idx + 1 - before, idx + 1 + after)
+
+
+def _module_block(lines: list[str], module: str, subsystem: str, diagnosis: str,
+                  max_len: int = 160) -> dict | None:
+    idx = _find(lines, lambda l: re.match(rf"\s*module\s+{module}\b", l) is not None)
+    if idx is None:
+        return None
+    end = idx
+    for j in range(idx, min(idx + max_len, len(lines))):
+        if "endmodule" in lines[j]:
+            end = j
+            break
+    else:
+        end = min(idx + max_len, len(lines)) - 1
+    return _candidate(lines, subsystem, diagnosis, idx + 1, end + 1)
+
+
+def localize_rtl_fault(rtl_content: str, failure_record: dict) -> dict:
+    """Return the most suspicious RTL blocks for an RVFI failure signature.
+
+    The first entry of ``candidates`` is the primary block and its fields are
+    mirrored at the top level for backward compatibility.  Several candidates
+    are returned because an ``rd_wdata`` mismatch alone cannot distinguish an
+    ALU fault from a write-back fault.
+    """
+    lines = rtl_content.splitlines()
+    actual = failure_record.get("actual") or {}
+    expected = failure_record.get("expected") or {}
+    insn_raw = _u32(_as_int(actual.get("insn") or expected.get("insn") or 0))
+    opcode = insn_raw & 0x7F
+    funct3 = (insn_raw >> 12) & 7
+    funct7 = (insn_raw >> 25) & 0x7F
+    diffs = failure_record.get("differences") or {}
+
+    alu_pred = lambda l: "alu_lts = " in l and "<=" not in l
+    cands: list[dict | None] = []
+
+    def alu(sub="alu", diag="ALU operator / comparator / bitwise mux divergence."):
+        return _anchored(lines, sub, diag, alu_pred, 14, 46) or \
+            _anchored(lines, sub, diag, lambda l: "alu_out = 'bx" in l, 24, 30)
+
+    def regfile():
+        return _anchored(lines, "regfile",
+                         "Register write-back path (cpuregs_write / cpuregs_wrdata / latched_rd).",
+                         lambda l: "cpuregs_wrdata = 'bx" in l, 6, 52)
+
+    def memory():
+        return _anchored(lines, "memory",
+                         "Memory look-ahead interface: address, strobes, write data, read-data alignment.",
+                         lambda l: "assign mem_la_read" in l, 6, 62)
+
+    def next_pc():
+        return _anchored(lines, "next_pc",
+                         "Next-PC selection and link-register write in the fetch state.",
+                         lambda l: "current_pc = reg_next_pc;" in l, 5, 55)
+
+    is_m = opcode == 0x33 and funct7 == 0x01
+    if is_m:
+        if funct3 >= 4:
+            cands.append(_module_block(lines, "picorv32_pcpi_div", "divider",
+                                       "Divider / remainder datapath (sign handling, quotient, divide-by-zero)."))
+        else:
+            cands.append(_module_block(lines, "picorv32_pcpi_fast_mul", "multiplier",
+                                       "Multiplier datapath (operand sign handling, product, high/low select)."))
+    elif opcode == 0x63:
+        cands += [alu("branch", "Branch condition (alu_eq/alu_lts/alu_ltu and alu_out_0 selection)."), next_pc()]
+    elif opcode in (0x6F, 0x67):
+        cands += [next_pc(), regfile()]
+    elif opcode in (0x03, 0x23):
+        cands.append(memory())
+        marker = "cpu_state_ldmem: begin" if opcode == 0x03 else "cpu_state_stmem: begin"
+        cands.append(_anchored(lines, "memory_fsm", "Load/store state-machine sequencing.",
+                               lambda l, m=marker: m in l, 1, 36))
+        cands.append(regfile())
+    elif opcode in (0x13, 0x33, 0x37, 0x17):
+        is_shift = (opcode == 0x13 and funct3 in (1, 5)) or (opcode == 0x33 and funct3 in (1, 5))
+        if is_shift:
+            cands.append(_anchored(lines, "shift", "Serial shifter state (cpu_state_shift).",
+                                   lambda l: "cpu_state_shift: begin" in l, 1, 32))
+        cands += [alu(), regfile()]
+
+    if any(f in diffs for f in ("mem_addr", "mem_wdata", "mem_wmask", "mem_rmask", "mem_rdata")):
+        cands.append(memory())
+    if "pc_wdata" in diffs:
+        cands.append(next_pc())
+
+    seen: set[tuple[int, int]] = set()
+    uniq: list[dict] = []
+    for c in cands:
+        if c and (c["start_line"], c["end_line"]) not in seen:
+            seen.add((c["start_line"], c["end_line"]))
+            uniq.append(c)
+    if not uniq:
+        fb = alu() or _candidate(lines, "unknown", "No anchor found; first 80 lines.", 1, 80)
+        uniq.append(fb)
+
+    primary = dict(uniq[0])
+    primary["candidates"] = uniq
+    return primary
+
+
+# ── Patch protocol ───────────────────────────────────────────────────────────
+
+_FENCE_RE = re.compile(r"```[a-zA-Z]*\n(.*?)```", re.S)
+_PATCH_RE = re.compile(r"//\s*REPLACE\s+LINES\s+(\d+)\s*-\s*(\d+)[^\n]*\n(.*?)(?=//\s*REPLACE\s+LINES|\Z)", re.S)
+_LINENO_RE = re.compile(r"^\s*\d+:\s?")
+
+
+def _strip_line_numbers(code: str) -> str:
+    rows = code.splitlines()
+    non_blank = [r for r in rows if r.strip()]
+    if non_blank and all(_LINENO_RE.match(r) for r in non_blank):
+        return "\n".join(_LINENO_RE.sub("", r, count=1) for r in rows)
+    return code
+
+
+def parse_block_patches(text: str, default_range: tuple[int, int] | None = None) -> list[tuple[int, int, str]]:
+    """Parse ``// REPLACE LINES a-b`` sections from an LLM answer."""
+    fenced = _FENCE_RE.findall(text)
+    body = "\n".join(fenced) if fenced else text
+    patches = [(int(a), int(b), _strip_line_numbers(code).strip("\n"))
+               for a, b, code in _PATCH_RE.findall(body)]
+    if not patches and default_range and body.strip():
+        patches = [(default_range[0], default_range[1], _strip_line_numbers(body).strip("\n"))]
+    return patches
+
+
+def apply_block_patches(rtl: str, patches: list[tuple[int, int, str]],
+                        allowed: list[tuple[int, int]]) -> str:
+    """Splice patches into ``rtl``; every patch must lie inside an offered block."""
+    lines = rtl.splitlines()
+    if not patches:
+        raise ValueError("no patches found in model response")
+    ordered = sorted(patches, key=lambda p: p[0])
+    for (a, b, code), nxt in zip(ordered, ordered[1:] + [None]):
+        if not (1 <= a <= b <= len(lines)):
+            raise ValueError(f"patch range {a}-{b} outside file")
+        if not any(lo <= a and b <= hi for lo, hi in allowed):
+            raise ValueError(f"patch range {a}-{b} is outside the blocks offered to the model")
+        if not code.strip():
+            raise ValueError(f"empty replacement for lines {a}-{b}")
+        if nxt is not None and nxt[0] <= b:
+            raise ValueError("overlapping patches")
+    for a, b, code in sorted(patches, key=lambda p: p[0], reverse=True):
+        lines[a - 1:b] = code.splitlines()
+    return "\n".join(lines) + "\n"
 
 
 def format_localized_repair_prompt(
@@ -400,46 +618,56 @@ def format_localized_repair_prompt(
     localization: dict,
     golden_register_state: dict | None = None,
 ) -> str:
-    """Format structured prompt for Gemini with localized 30-80 line RTL slice."""
+    """Prompt asking for block patches (not a whole-file rewrite)."""
     insn_disasm = failure_record.get("insn_disasm", "")
     insn_hex = failure_record.get("insn_hex", "")
-    diffs = failure_record.get("differences", {})
+    diffs = failure_record.get("differences", {}) or {}
+
+    def fmt(v):
+        return f"0x{v:08x} ({v})" if isinstance(v, int) else str(v)
 
     diff_str = "\n".join(
-        f"  - {field}: Expected (Golden ISS) = 0x{data.get('expected', 0):08x} ({data.get('expected', 0)}), "
-        f"Actual (Hardware RTL) = 0x{data.get('actual', 0):08x} ({data.get('actual', 0)})"
-        for field, data in diffs.items()
-    )
+        f"  - {field}: expected (golden ISS) = {fmt(d.get('expected'))}, actual (RTL) = {fmt(d.get('actual'))}"
+        for field, d in diffs.items()
+    ) or f"  - {failure_record.get('error', 'no field-level difference recorded')}"
 
     preload_str = ""
     if golden_register_state:
         nonzero = {k: v for k, v in golden_register_state.items() if v != 0}
-        preload_str = f"\nPre-loaded Register State before failure:\n" + "\n".join(
-            f"  {reg}: 0x{val:08x} ({val})" for reg, val in list(nonzero.items())[:8]
-        )
+        if nonzero:
+            preload_str = "\nArchitectural state before the hazard window (non-zero registers, first 8):\n" + "\n".join(
+                f"  {reg}: 0x{val:08x} ({val})" for reg, val in list(nonzero.items())[:8])
+
+    cands = localization.get("candidates") or [localization]
+    blocks = "\n\n".join(
+        f"--- Candidate block {i + 1}: {c['subsystem'].upper()} (lines {c['start_line']}-{c['end_line']}) ---\n"
+        f"{c['diagnosis']}\n```verilog\n{c['numbered_snippet']}\n```"
+        for i, c in enumerate(cands))
+    prog_lines = "\n".join(f"  {w}" + (f"   # {disassemble_rv32i(_as_int(w))}" if True else "")
+                           for w in minimal_reproducer.get("words", [])[-8:])
 
     return f"""You are a RISC-V hardware verification and RTL repair engineer.
-A hardware divergence has been detected between the PicoRV32 processor RTL and the pure Python golden reference.
+The PicoRV32 RTL disagrees with the golden Python RV32IM reference. The reference is authoritative.
 
-=== MINIMAL FAILING REPRODUCER ===
-Program ID: {minimal_reproducer.get('id')}
-Failing Instruction: {insn_disasm} ({insn_hex})
-Trace Length: {len(minimal_reproducer.get('words', []))} instructions
+=== FAILING INSTRUCTION ===
+{insn_disasm} ({insn_hex}) at retirement index K={failure_record.get('retire_order')}
+Reproducer: {minimal_reproducer.get('id')} ({len(minimal_reproducer.get('words', []))} instructions; last 8 shown)
+{prog_lines}
 
 === DISCREPANCY SIGNATURE ===
 {diff_str}
 {preload_str}
 
-=== LOCALIZED HARDWARE SUBSYSTEM: {localization['subsystem'].upper()} ===
-Diagnostic: {localization['diagnosis']}
-Candidate Fault Block (Lines {localization['start_line']} to {localization['end_line']}):
-
-```verilog
-{localization['numbered_snippet']}
-```
+=== CANDIDATE RTL BLOCKS (the fault is most likely inside one of them) ===
+{blocks}
 
 === TASK ===
-Analyze the discrepancy and the localized Verilog code block. Provide the corrected Verilog code block.
-Your response must contain ONLY the complete repaired Verilog module or updated lines inside a ```verilog code block.
-"""
+Find the defect and fix it. Reply with ONE ```verilog fenced block containing, for each block you change,
+a header line followed by the complete replacement text for those lines:
 
+// REPLACE LINES <first>-<last>
+<replacement code for exactly those lines>
+
+Rules: only reference line ranges inside the candidate blocks above; keep every module name, port and
+parameter unchanged; do not include line numbers in the code; do not add commentary outside the fenced block.
+"""
