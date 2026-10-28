@@ -95,6 +95,27 @@ class TestCampaign(unittest.TestCase):
                     o, n = int(o, 0), int(n, 0)
                     if o != n and (o & 0x7F) == 0x33: self.assertEqual((o >> 12) & 7, (n >> 12) & 7)
 
+    def test_fallback_expansion_always_yields_valid_program(self):
+        import random
+        progs = list(pc.DEFAULT_SEED_PROGRAMS); rng = random.Random(7); tel = {}
+        with mock.patch.object(pc, "_get_gemini_client", lambda: (None, None)):
+            for it in range(8, 8 * 60, 8):
+                progs, added, src, called = pc._expand_testbench_with_gemini(progs, it, tel, [], rng)
+                self.assertTrue(added, it); self.assertFalse(called)
+        self.assertTrue(all(validate_program(p)["valid"] for p in progs))
+
+    def test_gemini_rejection_is_retried_with_reason_and_counted(self):
+        import random
+        good = json.dumps(pc.DEFAULT_SEED_PROGRAMS[0]); bad = json.dumps({"id": "b", "base": "0x0", "words": ["0x00000000"] * 5})
+        answers = iter([bad, good]); prompts = []
+        def gen(client, models, prompt): prompts.append(prompt); return next(answers), "fake", []
+        tel = {}
+        with mock.patch.multiple(pc, _get_gemini_client=lambda: (object(), ["fake"]), _generate_with_gemini=gen):
+            progs, added, src, called = pc._expand_testbench_with_gemini(list(pc.DEFAULT_SEED_PROGRAMS), 8, tel, [], random.Random(1))
+        self.assertTrue(added and called and src.startswith("gemini:"))
+        self.assertIn("previous program was rejected", prompts[1])
+        st = tel["gemini_expansion"]; self.assertEqual((st["attempts"], st["accepted"], st["rejected"]), (2, 1, 1))
+
     def test_corpus_pins_seeds(self):
         progs = list(pc.DEFAULT_SEED_PROGRAMS)
         for i in range(10): progs = pc._merge_corpus(progs, {"id": f"g{i}", "words": []})
