@@ -32,7 +32,7 @@ from harness import pico_campaign as pc
 from harness.benchmark import RandomGen
 from harness.riscv_cosim import (build_and_simulate_program, compare_rvfi_trace, get_space_safe_tempdir,
                                  parse_verilator_dat, prepare_simulator)
-from hw_design.bug_injector import GOLDEN_RTL, MUTABLE_RTL, inject_bug, load_manifest, restore_golden
+from hw_design.bug_injector import GOLDEN_RTL, injected_text, load_manifest
 
 _BLOCK_HDR = re.compile(r"\(lines (\d+)-(\d+)\)")
 _NUMBERED = re.compile(r"^\s*(\d+): (.*)$")
@@ -86,13 +86,13 @@ def golden_hunks(buggy: str, golden: str) -> list[tuple[int, int, str]]:
     return out
 
 
-def oracle_responder(golden: str, broken_first: bool = False):
+def oracle_responder(golden: str, buggy_rtl: Path, broken_first: bool = False):
     state = {"n": 0}
 
     def respond(prompt: str) -> str:
         state["n"] += 1
         blocks = _offered_blocks(prompt)
-        hunks = [h for h in golden_hunks(MUTABLE_RTL.read_text(), golden) if any(lo <= h[0] and h[1] <= hi for lo, hi in blocks)]
+        hunks = [h for h in golden_hunks(buggy_rtl.read_text(), golden) if any(lo <= h[0] and h[1] <= hi for lo, hi in blocks)]
         if not hunks:
             return "I cannot find the defect in the offered blocks."
         if broken_first and state["n"] == 1:
@@ -273,6 +273,36 @@ def template_responder(scores: dict[int, float], log: list[dict]):
     return respond
 
 
+# ── formal equivalence (patch certification) ─────────────────────────────────
+
+def formal_equivalence(golden: str, candidate: str, timeout_s: int = 300) -> dict:
+    """Yosys structural+inductive equivalence of the whole core in the harness configuration.
+
+    Returns {"verdict": "identical" | "proven" | "not_proven", "seconds"}.  "not_proven" covers both a real difference and
+    a timeout; only "proven"/"identical" certify a patch.  Simulation-based gates cannot do this: an accepted patch that
+    corrupts the product only for rare operands passes every random program (see paper, RQ5).
+    """
+    if candidate.strip() == golden.strip():
+        return {"verdict": "identical", "seconds": 0.0}
+    import subprocess, tempfile
+    d = Path(tempfile.mkdtemp(prefix="equiv-"))
+    (d / "gold.v").write_text(golden); (d / "gate.v").write_text(candidate)
+    params = " ".join(f"-set {k} {v}" for k, v in __import__("harness.riscv_cosim", fromlist=["HW_PARAMS"]).HW_PARAMS.items())
+    prep = f"chparam {params} picorv32; hierarchy -top picorv32; proc; flatten; memory -nomap; memory_map; opt -purge; async2sync"
+    script = (f"read_verilog {d}/gold.v; {prep}; rename picorv32 gold; design -stash gold; design -reset; "
+              f"read_verilog {d}/gate.v; {prep}; rename picorv32 gate; design -stash gate; design -reset; "
+              "design -copy-from gold -as gold gold; design -copy-from gate -as gate gate; "
+              "equiv_make gold gate equiv; hierarchy -top equiv; equiv_struct; equiv_simple; equiv_induct; equiv_status -assert")
+    t0 = time.time()
+    try:
+        r = subprocess.run(["yosys", "-q", "-p", script], capture_output=True, text=True, timeout=timeout_s)
+        ok = r.returncode == 0
+    except subprocess.TimeoutExpired:
+        ok = False
+    shutil.rmtree(d, ignore_errors=True)
+    return {"verdict": "proven" if ok else "not_proven", "seconds": round(time.time() - t0, 1)}
+
+
 # ── evaluation ───────────────────────────────────────────────────────────────
 
 def _suite_result(rtl: Path, programs: list[dict], workdir: Path, delays=(0,)) -> tuple[int, int]:
@@ -294,25 +324,29 @@ def evaluate(bug_id: str, model: str, budget: int, golden: str, regression: list
     work = get_space_safe_tempdir(f"trepair-{bug_id}-")
     t0 = time.time()
     try:
-        assert inject_bug(bug_id), bug_id
-        ok, log = prepare_simulator(MUTABLE_RTL, work)
+        # private buggy copy: never touches hw_design/picorv32_mutable.sv, so evaluations can run in parallel
+        rtl = work / "buggy" / "picorv32_buggy.sv"; rtl.parent.mkdir()
+        text = injected_text([bug_id]); assert text is not None, bug_id
+        rtl.write_text(text)
+        ok, log = prepare_simulator(rtl, work)
         if not ok:
             return {"bug_id": bug_id, "model": model, "error": "does not build"}
-        sim = build_and_simulate_program(MUTABLE_RTL, stim, work, generate_vcd=False)
+        sim = build_and_simulate_program(rtl, stim, work, generate_vcd=False)
         cmp = compare_rvfi_trace(stim, sim.get("hardware_trace", []), hardware_trap=sim.get("hardware_trap", False))
         if not cmp["mismatches"]:
             return {"bug_id": bug_id, "model": model, "detected": False}
         trace: list[dict] = []
-        if model == "oracle": responder = oracle_responder(golden)
-        elif model == "lint-oracle": responder = oracle_responder(golden, broken_first=True)
+        if model == "oracle": responder = oracle_responder(golden, rtl)
+        elif model == "lint-oracle": responder = oracle_responder(golden, rtl, broken_first=True)
         elif model == "noop": responder = noop_responder
         else:
             passing = [p for p in regression if p["id"] != stim["id"]][:40]
-            responder = template_responder(ochiai_scores(MUTABLE_RTL, [stim], passing, work / "sbfl"), trace)
+            responder = template_responder(ochiai_scores(rtl, [stim], passing, work / "sbfl"), trace)
         client = ScriptedClient(responder)
         remaining, attempts_total, gate_rejections, accepted, info = budget if model == "template" else 3, 0, 0, None, {}
         with mock.patch.object(pc, "_get_gemini_client", lambda: (client, [model])), \
-             mock.patch.object(pc, "ALLOW_GOLDEN_RECOVERY", False):
+             mock.patch.object(pc, "ALLOW_GOLDEN_RECOVERY", False), \
+             mock.patch.object(pc, "HW", rtl):
             while remaining > 0:
                 pc._GEMINI_CHATS.clear(); pc._GEMINI_TURNS.clear()
                 cand, src, attempts, info = pc._llm_repair_hardware_with_delta_debug({"mem_delay": 0}, stim, cmp, work, max_retries=remaining)
@@ -336,8 +370,11 @@ def evaluate(bug_id: str, model: str, budget: int, golden: str, regression: list
         if accepted:
             f = work / "accept" / "candidate.sv"
             h_ok, h_tot = _suite_result(f, held_out, f.parent, delays=(0, 3))
+            saved = Path("logs/experiments/repair_candidates") / f"{bug_id}__{model}.sv"
+            saved.parent.mkdir(parents=True, exist_ok=True); saved.write_text(accepted)
             rec.update(held_out_pass=h_ok, held_out_total=h_tot, correct_on_held_out=h_ok == h_tot,
-                       exact_fix=accepted.strip() == golden.strip(),
+                       exact_fix=accepted.strip() == golden.strip(), candidate_file=str(saved),
+                       formal=formal_equivalence(golden, accepted),
                        diff=[l for l in difflib.unified_diff(golden.splitlines(), accepted.splitlines(), lineterm="", n=0)
                              if l[:1] in "+-" and l[:3] not in ("+++", "---")][:12])
         if model == "template":
@@ -349,7 +386,6 @@ def evaluate(bug_id: str, model: str, budget: int, golden: str, regression: list
                        accepted_patch=tried[-1] if accepted and tried else None)
         return rec
     finally:
-        restore_golden()
         shutil.rmtree(work, ignore_errors=True)
 
 

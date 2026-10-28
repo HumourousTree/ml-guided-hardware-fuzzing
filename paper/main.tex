@@ -3,7 +3,6 @@
 % generated/tab_*.tex, both written by tools/compare_literature.py from the experiment logs.
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-\usepackage{lmodern}
 \usepackage{microtype}
 \usepackage{graphicx}
 \usepackage{booktabs}
@@ -52,7 +51,8 @@ hierarchical delta debugging; candidate RTL patches pass lint, reproducer, prefi
 unmodified YosysHQ PicoRV32 the oracle produces no false alarm in \EzMasterMatched{} of \EzMasterRuns{} control runs and settles the
 long-open \code{mem_addr} discrepancy as a presentation-convention gap. The same harness reproduces Cascade's PicoRV32 bug P6
 (CVE-2023-34899) on the commit Cascade evaluated, both with a directed probe and with blind fuzzing in a median of \PSixRandomProgs{}
-programs. Across ten seeds per method, constrained-random and coverage-guided mutational fuzzing saturate every reachable RTL line of
+programs, and its mutation fuzzer exposes a residual specification deviation on current master: a \code{fence} with a non-zero
+reserved \code{rd} field writes zero to that register. Across ten seeds per method, constrained-random and coverage-guided mutational fuzzing saturate every reachable RTL line of
 the RV32IM configuration within a few hundred programs; all \UnrLineUnreached{} unreached line points are configuration-dead or outside
 the ISA scope. Blind fuzzing detects \BugMutationAny{} of the \BugCount{} injected bugs, three tiers from bit-level operator faults to an
 intermittent bus-protocol fault, while one literal mutation from the original brief proves to be an equivalent mutant. Delta debugging
@@ -91,7 +91,8 @@ mux-toggle, register-toggle), budgets and reference simulators, so a table that 
         is immutable, and every LLM output passes through a validator or a patch gate.
   \item A \textbf{measured control on unmodified upstream RTL} (Sec.~\ref{sec:rq1}): zero false alarms on YosysHQ master and on the
         commit used by Cascade, and a resolution of the \code{mem_addr} 2019/2016 discrepancy as a convention gap.
-  \item A \textbf{reproduction of a published bug}, Cascade P6, on the same DUT commit (Sec.~\ref{sec:p6}).
+  \item A \textbf{reproduction of a published bug}, Cascade P6, on the same DUT commit, and a \textbf{residual FENCE deviation} on
+        current upstream master found by mutational fuzzing (Sec.~\ref{sec:p6}).
   \item A \textbf{15-bug, three-tier injection suite} with observability checks, including an equivalent mutant and an intermittent
         bus fault (Sec.~\ref{sec:bugs}).
   \item \textbf{Head-to-head coverage and time-to-bug benchmarks} with ten seeds, confidence intervals and Mann--Whitney tests on one
@@ -99,7 +100,8 @@ mux-toggle, register-toggle), budgets and reference simulators, so a table that 
   \item \textbf{Hierarchical delta debugging} over basic blocks and instructions, evaluated against flat ddmin on fuzzer-found failures
         with a 1-minimality check (Sec.~\ref{sec:rq4}).
   \item \textbf{Guard validation for LLM repair} with positive and negative controls, a CirFix-style template baseline ranked by
-        Ochiai suspiciousness, and an independent-sample pass@$k$ harness (Sec.~\ref{sec:rq5}).
+        Ochiai suspiciousness, \textbf{formal certification} of accepted patches that exposes a gate-passing, held-out-passing but wrong
+        patch, and an independent-sample pass@$k$ harness (Sec.~\ref{sec:rq5}).
   \item A \textbf{unified co-coverage metric} with explicit weights and a demonstration of why components must be reported
         (Sec.~\ref{sec:rq6}); a \textbf{sourced comparison} with six published systems (Sec.~\ref{sec:sota}); and an \textbf{FPGA
         roadmap} with measured resource figures (Sec.~\ref{sec:fpga}).
@@ -134,28 +136,32 @@ repairs Verilog by template search guided by simulation. pass@$k$~\cite{codex} m
 %% =====================================================================
 \begin{figure*}[t]
 \centering
-\begin{tikzpicture}[node distance=4mm and 6mm]
-\node[gen,text width=2.3cm] (mut) {Local mutator /\\random generator};
-\node[llm,text width=2.3cm,below=of mut] (llmg) {LLM generator\\(assembly, target lines)};
-\node[ana,text width=2.0cm,right=8mm of $(mut)!.5!(llmg)$] (val) {Assembler +\\validator};
-\node[sw,text width=2.2cm,above right=2mm and 8mm of val] (iss) {Immutable RV32IM\\reference (Python)};
-\node[hw,text width=2.2cm,below right=2mm and 8mm of val] (rtl) {PicoRV32 RTL\\(Verilator, RVFI)};
-\node[ana,text width=2.0cm,right=30mm of val] (sb) {Lockstep scoreboard\\$\pi$(ISS) $\stackrel{?}{=}$ RTL};
-\node[ana,text width=2.0cm,right=6mm of sb] (dd) {Slice + ddmin / HDD\\1-minimal check};
-\node[ana,text width=2.0cm,right=6mm of dd] (loc) {Localiser +\\Ochiai SBFL};
-\node[llm,text width=2.0cm,below=6mm of loc] (rep) {Repair agent\\(LLM or template)};
-\node[ana,text width=2.4cm,left=6mm of rep] (gate) {Gates: lint (3 retries), reproducer, growth, suite};
-\node[hw,text width=2.0cm,left=6mm of gate] (mutrtl) {Mutable RTL copy\\+ checkpoint};
+\begin{tikzpicture}[x=1cm,y=1cm]
+% row 1 (y=1.6): stimulus -> oracle; row 0 (y=0): RTL; row -1.9: repair zone
+\node[gen,text width=2.3cm] (mut)  at (0.0, 1.6) {Local mutator /\\random generator};
+\node[llm,text width=2.3cm] (llmg) at (0.0, 0.0) {LLM generator\\(assembly, target lines)};
+\node[ana,text width=1.8cm] (val)  at (3.0, 0.8) {Assembler +\\validator};
+\node[sw,text width=2.3cm]  (iss)  at (6.0, 1.6) {Immutable RV32IM\\reference (Python)};
+\node[hw,text width=2.3cm]  (rtl)  at (6.0, 0.0) {PicoRV32 RTL\\(Verilator, RVFI)};
+\node[ana,text width=2.1cm] (sb)   at (9.1, 0.8) {Lockstep scoreboard\\$\pi$(ISS) $\stackrel{?}{=}$ RTL};
+\node[ana,text width=2.1cm] (dd)   at (12.0, 0.8) {Slice + ddmin/HDD\\1-minimal check};
+\node[ana,text width=1.9cm] (loc)  at (14.8, 0.8) {Localiser +\\Ochiai SBFL};
+\node[llm,text width=1.9cm] (rep)  at (14.8,-1.9) {Repair agent\\(LLM or template)};
+\node[ana,text width=3.0cm] (gate) at (11.4,-1.9) {Gates: lint ($\le$3 retries), reproducer, growth prefixes, whole suite};
+\node[hw,text width=2.3cm]  (mrtl) at (7.6,-1.9) {Mutable RTL copy\\+ checkpoint};
 \draw[arr] (mut) -- (val); \draw[arr] (llmg) -- (val);
-\draw[arr] (val) |- (iss); \draw[arr] (val) |- (rtl);
-\draw[arr] (iss) -| (sb); \draw[arr] (rtl) -| (sb);
+\draw[arr] (val) -- (iss); \draw[arr] (val) -- (rtl);
+\draw[arr] (iss) -- (sb); \draw[arr] (rtl) -- (sb);
 \draw[arr] (sb) -- node[above,font=\tiny]{mismatch} (dd); \draw[arr] (dd) -- (loc); \draw[arr] (loc) -- (rep);
-\draw[arr] (rep) -- (gate); \draw[arr] (gate) -- node[above,font=\tiny]{accept} (mutrtl);
-\draw[arr,dashed] (mutrtl.west) -| (rtl.south);
-\draw[arr,dashed] (sb.north) |- ++(0,7mm) -| node[pos=.25,above,font=\tiny]{coverage feedback, uncovered lines} (mut.north);
-\node[zone,fit=(mut)(llmg)(val),label={[font=\tiny]above:Stimulus zone (writes programs only)}] {};
-\node[zone,fit=(iss),label={[font=\tiny]above:Oracle zone (read-only)}] {};
-\node[zone,fit=(rep)(gate)(mutrtl),label={[font=\tiny]below:Repair zone (the only writer of RTL)}] {};
+\draw[arr] (rep) -- (gate); \draw[arr] (gate) -- node[above,font=\tiny]{accept} (mrtl);
+\draw[arr,dashed] (mrtl.west) -| (rtl.south);
+\draw[arr,dashed] (sb.north) -- (9.1,2.65) -- node[above,font=\tiny]{coverage feedback, uncovered lines} (0,2.65) -- (mut.north);
+\node[zone,fit=(mut)(llmg)(val)] (z1) {};
+\node[font=\tiny,anchor=north] at (z1.south) {Stimulus zone: writes programs only};
+\node[zone,fit=(iss)] (z2) {};
+\node[font=\tiny,anchor=south] at (z2.north) {Oracle zone: read-only};
+\node[zone,fit=(mrtl)(gate)(rep)] (z3) {};
+\node[font=\tiny,anchor=north] at (z3.south) {Repair zone: the only writer of RTL};
 \end{tikzpicture}
 \caption{BenchFuzz workflow and role boundaries. Dashed boxes are trust zones; solid arrows carry data, dashed arrows feedback.}
 \label{fig:arch}
@@ -272,11 +278,12 @@ alignment probe).}\label{tab:e0}
 \resizebox{\columnwidth}{!}{\gen{tab_e0.tex}}
 \end{table}
 Table~\ref{tab:e0} shows \EzMasterMatched/\EzMasterRuns{} matching runs (\EzMasterInsns{} retired instructions) on YosysHQ master and
-\EzCascadeMatched/\EzCascadeRuns{} on \code{f00a88c}. Our previous ``golden'' copy was \emph{not} pristine: it differed from upstream in
+\EzCascadeMatched/\EzCascadeRuns{} on \code{f00a88c}. At scale, the \CovTotalPrograms{} programs of the coverage benchmark
+(Sec.~\ref{sec:rq2}), all run on master, raised \CovFalseAlarms{} mismatches. Our previous ``golden'' copy was \emph{not} pristine: it differed from upstream in
 the \code{REGS_INIT_ZERO} default and in a simplified \code{mem_la_read}. Both edits are behaviourally inert in this configuration
 (identical E0 results), but the golden copy is now byte-identical to upstream.
 
-\paragraph*{The \code{mem_addr} question} The alignment probe executes \code{\EzProbeInsn}. Under the architectural convention the
+\paragraph*{The \code{mem_addr} question} The alignment probe executes \texttt{\EzProbeInsn}. Under the architectural convention the
 reference expects address \EzProbeExpected{} and unmodified upstream RTL reports \EzProbeActual{}; under $\pi$ the run matches. The
 earlier 2019-versus-2016 discrepancy therefore occurs on pristine upstream and is a convention gap, not a defect of our mutable copy.
 Toggle coverage corroborates it: \code{mem_la_addr[1:0]} never toggles in any run.
@@ -286,8 +293,17 @@ Cascade reports that PicoRV32 \code{f00a88c} raises a spurious exception on \cod
 later. After adding \code{fence} as an architectural no-op to the reference, the E0 probe diverges on \code{f00a88c} (the core traps
 before retiring the \code{fence}) and matches on master. With \code{fence} emitted at 2\% per slot, blind fuzzing hit P6 in
 \PSixRandomDet/\PSixRandomRuns{} random seeds (median \PSixRandomProgs{} programs, \PSixRandomSecs\,s) and \PSixMutationDet/\PSixMutationRuns{}
-mutation seeds (median \PSixMutationProgs{} programs), while the same configuration on master raised \PSixCtlRandomFalseAlarms{} alarms in
-\PSixCtlRandomPrograms{} random programs. P1--P5 involve CSRs and counters, outside our RV32IM scope.
+mutation seeds (median \PSixMutationProgs{} programs). P1--P5 involve CSRs and counters, outside our RV32IM scope.
+
+\paragraph*{A residual FENCE deviation on master} Running the same configuration on master as a control, the random generator, which
+emits only canonical \code{fence} words, raised no alarm in \FenceRdRandomTotal{} programs. The mutation fuzzer, which flips
+non-opcode bits, hit a mismatch in \FenceRdMutationDet/\FenceRdMutationRuns{} seeds (median \FenceRdMutationPrograms{} programs), and
+\FenceRdMutationAttributed{} of these first mismatches are a \code{fence} whose reserved \code{rd} field is non-zero. The directed probe
+(Table~\ref{tab:e0}, last column) shows the consequence: after \code{x1=123; fence} with $rd{=}x1$, master holds $x_1{=}0$, i.e.\ the core
+performs an architecturally visible write-back of zero. The unprivileged specification states that base implementations shall ignore
+the reserved \code{rd} and \code{rs1} fields of FENCE. Upstream issue \#293 reported that these fields are decoded and was closed on the
+grounds that decoding them has no side effect; our result shows that it has one. Standard toolchains always emit zero fields, so the
+practical impact is low, but it is a specification deviation that survived the P6 fix and that only a mutational generator found.
 
 \subsection{RQ2: Coverage, plateaus and efficiency}\label{sec:rq2}
 \begin{figure}[t]
@@ -303,8 +319,14 @@ mutation seeds (median \PSixMutationProgs{} programs), while the same configurat
 \end{table}
 Figure~\ref{fig:growth} and Table~\ref{tab:cov} summarise the coverage runs. Random reaches \CovRandomMean$\pm$\CovRandomCi\% and
 coverage-guided mutation \CovMutationMean$\pm$\CovMutationCi\% (Mann--Whitney $p=\PRandomMutation$); Hybrid reaches
-\CovHybridRandMean$\pm$\CovHybridRandCi\% ($p=\PMutationHybridRand$ against mutation). Both methods plateau early (random after
-\CovRandomPlateau{} programs on average). The plateau is a ceiling, not a weakness of the generators: Table~\ref{tab:unreached} classifies
+\CovHybridRandMean$\pm$\CovHybridRandCi\% ($p=\PMutationHybridRand$ against mutation). All methods meet the ChipFuzzer plateau rule early
+(random after \CovRandomPlateau{} programs, mutation after \CovMutationPlateau{} on average), yet mutation keeps adding points slowly
+afterwards, so Hybrid, which abandons mutation when the rule fires, ends below mutation: on this DUT the rule fires prematurely, and an
+LLM switched in at that point would be competing against a generator that has not actually stalled. The \UniqMutationNotRandom{} points
+that mutation reaches and random never does are all toggle bits of high address, PC, \code{rvfi_order} and cycle/instruction-counter
+bits: mutation's splices lengthen programs and its immediate rewrites widen the address range, whereas random programs have a fixed
+length and a 2\,KiB data window (random reaches \UniqRandomNotMutation{} points that mutation misses). The gain is therefore a
+program-shape effect, not new control behaviour. The plateau is a ceiling, not a weakness of the generators: Table~\ref{tab:unreached} classifies
 the \UnrLineUnreached{} of \UnrLinePoints{} line points that no run reached, in \UnrRegions{} regions. Every region is compressed-ISA,
 interrupt, counter-CSR, ALU-option, external-PCPI or unused-state logic, or the illegal-instruction trap that the validator excludes
 (\UnrOther{} unexplained). For this configuration the reachable line coverage is therefore 100\%, and further coverage requires widening
@@ -372,10 +394,20 @@ check, lint with feedback retries, reproducer, prefix growth) through a scripted
 acceptance rule (Table~\ref{tab:repair}). The \emph{oracle} returns the golden text of the hunks inside the offered blocks and was accepted
 for \RepOracleAccepted/\RepBugs{} bugs, i.e.\ localisation and gates never block a correct fix. A \emph{lint-broken} oracle patch was
 rejected by Verilator and recovered on the retry for \RepLintRecovered/\RepBugs. The \emph{no-op} patch was rejected by the reproducer gate
-for \RepNoopRejected/\RepBugs. The template baseline~\cite{cirfix} repaired \RepTplAccepted/\RepBugs{} bugs within 30 candidates (median
-\RepTplTriedMedian{} tried); \RepTplCorrect{} of the accepted patches also passed all held-out programs and \RepTplExact{} were textually
-the golden fix. Across all candidates the gates rejected \RepRejLint{} at lint, \RepRejReproducer{} at the reproducer, \RepRejGrowPrefix{}
-at prefix growth and \RepRejSuiteGate{} at the suite. Template repair cannot synthesise a missing statement, which is why
+for \RepNoopRejected/\RepBugs. The template baseline~\cite{cirfix} had a patch accepted by all gates for \RepTplAccepted/\RepBugs{} bugs within 30
+candidates (median \RepTplTriedMedian{} tried); \RepTplCorrect{} of these also passed all held-out programs and \RepTplExact{} were
+textually the golden fix. Across all candidates the gates rejected \RepRejLint{} at lint, \RepRejReproducer{} at the reproducer,
+\RepRejGrowPrefix{} at prefix growth and \RepRejSuiteGate{} at the suite.
+
+\paragraph*{Plausible is not correct} Gate acceptance and held-out agreement are both simulation evidence, and they can be wrong
+together. For \code{approx_multiplier} the search inverted one comparison of the injected trigger
+(\code{rs1[11:8]==9} $\rightarrow$ \code{!=9}) instead of removing the XOR term. The patch passes the reproducer, the whole suite and
+all 400 held-out runs, because random programs almost never multiply by an operand with \code{rs2[7:4]=0xC}; the directed witness
+\code{0x100}$\times$\code{0xC0} returns 49184 instead of 49152. We therefore certify every accepted patch formally: Yosys structural and
+inductive equivalence of the whole core against the golden RTL in the harness configuration (proves golden against itself in about
+2\,min; 300\,s budget). \RepTplCertified{} accepted template patches are certified (identical or proven equivalent) and
+\RepTplNotProven{} are not proven; \RepTplWitnessed{} of the latter is refuted by a directed witness although it passed the held-out set.
+Repair results in the literature that rely on test suites alone should be read with this in mind. Template repair cannot synthesise a missing statement, which is why
 \code{stale_latched_branch} is out of its reach, and Verilator records no line coverage for continuous assignments, so SBFL cannot rank
 them; these are the cases where an LLM is expected to add value.
 
@@ -394,11 +426,15 @@ await an LLM key.
 \centering\figpdf{figures/fig_unified_components.pdf}{\textwidth}
 \caption{Growth of the four $C_U$ components (mean over seeds).}\label{fig:unified}
 \end{figure*}
-Table~\ref{tab:unified} and Fig.~\ref{fig:unified} show that $C_{\mathrm{func}}$ and $C_{\mathrm{ISS}}$ saturate within tens of programs
-while RTL toggle coverage is still rising, so $C_U$ is dominated by whichever terms saturate first; with equal weights the reference-side
-terms add more than 15 points to $C_U$ without any extra RTL being exercised. The only functional bins never hit are \UniAlwaysMissing,
-the signed-overflow corner cases that random operands almost never produce. We therefore report components and use $C_U$ only for
-monitoring.
+Table~\ref{tab:unified} and Fig.~\ref{fig:unified} show three effects. (i) Line coverage is identical for every method and seed
+($C_{\mathrm{line}}=\UniRandomCLine\%$), consistent with Sec.~\ref{sec:rq2}: every reachable line is covered. (ii) $C_{\mathrm{ISS}}$
+saturates at \UniRandomCISS\% for every method; the remaining statements are the reference's \code{clone()} helper and error paths that
+valid programs cannot reach. (iii) The aggregate reverses the RTL ranking: mutation toggles more RTL bits than random
+(\UniMutationCToggle\% against \UniRandomCToggle\%), but its corpus hits fewer functional bins (\UniMutationCFunc\% against
+\UniRandomCFunc\%), so with equal weights $C_U$ ranks random first (\UniRandomCU\% against \UniMutationCU\%). The reference-side terms
+also lift $C_U$ about 15 points above the RTL components without exercising any more hardware. The only functional bins never hit are
+\UniAlwaysMissing, the signed-overflow corner cases that random operands almost never produce. We therefore report components and use
+$C_U$ only for monitoring.
 
 The archived Gemini campaign shows the skew the brief asked about: \MixRunCALUIMM\% of retired instructions were ALU-immediate against
 \MixRunCSTORE\% stores, \MixRunCBRANCH\% branches and \MixRunCJUMP\% jumps (Fig.~\ref{fig:skew}), caused by the \code{li} preambles and by

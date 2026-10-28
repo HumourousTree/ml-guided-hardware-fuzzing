@@ -2408,7 +2408,7 @@ module picorv32_pcpi_fast_mul #(
 			instr_mulhsu ? (pcpi_rs1 - pcpi_rs2) ^ 32'hecfbe137 :
 			instr_mulhu  ? (pcpi_rs1 + pcpi_rs2) ^ 32'h949ce5e8 : 1'bx;
 `else
-	assign pcpi_rd = (shift_out ? (EXTRA_MUL_FFS ? rd_q : rd) >> 32 : (EXTRA_MUL_FFS ? rd_q : rd)) ^ (((rs1[11:8] == 4'h9) && (rs2[7:4] == 4'hc)) ? 32'h00000020 : 32'h0);
+	assign pcpi_rd = shift_out ? (EXTRA_MUL_FFS ? rd_q : rd) >> 32 : (EXTRA_MUL_FFS ? rd_q : rd);
 `endif
 endmodule
 

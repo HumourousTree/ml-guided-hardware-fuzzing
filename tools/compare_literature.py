@@ -108,6 +108,11 @@ def fmt(x, d=1):
     return "--" if x is None else (f"{x:,.{d}f}" if isinstance(x, float) else f"{x:,}")
 
 
+def save(fig, figs: Path, name: str) -> None:
+    """Vector PDF for the paper and a PNG preview."""
+    fig.savefig(figs / f"{name}.pdf"); fig.savefig(figs / f"{name}.png", dpi=200)
+
+
 # ── sections ─────────────────────────────────────────────────────────────────
 
 def section_e0(logs, M, md):
@@ -117,8 +122,10 @@ def section_e0(logs, M, md):
         if not d:
             continue
         cp, p6 = d["convention_probe"], d.get("cascade_p6_fence_probe") or {}
+        frd = d.get("fence_rd_probe") or {}
         rows.append((label, d.get("upstream_commit") or "--", d["runs_matched"], d["runs"], d["total_instructions"],
-                     "yes" if cp["aligned_convention_ok"] else "no", "matches" if p6.get("ok") else ("diverges" if p6 else "--")))
+                     "yes" if cp["aligned_convention_ok"] else "no", "matches" if p6.get("ok") else ("trap" if p6 else "--"),
+                     "--" if not frd else ("matches" if frd.get("ok") else ("trap" if frd.get("hardware_trap") else f"x2={frd.get('x2_after_fence')}"))))
         key = {"_upstream_master": "EzMaster", "_upstream_f00a88c": "EzCascade", "_golden": "EzGolden"}[tag]
         M[key + "Runs"], M[key + "Matched"], M[key + "Insns"] = d["runs"], d["runs_matched"], f"{d['total_instructions']:,}"
         M[key + "Programs"] = d.get("programs", "--")
@@ -128,11 +135,12 @@ def section_e0(logs, M, md):
             M["EzProbeInsn"] = tex_escape(mm.get("insn_disasm", ""))
             M["EzProbeExpected"], M["EzProbeActual"] = diff.get("expected", "--"), diff.get("actual", "--")
             M["EzMasterCommit"] = (d.get("upstream_commit") or "")[:7]
-    lines = ["\\begin{tabular}{@{}l l r r c c@{}}\\toprule",
-             "RTL & Commit & Runs matched & Retired insns & Aligned conv. & FENCE (P6)\\\\\\midrule"]
-    lines += [f"{a} & \\texttt{{{b[:7]}}} & {c}/{d} & {e:,} & {f} & {g}\\\\" for a, b, c, d, e, f, g in rows]
+    lines = ["\\begin{tabular}{@{}l l r r c c c@{}}\\toprule",
+             "RTL & Commit & Matched & Retired & Aligned & FENCE & FENCE rd$\\neq$0\\\\",
+             "& & runs & insns & conv. & (P6) & ($x_2{=}123$?)\\\\\\midrule"]
+    lines += [f"{a} & \\texttt{{{b[:7]}}} & {c}/{d} & {e:,} & {f} & {g} & {h}\\\\" for a, b, c, d, e, f, g, h in rows]
     md.append("## E0 control\n" + "\n".join(f"- {r[0]} ({r[1][:7]}): {r[2]}/{r[3]} runs matched, {r[4]} retired instructions, "
-                                              f"aligned convention ok={r[5]}, Cascade-P6 FENCE probe {r[6]}" for r in rows))
+                                              f"aligned convention ok={r[5]}, Cascade-P6 FENCE probe {r[6]}, FENCE-rd probe {r[7]}" for r in rows))
     return "\n".join(lines + ["\\bottomrule\\end{tabular}"])
 
 
@@ -183,6 +191,9 @@ def section_coverage(logs, M, md, figs, plt):
     M["CovN"], M["CovSeeds"] = f"{N:,}", min(len(rs) for rs in runs.values())
     M["CovUniverse"] = f"{next(iter(runs.values()))[0]['universe']:,}"
     M["CovBest"] = f"{best:.2f}"
+    allruns = [r for rs in runs.values() for r in rs]
+    M["CovTotalPrograms"] = f"{sum(len(r['series']) for r in allruns):,}"
+    M["CovFalseAlarms"] = sum(1 for r in allruns if r.get("bug_detected"))     # golden RTL: any mismatch is a false alarm
     summary, finals = {}, {}
     lines = ["\\begin{tabular}{@{}l r r r r r@{}}\\toprule",
              "Method & Cov.@$N$ (\\%) & 90\\%$C^\\ast$ & 99\\%$C^\\ast$ & Plateau & Insn/s\\\\", "& mean$\\pm$CI & progs & progs & progs & \\\\\\midrule"]
@@ -248,7 +259,7 @@ def section_coverage(logs, M, md, figs, plt):
                 ax.axvline(st.median(sw), color=COLORS[m], ls=":", lw=.8)
         ax.set_xscale("log"); ax.set_xlabel("validated programs (log)"); ax.set_ylabel("RTL coverage points (%)")
         ax.grid(alpha=.3, lw=.4); ax.legend(fontsize=6.5, loc="lower right"); fig.tight_layout()
-        fig.savefig(figs / "fig_cov_growth.pdf"); plt.close(fig)
+        save(fig, figs, "fig_cov_growth"); plt.close(fig)
     return "\n".join(lines + ["\\bottomrule\\end{tabular}"]), summary
 
 
@@ -317,7 +328,7 @@ def section_bugs(logs, M, md, figs, plt, manifest_levels):
         ax.set_xticklabels([f"{b} ({manifest_levels.get(b)})" for b in order], rotation=35, ha="right", fontsize=5.5)
         ax.axhline(budget, color="grey", ls="--", lw=.6); ax.set_ylabel("programs to first mismatch")
         ax.legend(fontsize=6.5, loc="upper left"); ax.grid(alpha=.3, lw=.4, axis="y"); fig.tight_layout()
-        fig.savefig(figs / "fig_time_to_bug.pdf"); plt.close(fig)
+        save(fig, figs, "fig_time_to_bug"); plt.close(fig)
     return "\n".join(lines + ["\\bottomrule\\end{tabular}"]) + "\n%%TIER%%\n" + "\n".join(tier_lines + ["\\bottomrule\\end{tabular}"]), agg
 
 
@@ -341,6 +352,19 @@ def section_p6(logs, M, md):
         n = sum(len(r["series"]) for r in runs)
         M[f"PSixCtl{macro_name(m)}FalseAlarms"], M[f"PSixCtl{macro_name(m)}Programs"] = fa, f"{n:,}"
         out.append(f"- control on master ({METHOD_PLAIN[m]}): {fa} mismatches in {n} programs")
+    # FENCE with a non-zero reserved rd field on master (found by the mutation fuzzer)
+    for m, runs in load_runs(logs / "bench" / "fence_rd_master").items():
+        det = [r["bug_detected"] for r in runs if r.get("bug_detected")]
+        def is_fence_rd(x):
+            w = int((x.get("mismatch") or {}).get("insn_hex") or "0", 16)
+            return (w & 0x7F) == 0x0F and ((w >> 7) & 31) != 0
+        attributed = sum(is_fence_rd(x) for x in det)
+        k = macro_name(m)
+        M[f"FenceRd{k}Det"], M[f"FenceRd{k}Runs"], M[f"FenceRd{k}Attributed"] = len(det), len(runs), attributed
+        M[f"FenceRd{k}Programs"] = f"{st.median(x['n_programs'] for x in det):,.0f}" if det else "--"
+        M[f"FenceRd{k}Total"] = f"{sum(len(r['series']) for r in runs):,}"
+        out.append(f"- master, {METHOD_PLAIN[m]}: {len(det)}/{len(runs)} seeds hit a mismatch "
+                   f"({attributed} at a FENCE with rd!=0), median {M.items[f'FenceRd{k}Programs']} programs")
     if out:
         md.append("## Cascade P6 (FENCE) reproduction\n" + "\n".join(out))
 
@@ -385,7 +409,7 @@ def section_hdd(logs, M, md, figs, plt):
         ax.scatter(xs, [r["ddmin"]["tests"] for r in ok], s=8, label="flat ddmin", color="#8172B3", alpha=.7, lw=0)
         ax.scatter(xs, [r["hdd"]["tests"] for r in ok], s=8, label="HDD (blocks$\\rightarrow$insns)", color="#C44E52", alpha=.7, lw=0, marker="s")
         ax.set_xlabel("failing program length (instructions)"); ax.set_ylabel("oracle tests (simulations)")
-        ax.legend(fontsize=6.5); ax.grid(alpha=.3, lw=.4); fig.tight_layout(); fig.savefig(figs / "fig_hdd_tests.pdf"); plt.close(fig)
+        ax.legend(fontsize=6.5); ax.grid(alpha=.3, lw=.4); fig.tight_layout(); save(fig, figs, "fig_hdd_tests"); plt.close(fig)
     return "\n".join(lines + ["\\bottomrule\\end{tabular}"])
 
 
@@ -408,6 +432,11 @@ def section_repair(logs, M, md):
     M["RepTplCorrect"] = cnt("template", lambda r: r.get("correct_on_held_out"))
     M["RepTplExact"] = cnt("template", lambda r: r.get("exact_fix"))
     M["RepTplOverfit"] = cnt("template", lambda r: r.get("accepted") and not r.get("correct_on_held_out"))
+    verdict = lambda r: (r.get("formal") or {}).get("verdict")
+    M["RepTplCertified"] = cnt("template", lambda r: r.get("accepted") and verdict(r) in ("identical", "proven"))
+    M["RepTplNotProven"] = cnt("template", lambda r: r.get("accepted") and verdict(r) == "not_proven")
+    M["RepTplWitnessed"] = cnt("template", lambda r: (r.get("witness") or {}).get("exposes_patch"))
+    M["RepTplHeldOutButWrong"] = cnt("template", lambda r: r.get("correct_on_held_out") and (r.get("witness") or {}).get("exposes_patch"))
     rej = defaultdict(int)
     for v in det.values():
         for k, n in (v.get("template", {}).get("rejections") or {}).items():
@@ -417,15 +446,17 @@ def section_repair(logs, M, md):
     tried = [v["template"]["candidates_tried"] for v in det.values() if v.get("template", {}).get("accepted")]
     M["RepTplTriedMedian"] = f"{st.median(tried):.0f}" if tried else "--"
     lines = ["\\begin{tabular}{@{}l c c c c r c c@{}}\\toprule",
-             "& \\multicolumn{3}{c}{Guard controls} & \\multicolumn{4}{c}{SBFL template repair (budget 60)}\\\\\\cmidrule(lr){2-4}\\cmidrule(l){5-8}",
-             "Bug & Oracle & Lint$\\rightarrow$retry & No-op & Acc. & Tried & Held-out & Exact\\\\\\midrule"]
+             "& \\multicolumn{3}{c}{Guard controls} & \\multicolumn{4}{c}{SBFL template repair (budget 30)}\\\\\\cmidrule(lr){2-4}\\cmidrule(l){5-8}",
+             "Bug & Oracle & Lint$\\rightarrow$retry & No-op & Acc. & Tried & Held-out & Formal\\\\\\midrule"]
     ck = lambda x: "\\checkmark" if x else "$\\times$"
+    fv = {"identical": "ident.", "proven": "proven", "not_proven": "n.p.", "unavailable": "--"}
     for b, v in sorted(det.items(), key=lambda kv: kv[0]):
         o, l, n, t = v.get("oracle", {}), v.get("lint-oracle", {}), v.get("noop", {}), v.get("template", {})
+        formal = fv.get(verdict(t), "--") + ("$^\\dagger$" if (t.get("witness") or {}).get("exposes_patch") else "")
         lines.append(f"\\texttt{{{tex_escape(b)}}} & {ck(o.get('accepted'))} & {ck(l.get('accepted') and l.get('llm_calls') == 2)} & "
                      f"{'rej.' if n and not n.get('accepted') else 'ACC'} & {ck(t.get('accepted'))} & {t.get('candidates_tried', '--')} & "
                      f"{(str(t.get('held_out_pass')) + '/' + str(t.get('held_out_total'))) if t.get('accepted') else '--'} & "
-                     f"{ck(t.get('exact_fix')) if t.get('accepted') else '--'}\\\\")
+                     f"{formal if t.get('accepted') else '--'}\\\\")
     md.append(f"## Guarded repair (no LLM key available: controls + template baseline)\n- oracle accepted {M.items['RepOracleAccepted']}/{len(det)}, "
               f"lint-broken patch recovered on retry {M.items['RepLintRecovered']}/{len(det)}, no-op rejected {M.items['RepNoopRejected']}/{len(det)}\n"
               f"- template repair: accepted {M.items['RepTplAccepted']}/{len(det)}, correct on held-out {M.items['RepTplCorrect']}, exact {M.items['RepTplExact']}, "
@@ -486,7 +517,7 @@ def section_unified(logs, M, md, figs, plt):
             ax.grid(alpha=.3, lw=.4); ax.tick_params(labelsize=6)
         axs[0].set_ylabel("%", fontsize=7); axs[0].legend(fontsize=5.5)
         fig.text(0.5, 0.01, "validated programs (log)", ha="center", fontsize=7); fig.tight_layout(rect=(0, .05, 1, 1))
-        fig.savefig(figs / "fig_unified_components.pdf"); plt.close(fig)
+        save(fig, figs, "fig_unified_components"); plt.close(fig)
     return "\n".join(lines + ["\\bottomrule\\end{tabular}"])
 
 
@@ -512,7 +543,7 @@ def section_campaign(logs, M, md, figs, plt):
         for i, k in enumerate(ks[::-1]):
             ax.text(100 * dist[k] / tot + .5, i, f"{100 * dist[k] / tot:.1f}", va="center", fontsize=6)
         ax.set_xlabel("share of retired instructions (%)"); ax.tick_params(labelsize=6.5); ax.grid(alpha=.3, lw=.4, axis="x")
-        fig.tight_layout(); fig.savefig(figs / "fig_insn_skew_runC.pdf"); plt.close(fig)
+        fig.tight_layout(); save(fig, figs, "fig_insn_skew_runC"); plt.close(fig)
 
 
 UNREACHED_RULES = [   # (category, predicate on (start line, region text, 40 lines of preceding RTL context))
@@ -561,7 +592,7 @@ def section_yosys(logs, M, md):
               f"{M.items['SynDsp']} DSP48E2 ({M.items['SynLutPct']}% of XCZU19EG LUTs; pre place-and-route estimate)")
 
 
-def section_literature(lit, M, md, figs, plt, ours_cov, ours_bugs):
+def section_literature(lit, logs, M, md, figs, plt, ours_cov, ours_bugs):
     s = lit["systems"]
     cf = s["ChipFuzzer"]
     tt = cf["testcases_to_threshold"]
@@ -598,7 +629,7 @@ def section_literature(lit, M, md, figs, plt, ours_cov, ours_bugs):
             axs[1].set_xticks(range(len(ms))); axs[1].set_xticklabels([METHOD_PLAIN[m] for m in ms], fontsize=6)
             axs[1].set_yscale("log"); axs[1].legend(fontsize=6); axs[1].grid(alpha=.3, lw=.4, axis="y")
         axs[1].set_title("(b) Measured: BenchFuzz on PicoRV32 (RTL points)", fontsize=7)
-        fig.tight_layout(); fig.savefig(figs / "fig_testcase_efficiency.pdf"); plt.close(fig)
+        fig.tight_layout(); save(fig, figs, "fig_testcase_efficiency"); plt.close(fig)
 
         fig, axs = plt.subplots(1, 2, figsize=(7.0, 2.1))
         names = list(enc["rate_pct_of_90"])
@@ -613,20 +644,25 @@ def section_literature(lit, M, md, figs, plt, ours_cov, ours_bugs):
             axs[1].set_xticks(range(len(bugs))); axs[1].set_xticklabels([b[:14] for b in bugs], rotation=60, ha="right", fontsize=4.8)
             axs[1].set_ylabel("seeds detecting (%)", fontsize=7); axs[1].legend(fontsize=6)
         axs[1].set_title("(b) Measured: 15-bug PicoRV32 suite, per-bug detection", fontsize=7)
-        fig.tight_layout(); fig.savefig(figs / "fig_bug_detection.pdf"); plt.close(fig)
+        fig.tight_layout(); save(fig, figs, "fig_bug_detection"); plt.close(fig)
 
         fig, ax = plt.subplots(figsize=(3.45, 1.9))
         names = list(tp)
         vals = [tp[n]["insn_per_s"] for n in names]
         cols = ["#999999"] * len(names)
+        solo = load_runs(logs / "bench" / "throughput")
         for m in ("mutation", "random"):
-            if m in ours_cov and ours_cov[m]["insn_per_s"][0]:
-                names.append(f"BenchFuzz {METHOD_PLAIN[m]}\n(1 core, Verilator)"); vals.append(ours_cov[m]["insn_per_s"][0]); cols.append(COLORS[m])
+            if solo.get(m):           # dedicated single-process run on an idle machine
+                ips = st.mean(r["series"][-1]["n_instructions"] / r["series"][-1]["t"] for r in solo[m])
+                M[f"TputSolo{macro_name(m)}"] = f"{ips:,.0f}"
+                names.append(f"BenchFuzz {METHOD_PLAIN[m]}\n(1 process, idle host)"); vals.append(ips); cols.append(COLORS[m])
+            elif m in ours_cov and ours_cov[m]["insn_per_s"][0]:
+                names.append(f"BenchFuzz {METHOD_PLAIN[m]}\n(1 process, loaded host)"); vals.append(ours_cov[m]["insn_per_s"][0]); cols.append(COLORS[m])
         ax.barh(names[::-1], vals[::-1], color=cols[::-1]); ax.set_xscale("log")
         for i, v in enumerate(vals[::-1]):
             ax.text(v * 1.1, i, f"{v:,.0f}", va="center", fontsize=5.5)
         ax.set_xlabel("executed instructions / s (log)", fontsize=7); ax.tick_params(labelsize=5.5); ax.grid(alpha=.3, lw=.4, axis="x")
-        fig.tight_layout(); fig.savefig(figs / "fig_throughput.pdf"); plt.close(fig)
+        fig.tight_layout(); save(fig, figs, "fig_throughput"); plt.close(fig)
     md.append("## Literature (quoted, not re-measured)\n" + "\n".join(f"- {k}: {v.get('citation')} (peer-reviewed: {v.get('peer_reviewed')}); "
                                                                      f"comparable: {v.get('comparable_with_benchfuzz')}" for k, v in s.items()))
     return tab_tt, tab_enc
@@ -667,13 +703,21 @@ def main():
     tabs["unreached"] = section_unreached(logs, M, md)
     section_campaign(logs, M, md, figs, plt)
     section_yosys(logs, M, md)
-    tabs["lit_testcases"], tabs["lit_encarsia"] = section_literature(json.loads(Path(a.lit).read_text()), M, md, figs, plt, cov, bugagg)
+    tabs["lit_testcases"], tabs["lit_encarsia"] = section_literature(json.loads(Path(a.lit).read_text()), logs, M, md, figs, plt, cov, bugagg)
     for k, v in tabs.items():
         (gen / f"tab_{k}.tex").write_text(v or "\\emph{(no data)}")
     (gen / "results.tex").write_text(M.tex() + "\n")
     (logs / "comparison_report.md").write_text("\n\n".join(md) + "\n")
     print("\n\n".join(md))
     print(f"\n{len(M.items)} macros -> {gen / 'results.tex'}")
+    tex = paper / "main.tex"
+    if tex.exists():         # every data macro the paper uses must have been generated
+        body = tex.read_text(encoding="utf-8")
+        defined = set(re.findall(r"\\(?:newcommand|providecommand|def)\{?\\([A-Za-z]+)", body))
+        used = set(re.findall(r"\\([A-Z][A-Za-z]+)", body))
+        latex = {"IEEEauthorblockN", "IEEEauthorblockA", "IEEEkeywords", "RQ", "Stealth", "Undo", "IfFileExists", "Ochiai"}
+        missing = sorted(u for u in used - set(M.items) - defined - latex if not u.startswith("IEEE"))
+        print("paper macros missing from results.tex:", ", ".join(missing) if missing else "none")
 
 
 if __name__ == "__main__":

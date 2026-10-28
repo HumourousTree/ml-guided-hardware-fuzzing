@@ -47,3 +47,33 @@ lines), not four. `repaired_bugs` telemetry from v0.2.1 was wrong and was remove
 
 Still unverified (no Verilator in the authoring environment): C++ harness, coverage `.dat` format assumption, validity of the 7 new RTL
 edits as Verilog (markers/structure checked, never compiled), observability of the new bugs, everything in docs/BENCHMARK_PLAN.md.
+
+# v0.4 (everything run on Verilator 5.032 / Yosys 0.52 in WSL; see paper/ and results/v0.4/)
+
+Verified: the whole v0.3 "still unverified" list. All 15 bug edits compile; the C++ harness, `.dat` parser and Yosys script work;
+74 unit tests pass (`python3 -m unittest discover -s tests -t .`).
+
+Oracle and DUT
+- `picorv32_golden.sv` was NOT pristine upstream (REGS_INIT_ZERO default, simplified `mem_la_read`); it is now byte-identical to YosysHQ
+  master `ef203c2` (`tools/fetch_upstream.py --commit ef203c2`). Both edits were inert in this configuration (E0 identical).
+- E0 on master and on Cascade's commit `f00a88c`: 150/150 runs match. Convention probe: unmodified upstream reports word-aligned
+  `mem_addr` (lb 1(x1): 257 expected, 256 actual) -> the 2019/2016 discrepancy is a convention gap.
+- FENCE added to reference/validator/assembler as an architectural no-op. Cascade P6 (fence trap) reproduced on f00a88c; on master the
+  mutation fuzzer found that a FENCE with a non-zero reserved rd field writes 0 to rd (cf. YosysHQ/picorv32#293, closed as "no side
+  effect"). Both are E0 probes.
+
+Bug suite (15): + `fast_mul_decode_and_to_or` (literal brief; equivalent mutant, never detected), `fast_mul_rs2_signed_widened`,
+`store_after_store_dropped_intermittent`. E1: ddmin falls back to the original program when the state-preloading slice loses a
+micro-architectural failure; `fails()` requires a valid simulation (an invalid candidate used to count as "still fails").
+
+Benchmark: budgets in programs, parallel-safe `--bug` (private RTL copy), pre-built simulator, per-page coverage series, `--save-programs`,
+`--fence-rate`, `--stop-on-mismatch`, mismatch details and failing words saved; per-program artefacts deleted.
+`tools/run_full_evaluation.sh` runs the whole evaluation with N workers.
+
+New: hierarchical delta debugging + 1-minimality (`delta_debugger.hdd_reproducer`, `tools/hdd_eval.py`); guard controls and an
+Ochiai-ranked template-repair baseline driving the unchanged repair pipeline (`harness/template_repair.py`); unified co-coverage
+(`tools/unified_coverage.py`); unreached-RTL classification (`tools/uncovered_lines.py --universe-dat`); sourced literature values
+(`docs/literature_baselines.json`) and the comparative analysis that generates every table/figure/number of the paper
+(`tools/compare_literature.py`); IEEE-format paper (`paper/main.tex`).
+
+Not done: anything needing an LLM (semantic/hybrid generation, pass@k) - no API key in the evaluation environment.

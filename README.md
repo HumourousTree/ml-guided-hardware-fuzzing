@@ -1,4 +1,4 @@
-# ML Guided Hardware Fuzzing (v0.2, audited)
+# ML Guided Hardware Fuzzing / BenchFuzz (v0.4)
 
 LLM-guided differential fuzzing, delta-debugging and block-patch repair of the PicoRV32 RISC-V core.
 Lockstep RVFI comparison of Verilator-compiled RTL against a pure-Python RV32IM model.
@@ -10,6 +10,9 @@ python3 -m pip install -r requirements.txt
 python3 tools/apply_fixes.py                   # one-off: restores upstream mem_la_addr, patches dashboard.py
 python3 -m unittest discover -s tests -t .     # software-DUT tests (3 need the RTL files)
 python3 -m harness.run_experiments --experiment E0   # control: upstream RTL must be 100% matching
+bash tools/run_full_evaluation.sh 7                  # E0-E2, coverage + time-to-bug benchmark, H-DD (hours)
+python3 -m harness.template_repair --budget 30       # repair-gate controls + template-repair baseline
+python tools/compare_literature.py                   # regenerate paper/generated + paper/figures (needs matplotlib)
 streamlit run dashboard.py --server.address 0.0.0.0 --server.port 8501
 ```
 
@@ -27,3 +30,5 @@ streamlit run dashboard.py --server.address 0.0.0.0 --server.port 8501
 `PICO_GOLDEN_RECOVERY=1` (allow restoring golden RTL on failure; reported separately, never a "repair").
 
 Telemetry: `logs/pico_campaign_telemetry.json`. See `CHANGES.md` for the audit.
+
+Paper: `paper/main.tex` (IEEEtran; numbers come from `paper/generated/results.tex`). Results of the v0.4 evaluation: `results/v0.4/`.
