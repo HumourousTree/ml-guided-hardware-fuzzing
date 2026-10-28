@@ -28,3 +28,22 @@ repo-level tests in `tests/test_repo_integrity.py`. Run the suite and `--experim
 14. Coverage: cumulative Verilator merge via `.dat` parser; correct denominators; no zero-pattern inflation.
 15. Yosys parsing, telemetry build flags, VCD accumulation, dashboard legacy keys, crash status, Gemini history growth.
 16. Experiments: broader E0, injection errors reported, timing excludes compile, E6 containment metric.
+
+# v0.3 (post-audit runs, real-RTL checks, benchmark framework)
+
+New: `harness/asm.py` (RV32IM assembler with line-numbered errors), `harness/semantic_gen.py` (ChipFuzzer-style target-line
+generation with syntax/semantic correction), `harness/benchmark.py` (random / mutation / semantic / hybrid generators, plateau rule,
+campaign runner, statistics), `harness/repair_eval.py` (pass@k, independent samples), `hw_design/bug_manifest_v2.json` +
+multi-edit `bug_injector.py` (7 new bugs, tiers L1-L3), `tools/fetch_upstream.py`, `tools/analyze_bench.py`, `tools/uncovered_lines.py`,
+`docs/BENCHMARK_PLAN.md`, E0 convention probe, `--suite` for E1/E2.
+
+Fixed after running on the real RTL: the localiser's memory block missed the bus state machine (where `mem_addr` is registered) and the
+instruction-launch block (`latched_rd`); both are now offered. All 12 bugs' edits lie inside an offered block (`tests/test_repo_integrity.py`).
+Fixed earlier in v0.2.x: acceptance check now re-runs programs at the same memory delay as before the repair; Gemini expansion retry and
+statistics; rollback reasons recorded and fed back; fallback mutator retries until valid.
+
+Correction to an earlier statement: the 552-iteration run repaired all five injected bugs (the iteration-14 patch removed two injected
+lines), not four. `repaired_bugs` telemetry from v0.2.1 was wrong and was removed in v0.2.2.
+
+Still unverified (no Verilator in the authoring environment): C++ harness, coverage `.dat` format assumption, validity of the 7 new RTL
+edits as Verilog (markers/structure checked, never compiled), observability of the new bugs, everything in docs/BENCHMARK_PLAN.md.

@@ -165,6 +165,8 @@ class RV32IReference:
             byte_offset = mem_addr & 3
             mem_wmask = ((1 << size) - 1) << byte_offset
             mem_wdata = (b & ((1 << (size * 8)) - 1)) << (byte_offset * 8)
+        elif opcode == 0x0F and funct3 == 0:  # FENCE: architectural no-op on a single in-order hart
+            pass
         else:
             raise ValueError(f"unsupported RV32I instruction: 0x{insn:08x} at 0x{pc:08x}")
 
