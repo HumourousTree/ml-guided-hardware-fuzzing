@@ -60,6 +60,14 @@ class TestFramework(unittest.TestCase):
         self.assertTrue(4 <= len(g.corpus) < 200)
         for p in [g.next(None)[0] for _ in range(20)]: self.assertTrue(analyze_program([int(w, 0) for w in p["words"]])["ok"])
 
+    def test_campaign_stops_when_the_simulator_keeps_failing(self):
+        class Broken:
+            universe = set()
+            def run(self, prog): return RunResult(False, 0, set(), False, "simulator build failed")
+        res = run_campaign(Broken(), RandomGen(random.Random(1)), budget_programs=10)
+        self.assertEqual(res["series"], [])
+        self.assertEqual(res["harness_error"], "simulator build failed")
+
     def test_plateau_rule(self):
         self.assertFalse(bm.plateau_reached([1.0] * 50, 100, .1))
         self.assertTrue(bm.plateau_reached([50.0] + [60.0] * 100 + [60.05], 100, .1) or bm.plateau_reached([60.0] * 102, 100, .1))

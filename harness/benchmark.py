@@ -250,9 +250,9 @@ def run_campaign(backend, gen, *, budget_seconds: float | None = None, budget_pr
     t0 = clock()
     covered: set[str] = set()
     pages: dict[str, int] = {}
-    series, n_prog, n_ins, bug = [], 0, 0, None
+    series, n_prog, n_ins, bug, harness_error = [], 0, 0, None, None
     state = {"covered": covered, "universe": backend.universe, "pct_history": [], "n_programs": 0, "t": 0.0}
-    while True:
+    while harness_error is None:
         state["t"] = clock() - t0
         if budget_seconds is not None and state["t"] >= budget_seconds: break
         if budget_programs is not None and n_prog >= budget_programs: break
@@ -261,7 +261,14 @@ def run_campaign(backend, gen, *, budget_seconds: float | None = None, budget_pr
         for prog in batch:
             res = prog.pop("_result", None) or backend.run(prog)
             if not res.ok:
+                # failed runs do not count against the budget, so a broken build (e.g. a full /tmp) would loop forever
+                failures = state.get("consecutive_failures", 0) + 1
+                state["consecutive_failures"] = failures
+                if failures >= 25:
+                    harness_error = res.error
+                    break
                 continue
+            state["consecutive_failures"] = 0
             fresh = res.covered - covered
             new = len(fresh)
             for k in fresh:
@@ -285,6 +292,7 @@ def run_campaign(backend, gen, *, budget_seconds: float | None = None, budget_pr
     for k in backend.universe:
         universe_pages[page_of(k)] = universe_pages.get(page_of(k), 0) + 1
     return {"label": label or gen.name, "method": gen.name, "series": series, "universe": len(backend.universe),
+            "harness_error": harness_error,
             "universe_pages": universe_pages,
             "bug_detected": bug, "switched_at": getattr(gen, "switched_at", None),
             "covered_points": sorted(covered), "wall_seconds": round(clock() - t0, 3)}

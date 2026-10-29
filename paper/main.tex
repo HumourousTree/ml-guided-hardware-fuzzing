@@ -52,10 +52,10 @@ unmodified YosysHQ PicoRV32 the oracle produces no false alarm in \EzMasterMatch
 long-open \code{mem_addr} discrepancy as a presentation-convention gap. The same harness reproduces Cascade's PicoRV32 bug P6
 (CVE-2023-34899) on the commit Cascade evaluated, both with a directed probe and with blind fuzzing in a median of \PSixRandomProgs{}
 programs, and its mutation fuzzer exposes a residual specification deviation on current master: a \code{fence} with a non-zero
-reserved \code{rd} field writes zero to that register. Across ten seeds per method, constrained-random and coverage-guided mutational fuzzing saturate every reachable RTL line of
+reserved \code{rd} field writes zero to that register. Across \CovSeeds{} seeds per method, constrained-random and coverage-guided mutational fuzzing saturate every reachable RTL line of
 the RV32IM configuration within a few hundred programs; all \UnrLineUnreached{} unreached line points are configuration-dead or outside
-the ISA scope. Blind fuzzing detects \BugMutationAny{} of the \BugCount{} injected bugs, three tiers from bit-level operator faults to an
-intermittent bus-protocol fault, while one literal mutation from the original brief proves to be an equivalent mutant. Delta debugging
+the ISA scope. Blind random fuzzing detects \BugRandomAny{} of the \BugCount{} injected bugs, three tiers from bit-level operator faults to an
+intermittent bus-protocol fault, while one literal mutation from the original brief is equivalent on every valid program. Delta debugging
 reduces fuzzer-found failures by a median \HddLenRedMedian\% in length and \HddCycRedMedian\% in cycles. Positive and negative
 controls confirm that the repair gates accept correct patches and reject wrong ones, and a spectrum-ranked template-repair baseline
 fixes \RepTplAccepted{} of \RepBugs{} observable bugs without an LLM. We tabulate the published results of ChipFuzzer, Cascade,
@@ -93,9 +93,9 @@ mux-toggle, register-toggle), budgets and reference simulators, so a table that 
         commit used by Cascade, and a resolution of the \code{mem_addr} 2019/2016 discrepancy as a convention gap.
   \item A \textbf{reproduction of a published bug}, Cascade P6, on the same DUT commit, and a \textbf{residual FENCE deviation} on
         current upstream master found by mutational fuzzing (Sec.~\ref{sec:p6}).
-  \item A \textbf{15-bug, three-tier injection suite} with observability checks, including an equivalent mutant and an intermittent
+  \item A \textbf{15-bug, three-tier injection suite} with observability checks, including a mutant that is equivalent on all valid programs and an intermittent
         bus fault (Sec.~\ref{sec:bugs}).
-  \item \textbf{Head-to-head coverage and time-to-bug benchmarks} with ten seeds, confidence intervals and Mann--Whitney tests on one
+  \item \textbf{Head-to-head coverage and time-to-bug benchmarks} with seven to ten seeds, confidence intervals and Mann--Whitney tests on one
         harness (Secs.~\ref{sec:rq2}--\ref{sec:rq3}), and a classification of everything left uncovered.
   \item \textbf{Hierarchical delta debugging} over basic blocks and instructions, evaluated against flat ddmin on fuzzer-found failures
         with a 1-minimality check (Sec.~\ref{sec:rq4}).
@@ -196,7 +196,7 @@ after, instruction, destination register and value, memory address, masks and da
 \begin{equation}
   \mathrm{ok}(p) \iff |R^{\mathrm{RTL}}| = |R^{\mathrm{ISS}}| \;\wedge\; \forall i:\; \pi\!\left(r_i^{\mathrm{ISS}}\right) = r_i^{\mathrm{RTL}},
 \end{equation}
-where $\pi$ applies the DUT's presentation convention. For PicoRV32 (riscv-formal \code{ALIGNED_MEM}) $\pi$ replaces the architectural
+where $\pi$ applies the DUT's presentation convention. For PicoRV32 (riscv-formal~\cite{riscvformal} \code{ALIGNED_MEM}) $\pi$ replaces the architectural
 address $a$ by $a \wedge \lnot 3$ and leaves the byte lane to the masks. Missing and extra retirements are failures, so a core that traps
 early cannot pass by default. The DUT is built with \code{ENABLE_FAST_MUL}, \code{ENABLE_DIV} and \code{REGS_INIT_ZERO}; the validator
 accepts exactly RV32IM plus \code{fence}.
@@ -238,8 +238,8 @@ Each bug is a list of exact-text edits applied to a fresh copy of the golden RTL
 unique). Table~\ref{tab:e1} lists the suite. Tier L1 contains signal and operator faults, L2 control and block faults, and L3 system and
 protocol faults. Five legacy bugs come from the prototype; they contain conspicuous constants (for instance \code{latched_rd == 5}) that
 an LLM can spot by reading, so ten plain mutations were added. Three items of the original brief needed refinement (details in
-Appendix~\ref{app:brief}): the only AND operators in \code{picorv32_pcpi_fast_mul} are logical; mutating that decode term is our
-equivalent mutant, so we also add an observable signedness fault inside the same module and keep the bitwise AND$\rightarrow$OR in the ALU.
+Appendix~\ref{app:brief}): the only AND operators in \code{picorv32_pcpi_fast_mul} are logical; mutating that decode term gives a mutant
+that is equivalent on valid programs (Sec.~\ref{sec:rq3}), so we also add an observable signedness fault inside the same module and keep the bitwise AND$\rightarrow$OR in the ALU.
 \code{mem_ready} is a testbench input, so the handshake fault is placed in the core's reaction to it, in a deterministic and an
 intermittent (timing-gated) variant. Interrupt trap flags are unobservable with \code{ENABLE_IRQ=0} and no interrupt model in the
 reference, so an uncleared \code{latched_branch} flag substitutes.
@@ -260,8 +260,10 @@ over a pool of interesting values), \emph{Cov.-guided mutation} (an AFL-style co
 by bit flips outside the opcode, swaps, splices, immediate rewrites and fresh segments), and \emph{Hybrid} (mutation until the plateau rule
 fires, then random, the equal-budget control for ChipFuzzer's plateau switch). These are re-implementations of strategies, not the
 published tools. Budgets are counted in validated programs, the testcase unit of ChipFuzzer's Table~2, so results do not depend on
-machine load: \CovN{} programs per coverage run and \BugBudget{} per time-to-bug run; ten seeds per configuration. Seven runs shared the
-CPU, so throughput is per process under load.
+machine load: \CovN{} programs per coverage run (\CovSeeds{} seeds per method) and \BugBudget{} per time-to-bug run (ten seeds per bug and
+method). Between seven and twelve
+processes shared the eight cores, so seconds and per-process throughput in the benchmark tables are measured under load; a separate
+single-process run on the idle machine gives the throughput figure of Sec.~\ref{sec:sota}.
 
 \paragraph*{LLM availability} No LLM key was available in this evaluation environment. LLM generation and LLM repair (pass@$k$) are
 implemented and unit-tested with a scripted model; their measurement is future work, and every LLM-dependent statement below refers to
@@ -357,11 +359,21 @@ budget (dashed line); the number is the count of such seeds.}\label{fig:ttb}
 \end{table}
 Figure~\ref{fig:ttb} and Tables~\ref{tab:ttb}--\ref{tab:tiers} report detection. Random detects \BugRandomAny{} and mutation
 \BugMutationAny{} of the \BugCount{} bugs in at least one seed (\BugRandomAll{} and \BugMutationAll{} in every seed; per-run detection rates
-\BugRandomRunRate\% and \BugMutationRunRate\%). The literal AND$\rightarrow$OR mutation in the multiplier's decode is never detected by
-the targeted stimulus or by fuzzing, consistent with it being an equivalent mutant: the funct3 case below the decode still selects only
-the four multiply instructions. Bugs with conspicuous trigger conditions (legacy \code{approx_multiplier}, \code{writeback_forwarding_drop})
-need specific operand values or register numbers and dominate the misses, whereas plain operator mutations are found within a handful of
-programs, showing that random RV32IM programs are effective at exposing datapath faults on a small in-order core.
+\BugRandomRunRate\% and \BugMutationRunRate\%). The literal AND$\rightarrow$OR mutation in the multiplier's decode is never detected, by the targeted stimulus or
+by any fuzzing run. By inspection it is equivalent on every valid RV32IM program: decoded instructions never reach the PCPI bus, and
+\code{funct7=1} R-type instructions already satisfy both terms. It differs only for encodings the core does not decode, which PicoRV32
+forwards to PCPI: with the mutation the multiplier would claim an illegal instruction with \code{funct7=1} and retire it instead of
+trapping. Our validator excludes illegal encodings, so the mutant is out of reach by construction; the whole-core equivalence check
+did not terminate within 600\,s, so we do not claim formal equivalence.
+
+Apart from that mutant, only \code{approx_multiplier} resists: its trigger is a conjunction of two operand nibbles of a multiplication
+(about one MUL in 256 even with uniformly random operands), and random found it in 2 of 10 seeds, mutation in none. Every other bug is
+detected in every seed, with median latencies of one to three programs in each tier (Table~\ref{tab:tiers}). The tier of a fault, its
+structural level, therefore does not predict how hard it is to trigger; the specificity of its activation condition does. Even the legacy
+\code{writeback_forwarding_drop}, whose trigger names register x5, is hit by the first program because the random preamble writes and
+re-reads every low register. Coverage guidance does not help detection here: mutation is never faster than random by more than a program
+and is slower on the signedness fault in the multiplier (median 52 against 10.5 programs) and on the intermittent store fault (21 against
+11), because its corpus concentrates on programs that toggled new bits rather than on fresh operand combinations.
 
 \subsection{RQ4: How small do failures get, at what cost?}\label{sec:rq4}
 \begin{table}[t]
@@ -380,7 +392,12 @@ The state-preloading slice kept the failure in \HddSliceKept{} cases; otherwise 
 matters for faults in micro-architectural state (\code{stale_latched_branch}). HDD and flat ddmin reached the same size in
 \HddSameSize{} cases and HDD a smaller one in \HddSmaller; HDD needed fewer oracle tests in \HddFewerTests{} cases (medians
 \HddTestsMedian{} versus \DdminTestsMedian, Fig.~\ref{fig:hdd}). \HddOneMinimalPct\% of HDD and \DdminOneMinimalPct\% of ddmin results were
-1-minimal.
+1-minimal. The hierarchy does not pay off here because the state-preloading slice does most of the work: it already cuts the failing
+program to the window before the failing retirement (median 19 instructions), and at that size flat ddmin needs only about six
+simulations while HDD's extra basic-block level is overhead. HDD is designed for long, structured inputs; fuzzer failures on an in-order
+core that diverge within tens of instructions are not such inputs, and we would expect the balance to change for long Cascade-style
+programs whose failure needs distant state set-up that the slice cannot preload (micro-architectural state, as in
+\code{stale_latched_branch}).
 
 \subsection{RQ5: Do the repair gates work, and how far does a non-LLM baseline get?}\label{sec:rq5}
 \begin{table}[t]
@@ -450,7 +467,8 @@ reachable space leaves it little room.
 %% =====================================================================
 \section{Comparison with the State of the Art}\label{sec:sota}
 %% =====================================================================
-Tables~\ref{tab:lit}--\ref{tab:enc} quote published results; none was re-measured, and \emph{the rows are not comparable with our
+Tables~\ref{tab:lit}--\ref{tab:enc} and Figs.~\ref{fig:eff} and~\ref{fig:det} quote published results (testcase efficiency in
+Table~\ref{tab:tt}, Encarsia detection in Table~\ref{tab:enc}); none was re-measured, and \emph{the rows are not comparable with our
 measurements}: different cores (RocketCore, BOOM, CVA6 versus PicoRV32), coverage definitions (condition, mux- and register-toggle versus
 Verilator line/toggle/branch), budgets (24\,h versus program counts) and references (Spike versus our Python model). Two numbers are
 comparable in kind: our reproduction of Cascade P6 on the same commit, and executed instructions per second as an order of magnitude.
@@ -504,8 +522,9 @@ adds minimisation, localisation and gated repair; ChipFuzzer has path-similarity
 bug-guided stage with historical priors and seed fusion, which we lack. Relative to Cascade, BenchFuzz checks every retirement instead of
 relying on program termination, at the cost of a reference model, and does not cover CSRs or privilege.
 
-\paragraph*{Throughput} Our loop executes about \CovRandomInsnPerS{} instructions per second per process under load
-(Fig.~\ref{fig:tput}), below Cascade's 2{,}489 and three orders of magnitude below TurboFuzz. Each 30-instruction program costs one
+\paragraph*{Throughput} Run alone on the idle machine, our loop executes \TputSoloRandom{} (random) and \TputSoloMutation{}
+(mutation, longer programs) instructions per second in one process (Fig.~\ref{fig:tput}), below Cascade's 2{,}489 and three orders of
+magnitude below TurboFuzz. Each 30-instruction program costs one
 process launch, a Verilator coverage dump and a Python reference run; batching programs per simulation and a native reference would be the
 first optimisations, and the FPGA path below the decisive one.
 
@@ -589,8 +608,9 @@ Code, logs and the generator of every table and figure: branch \code{v0.3-evalua
   \item \emph{Names.} The tool is ChipFuzzer (not ``ChipFuzz''); ChipFuzzer and TurboFuzz are preprints, not peer-reviewed.
   \item \emph{24-hour condition coverage on RocketCore/BOOM/CVA6 and Encarsia rates} are quoted (Tables~\ref{tab:lit}--\ref{tab:enc}) but
         cannot be cross-referenced numerically with PicoRV32 telemetry; we compare methods on one harness instead.
-  \item \emph{AND$\rightarrow$OR in \code{picorv32_pcpi_fast_mul}:} the module has only logical ANDs; the literal mutation is an equivalent
-        mutant (measured, Sec.~\ref{sec:rq3}); an observable signedness fault in the same module and a bitwise AND$\rightarrow$OR in the ALU are used.
+  \item \emph{AND$\rightarrow$OR in \code{picorv32_pcpi_fast_mul}:} the module has only logical ANDs; the literal mutation is
+        equivalent on every valid program and observable only through illegal encodings (Sec.~\ref{sec:rq3}); an observable signedness
+        fault in the same module and a bitwise AND$\rightarrow$OR in the ALU are used.
   \item \emph{Stuck-at on low \code{mem_addr} bits:} bits 1:0 are always zero under the word-aligned convention, so bit 2 is used.
   \item \emph{\code{mem_ready} drops} are injected in the core's reaction to the testbench input (deterministic and intermittent variants).
   \item \emph{Uncleared interrupt trap flags} are unobservable with \code{ENABLE_IRQ=0}; an uncleared \code{latched_branch} substitutes.

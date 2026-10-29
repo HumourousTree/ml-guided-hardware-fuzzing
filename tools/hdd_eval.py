@@ -10,6 +10,7 @@ static length, dynamic retired instructions and cycles before/after, oracle test
 """
 import argparse
 import json
+import shutil
 import sys
 import time
 from collections import defaultdict
@@ -79,6 +80,7 @@ def main():
             print(f"{bug:40s} {r['method']:9s} s{r['seed']}: {rec['original_length']}->{rec['slice_length']}"
                   f"(slice {'ok' if slice_ok else 'LOST'}) ddmin {rec['ddmin']['length']}/{rec['ddmin']['tests']}t "
                   f"hdd {rec['hdd']['length']}/{rec['hdd']['tests']}t cycles {rec['original_cycles']}->{rec['hdd']['cycles']}", flush=True)
+        shutil.rmtree(work, ignore_errors=True)       # a Verilator build is ~250 MB; /tmp may be a small tmpfs
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
     Path(a.out).write_text(json.dumps(results, indent=2))
 

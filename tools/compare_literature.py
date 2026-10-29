@@ -219,7 +219,7 @@ def section_coverage(logs, M, md, figs, plt):
         mc = mean_ci(fin)
         summary[m] = {"cov_at_N": mc, "thr90": thr[0.90], "thr99": thr[0.99], "plateau": mean_ci(plat), "plateau_runs": len(plat),
                       "insn_per_s": mean_ci(ips), "prog_per_s": mean_ci(pps), "runs": len(rs),
-                      "union": len(set().union(*[set(r["covered_points"]) for r in rs]))}
+                      "union": len(set().union(*[set(r.get("covered_points", [])) for r in rs]))}
         key = macro_name(m)
         M[f"Cov{key}Mean"], M[f"Cov{key}Ci"] = f"{mc[0]:.2f}", f"{mc[1]:.2f}"
         M[f"Cov{key}Plateau"] = fmt(summary[m]["plateau"][0], 0)
@@ -236,7 +236,7 @@ def section_coverage(logs, M, md, figs, plt):
             u, p = mann_whitney(finals[a], finals[b])
             pw[f"{a} vs {b}"] = p
             M[f"P{macro_name(a)}{macro_name(b)}"] = f"{p:.3f}" if p is not None else "--"
-    unions = {m: set().union(*[set(r["covered_points"]) for r in runs[m]]) for m in ms}
+    unions = {m: set().union(*[set(r.get("covered_points", [])) for r in runs[m]]) for m in ms}
     for a in ms:
         for b in ms:
             if a != b:

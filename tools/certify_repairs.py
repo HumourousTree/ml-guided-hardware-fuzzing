@@ -10,6 +10,7 @@ directed witness for any candidate listed in WITNESSES and records whether it ex
 """
 import argparse
 import json
+import shutil
 import sys
 from pathlib import Path
 
@@ -51,6 +52,9 @@ def witness(bug: str, cand: str) -> dict | None:
     prog = {"id": f"witness-{bug}", "base": "0x00000000", "words": [f"0x{w:08x}" for w in WITNESSES[bug]]}
     sim = build_and_simulate_program(rtl, prog, work, generate_vcd=False)
     cmp = compare_rvfi_trace(prog, sim.get("hardware_trace", []), hardware_trap=sim.get("hardware_trap", False))
+    shutil.rmtree(work, ignore_errors=True)
+    if not sim["ok"]:
+        return {"exposes_patch": None, "error": sim.get("error")}
     mm = (cmp["mismatches"] or [None])[0]
     return {"exposes_patch": bool(mm), "mismatch": mm and {k: mm.get(k) for k in ("insn_disasm", "differences")}}
 
