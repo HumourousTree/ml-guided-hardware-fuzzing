@@ -1,0 +1,18 @@
+\begin{tabular}{@{}l c l r r c c@{}}\toprule
+Bug & Tier & Failing field / kind & Stim. & Min. & Loc. & Hit\\\midrule
+\texttt{approx\_multiplier} & L1 & field\_mismatch & 6 & 4 & multiplier & \checkmark\\
+\texttt{alu\_operator\_xor\_or} & L1 & field\_mismatch & 4 & 3 & alu & \checkmark\\
+\texttt{branch\_inversion\_blt} & L2 & field\_mismatch & 6 & 3 & branch & \checkmark\\
+\texttt{writeback\_forwarding\_drop} & L2 & field\_mismatch & 5 & 3 & alu & \checkmark\\
+\texttt{mem\_handshake\_drop} & L3 & field\_mismatch & 6 & 2 & memory & \checkmark\\
+\texttt{and\_to\_or\_alu} & L1 & field\_mismatch & 5 & 3 & alu & \checkmark\\
+\texttt{fast\_mul\_decode\_and\_to\_or} & -- & \multicolumn{5}{l}{not observable (equivalent mutant)}\\
+\texttt{fast\_mul\_rs2\_signed\_widened} & L1 & field\_mismatch & 5 & 4 & multiplier & \checkmark\\
+\texttt{mem\_addr\_bit2\_stuck} & L1 & field\_mismatch & 7 & 2 & memory & \checkmark\\
+\texttt{slt\_signed\_as\_unsigned} & L1 & field\_mismatch & 6 & 3 & alu & \checkmark\\
+\texttt{beq\_inverted} & L2 & field\_mismatch & 6 & 2 & branch & \checkmark\\
+\texttt{lui\_auipc\_rd\_x0} & L2 & field\_mismatch & 5 & 2 & fetch\_launch & \checkmark\\
+\texttt{store\_after\_store\_dropped} & L3 & field\_mismatch & 7 & 2 & memory & \checkmark\\
+\texttt{store\_after\_store\_dropped\_intermittent} & L3 & field\_mismatch & 27 & 6 & memory & \checkmark\\
+\texttt{stale\_latched\_branch} & L3 & field\_mismatch & 8 & 3 & branch & \checkmark\\
+\bottomrule\end{tabular}

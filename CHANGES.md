@@ -48,10 +48,29 @@ lines), not four. `repaired_bugs` telemetry from v0.2.1 was wrong and was remove
 Still unverified (no Verilator in the authoring environment): C++ harness, coverage `.dat` format assumption, validity of the 7 new RTL
 edits as Verilog (markers/structure checked, never compiled), observability of the new bugs, everything in docs/BENCHMARK_PLAN.md.
 
-# v0.4 (everything run on Verilator 5.032 / Yosys 0.52 in WSL; see paper/ and results/v0.4/)
+# v0.4 (everything run on Verilator 5.032 / Yosys 0.52 in WSL; paper in paper/, compact results in results/v0.4/)
 
+## Headline results
+- E0: 150/150 runs match on YosysHQ master ef203c2, on Cascade's f00a88c and on the golden copy; 0 mismatches in the 210,000
+  programs of the coverage benchmark. The 2019/2016 `mem_addr` discrepancy is a convention gap present on pristine upstream.
+- Cascade P6 (fence trap, CVE-2023-34899) reproduced on f00a88c (probe + blind fuzzing, 10/10 seeds). On current master the
+  mutation fuzzer found that a FENCE with a non-zero reserved rd field writes 0 to rd (9/10 seeds; random 0/10). Related upstream
+  issue YosysHQ/picorv32#293 was closed as "no side effect".
+- Coverage (7 seeds, 10k programs): mutation 64.57%, hybrid 64.21%, random 63.79% (p<0.002); every reachable line is covered
+  within a few hundred programs; all 64 unreached line points are configuration-dead or outside the ISA scope. The ChipFuzzer
+  plateau rule fires prematurely (~200 programs).
+- Time-to-bug (15 bugs, 10 seeds, 1000 programs): random finds 14/15, mutation 13/15; median latency 1-3 programs in every tier;
+  approx_multiplier is hard (2/10), the decode AND->OR mutant is equivalent on valid programs.
+- Delta debugging on 80 fuzzer failures: 36 -> 3 instructions median (93%), cycles -86%; all results 1-minimal; HDD rarely beats
+  flat ddmin because slicing already shortens programs to ~19 instructions.
+- Repair: guard controls pass on 14/14 observable bugs; Ochiai template repair gets 9 gate-passing patches, only 7 formally certified:
+  one wrong for rare MUL operands (directed witness), one changes only the `mem_la_write` output (2400/2401 points proven).
+- C_U ranks random above mutation although mutation covers more RTL toggle bits: report components.
+- PicoRV32 for Zynq UltraScale+ (Yosys synth_xilinx xcup): 1,502 LUTs, 945 FFs, 4 DSP48E2.
+
+## Code changes
 Verified: the whole v0.3 "still unverified" list. All 15 bug edits compile; the C++ harness, `.dat` parser and Yosys script work;
-74 unit tests pass (`python3 -m unittest discover -s tests -t .`).
+75 unit tests pass (`python3 -m unittest discover -s tests -t .`).
 
 Oracle and DUT
 - `picorv32_golden.sv` was NOT pristine upstream (REGS_INIT_ZERO default, simplified `mem_la_read`); it is now byte-identical to YosysHQ

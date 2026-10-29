@@ -1,0 +1,19 @@
+\begin{tabular}{@{}l c r r r r@{}}\toprule
+& & \multicolumn{2}{c}{Random} & \multicolumn{2}{c}{Cov.-guided mut.}\\\cmidrule(lr){3-4}\cmidrule(l){5-6}
+Bug & Tier & Det. & Progs (med.) & Det. & Progs (med.)\\\midrule
+\texttt{alu\_operator\_xor\_or} & L1 & 10/10 & 7 & 10/10 & 14\\
+\texttt{and\_to\_or\_alu} & L1 & 10/10 & 2 & 10/10 & 2\\
+\texttt{approx\_multiplier} & L1 & 2/10 & 554 & 0/10 & --\\
+\texttt{fast\_mul\_decode\_and\_to\_or} & L1 & 0/10 & -- & 0/10 & --\\
+\texttt{fast\_mul\_rs2\_signed\_widened} & L1 & 10/10 & 10 & 10/10 & 52\\
+\texttt{mem\_addr\_bit2\_stuck} & L1 & 10/10 & 1 & 10/10 & 1\\
+\texttt{slt\_signed\_as\_unsigned} & L1 & 10/10 & 1 & 10/10 & 2\\
+\texttt{beq\_inverted} & L2 & 10/10 & 3 & 10/10 & 2\\
+\texttt{branch\_inversion\_blt} & L2 & 10/10 & 3 & 10/10 & 8\\
+\texttt{lui\_auipc\_rd\_x0} & L2 & 10/10 & 1 & 10/10 & 1\\
+\texttt{writeback\_forwarding\_drop} & L2 & 10/10 & 1 & 10/10 & 1\\
+\texttt{mem\_handshake\_drop} & L3 & 10/10 & 4 & 10/10 & 4\\
+\texttt{stale\_latched\_branch} & L3 & 10/10 & 1 & 10/10 & 1\\
+\texttt{store\_after\_store\_dropped} & L3 & 10/10 & 2 & 10/10 & 2\\
+\texttt{store\_after\_store\_dropped\_intermittent} & L3 & 10/10 & 11 & 10/10 & 21\\
+\bottomrule\end{tabular}

@@ -1,0 +1,562 @@
+{
+  "experiment": "E1",
+  "timestamp": "2026-10-28T21:41:17.773295+00:00",
+  "bug_count": 15,
+  "results": {
+    "approx_multiplier": {
+      "bug_id": "approx_multiplier",
+      "name": "Pentium-Style Approximate Multiplier",
+      "level": "L1",
+      "subsystem": "multiplier",
+      "detected": true,
+      "detection_time_seconds": 0.052,
+      "failure_kind": "field_mismatch",
+      "failing_instruction": "mul x3, x1, x2",
+      "failure_index_k": 3,
+      "slice_mode": "state_preload",
+      "reproducer_fails": true,
+      "ddmin_input": "slice",
+      "minimal_fails": true,
+      "original_length": 6,
+      "minimal_length": 4,
+      "original_cycles": 38,
+      "minimal_cycles": 29,
+      "suite": "legacy",
+      "slice_reduction_pct": 33.3,
+      "ddmin_tests": 3,
+      "localized_subsystem": "multiplier",
+      "localization_candidates": [
+        [
+          2318,
+          2413
+        ]
+      ],
+      "fault_line": 2411,
+      "localization_contains_fault": true,
+      "primary_contains_fault": true,
+      "localized_snippet_line_count": 96
+    },
+    "alu_operator_xor_or": {
+      "bug_id": "alu_operator_xor_or",
+      "name": "ALU Operator Mutation (XOR -> OR)",
+      "level": "L1",
+      "subsystem": "alu",
+      "detected": true,
+      "detection_time_seconds": 0.051,
+      "failure_kind": "field_mismatch",
+      "failing_instruction": "xori x2, x1, -1",
+      "failure_index_k": 1,
+      "slice_mode": "state_preload",
+      "reproducer_fails": true,
+      "ddmin_input": "slice",
+      "minimal_fails": true,
+      "original_length": 4,
+      "minimal_length": 3,
+      "original_cycles": 26,
+      "minimal_cycles": 23,
+      "suite": "legacy",
+      "slice_reduction_pct": 25.0,
+      "ddmin_tests": 1,
+      "localized_subsystem": "alu",
+      "localization_candidates": [
+        [
+          1228,
+          1288
+        ],
+        [
+          1305,
+          1363
+        ]
+      ],
+      "fault_line": 1275,
+      "localization_contains_fault": true,
+      "primary_contains_fault": true,
+      "localized_snippet_line_count": 61
+    },
+    "branch_inversion_blt": {
+      "bug_id": "branch_inversion_blt",
+      "name": "Branch Signed Comparison Inversion",
+      "level": "L2",
+      "subsystem": "branch",
+      "detected": true,
+      "detection_time_seconds": 0.101,
+      "failure_kind": "field_mismatch",
+      "failing_instruction": "blt x1, x2, 8",
+      "failure_index_k": 2,
+      "slice_mode": "state_preload",
+      "reproducer_fails": true,
+      "ddmin_input": "slice",
+      "minimal_fails": true,
+      "original_length": 6,
+      "minimal_length": 3,
+      "original_cycles": 32,
+      "minimal_cycles": 23,
+      "suite": "legacy",
+      "slice_reduction_pct": 50.0,
+      "ddmin_tests": 3,
+      "localized_subsystem": "branch",
+      "localization_candidates": [
+        [
+          1228,
+          1288
+        ],
+        [
+          1490,
+          1550
+        ]
+      ],
+      "fault_line": 1242,
+      "localization_contains_fault": true,
+      "primary_contains_fault": true,
+      "localized_snippet_line_count": 61
+    },
+    "writeback_forwarding_drop": {
+      "bug_id": "writeback_forwarding_drop",
+      "name": "Register Writeback Hazard Drop",
+      "level": "L2",
+      "subsystem": "regfile",
+      "detected": true,
+      "detection_time_seconds": 0.052,
+      "failure_kind": "field_mismatch",
+      "failing_instruction": "addi x6, x5, 1",
+      "failure_index_k": 1,
+      "slice_mode": "state_preload",
+      "reproducer_fails": true,
+      "ddmin_input": "slice",
+      "minimal_fails": true,
+      "original_length": 5,
+      "minimal_length": 3,
+      "original_cycles": 29,
+      "minimal_cycles": 23,
+      "suite": "legacy",
+      "slice_reduction_pct": 40.0,
+      "ddmin_tests": 1,
+      "localized_subsystem": "alu",
+      "localization_candidates": [
+        [
+          1228,
+          1288
+        ],
+        [
+          1305,
+          1363
+        ]
+      ],
+      "fault_line": 1344,
+      "localization_contains_fault": true,
+      "primary_contains_fault": false,
+      "localized_snippet_line_count": 61
+    },
+    "mem_handshake_drop": {
+      "bug_id": "mem_handshake_drop",
+      "name": "Memory Handshake Protocol Drop",
+      "level": "L3",
+      "subsystem": "memory",
+      "detected": true,
+      "detection_time_seconds": 0.052,
+      "failure_kind": "field_mismatch",
+      "failing_instruction": "sh x2, 2(x1)",
+      "failure_index_k": 2,
+      "slice_mode": "state_preload",
+      "reproducer_fails": true,
+      "ddmin_input": "slice",
+      "minimal_fails": true,
+      "original_length": 6,
+      "minimal_length": 2,
+      "original_cycles": 38,
+      "minimal_cycles": 0,
+      "suite": "legacy",
+      "slice_reduction_pct": 66.7,
+      "ddmin_tests": 2,
+      "localized_subsystem": "memory",
+      "localization_candidates": [
+        [
+          374,
+          442
+        ],
+        [
+          559,
+          637
+        ],
+        [
+          1853,
+          1890
+        ],
+        [
+          1305,
+          1363
+        ]
+      ],
+      "fault_line": 379,
+      "localization_contains_fault": true,
+      "primary_contains_fault": true,
+      "localized_snippet_line_count": 69
+    },
+    "and_to_or_alu": {
+      "bug_id": "and_to_or_alu",
+      "name": "Bitwise AND mutated to OR in the ALU",
+      "level": "L1",
+      "subsystem": "alu",
+      "detected": true,
+      "detection_time_seconds": 0.048,
+      "failure_kind": "field_mismatch",
+      "failing_instruction": "and x3, x1, x2",
+      "failure_index_k": 2,
+      "slice_mode": "state_preload",
+      "reproducer_fails": true,
+      "ddmin_input": "slice",
+      "minimal_fails": true,
+      "original_length": 5,
+      "minimal_length": 3,
+      "original_cycles": 29,
+      "minimal_cycles": 23,
+      "suite": "v2",
+      "slice_reduction_pct": 40.0,
+      "ddmin_tests": 2,
+      "localized_subsystem": "alu",
+      "localization_candidates": [
+        [
+          1228,
+          1288
+        ],
+        [
+          1305,
+          1363
+        ]
+      ],
+      "fault_line": 1279,
+      "localization_contains_fault": true,
+      "primary_contains_fault": true,
+      "localized_snippet_line_count": 61
+    },
+    "fast_mul_decode_and_to_or": {
+      "bug_id": "fast_mul_decode_and_to_or",
+      "detected": false,
+      "detection_time_seconds": 0.058
+    },
+    "fast_mul_rs2_signed_widened": {
+      "bug_id": "fast_mul_rs2_signed_widened",
+      "name": "Signedness mask widened in picorv32_pcpi_fast_mul (MULHSU treats rs2 as signed)",
+      "level": "L1",
+      "subsystem": "multiplier",
+      "detected": true,
+      "detection_time_seconds": 0.049,
+      "failure_kind": "field_mismatch",
+      "failing_instruction": "mulhsu x3, x1, x2",
+      "failure_index_k": 2,
+      "slice_mode": "state_preload",
+      "reproducer_fails": true,
+      "ddmin_input": "slice",
+      "minimal_fails": true,
+      "original_length": 5,
+      "minimal_length": 4,
+      "original_cycles": 35,
+      "minimal_cycles": 29,
+      "suite": "v2",
+      "slice_reduction_pct": 20.0,
+      "ddmin_tests": 2,
+      "localized_subsystem": "multiplier",
+      "localization_candidates": [
+        [
+          2318,
+          2413
+        ]
+      ],
+      "fault_line": 2338,
+      "localization_contains_fault": true,
+      "primary_contains_fault": true,
+      "localized_snippet_line_count": 96
+    },
+    "mem_addr_bit2_stuck": {
+      "bug_id": "mem_addr_bit2_stuck",
+      "name": "Stuck-at-0 on data address bit 2",
+      "level": "L1",
+      "subsystem": "memory",
+      "detected": true,
+      "detection_time_seconds": 0.053,
+      "failure_kind": "field_mismatch",
+      "failing_instruction": "sw x2, 4(x1)",
+      "failure_index_k": 2,
+      "slice_mode": "state_preload",
+      "reproducer_fails": true,
+      "ddmin_input": "slice",
+      "minimal_fails": true,
+      "original_length": 7,
+      "minimal_length": 2,
+      "original_cycles": 43,
+      "minimal_cycles": 0,
+      "suite": "v2",
+      "slice_reduction_pct": 71.4,
+      "ddmin_tests": 2,
+      "localized_subsystem": "memory",
+      "localization_candidates": [
+        [
+          374,
+          442
+        ],
+        [
+          559,
+          637
+        ],
+        [
+          1853,
+          1890
+        ],
+        [
+          1305,
+          1363
+        ]
+      ],
+      "fault_line": 575,
+      "localization_contains_fault": true,
+      "primary_contains_fault": false,
+      "localized_snippet_line_count": 69
+    },
+    "slt_signed_as_unsigned": {
+      "bug_id": "slt_signed_as_unsigned",
+      "name": "Signed less-than computed unsigned (subtle, no magic constants)",
+      "level": "L1",
+      "subsystem": "alu",
+      "detected": true,
+      "detection_time_seconds": 0.055,
+      "failure_kind": "field_mismatch",
+      "failing_instruction": "slt x3, x1, x2",
+      "failure_index_k": 2,
+      "slice_mode": "state_preload",
+      "reproducer_fails": true,
+      "ddmin_input": "slice",
+      "minimal_fails": true,
+      "original_length": 6,
+      "minimal_length": 3,
+      "original_cycles": 32,
+      "minimal_cycles": 23,
+      "suite": "v2",
+      "slice_reduction_pct": 50.0,
+      "ddmin_tests": 3,
+      "localized_subsystem": "alu",
+      "localization_candidates": [
+        [
+          1228,
+          1288
+        ],
+        [
+          1305,
+          1363
+        ]
+      ],
+      "fault_line": 1242,
+      "localization_contains_fault": true,
+      "primary_contains_fault": true,
+      "localized_snippet_line_count": 61
+    },
+    "beq_inverted": {
+      "bug_id": "beq_inverted",
+      "name": "BEQ condition inverted",
+      "level": "L2",
+      "subsystem": "branch",
+      "detected": true,
+      "detection_time_seconds": 0.054,
+      "failure_kind": "field_mismatch",
+      "failing_instruction": "beq x1, x2, 8",
+      "failure_index_k": 2,
+      "slice_mode": "state_preload",
+      "reproducer_fails": true,
+      "ddmin_input": "slice",
+      "minimal_fails": true,
+      "original_length": 6,
+      "minimal_length": 2,
+      "original_cycles": 32,
+      "minimal_cycles": 20,
+      "suite": "v2",
+      "slice_reduction_pct": 66.7,
+      "ddmin_tests": 2,
+      "localized_subsystem": "branch",
+      "localization_candidates": [
+        [
+          1228,
+          1288
+        ],
+        [
+          1490,
+          1550
+        ]
+      ],
+      "fault_line": 1254,
+      "localization_contains_fault": true,
+      "primary_contains_fault": true,
+      "localized_snippet_line_count": 61
+    },
+    "lui_auipc_rd_x0": {
+      "bug_id": "lui_auipc_rd_x0",
+      "name": "LUI/AUIPC write-back routed to x0",
+      "level": "L2",
+      "subsystem": "regfile",
+      "detected": true,
+      "detection_time_seconds": 0.051,
+      "failure_kind": "field_mismatch",
+      "failing_instruction": "lui x1, 0x12345",
+      "failure_index_k": 0,
+      "slice_mode": "state_preload",
+      "reproducer_fails": true,
+      "ddmin_input": "slice",
+      "minimal_fails": true,
+      "original_length": 5,
+      "minimal_length": 2,
+      "original_cycles": 29,
+      "minimal_cycles": 20,
+      "suite": "v2",
+      "slice_reduction_pct": 60.0,
+      "ddmin_tests": 0,
+      "localized_subsystem": "fetch_launch",
+      "localization_candidates": [
+        [
+          1489,
+          1553
+        ],
+        [
+          1305,
+          1363
+        ],
+        [
+          1228,
+          1288
+        ]
+      ],
+      "fault_line": 1535,
+      "localization_contains_fault": true,
+      "primary_contains_fault": true,
+      "localized_snippet_line_count": 65
+    },
+    "store_after_store_dropped": {
+      "bug_id": "store_after_store_dropped",
+      "name": "Second of two back-to-back data stores loses its write strobe",
+      "level": "L3",
+      "subsystem": "memory",
+      "detected": true,
+      "detection_time_seconds": 0.05,
+      "failure_kind": "field_mismatch",
+      "failing_instruction": "sw x2, 4(x1)",
+      "failure_index_k": 3,
+      "slice_mode": "state_preload",
+      "reproducer_fails": true,
+      "ddmin_input": "slice",
+      "minimal_fails": true,
+      "original_length": 7,
+      "minimal_length": 2,
+      "original_cycles": 43,
+      "minimal_cycles": 0,
+      "suite": "v2",
+      "slice_reduction_pct": 71.4,
+      "ddmin_tests": 2,
+      "localized_subsystem": "memory",
+      "localization_candidates": [
+        [
+          380,
+          448
+        ],
+        [
+          565,
+          643
+        ],
+        [
+          1859,
+          1896
+        ],
+        [
+          1311,
+          1369
+        ]
+      ],
+      "fault_line": 582,
+      "localization_contains_fault": true,
+      "primary_contains_fault": false,
+      "localized_snippet_line_count": 69
+    },
+    "store_after_store_dropped_intermittent": {
+      "bug_id": "store_after_store_dropped_intermittent",
+      "name": "Intermittent write-strobe drop on back-to-back stores (fires when a free-running 3-bit counter is 0)",
+      "level": "L3",
+      "subsystem": "memory",
+      "detected": true,
+      "detection_time_seconds": 0.05,
+      "failure_kind": "field_mismatch",
+      "failing_instruction": "sw x2, 16(x1)",
+      "failure_index_k": 6,
+      "slice_mode": "state_preload",
+      "reproducer_fails": false,
+      "ddmin_input": "original",
+      "minimal_fails": true,
+      "original_length": 27,
+      "minimal_length": 6,
+      "original_cycles": 143,
+      "minimal_cycles": 0,
+      "suite": "v2",
+      "slice_reduction_pct": 77.8,
+      "ddmin_tests": 12,
+      "localized_subsystem": "memory",
+      "localization_candidates": [
+        [
+          382,
+          450
+        ],
+        [
+          567,
+          645
+        ],
+        [
+          1887,
+          1924
+        ],
+        [
+          1313,
+          1371
+        ]
+      ],
+      "fault_line": 584,
+      "localization_contains_fault": true,
+      "primary_contains_fault": false,
+      "localized_snippet_line_count": 69
+    },
+    "stale_latched_branch": {
+      "bug_id": "stale_latched_branch",
+      "name": "latched_branch not cleared at instruction launch (uncleared state flag)",
+      "level": "L3",
+      "subsystem": "control",
+      "detected": true,
+      "detection_time_seconds": 0.065,
+      "failure_kind": "field_mismatch",
+      "failing_instruction": "beq x1, x2, 8",
+      "failure_index_k": 2,
+      "slice_mode": "state_preload",
+      "reproducer_fails": false,
+      "ddmin_input": "original",
+      "minimal_fails": true,
+      "original_length": 8,
+      "minimal_length": 3,
+      "original_cycles": 37,
+      "minimal_cycles": 22,
+      "suite": "v2",
+      "slice_reduction_pct": 62.5,
+      "ddmin_tests": 4,
+      "localized_subsystem": "branch",
+      "localization_candidates": [
+        [
+          1228,
+          1288
+        ],
+        [
+          1490,
+          1550
+        ],
+        [
+          1489,
+          1553
+        ]
+      ],
+      "fault_line": 1530,
+      "localization_contains_fault": true,
+      "primary_contains_fault": false,
+      "localized_snippet_line_count": 61
+    }
+  }
+}

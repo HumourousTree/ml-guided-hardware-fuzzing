@@ -57,8 +57,10 @@ the RV32IM configuration within a few hundred programs; all \UnrLineUnreached{} 
 the ISA scope. Blind random fuzzing detects \BugRandomAny{} of the \BugCount{} injected bugs, three tiers from bit-level operator faults to an
 intermittent bus-protocol fault, while one literal mutation from the original brief is equivalent on every valid program. Delta debugging
 reduces fuzzer-found failures by a median \HddLenRedMedian\% in length and \HddCycRedMedian\% in cycles. Positive and negative
-controls confirm that the repair gates accept correct patches and reject wrong ones, and a spectrum-ranked template-repair baseline
-fixes \RepTplAccepted{} of \RepBugs{} observable bugs without an LLM. We tabulate the published results of ChipFuzzer, Cascade,
+controls confirm that the repair gates accept correct patches and reject wrong ones. A spectrum-ranked template-repair baseline without
+an LLM produces gate-passing patches for \RepTplAccepted{} of \RepBugs{} observable bugs, but whole-core formal equivalence certifies only
+\RepTplCertified: one accepted patch is wrong for rare operands and another changes an output the lockstep oracle never observes,
+although both passed every regression and held-out test. We tabulate the published results of ChipFuzzer, Cascade,
 TheHuzz, TurboFuzz, BMCFuzz and Encarsia with their sources, state precisely which comparisons are and are not meaningful, and give a
 measured-resource roadmap for moving the loop onto a Zynq UltraScale+ SoC following TurboFuzz.
 \end{abstract}
@@ -395,15 +397,18 @@ matters for faults in micro-architectural state (\code{stale_latched_branch}). H
 1-minimal. The hierarchy does not pay off here because the state-preloading slice does most of the work: it already cuts the failing
 program to the window before the failing retirement (median 19 instructions), and at that size flat ddmin needs only about six
 simulations while HDD's extra basic-block level is overhead. HDD is designed for long, structured inputs; fuzzer failures on an in-order
-core that diverge within tens of instructions are not such inputs, and we would expect the balance to change for long Cascade-style
-programs whose failure needs distant state set-up that the slice cannot preload (micro-architectural state, as in
-\code{stale_latched_branch}).
+core that diverge within tens of instructions are not such inputs. The \HddSmaller{} cases in which HDD reached a strictly smaller
+reproducer than flat ddmin are all failures that depend on micro-architectural or timing state (\code{stale_latched_branch} and the
+intermittent store fault); this is consistent with HDD paying off for
+long Cascade-style programs whose failure needs distant state set-up that the slice cannot preload, which we have not evaluated.
 
 \subsection{RQ5: Do the repair gates work, and how far does a non-LLM baseline get?}\label{sec:rq5}
 \begin{table}[t]
 \centering\scriptsize
 \caption{Guarded repair on the \RepBugs{} observable bugs. Controls drive the unchanged pipeline through a scripted model; template
-repair searches generic single-line operators ranked by Ochiai; held-out: 200 unseen random programs $\times$ delays 0 and 3.}\label{tab:repair}
+repair searches generic single-line operators ranked by Ochiai; held-out: 200 unseen random programs $\times$ delays 0 and 3; formal:
+Yosys whole-core equivalence with the golden RTL (ident.\ = textually identical, n.p.\ = not proven; $^\dagger$ refuted by a directed
+witness, $^\ddagger$ differs only at the \code{mem_la_write} output).}\label{tab:repair}
 \resizebox{\columnwidth}{!}{\gen{tab_repair.tex}}
 \end{table}
 To evaluate the gates independently of any model we drive the unchanged pipeline (slice, ddmin, localisation, patch parsing, block-range
@@ -424,9 +429,20 @@ all 400 held-out runs, because random programs almost never multiply by an opera
 inductive equivalence of the whole core against the golden RTL in the harness configuration (proves golden against itself in about
 2\,min; 300\,s budget). \RepTplCertified{} accepted template patches are certified (identical or proven equivalent) and
 \RepTplNotProven{} are not proven; \RepTplWitnessed{} of the latter is refuted by a directed witness although it passed the held-out set.
-Repair results in the literature that rely on test suites alone should be read with this in mind. Template repair cannot synthesise a missing statement, which is why
-\code{stale_latched_branch} is out of its reach, and Verilator records no line coverage for continuous assignments, so SBFL cannot rank
-them; these are the cases where an LLM is expected to add value.
+The other, for \code{mem_handshake_drop}, is a subtler case: \RepInterfaceProven{} of the core's equivalence points are proven equal and
+the single unproven one is the top-level output \code{mem_la_write}. The patch turned an \code{&&} into \code{||} at a precedence
+boundary, so the look-ahead write strobe is asserted whenever the bus is idle; the native bus is unaffected because the state machine
+clears \code{mem_wstrb} on the same edge, so no retirement record can show the difference (fuzzing the patched core for
+\RepHuntPrograms{} further programs raised \RepHuntMismatches{} mismatches). A system that uses PicoRV32's look-ahead interface would
+see spurious write requests. Repair results that rely on test suites, or on an oracle that observes only architectural state, should be
+read with both cases in mind.
+
+Of the five bugs the template search did not repair, \code{stale_latched_branch} needs a deleted statement re-inserted, which no
+single-line operator can do. For the other four (\code{branch_inversion_blt}, \code{writeback_forwarding_drop}, \code{lui_auipc_rd_x0}:
+a ternary collapse; \code{slt_signed_as_unsigned}: a \texttt{\$signed} wrap) the correct template exists, but the edit ranked beyond the
+30-candidate budget, because Ochiai ranks lines, not edits. Verilator
+records no line coverage for continuous assignments, so those lines cannot be ranked by evidence at all (we let them inherit their
+block's highest score). Choosing the edit, not only the line, is where an LLM is expected to add value.
 
 The archived Gemini campaign (Run~C: \RunCIters{} iterations, five legacy bugs) accepted \RunCRepairs{} patches that together removed all
 five bugs, after ten rolled-back candidates; one accepted patch also removed a bug that the failing signature did not implicate, which
@@ -523,7 +539,7 @@ bug-guided stage with historical priors and seed fusion, which we lack. Relative
 relying on program termination, at the cost of a reference model, and does not cover CSRs or privilege.
 
 \paragraph*{Throughput} Run alone on the idle machine, our loop executes \TputSoloRandom{} (random) and \TputSoloMutation{}
-(mutation, longer programs) instructions per second in one process (Fig.~\ref{fig:tput}), below Cascade's 2{,}489 and three orders of
+(mutation, longer programs) instructions per second in one process (Fig.~\ref{fig:tput}), below Cascade's 2{,}489 and two to three orders of
 magnitude below TurboFuzz. Each 30-instruction program costs one
 process launch, a Verilator coverage dump and a Python reference run; batching programs per simulation and a native reference would be the
 first optimisations, and the FPGA path below the decisive one.
@@ -570,15 +586,20 @@ API tier whose model changed during the run.
 %% =====================================================================
 \section{Conclusion}
 %% =====================================================================
-On PicoRV32 a carefully specified lockstep oracle has no false alarms on upstream RTL, reproduces a published bug on the same commit, and,
-fed by simple random and mutational generators, saturates all reachable RTL within a few hundred programs and finds most injected bugs
-within tens of programs. The remaining effort lies after detection: delta debugging shrinks fuzzer failures to a few instructions, and
-gated repair works with a correct patch but a template search reaches only part of the suite. The next steps are LLM pass@$k$ on the
-suite, widening the ISA scope to CSRs so that Cascade P1--P5 and counter faults become observable, a larger out-of-order core where
-coverage does not saturate, and Stage~B of the FPGA roadmap.
+On PicoRV32 a carefully specified lockstep oracle raises no false alarm on upstream RTL, reproduces a published bug on the same commit
+and, through a mutational generator, exposes a residual FENCE deviation on current master. Fed by simple random and mutational
+generators it saturates all reachable RTL within a few hundred programs and finds every observable injected bug but one within a few
+programs; what makes a bug hard is the specificity of its trigger, not its structural tier, and coverage guidance did not shorten
+detection. The remaining effort lies after detection. Slicing and delta debugging shrink fuzzer failures to a few instructions, with
+slicing doing most of the work. Gated repair accepts every correct patch, and a template search without any LLM produces gate-passing
+patches for most bugs, but two of them are not correct, one functionally wrong for rare operands and one changing an interface the
+oracle does not observe; only formal certification separated them. We therefore argue that LLM repair results should be reported with
+formal (or at least interface-complete) certification, not with test-suite pass rates alone. The next steps are LLM pass@$k$ on the
+suite under the same certification, widening the ISA scope to CSRs so that Cascade P1--P5 and counter faults become observable, a larger
+out-of-order core where coverage does not saturate, and Stage~B of the FPGA roadmap.
 
 \section*{Artifact}
-Code, logs and the generator of every table and figure: branch \code{v0.3-evaluation} of
+Code, compact result logs (\code{results/v0.4}) and the generator of every table and figure: branch \code{v0.4-evaluation} of
 \url{https://github.com/HumourousTree/ml-guided-hardware-fuzzing}; \code{tools/run_full_evaluation.sh} reruns everything and
 \code{tools/compare_literature.py} regenerates \code{paper/generated} and \code{paper/figures}.
 

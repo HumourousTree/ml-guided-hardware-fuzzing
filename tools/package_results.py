@@ -11,12 +11,16 @@ except the unique-point analysis, which needs the raw covered_points.
 import argparse
 import json
 import shutil
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 
 def compact_run(r: dict) -> dict:
+    from compare_literature import plateau_programs   # computed on the full series before thinning
+    r = dict(r, plateau_programs=plateau_programs(r))
     s = r.get("series") or []
     keep, last = [], None
     marks = {int(round(1.15 ** k)) for k in range(80)}
@@ -46,8 +50,8 @@ def main():
     for d in sorted((logs / "bench").iterdir()):
         if not d.is_dir():
             continue
-        for f in sorted(d.glob("*_seed*.json")):
-            dst = out / "bench" / d.name / f.name
+        for f in sorted(d.rglob("*_seed*.json")):
+            dst = out / "bench" / f.relative_to(logs / "bench")
             dst.parent.mkdir(parents=True, exist_ok=True)
             dst.write_text(json.dumps(compact_run(json.loads(f.read_text()))))
             n += 1

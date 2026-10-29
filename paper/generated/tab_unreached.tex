@@ -1,0 +1,10 @@
+\begin{tabular}{@{}l r r@{}}\toprule
+Cause & Regions & Source lines\\\midrule
+Compressed ISA (COMPRESSED\_ISA=0) & 28 & 40\\
+Interrupts (ENABLE\_IRQ=0) & 14 & 14\\
+Counter CSRs (outside RV32IM scope) & 2 & 8\\
+ld\_rs2 state (unused, ENABLE\_REGS\_DUALPORT=1) & 4 & 6\\
+ALU options (BARREL\_SHIFTER, TWO\_CYCLE\_*) & 3 & 5\\
+External PCPI (ENABLE\_PCPI=0) & 1 & 1\\
+Trap on illegal instruction (excluded by validator) & 1 & 1\\
+\bottomrule\end{tabular}

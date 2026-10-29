@@ -62,14 +62,22 @@ def evaluate_bug(bug_id: str, samples: int = 5, suite: str = "all", feedback_att
                 f = cand_dir / "candidate.sv"; f.write_text(cand)
                 rec["success"] = _suite_ok(f, regression, cand_dir)
                 rec["exact_fix"] = rec["success"] and cand.strip() == golden.strip()
+                if rec["success"]:      # gates and suites can accept wrong patches: certify formally (see template_repair)
+                    from harness.template_repair import formal_equivalence
+                    rec["formal"] = formal_equivalence(golden, cand)
+                    rec["certified"] = rec["formal"]["verdict"] in ("identical", "proven")
                 (cand_dir / "build_stamp_reset").write_text("")
                 (cand_dir / ".build_stamp").unlink(missing_ok=True)                   # force rebuild for the next candidate
             return rec
 
         indep = [one(1) for _ in range(samples)]
         c = sum(r["success"] for r in indep)
+        cc = sum(bool(r.get("certified")) for r in indep)
         fb = one(feedback_attempts)
         return {"bug_id": bug_id, "level": manifest[bug_id]["level"], "detected": True, "samples": samples, "successes": c,
+                "certified_successes": cc,
+                "pass@1_certified": round(pass_at_k(samples, cc, 1), 3),
+                "pass@5_certified": round(pass_at_k(samples, cc, min(5, samples)), 3) if samples >= 5 else None,
                 "pass@1": round(pass_at_k(samples, c, 1), 3), "pass@5": round(pass_at_k(samples, c, min(5, samples)), 3) if samples >= 5 else None,
                 "exact_fix_rate": round(sum(r["exact_fix"] for r in indep) / samples, 3), "independent": indep,
                 "feedback_success": fb["success"], "feedback_attempts_used": fb["attempts"], "feedback_run": fb}

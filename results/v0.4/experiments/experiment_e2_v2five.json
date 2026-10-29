@@ -1,0 +1,44 @@
+{
+  "experiment": "E2",
+  "timestamp": "2026-10-28T21:47:05.652169+00:00",
+  "injected_bugs": [
+    "fast_mul_rs2_signed_widened",
+    "mem_addr_bit2_stuck",
+    "lui_auipc_rd_x0",
+    "stale_latched_branch",
+    "store_after_store_dropped_intermittent"
+  ],
+  "isolated_count": 5,
+  "details": [
+    {
+      "bug_id": "fast_mul_rs2_signed_widened",
+      "detected": true,
+      "failing_insn": "mulhsu x3, x1, x2",
+      "localized_subsystem": "multiplier"
+    },
+    {
+      "bug_id": "mem_addr_bit2_stuck",
+      "detected": true,
+      "failing_insn": "sw x2, 4(x1)",
+      "localized_subsystem": "memory"
+    },
+    {
+      "bug_id": "lui_auipc_rd_x0",
+      "detected": true,
+      "failing_insn": "lui x1, 0x12345",
+      "localized_subsystem": "fetch_launch"
+    },
+    {
+      "bug_id": "stale_latched_branch",
+      "detected": true,
+      "failing_insn": "beq x1, x2, 8",
+      "localized_subsystem": "branch"
+    },
+    {
+      "bug_id": "store_after_store_dropped_intermittent",
+      "detected": true,
+      "failing_insn": "sw x2, 4(x1)",
+      "localized_subsystem": "memory"
+    }
+  ]
+}

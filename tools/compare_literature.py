@@ -173,6 +173,23 @@ def section_e1(logs, M, md):
     return "\n".join(lines + ["\\bottomrule\\end{tabular}"])
 
 
+def n_programs(r: dict) -> int:
+    """Validated programs of a run (the series may be thinned in packaged results)."""
+    return r["series"][-1]["n_programs"] if r.get("series") else 0
+
+
+def plateau_programs(r: dict, window: int = 100, thresh: float = 0.1):
+    """ChipFuzzer plateau point; packaged runs carry it precomputed because their series is thinned."""
+    if "plateau_programs" in r:
+        return r["plateau_programs"]
+    hist = []
+    for s in r["series"]:
+        hist.append(s["pct"])
+        if len(hist) > window and hist[-1] - hist[-1 - window] < thresh:
+            return s["n_programs"]
+    return None
+
+
 def load_runs(d: Path):
     runs = defaultdict(list)
     for f in sorted(d.glob("*_seed*.json")) if d.exists() else []:
@@ -192,7 +209,7 @@ def section_coverage(logs, M, md, figs, plt):
     M["CovUniverse"] = f"{next(iter(runs.values()))[0]['universe']:,}"
     M["CovBest"] = f"{best:.2f}"
     allruns = [r for rs in runs.values() for r in rs]
-    M["CovTotalPrograms"] = f"{sum(len(r['series']) for r in allruns):,}"
+    M["CovTotalPrograms"] = f"{sum(n_programs(r) for r in allruns):,}"
     M["CovFalseAlarms"] = sum(1 for r in allruns if r.get("bug_detected"))     # golden RTL: any mismatch is a false alarm
     summary, finals = {}, {}
     lines = ["\\begin{tabular}{@{}l r r r r r@{}}\\toprule",
@@ -207,13 +224,7 @@ def section_coverage(logs, M, md, figs, plt):
         for rho in (0.90, 0.99):
             reach = [next((s["n_programs"] for s in r["series"] if s["pct"] >= rho * best), None) for r in rs]
             thr[rho] = (mean_ci([x for x in reach if x is not None])[0], sum(x is not None for x in reach))
-        plat = []
-        for r in rs:
-            hist = []
-            for s in r["series"]:
-                hist.append(s["pct"])
-                if len(hist) > 100 and hist[-1] - hist[-101] < 0.1:
-                    plat.append(s["n_programs"]); break
+        plat = [p for p in (plateau_programs(r) for r in rs) if p is not None]
         ips = [r["series"][-1]["n_instructions"] / max(1e-9, r["series"][-1]["t"]) for r in rs]
         pps = [r["series"][-1]["n_programs"] / max(1e-9, r["series"][-1]["t"]) for r in rs]
         mc = mean_ci(fin)
@@ -252,7 +263,9 @@ def section_coverage(logs, M, md, figs, plt):
             ys = [[at_programs(r["series"], g) for g in grid] for r in runs[m]]
             mean = [sum(c) / len(c) for c in zip(*ys)]
             ci = [mean_ci(list(c))[1] for c in zip(*ys)]
-            ax.plot(grid, mean, label=METHOD_PLAIN[m], color=COLORS[m], lw=1.2)
+            # Hybrid equals mutation until its switch: draw it dashed and underneath so both stay visible
+            ax.plot(grid, mean, label=METHOD_PLAIN[m], color=COLORS[m], lw=1.2, ls="--" if m == "hybrid-rand" else "-",
+                    zorder=2 if m == "hybrid-rand" else 3)
             ax.fill_between(grid, [a - b for a, b in zip(mean, ci)], [a + b for a, b in zip(mean, ci)], color=COLORS[m], alpha=.18, lw=0)
             sw = [r["switched_at"]["programs"] for r in runs[m] if r.get("switched_at")]
             if sw:
@@ -314,7 +327,7 @@ def section_bugs(logs, M, md, figs, plt, manifest_levels):
         f"(median {agg[(b, 'random')]['median_programs']} progs), mutation {agg[(b, 'mutation')]['detected']}/{agg[(b, 'mutation')]['runs']} "
         f"(median {agg[(b, 'mutation')]['median_programs']} progs)" for b in order))
     if plt:
-        fig, ax = plt.subplots(figsize=(7.0, 2.3))
+        fig, ax = plt.subplots(figsize=(7.0, 2.8))
         for j, m in enumerate(("random", "mutation")):
             for i, bug in enumerate(order):
                 ys = [r["bug_detected"]["n_programs"] for r in per[bug].get(m, []) if r.get("bug_detected")]
@@ -326,8 +339,10 @@ def section_bugs(logs, M, md, figs, plt, manifest_levels):
                     ax.annotate(str(miss), (x, budget * 1.5), fontsize=5, ha="center", va="bottom", xytext=(0, 3), textcoords="offset points")
         ax.set_yscale("log"); ax.set_xticks(range(len(order)))
         ax.set_xticklabels([f"{b} ({manifest_levels.get(b)})" for b in order], rotation=35, ha="right", fontsize=5.5)
-        ax.axhline(budget, color="grey", ls="--", lw=.6); ax.set_ylabel("programs to first mismatch")
-        ax.legend(fontsize=6.5, loc="upper left"); ax.grid(alpha=.3, lw=.4, axis="y"); fig.tight_layout()
+        ax.axhline(budget, color="grey", ls="--", lw=.6); ax.set_ylabel("programs to mismatch")
+        ax.set_ylim(0.6, budget * 6)
+        ax.legend(fontsize=6.5, ncol=2, loc="lower center", bbox_to_anchor=(0.5, 1.0), frameon=False)
+        ax.grid(alpha=.3, lw=.4, axis="y"); fig.tight_layout()
         save(fig, figs, "fig_time_to_bug"); plt.close(fig)
     return "\n".join(lines + ["\\bottomrule\\end{tabular}"]) + "\n%%TIER%%\n" + "\n".join(tier_lines + ["\\bottomrule\\end{tabular}"]), agg
 
@@ -349,7 +364,7 @@ def section_p6(logs, M, md):
         out.append(f"- {METHOD_PLAIN[m]} on f00a88c: {len(det)}/{len(runs)} seeds hit P6, median {M.items[f'PSix{k}Progs']} programs, {M.items[f'PSix{k}Secs']} s")
     for m, runs in ctl.items():
         fa = sum(1 for r in runs if r.get("bug_detected"))
-        n = sum(len(r["series"]) for r in runs)
+        n = sum(n_programs(r) for r in runs)
         M[f"PSixCtl{macro_name(m)}FalseAlarms"], M[f"PSixCtl{macro_name(m)}Programs"] = fa, f"{n:,}"
         out.append(f"- control on master ({METHOD_PLAIN[m]}): {fa} mismatches in {n} programs")
     # FENCE with a non-zero reserved rd field on master (found by the mutation fuzzer)
@@ -362,7 +377,7 @@ def section_p6(logs, M, md):
         k = macro_name(m)
         M[f"FenceRd{k}Det"], M[f"FenceRd{k}Runs"], M[f"FenceRd{k}Attributed"] = len(det), len(runs), attributed
         M[f"FenceRd{k}Programs"] = f"{st.median(x['n_programs'] for x in det):,.0f}" if det else "--"
-        M[f"FenceRd{k}Total"] = f"{sum(len(r['series']) for r in runs):,}"
+        M[f"FenceRd{k}Total"] = f"{sum(n_programs(r) for r in runs):,}"
         out.append(f"- master, {METHOD_PLAIN[m]}: {len(det)}/{len(runs)} seeds hit a mismatch "
                    f"({attributed} at a FENCE with rd!=0), median {M.items[f'FenceRd{k}Programs']} programs")
     if out:
@@ -437,6 +452,16 @@ def section_repair(logs, M, md):
     M["RepTplNotProven"] = cnt("template", lambda r: r.get("accepted") and verdict(r) == "not_proven")
     M["RepTplWitnessed"] = cnt("template", lambda r: (r.get("witness") or {}).get("exposes_patch"))
     M["RepTplHeldOutButWrong"] = cnt("template", lambda r: r.get("correct_on_held_out") and (r.get("witness") or {}).get("exposes_patch"))
+    M["RepTplInterfaceOnly"] = cnt("template", lambda r: bool(r.get("formal_detail")))
+    hunt = [r for d_ in (logs / "bench" / "witness_hunt").glob("delay*") for rs in load_runs(d_).values() for r in rs]
+    if hunt:
+        M["RepHuntPrograms"] = f"{sum(n_programs(r) for r in hunt):,}"
+        M["RepHuntMismatches"] = sum(1 for r in hunt if r.get("bug_detected"))
+    for b, v in det.items():
+        fd = (v.get("template") or {}).get("formal_detail")
+        if fd:
+            M["RepInterfaceProven"] = f"{fd['proven_points']:,}"
+            md.append(f"- {b} template patch: only {fd['unproven_points']} not proven equal ({fd['proven_points']} points proven)")
     rej = defaultdict(int)
     for v in det.values():
         for k, n in (v.get("template", {}).get("rejections") or {}).items():
@@ -452,7 +477,8 @@ def section_repair(logs, M, md):
     fv = {"identical": "ident.", "proven": "proven", "not_proven": "n.p.", "unavailable": "--"}
     for b, v in sorted(det.items(), key=lambda kv: kv[0]):
         o, l, n, t = v.get("oracle", {}), v.get("lint-oracle", {}), v.get("noop", {}), v.get("template", {})
-        formal = fv.get(verdict(t), "--") + ("$^\\dagger$" if (t.get("witness") or {}).get("exposes_patch") else "")
+        formal = fv.get(verdict(t), "--") + ("$^\\dagger$" if (t.get("witness") or {}).get("exposes_patch") else "") \
+                 + ("$^\\ddagger$" if t.get("formal_detail") else "")
         lines.append(f"\\texttt{{{tex_escape(b)}}} & {ck(o.get('accepted'))} & {ck(l.get('accepted') and l.get('llm_calls') == 2)} & "
                      f"{'rej.' if n and not n.get('accepted') else 'ACC'} & {ck(t.get('accepted'))} & {t.get('candidates_tried', '--')} & "
                      f"{(str(t.get('held_out_pass')) + '/' + str(t.get('held_out_total'))) if t.get('accepted') else '--'} & "
@@ -641,9 +667,10 @@ def section_literature(lit, logs, M, md, figs, plt, ours_cov, ours_bugs):
             for j, m in enumerate(("random", "mutation")):
                 rate = [100 * ours_bugs[(b, m)]["detected"] / max(1, ours_bugs[(b, m)]["runs"]) for b in bugs]
                 axs[1].bar([i + (j - .5) * .4 for i in range(len(bugs))], rate, .4, color=COLORS[m], label=METHOD_PLAIN[m])
-            axs[1].set_xticks(range(len(bugs))); axs[1].set_xticklabels([b[:14] for b in bugs], rotation=60, ha="right", fontsize=4.8)
-            axs[1].set_ylabel("seeds detecting (%)", fontsize=7); axs[1].legend(fontsize=6)
-        axs[1].set_title("(b) Measured: 15-bug PicoRV32 suite, per-bug detection", fontsize=7)
+            axs[1].set_xticks(range(len(bugs))); axs[1].set_xticklabels(bugs, rotation=60, ha="right", fontsize=4.2)
+            axs[1].set_ylabel("seeds detecting (%)", fontsize=7); axs[1].set_ylim(0, 135)
+            axs[1].legend(fontsize=6, ncol=2, loc="upper center")
+        axs[1].set_title("(b) Measured: 15-bug PicoRV32 suite", fontsize=7)
         fig.tight_layout(); save(fig, figs, "fig_bug_detection"); plt.close(fig)
 
         fig, ax = plt.subplots(figsize=(3.45, 1.9))

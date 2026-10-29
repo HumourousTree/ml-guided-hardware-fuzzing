@@ -1,0 +1,2071 @@
+{
+  "approx_multiplier|oracle": {
+    "bug_id": "approx_multiplier",
+    "model": "oracle",
+    "detected": true,
+    "accepted": true,
+    "llm_calls": 1,
+    "pipeline_attempts": 1,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "multiplier",
+    "localized_lines": [
+      [
+        2318,
+        2413
+      ]
+    ],
+    "minimal_length": 4,
+    "status": "VERIFIED_REGRESSION_FREE",
+    "seconds": 75.2,
+    "held_out_pass": 400,
+    "held_out_total": 400,
+    "correct_on_held_out": true,
+    "exact_fix": true,
+    "diff": [],
+    "formal": {
+      "verdict": "identical",
+      "seconds": 0.0
+    }
+  },
+  "approx_multiplier|lint-oracle": {
+    "bug_id": "approx_multiplier",
+    "model": "lint-oracle",
+    "detected": true,
+    "accepted": true,
+    "llm_calls": 2,
+    "pipeline_attempts": 2,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "multiplier",
+    "localized_lines": [
+      [
+        2318,
+        2413
+      ]
+    ],
+    "minimal_length": 4,
+    "status": "VERIFIED_REGRESSION_FREE",
+    "seconds": 74.8,
+    "held_out_pass": 400,
+    "held_out_total": 400,
+    "correct_on_held_out": true,
+    "exact_fix": true,
+    "diff": [],
+    "formal": {
+      "verdict": "identical",
+      "seconds": 0.0
+    }
+  },
+  "approx_multiplier|noop": {
+    "bug_id": "approx_multiplier",
+    "model": "noop",
+    "detected": true,
+    "accepted": false,
+    "llm_calls": 3,
+    "pipeline_attempts": 3,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "multiplier",
+    "localized_lines": [
+      [
+        2318,
+        2413
+      ]
+    ],
+    "minimal_length": 4,
+    "status": "REPAIR_FAILED_EXHAUSTED",
+    "seconds": 45.7
+  },
+  "alu_operator_xor_or|oracle": {
+    "bug_id": "alu_operator_xor_or",
+    "model": "oracle",
+    "detected": true,
+    "accepted": true,
+    "llm_calls": 1,
+    "pipeline_attempts": 1,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "alu",
+    "localized_lines": [
+      [
+        1228,
+        1288
+      ],
+      [
+        1305,
+        1363
+      ]
+    ],
+    "minimal_length": 3,
+    "status": "VERIFIED_REGRESSION_FREE",
+    "seconds": 110.7,
+    "held_out_pass": 400,
+    "held_out_total": 400,
+    "correct_on_held_out": true,
+    "exact_fix": true,
+    "diff": [],
+    "formal": {
+      "verdict": "identical",
+      "seconds": 0.0
+    }
+  },
+  "alu_operator_xor_or|lint-oracle": {
+    "bug_id": "alu_operator_xor_or",
+    "model": "lint-oracle",
+    "detected": true,
+    "accepted": true,
+    "llm_calls": 2,
+    "pipeline_attempts": 2,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "alu",
+    "localized_lines": [
+      [
+        1228,
+        1288
+      ],
+      [
+        1305,
+        1363
+      ]
+    ],
+    "minimal_length": 3,
+    "status": "VERIFIED_REGRESSION_FREE",
+    "seconds": 100.7,
+    "held_out_pass": 400,
+    "held_out_total": 400,
+    "correct_on_held_out": true,
+    "exact_fix": true,
+    "diff": [],
+    "formal": {
+      "verdict": "identical",
+      "seconds": 0.0
+    }
+  },
+  "alu_operator_xor_or|noop": {
+    "bug_id": "alu_operator_xor_or",
+    "model": "noop",
+    "detected": true,
+    "accepted": false,
+    "llm_calls": 3,
+    "pipeline_attempts": 3,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "alu",
+    "localized_lines": [
+      [
+        1228,
+        1288
+      ],
+      [
+        1305,
+        1363
+      ]
+    ],
+    "minimal_length": 3,
+    "status": "REPAIR_FAILED_EXHAUSTED",
+    "seconds": 31.6
+  },
+  "alu_operator_xor_or|template": {
+    "bug_id": "alu_operator_xor_or",
+    "model": "template",
+    "detected": true,
+    "accepted": true,
+    "llm_calls": 15,
+    "pipeline_attempts": 15,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "alu",
+    "localized_lines": [
+      [
+        1228,
+        1288
+      ],
+      [
+        1305,
+        1363
+      ]
+    ],
+    "minimal_length": 3,
+    "status": "VERIFIED_REGRESSION_FREE",
+    "seconds": 642.1,
+    "held_out_pass": 400,
+    "held_out_total": 400,
+    "correct_on_held_out": true,
+    "exact_fix": false,
+    "diff": [
+      "-\t\t\t\talu_out = reg_op1 ^ reg_op2;",
+      "+\t\t\t\talu_out = reg_op2[31] ? (reg_op1 ^ reg_op2) : (reg_op1 ^ reg_op2);"
+    ],
+    "offered_lines": 120,
+    "candidate_pool": 75,
+    "candidates_tried": 15,
+    "rejections": {
+      "patch_format": 0,
+      "lint": 0,
+      "reproducer": 14,
+      "grow_prefix": 0,
+      "suite_gate": 0
+    },
+    "accepted_patch": {
+      "line": 1275,
+      "suspiciousness": 0.707,
+      "patch": "alu_out = reg_op2[31] ? (reg_op1 ^ reg_op2) : (reg_op1 ^ reg_op2);"
+    },
+    "formal": {
+      "verdict": "proven",
+      "seconds": 29.9
+    }
+  },
+  "branch_inversion_blt|oracle": {
+    "bug_id": "branch_inversion_blt",
+    "model": "oracle",
+    "detected": true,
+    "accepted": true,
+    "llm_calls": 1,
+    "pipeline_attempts": 1,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "branch",
+    "localized_lines": [
+      [
+        1228,
+        1288
+      ],
+      [
+        1490,
+        1550
+      ]
+    ],
+    "minimal_length": 3,
+    "status": "VERIFIED_REGRESSION_FREE",
+    "seconds": 111.6,
+    "held_out_pass": 400,
+    "held_out_total": 400,
+    "correct_on_held_out": true,
+    "exact_fix": true,
+    "diff": [],
+    "formal": {
+      "verdict": "identical",
+      "seconds": 0.0
+    }
+  },
+  "branch_inversion_blt|lint-oracle": {
+    "bug_id": "branch_inversion_blt",
+    "model": "lint-oracle",
+    "detected": true,
+    "accepted": true,
+    "llm_calls": 2,
+    "pipeline_attempts": 2,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "branch",
+    "localized_lines": [
+      [
+        1228,
+        1288
+      ],
+      [
+        1490,
+        1550
+      ]
+    ],
+    "minimal_length": 3,
+    "status": "VERIFIED_REGRESSION_FREE",
+    "seconds": 118.4,
+    "held_out_pass": 400,
+    "held_out_total": 400,
+    "correct_on_held_out": true,
+    "exact_fix": true,
+    "diff": [],
+    "formal": {
+      "verdict": "identical",
+      "seconds": 0.0
+    }
+  },
+  "branch_inversion_blt|noop": {
+    "bug_id": "branch_inversion_blt",
+    "model": "noop",
+    "detected": true,
+    "accepted": false,
+    "llm_calls": 3,
+    "pipeline_attempts": 3,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "branch",
+    "localized_lines": [
+      [
+        1228,
+        1288
+      ],
+      [
+        1490,
+        1550
+      ]
+    ],
+    "minimal_length": 3,
+    "status": "REPAIR_FAILED_EXHAUSTED",
+    "seconds": 48.4
+  },
+  "branch_inversion_blt|template": {
+    "bug_id": "branch_inversion_blt",
+    "model": "template",
+    "detected": true,
+    "accepted": false,
+    "llm_calls": 30,
+    "pipeline_attempts": 30,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "branch",
+    "localized_lines": [
+      [
+        1228,
+        1288
+      ],
+      [
+        1490,
+        1550
+      ]
+    ],
+    "minimal_length": 3,
+    "status": "REPAIR_FAILED_EXHAUSTED",
+    "seconds": 1132.2,
+    "offered_lines": 122,
+    "candidate_pool": 93,
+    "candidates_tried": 30,
+    "rejections": {
+      "patch_format": 0,
+      "lint": 0,
+      "reproducer": 29,
+      "grow_prefix": 0,
+      "suite_gate": 0
+    },
+    "accepted_patch": null
+  },
+  "writeback_forwarding_drop|oracle": {
+    "bug_id": "writeback_forwarding_drop",
+    "model": "oracle",
+    "detected": true,
+    "accepted": true,
+    "llm_calls": 1,
+    "pipeline_attempts": 1,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "alu",
+    "localized_lines": [
+      [
+        1228,
+        1288
+      ],
+      [
+        1305,
+        1363
+      ]
+    ],
+    "minimal_length": 3,
+    "status": "VERIFIED_REGRESSION_FREE",
+    "seconds": 93.7,
+    "held_out_pass": 400,
+    "held_out_total": 400,
+    "correct_on_held_out": true,
+    "exact_fix": true,
+    "diff": [],
+    "formal": {
+      "verdict": "identical",
+      "seconds": 0.0
+    }
+  },
+  "writeback_forwarding_drop|lint-oracle": {
+    "bug_id": "writeback_forwarding_drop",
+    "model": "lint-oracle",
+    "detected": true,
+    "accepted": true,
+    "llm_calls": 2,
+    "pipeline_attempts": 2,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "alu",
+    "localized_lines": [
+      [
+        1228,
+        1288
+      ],
+      [
+        1305,
+        1363
+      ]
+    ],
+    "minimal_length": 3,
+    "status": "VERIFIED_REGRESSION_FREE",
+    "seconds": 92.2,
+    "held_out_pass": 400,
+    "held_out_total": 400,
+    "correct_on_held_out": true,
+    "exact_fix": true,
+    "diff": [],
+    "formal": {
+      "verdict": "identical",
+      "seconds": 0.0
+    }
+  },
+  "writeback_forwarding_drop|noop": {
+    "bug_id": "writeback_forwarding_drop",
+    "model": "noop",
+    "detected": true,
+    "accepted": false,
+    "llm_calls": 3,
+    "pipeline_attempts": 3,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "alu",
+    "localized_lines": [
+      [
+        1228,
+        1288
+      ],
+      [
+        1305,
+        1363
+      ]
+    ],
+    "minimal_length": 3,
+    "status": "REPAIR_FAILED_EXHAUSTED",
+    "seconds": 30.2
+  },
+  "approx_multiplier|template": {
+    "bug_id": "approx_multiplier",
+    "model": "template",
+    "detected": true,
+    "accepted": true,
+    "llm_calls": 27,
+    "pipeline_attempts": 27,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "multiplier",
+    "localized_lines": [
+      [
+        2318,
+        2413
+      ]
+    ],
+    "minimal_length": 4,
+    "status": "VERIFIED_REGRESSION_FREE",
+    "seconds": 1850.7,
+    "held_out_pass": 400,
+    "held_out_total": 400,
+    "correct_on_held_out": true,
+    "exact_fix": false,
+    "candidate_file": "logs/experiments/repair_candidates/approx_multiplier__template.sv",
+    "formal": {
+      "verdict": "not_proven",
+      "seconds": 300.3
+    },
+    "diff": [
+      "-\tassign pcpi_rd = shift_out ? (EXTRA_MUL_FFS ? rd_q : rd) >> 32 : (EXTRA_MUL_FFS ? rd_q : rd);",
+      "+\tassign pcpi_rd = (shift_out ? (EXTRA_MUL_FFS ? rd_q : rd) >> 32 : (EXTRA_MUL_FFS ? rd_q : rd)) ^ (((rs1[11:8] != 4'h9) && (rs2[7:4] == 4'hc)) ? 32'h00000020 : 32'h0);"
+    ],
+    "offered_lines": 96,
+    "candidate_pool": 41,
+    "candidates_tried": 27,
+    "rejections": {
+      "patch_format": 0,
+      "lint": 0,
+      "reproducer": 26,
+      "grow_prefix": 0,
+      "suite_gate": 0
+    },
+    "accepted_patch": {
+      "line": 2411,
+      "suspiciousness": -1.0,
+      "patch": "assign pcpi_rd = (shift_out ? (EXTRA_MUL_FFS ? rd_q : rd) >> 32 : (EXTRA_MUL_FFS ? rd_q : rd)) ^ (((rs1[11:8] != 4'h9) && (rs2[7:4] == 4'hc)) ? 32'h00000020 : 3"
+    },
+    "witness": {
+      "exposes_patch": true,
+      "mismatch": {
+        "insn_disasm": "mul x3, x1, x2",
+        "differences": {
+          "rd_wdata": {
+            "expected": 49152,
+            "actual": 49184
+          }
+        }
+      }
+    }
+  },
+  "writeback_forwarding_drop|template": {
+    "bug_id": "writeback_forwarding_drop",
+    "model": "template",
+    "detected": true,
+    "accepted": false,
+    "llm_calls": 30,
+    "pipeline_attempts": 30,
+    "suite_gate_rejections": 2,
+    "localized_subsystem": "alu",
+    "localized_lines": [
+      [
+        1228,
+        1288
+      ],
+      [
+        1305,
+        1363
+      ]
+    ],
+    "minimal_length": 3,
+    "status": "REPAIR_FAILED_EXHAUSTED",
+    "seconds": 2257.2,
+    "offered_lines": 120,
+    "candidate_pool": 76,
+    "candidates_tried": 30,
+    "rejections": {
+      "patch_format": 0,
+      "lint": 0,
+      "reproducer": 27,
+      "grow_prefix": 0,
+      "suite_gate": 2
+    },
+    "accepted_patch": null
+  },
+  "mem_handshake_drop|oracle": {
+    "bug_id": "mem_handshake_drop",
+    "model": "oracle",
+    "detected": true,
+    "accepted": true,
+    "llm_calls": 1,
+    "pipeline_attempts": 1,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "memory",
+    "localized_lines": [
+      [
+        374,
+        442
+      ],
+      [
+        559,
+        637
+      ],
+      [
+        1853,
+        1890
+      ],
+      [
+        1305,
+        1363
+      ]
+    ],
+    "minimal_length": 3,
+    "status": "VERIFIED_REGRESSION_FREE",
+    "seconds": 286.4,
+    "held_out_pass": 400,
+    "held_out_total": 400,
+    "correct_on_held_out": true,
+    "exact_fix": true,
+    "candidate_file": "logs/experiments/repair_candidates/mem_handshake_drop__oracle.sv",
+    "formal": {
+      "verdict": "identical",
+      "seconds": 0.0
+    },
+    "diff": []
+  },
+  "mem_handshake_drop|lint-oracle": {
+    "bug_id": "mem_handshake_drop",
+    "model": "lint-oracle",
+    "detected": true,
+    "accepted": true,
+    "llm_calls": 2,
+    "pipeline_attempts": 2,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "memory",
+    "localized_lines": [
+      [
+        374,
+        442
+      ],
+      [
+        559,
+        637
+      ],
+      [
+        1853,
+        1890
+      ],
+      [
+        1305,
+        1363
+      ]
+    ],
+    "minimal_length": 3,
+    "status": "VERIFIED_REGRESSION_FREE",
+    "seconds": 245.2,
+    "held_out_pass": 400,
+    "held_out_total": 400,
+    "correct_on_held_out": true,
+    "exact_fix": true,
+    "candidate_file": "logs/experiments/repair_candidates/mem_handshake_drop__lint-oracle.sv",
+    "formal": {
+      "verdict": "identical",
+      "seconds": 0.0
+    },
+    "diff": []
+  },
+  "mem_handshake_drop|noop": {
+    "bug_id": "mem_handshake_drop",
+    "model": "noop",
+    "detected": true,
+    "accepted": false,
+    "llm_calls": 3,
+    "pipeline_attempts": 3,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "memory",
+    "localized_lines": [
+      [
+        374,
+        442
+      ],
+      [
+        559,
+        637
+      ],
+      [
+        1853,
+        1890
+      ],
+      [
+        1305,
+        1363
+      ]
+    ],
+    "minimal_length": 3,
+    "status": "REPAIR_FAILED_EXHAUSTED",
+    "seconds": 61.7
+  },
+  "mem_handshake_drop|template": {
+    "bug_id": "mem_handshake_drop",
+    "model": "template",
+    "detected": true,
+    "accepted": true,
+    "llm_calls": 6,
+    "pipeline_attempts": 6,
+    "suite_gate_rejections": 1,
+    "localized_subsystem": "memory",
+    "localized_lines": [
+      [
+        374,
+        442
+      ],
+      [
+        559,
+        637
+      ],
+      [
+        1853,
+        1890
+      ],
+      [
+        1305,
+        1363
+      ]
+    ],
+    "minimal_length": 3,
+    "status": "VERIFIED_REGRESSION_FREE",
+    "seconds": 403.0,
+    "held_out_pass": 400,
+    "held_out_total": 400,
+    "correct_on_held_out": true,
+    "exact_fix": false,
+    "candidate_file": "logs/experiments/repair_candidates/mem_handshake_drop__template.sv",
+    "diff": [
+      "-\tassign mem_la_write = resetn && !mem_state && mem_do_wdata;",
+      "+\tassign mem_la_write = resetn && !mem_state || mem_do_wdata && !(reg_op1[1:0] == 2'b10 && mem_wordsize == 1);"
+    ],
+    "offered_lines": 245,
+    "candidate_pool": 118,
+    "candidates_tried": 6,
+    "rejections": {
+      "patch_format": 0,
+      "lint": 0,
+      "reproducer": 4,
+      "grow_prefix": 0,
+      "suite_gate": 1
+    },
+    "accepted_patch": {
+      "line": 379,
+      "suspiciousness": -1.0,
+      "patch": "assign mem_la_write = resetn && !mem_state || mem_do_wdata && !(reg_op1[1:0] == 2'b10 && mem_wordsize == 1);"
+    },
+    "formal": {
+      "verdict": "not_proven",
+      "seconds": 96.1
+    },
+    "witness": null,
+    "formal_detail": {
+      "unproven_points": [
+        "mem_la_write (top-level output, look-ahead memory interface)"
+      ],
+      "proven_points": 2400,
+      "explanation": "patch asserts mem_la_write whenever the bus is idle; the native bus is unaffected (mem_wstrb is cleared in state 0), so no lockstep or held-out run can observe it",
+      "witness_hunt": "fuzzing the candidate at memory delays 0 and 3: see logs/bench/witness_hunt (RVFI does not expose mem_la_write)"
+    }
+  },
+  "and_to_or_alu|oracle": {
+    "bug_id": "and_to_or_alu",
+    "model": "oracle",
+    "detected": true,
+    "accepted": true,
+    "llm_calls": 1,
+    "pipeline_attempts": 1,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "alu",
+    "localized_lines": [
+      [
+        1228,
+        1288
+      ],
+      [
+        1305,
+        1363
+      ]
+    ],
+    "minimal_length": 3,
+    "status": "VERIFIED_REGRESSION_FREE",
+    "seconds": 122.2,
+    "held_out_pass": 400,
+    "held_out_total": 400,
+    "correct_on_held_out": true,
+    "exact_fix": true,
+    "candidate_file": "logs/experiments/repair_candidates/and_to_or_alu__oracle.sv",
+    "formal": {
+      "verdict": "identical",
+      "seconds": 0.0
+    },
+    "diff": []
+  },
+  "and_to_or_alu|lint-oracle": {
+    "bug_id": "and_to_or_alu",
+    "model": "lint-oracle",
+    "detected": true,
+    "accepted": true,
+    "llm_calls": 2,
+    "pipeline_attempts": 2,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "alu",
+    "localized_lines": [
+      [
+        1228,
+        1288
+      ],
+      [
+        1305,
+        1363
+      ]
+    ],
+    "minimal_length": 3,
+    "status": "VERIFIED_REGRESSION_FREE",
+    "seconds": 117.9,
+    "held_out_pass": 400,
+    "held_out_total": 400,
+    "correct_on_held_out": true,
+    "exact_fix": true,
+    "candidate_file": "logs/experiments/repair_candidates/and_to_or_alu__lint-oracle.sv",
+    "formal": {
+      "verdict": "identical",
+      "seconds": 0.0
+    },
+    "diff": []
+  },
+  "and_to_or_alu|noop": {
+    "bug_id": "and_to_or_alu",
+    "model": "noop",
+    "detected": true,
+    "accepted": false,
+    "llm_calls": 3,
+    "pipeline_attempts": 3,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "alu",
+    "localized_lines": [
+      [
+        1228,
+        1288
+      ],
+      [
+        1305,
+        1363
+      ]
+    ],
+    "minimal_length": 3,
+    "status": "REPAIR_FAILED_EXHAUSTED",
+    "seconds": 23.6
+  },
+  "and_to_or_alu|template": {
+    "bug_id": "and_to_or_alu",
+    "model": "template",
+    "detected": true,
+    "accepted": true,
+    "llm_calls": 14,
+    "pipeline_attempts": 14,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "alu",
+    "localized_lines": [
+      [
+        1228,
+        1288
+      ],
+      [
+        1305,
+        1363
+      ]
+    ],
+    "minimal_length": 3,
+    "status": "VERIFIED_REGRESSION_FREE",
+    "seconds": 955.2,
+    "held_out_pass": 400,
+    "held_out_total": 400,
+    "correct_on_held_out": true,
+    "exact_fix": true,
+    "candidate_file": "logs/experiments/repair_candidates/and_to_or_alu__template.sv",
+    "formal": {
+      "verdict": "identical",
+      "seconds": 0.0
+    },
+    "diff": [],
+    "offered_lines": 120,
+    "candidate_pool": 69,
+    "candidates_tried": 14,
+    "rejections": {
+      "patch_format": 0,
+      "lint": 0,
+      "reproducer": 13,
+      "grow_prefix": 0,
+      "suite_gate": 0
+    },
+    "accepted_patch": {
+      "line": 1279,
+      "suspiciousness": 0.577,
+      "patch": "alu_out = reg_op1 & reg_op2;"
+    }
+  },
+  "fast_mul_decode_and_to_or|oracle": {
+    "bug_id": "fast_mul_decode_and_to_or",
+    "model": "oracle",
+    "detected": false
+  },
+  "fast_mul_decode_and_to_or|lint-oracle": {
+    "bug_id": "fast_mul_decode_and_to_or",
+    "model": "lint-oracle",
+    "detected": false
+  },
+  "fast_mul_decode_and_to_or|noop": {
+    "bug_id": "fast_mul_decode_and_to_or",
+    "model": "noop",
+    "detected": false
+  },
+  "fast_mul_decode_and_to_or|template": {
+    "bug_id": "fast_mul_decode_and_to_or",
+    "model": "template",
+    "detected": false
+  },
+  "fast_mul_rs2_signed_widened|oracle": {
+    "bug_id": "fast_mul_rs2_signed_widened",
+    "model": "oracle",
+    "detected": true,
+    "accepted": true,
+    "llm_calls": 1,
+    "pipeline_attempts": 1,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "multiplier",
+    "localized_lines": [
+      [
+        2318,
+        2413
+      ]
+    ],
+    "minimal_length": 4,
+    "status": "VERIFIED_REGRESSION_FREE",
+    "seconds": 140.1,
+    "held_out_pass": 400,
+    "held_out_total": 400,
+    "correct_on_held_out": true,
+    "exact_fix": true,
+    "candidate_file": "logs/experiments/repair_candidates/fast_mul_rs2_signed_widened__oracle.sv",
+    "formal": {
+      "verdict": "identical",
+      "seconds": 0.0
+    },
+    "diff": []
+  },
+  "fast_mul_rs2_signed_widened|lint-oracle": {
+    "bug_id": "fast_mul_rs2_signed_widened",
+    "model": "lint-oracle",
+    "detected": true,
+    "accepted": true,
+    "llm_calls": 2,
+    "pipeline_attempts": 2,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "multiplier",
+    "localized_lines": [
+      [
+        2318,
+        2413
+      ]
+    ],
+    "minimal_length": 4,
+    "status": "VERIFIED_REGRESSION_FREE",
+    "seconds": 154.5,
+    "held_out_pass": 400,
+    "held_out_total": 400,
+    "correct_on_held_out": true,
+    "exact_fix": true,
+    "candidate_file": "logs/experiments/repair_candidates/fast_mul_rs2_signed_widened__lint-oracle.sv",
+    "formal": {
+      "verdict": "identical",
+      "seconds": 0.0
+    },
+    "diff": []
+  },
+  "fast_mul_rs2_signed_widened|noop": {
+    "bug_id": "fast_mul_rs2_signed_widened",
+    "model": "noop",
+    "detected": true,
+    "accepted": false,
+    "llm_calls": 3,
+    "pipeline_attempts": 3,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "multiplier",
+    "localized_lines": [
+      [
+        2318,
+        2413
+      ]
+    ],
+    "minimal_length": 4,
+    "status": "REPAIR_FAILED_EXHAUSTED",
+    "seconds": 87.3
+  },
+  "fast_mul_rs2_signed_widened|template": {
+    "bug_id": "fast_mul_rs2_signed_widened",
+    "model": "template",
+    "detected": true,
+    "accepted": true,
+    "llm_calls": 11,
+    "pipeline_attempts": 11,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "multiplier",
+    "localized_lines": [
+      [
+        2318,
+        2413
+      ]
+    ],
+    "minimal_length": 4,
+    "status": "VERIFIED_REGRESSION_FREE",
+    "seconds": 641.9,
+    "held_out_pass": 400,
+    "held_out_total": 400,
+    "correct_on_held_out": true,
+    "exact_fix": true,
+    "candidate_file": "logs/experiments/repair_candidates/fast_mul_rs2_signed_widened__template.sv",
+    "formal": {
+      "verdict": "identical",
+      "seconds": 0.0
+    },
+    "diff": [],
+    "offered_lines": 96,
+    "candidate_pool": 32,
+    "candidates_tried": 11,
+    "rejections": {
+      "patch_format": 0,
+      "lint": 0,
+      "reproducer": 10,
+      "grow_prefix": 0,
+      "suite_gate": 0
+    },
+    "accepted_patch": {
+      "line": 2338,
+      "suspiciousness": -1.0,
+      "patch": "wire instr_rs2_signed = |{instr_mulh};"
+    }
+  },
+  "mem_addr_bit2_stuck|oracle": {
+    "bug_id": "mem_addr_bit2_stuck",
+    "model": "oracle",
+    "detected": true,
+    "accepted": true,
+    "llm_calls": 1,
+    "pipeline_attempts": 1,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "memory",
+    "localized_lines": [
+      [
+        374,
+        442
+      ],
+      [
+        559,
+        637
+      ],
+      [
+        1853,
+        1890
+      ],
+      [
+        1305,
+        1363
+      ]
+    ],
+    "minimal_length": 3,
+    "status": "VERIFIED_REGRESSION_FREE",
+    "seconds": 342.3,
+    "held_out_pass": 400,
+    "held_out_total": 400,
+    "correct_on_held_out": true,
+    "exact_fix": true,
+    "candidate_file": "logs/experiments/repair_candidates/mem_addr_bit2_stuck__oracle.sv",
+    "formal": {
+      "verdict": "identical",
+      "seconds": 0.0
+    },
+    "diff": []
+  },
+  "mem_addr_bit2_stuck|lint-oracle": {
+    "bug_id": "mem_addr_bit2_stuck",
+    "model": "lint-oracle",
+    "detected": true,
+    "accepted": true,
+    "llm_calls": 2,
+    "pipeline_attempts": 2,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "memory",
+    "localized_lines": [
+      [
+        374,
+        442
+      ],
+      [
+        559,
+        637
+      ],
+      [
+        1853,
+        1890
+      ],
+      [
+        1305,
+        1363
+      ]
+    ],
+    "minimal_length": 3,
+    "status": "VERIFIED_REGRESSION_FREE",
+    "seconds": 197.5,
+    "held_out_pass": 400,
+    "held_out_total": 400,
+    "correct_on_held_out": true,
+    "exact_fix": true,
+    "candidate_file": "logs/experiments/repair_candidates/mem_addr_bit2_stuck__lint-oracle.sv",
+    "formal": {
+      "verdict": "identical",
+      "seconds": 0.0
+    },
+    "diff": []
+  },
+  "mem_addr_bit2_stuck|noop": {
+    "bug_id": "mem_addr_bit2_stuck",
+    "model": "noop",
+    "detected": true,
+    "accepted": false,
+    "llm_calls": 3,
+    "pipeline_attempts": 3,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "memory",
+    "localized_lines": [
+      [
+        374,
+        442
+      ],
+      [
+        559,
+        637
+      ],
+      [
+        1853,
+        1890
+      ],
+      [
+        1305,
+        1363
+      ]
+    ],
+    "minimal_length": 3,
+    "status": "REPAIR_FAILED_EXHAUSTED",
+    "seconds": 53.4
+  },
+  "mem_addr_bit2_stuck|template": {
+    "bug_id": "mem_addr_bit2_stuck",
+    "model": "template",
+    "detected": true,
+    "accepted": true,
+    "llm_calls": 18,
+    "pipeline_attempts": 18,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "memory",
+    "localized_lines": [
+      [
+        374,
+        442
+      ],
+      [
+        559,
+        637
+      ],
+      [
+        1853,
+        1890
+      ],
+      [
+        1305,
+        1363
+      ]
+    ],
+    "minimal_length": 3,
+    "status": "VERIFIED_REGRESSION_FREE",
+    "seconds": 1182.5,
+    "held_out_pass": 400,
+    "held_out_total": 400,
+    "correct_on_held_out": true,
+    "exact_fix": true,
+    "candidate_file": "logs/experiments/repair_candidates/mem_addr_bit2_stuck__template.sv",
+    "formal": {
+      "verdict": "identical",
+      "seconds": 0.0
+    },
+    "diff": [],
+    "offered_lines": 245,
+    "candidate_pool": 120,
+    "candidates_tried": 18,
+    "rejections": {
+      "patch_format": 0,
+      "lint": 0,
+      "reproducer": 17,
+      "grow_prefix": 0,
+      "suite_gate": 0
+    },
+    "accepted_patch": {
+      "line": 575,
+      "suspiciousness": -1.0,
+      "patch": "mem_addr <= mem_la_addr;"
+    }
+  },
+  "slt_signed_as_unsigned|oracle": {
+    "bug_id": "slt_signed_as_unsigned",
+    "model": "oracle",
+    "detected": true,
+    "accepted": true,
+    "llm_calls": 1,
+    "pipeline_attempts": 1,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "alu",
+    "localized_lines": [
+      [
+        1228,
+        1288
+      ],
+      [
+        1305,
+        1363
+      ]
+    ],
+    "minimal_length": 3,
+    "status": "VERIFIED_REGRESSION_FREE",
+    "seconds": 118.6,
+    "held_out_pass": 400,
+    "held_out_total": 400,
+    "correct_on_held_out": true,
+    "exact_fix": true,
+    "candidate_file": "logs/experiments/repair_candidates/slt_signed_as_unsigned__oracle.sv",
+    "formal": {
+      "verdict": "identical",
+      "seconds": 0.0
+    },
+    "diff": []
+  },
+  "slt_signed_as_unsigned|lint-oracle": {
+    "bug_id": "slt_signed_as_unsigned",
+    "model": "lint-oracle",
+    "detected": true,
+    "accepted": true,
+    "llm_calls": 2,
+    "pipeline_attempts": 2,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "alu",
+    "localized_lines": [
+      [
+        1228,
+        1288
+      ],
+      [
+        1305,
+        1363
+      ]
+    ],
+    "minimal_length": 3,
+    "status": "VERIFIED_REGRESSION_FREE",
+    "seconds": 152.6,
+    "held_out_pass": 400,
+    "held_out_total": 400,
+    "correct_on_held_out": true,
+    "exact_fix": true,
+    "candidate_file": "logs/experiments/repair_candidates/slt_signed_as_unsigned__lint-oracle.sv",
+    "formal": {
+      "verdict": "identical",
+      "seconds": 0.0
+    },
+    "diff": []
+  },
+  "slt_signed_as_unsigned|noop": {
+    "bug_id": "slt_signed_as_unsigned",
+    "model": "noop",
+    "detected": true,
+    "accepted": false,
+    "llm_calls": 3,
+    "pipeline_attempts": 3,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "alu",
+    "localized_lines": [
+      [
+        1228,
+        1288
+      ],
+      [
+        1305,
+        1363
+      ]
+    ],
+    "minimal_length": 3,
+    "status": "REPAIR_FAILED_EXHAUSTED",
+    "seconds": 45.2
+  },
+  "slt_signed_as_unsigned|template": {
+    "bug_id": "slt_signed_as_unsigned",
+    "model": "template",
+    "detected": true,
+    "accepted": false,
+    "llm_calls": 30,
+    "pipeline_attempts": 30,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "alu",
+    "localized_lines": [
+      [
+        1228,
+        1288
+      ],
+      [
+        1305,
+        1363
+      ]
+    ],
+    "minimal_length": 3,
+    "status": "REPAIR_FAILED_EXHAUSTED",
+    "seconds": 2341.6,
+    "offered_lines": 120,
+    "candidate_pool": 70,
+    "candidates_tried": 30,
+    "rejections": {
+      "patch_format": 0,
+      "lint": 0,
+      "reproducer": 29,
+      "grow_prefix": 0,
+      "suite_gate": 0
+    },
+    "accepted_patch": null
+  },
+  "beq_inverted|oracle": {
+    "bug_id": "beq_inverted",
+    "model": "oracle",
+    "detected": true,
+    "accepted": true,
+    "llm_calls": 1,
+    "pipeline_attempts": 1,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "branch",
+    "localized_lines": [
+      [
+        1228,
+        1288
+      ],
+      [
+        1490,
+        1550
+      ]
+    ],
+    "minimal_length": 2,
+    "status": "VERIFIED_REGRESSION_FREE",
+    "seconds": 237.6,
+    "held_out_pass": 400,
+    "held_out_total": 400,
+    "correct_on_held_out": true,
+    "exact_fix": true,
+    "candidate_file": "logs/experiments/repair_candidates/beq_inverted__oracle.sv",
+    "formal": {
+      "verdict": "identical",
+      "seconds": 0.0
+    },
+    "diff": []
+  },
+  "beq_inverted|lint-oracle": {
+    "bug_id": "beq_inverted",
+    "model": "lint-oracle",
+    "detected": true,
+    "accepted": true,
+    "llm_calls": 2,
+    "pipeline_attempts": 2,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "branch",
+    "localized_lines": [
+      [
+        1228,
+        1288
+      ],
+      [
+        1490,
+        1550
+      ]
+    ],
+    "minimal_length": 2,
+    "status": "VERIFIED_REGRESSION_FREE",
+    "seconds": 153.9,
+    "held_out_pass": 400,
+    "held_out_total": 400,
+    "correct_on_held_out": true,
+    "exact_fix": true,
+    "candidate_file": "logs/experiments/repair_candidates/beq_inverted__lint-oracle.sv",
+    "formal": {
+      "verdict": "identical",
+      "seconds": 0.0
+    },
+    "diff": []
+  },
+  "beq_inverted|noop": {
+    "bug_id": "beq_inverted",
+    "model": "noop",
+    "detected": true,
+    "accepted": false,
+    "llm_calls": 3,
+    "pipeline_attempts": 3,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "branch",
+    "localized_lines": [
+      [
+        1228,
+        1288
+      ],
+      [
+        1490,
+        1550
+      ]
+    ],
+    "minimal_length": 2,
+    "status": "REPAIR_FAILED_EXHAUSTED",
+    "seconds": 47.8
+  },
+  "beq_inverted|template": {
+    "bug_id": "beq_inverted",
+    "model": "template",
+    "detected": true,
+    "accepted": true,
+    "llm_calls": 15,
+    "pipeline_attempts": 15,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "branch",
+    "localized_lines": [
+      [
+        1228,
+        1288
+      ],
+      [
+        1490,
+        1550
+      ]
+    ],
+    "minimal_length": 2,
+    "status": "VERIFIED_REGRESSION_FREE",
+    "seconds": 738.3,
+    "held_out_pass": 400,
+    "held_out_total": 400,
+    "correct_on_held_out": true,
+    "exact_fix": true,
+    "candidate_file": "logs/experiments/repair_candidates/beq_inverted__template.sv",
+    "formal": {
+      "verdict": "identical",
+      "seconds": 0.0
+    },
+    "diff": [],
+    "offered_lines": 122,
+    "candidate_pool": 88,
+    "candidates_tried": 15,
+    "rejections": {
+      "patch_format": 0,
+      "lint": 0,
+      "reproducer": 14,
+      "grow_prefix": 0,
+      "suite_gate": 0
+    },
+    "accepted_patch": {
+      "line": 1254,
+      "suspiciousness": 0.577,
+      "patch": "alu_out_0 = alu_eq;"
+    }
+  },
+  "lui_auipc_rd_x0|oracle": {
+    "bug_id": "lui_auipc_rd_x0",
+    "model": "oracle",
+    "detected": true,
+    "accepted": true,
+    "llm_calls": 1,
+    "pipeline_attempts": 1,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "fetch_launch",
+    "localized_lines": [
+      [
+        1489,
+        1553
+      ],
+      [
+        1305,
+        1363
+      ],
+      [
+        1228,
+        1288
+      ]
+    ],
+    "minimal_length": 2,
+    "status": "VERIFIED_REGRESSION_FREE",
+    "seconds": 147.1,
+    "held_out_pass": 400,
+    "held_out_total": 400,
+    "correct_on_held_out": true,
+    "exact_fix": true,
+    "candidate_file": "logs/experiments/repair_candidates/lui_auipc_rd_x0__oracle.sv",
+    "formal": {
+      "verdict": "identical",
+      "seconds": 0.0
+    },
+    "diff": []
+  },
+  "lui_auipc_rd_x0|lint-oracle": {
+    "bug_id": "lui_auipc_rd_x0",
+    "model": "lint-oracle",
+    "detected": true,
+    "accepted": true,
+    "llm_calls": 2,
+    "pipeline_attempts": 2,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "fetch_launch",
+    "localized_lines": [
+      [
+        1489,
+        1553
+      ],
+      [
+        1305,
+        1363
+      ],
+      [
+        1228,
+        1288
+      ]
+    ],
+    "minimal_length": 2,
+    "status": "VERIFIED_REGRESSION_FREE",
+    "seconds": 160.4,
+    "held_out_pass": 400,
+    "held_out_total": 400,
+    "correct_on_held_out": true,
+    "exact_fix": true,
+    "candidate_file": "logs/experiments/repair_candidates/lui_auipc_rd_x0__lint-oracle.sv",
+    "formal": {
+      "verdict": "identical",
+      "seconds": 0.0
+    },
+    "diff": []
+  },
+  "lui_auipc_rd_x0|noop": {
+    "bug_id": "lui_auipc_rd_x0",
+    "model": "noop",
+    "detected": true,
+    "accepted": false,
+    "llm_calls": 3,
+    "pipeline_attempts": 3,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "fetch_launch",
+    "localized_lines": [
+      [
+        1489,
+        1553
+      ],
+      [
+        1305,
+        1363
+      ],
+      [
+        1228,
+        1288
+      ]
+    ],
+    "minimal_length": 2,
+    "status": "REPAIR_FAILED_EXHAUSTED",
+    "seconds": 47.0
+  },
+  "lui_auipc_rd_x0|template": {
+    "bug_id": "lui_auipc_rd_x0",
+    "model": "template",
+    "detected": true,
+    "accepted": false,
+    "llm_calls": 30,
+    "pipeline_attempts": 30,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "fetch_launch",
+    "localized_lines": [
+      [
+        1489,
+        1553
+      ],
+      [
+        1305,
+        1363
+      ],
+      [
+        1228,
+        1288
+      ]
+    ],
+    "minimal_length": 2,
+    "status": "REPAIR_FAILED_EXHAUSTED",
+    "seconds": 1909.3,
+    "offered_lines": 185,
+    "candidate_pool": 126,
+    "candidates_tried": 30,
+    "rejections": {
+      "patch_format": 0,
+      "lint": 0,
+      "reproducer": 29,
+      "grow_prefix": 0,
+      "suite_gate": 0
+    },
+    "accepted_patch": null
+  },
+  "store_after_store_dropped|oracle": {
+    "bug_id": "store_after_store_dropped",
+    "model": "oracle",
+    "detected": true,
+    "accepted": true,
+    "llm_calls": 1,
+    "pipeline_attempts": 1,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "memory",
+    "localized_lines": [
+      [
+        380,
+        448
+      ],
+      [
+        565,
+        643
+      ],
+      [
+        1859,
+        1896
+      ],
+      [
+        1311,
+        1369
+      ]
+    ],
+    "minimal_length": 4,
+    "status": "VERIFIED_REGRESSION_FREE",
+    "seconds": 163.5,
+    "held_out_pass": 400,
+    "held_out_total": 400,
+    "correct_on_held_out": true,
+    "exact_fix": false,
+    "candidate_file": "logs/experiments/repair_candidates/store_after_store_dropped__oracle.sv",
+    "formal": {
+      "verdict": "proven",
+      "seconds": 114.3
+    },
+    "diff": [
+      "+\treg bug_prev_data_store;",
+      "+\talways @(posedge clk) begin",
+      "+\t\tif (!resetn) bug_prev_data_store <= 0;",
+      "+\t\telse if (mem_state == 2 && mem_xfer) bug_prev_data_store <= 1;",
+      "+\t\telse if (mem_state == 1 && mem_xfer && !mem_instr) bug_prev_data_store <= 0;",
+      "+\tend"
+    ]
+  },
+  "store_after_store_dropped|lint-oracle": {
+    "bug_id": "store_after_store_dropped",
+    "model": "lint-oracle",
+    "detected": true,
+    "accepted": true,
+    "llm_calls": 2,
+    "pipeline_attempts": 2,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "memory",
+    "localized_lines": [
+      [
+        380,
+        448
+      ],
+      [
+        565,
+        643
+      ],
+      [
+        1859,
+        1896
+      ],
+      [
+        1311,
+        1369
+      ]
+    ],
+    "minimal_length": 4,
+    "status": "VERIFIED_REGRESSION_FREE",
+    "seconds": 173.9,
+    "held_out_pass": 400,
+    "held_out_total": 400,
+    "correct_on_held_out": true,
+    "exact_fix": false,
+    "candidate_file": "logs/experiments/repair_candidates/store_after_store_dropped__lint-oracle.sv",
+    "formal": {
+      "verdict": "proven",
+      "seconds": 158.4
+    },
+    "diff": [
+      "+\treg bug_prev_data_store;",
+      "+\talways @(posedge clk) begin",
+      "+\t\tif (!resetn) bug_prev_data_store <= 0;",
+      "+\t\telse if (mem_state == 2 && mem_xfer) bug_prev_data_store <= 1;",
+      "+\t\telse if (mem_state == 1 && mem_xfer && !mem_instr) bug_prev_data_store <= 0;",
+      "+\tend"
+    ]
+  },
+  "store_after_store_dropped|noop": {
+    "bug_id": "store_after_store_dropped",
+    "model": "noop",
+    "detected": true,
+    "accepted": false,
+    "llm_calls": 3,
+    "pipeline_attempts": 3,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "memory",
+    "localized_lines": [
+      [
+        380,
+        448
+      ],
+      [
+        565,
+        643
+      ],
+      [
+        1859,
+        1896
+      ],
+      [
+        1311,
+        1369
+      ]
+    ],
+    "minimal_length": 4,
+    "status": "REPAIR_FAILED_EXHAUSTED",
+    "seconds": 62.1
+  },
+  "store_after_store_dropped|template": {
+    "bug_id": "store_after_store_dropped",
+    "model": "template",
+    "detected": true,
+    "accepted": true,
+    "llm_calls": 16,
+    "pipeline_attempts": 16,
+    "suite_gate_rejections": 1,
+    "localized_subsystem": "memory",
+    "localized_lines": [
+      [
+        380,
+        448
+      ],
+      [
+        565,
+        643
+      ],
+      [
+        1859,
+        1896
+      ],
+      [
+        1311,
+        1369
+      ]
+    ],
+    "minimal_length": 4,
+    "status": "VERIFIED_REGRESSION_FREE",
+    "seconds": 1456.2,
+    "held_out_pass": 400,
+    "held_out_total": 400,
+    "correct_on_held_out": true,
+    "exact_fix": false,
+    "candidate_file": "logs/experiments/repair_candidates/store_after_store_dropped__template.sv",
+    "formal": {
+      "verdict": "proven",
+      "seconds": 266.0
+    },
+    "diff": [
+      "+\treg bug_prev_data_store;",
+      "+\talways @(posedge clk) begin",
+      "+\t\tif (!resetn) bug_prev_data_store <= 0;",
+      "+\t\telse if (mem_state == 2 && mem_xfer) bug_prev_data_store <= 1;",
+      "+\t\telse if (mem_state == 1 && mem_xfer && !mem_instr) bug_prev_data_store <= 0;",
+      "+\tend",
+      "-\t\t\t\tmem_wstrb <= mem_la_wstrb & {4{mem_la_write}};",
+      "+\t\t\t\tmem_wstrb <= mem_la_wstrb & {4{mem_la_write || !bug_prev_data_store}};"
+    ],
+    "offered_lines": 245,
+    "candidate_pool": 114,
+    "candidates_tried": 16,
+    "rejections": {
+      "patch_format": 0,
+      "lint": 0,
+      "reproducer": 14,
+      "grow_prefix": 0,
+      "suite_gate": 1
+    },
+    "accepted_patch": {
+      "line": 582,
+      "suspiciousness": -1.0,
+      "patch": "mem_wstrb <= mem_la_wstrb & {4{mem_la_write || !bug_prev_data_store}};"
+    }
+  },
+  "store_after_store_dropped_intermittent|oracle": {
+    "bug_id": "store_after_store_dropped_intermittent",
+    "model": "oracle",
+    "detected": true,
+    "accepted": true,
+    "llm_calls": 1,
+    "pipeline_attempts": 1,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "memory",
+    "localized_lines": [
+      [
+        382,
+        450
+      ],
+      [
+        567,
+        645
+      ],
+      [
+        1861,
+        1898
+      ],
+      [
+        1313,
+        1371
+      ]
+    ],
+    "minimal_length": 27,
+    "status": "VERIFIED_REGRESSION_FREE",
+    "seconds": 256.6,
+    "held_out_pass": 400,
+    "held_out_total": 400,
+    "correct_on_held_out": true,
+    "exact_fix": false,
+    "candidate_file": "logs/experiments/repair_candidates/store_after_store_dropped_intermittent__oracle.sv",
+    "formal": {
+      "verdict": "proven",
+      "seconds": 222.1
+    },
+    "diff": [
+      "+\treg bug_prev_data_store;",
+      "+\treg [2:0] bug_phase;",
+      "+\talways @(posedge clk) begin",
+      "+\t\tbug_phase <= resetn ? bug_phase + 3'd1 : 3'd0;",
+      "+\t\tif (!resetn) bug_prev_data_store <= 0;",
+      "+\t\telse if (mem_state == 2 && mem_xfer) bug_prev_data_store <= 1;",
+      "+\t\telse if (mem_state == 1 && mem_xfer && !mem_instr) bug_prev_data_store <= 0;",
+      "+\tend"
+    ]
+  },
+  "store_after_store_dropped_intermittent|lint-oracle": {
+    "bug_id": "store_after_store_dropped_intermittent",
+    "model": "lint-oracle",
+    "detected": true,
+    "accepted": true,
+    "llm_calls": 2,
+    "pipeline_attempts": 2,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "memory",
+    "localized_lines": [
+      [
+        382,
+        450
+      ],
+      [
+        567,
+        645
+      ],
+      [
+        1861,
+        1898
+      ],
+      [
+        1313,
+        1371
+      ]
+    ],
+    "minimal_length": 27,
+    "status": "VERIFIED_REGRESSION_FREE",
+    "seconds": 161.2,
+    "held_out_pass": 400,
+    "held_out_total": 400,
+    "correct_on_held_out": true,
+    "exact_fix": false,
+    "candidate_file": "logs/experiments/repair_candidates/store_after_store_dropped_intermittent__lint-oracle.sv",
+    "formal": {
+      "verdict": "proven",
+      "seconds": 127.9
+    },
+    "diff": [
+      "+\treg bug_prev_data_store;",
+      "+\treg [2:0] bug_phase;",
+      "+\talways @(posedge clk) begin",
+      "+\t\tbug_phase <= resetn ? bug_phase + 3'd1 : 3'd0;",
+      "+\t\tif (!resetn) bug_prev_data_store <= 0;",
+      "+\t\telse if (mem_state == 2 && mem_xfer) bug_prev_data_store <= 1;",
+      "+\t\telse if (mem_state == 1 && mem_xfer && !mem_instr) bug_prev_data_store <= 0;",
+      "+\tend"
+    ]
+  },
+  "store_after_store_dropped_intermittent|noop": {
+    "bug_id": "store_after_store_dropped_intermittent",
+    "model": "noop",
+    "detected": true,
+    "accepted": false,
+    "llm_calls": 3,
+    "pipeline_attempts": 3,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "memory",
+    "localized_lines": [
+      [
+        382,
+        450
+      ],
+      [
+        567,
+        645
+      ],
+      [
+        1861,
+        1898
+      ],
+      [
+        1313,
+        1371
+      ]
+    ],
+    "minimal_length": 27,
+    "status": "REPAIR_FAILED_EXHAUSTED",
+    "seconds": 49.7
+  },
+  "store_after_store_dropped_intermittent|template": {
+    "bug_id": "store_after_store_dropped_intermittent",
+    "model": "template",
+    "detected": true,
+    "accepted": true,
+    "llm_calls": 16,
+    "pipeline_attempts": 16,
+    "suite_gate_rejections": 1,
+    "localized_subsystem": "memory",
+    "localized_lines": [
+      [
+        382,
+        450
+      ],
+      [
+        567,
+        645
+      ],
+      [
+        1861,
+        1898
+      ],
+      [
+        1313,
+        1371
+      ]
+    ],
+    "minimal_length": 27,
+    "status": "VERIFIED_REGRESSION_FREE",
+    "seconds": 776.3,
+    "held_out_pass": 400,
+    "held_out_total": 400,
+    "correct_on_held_out": true,
+    "exact_fix": false,
+    "candidate_file": "logs/experiments/repair_candidates/store_after_store_dropped_intermittent__template.sv",
+    "formal": {
+      "verdict": "proven",
+      "seconds": 149.8
+    },
+    "diff": [
+      "+\treg bug_prev_data_store;",
+      "+\treg [2:0] bug_phase;",
+      "+\talways @(posedge clk) begin",
+      "+\t\tbug_phase <= resetn ? bug_phase + 3'd1 : 3'd0;",
+      "+\t\tif (!resetn) bug_prev_data_store <= 0;",
+      "+\t\telse if (mem_state == 2 && mem_xfer) bug_prev_data_store <= 1;",
+      "+\t\telse if (mem_state == 1 && mem_xfer && !mem_instr) bug_prev_data_store <= 0;",
+      "+\tend",
+      "-\t\t\t\tmem_wstrb <= mem_la_wstrb & {4{mem_la_write}};",
+      "+\t\t\t\tmem_wstrb <= mem_la_wstrb & {4{mem_la_write || !(bug_prev_data_store && bug_phase == 3'd0)}};"
+    ],
+    "offered_lines": 245,
+    "candidate_pool": 118,
+    "candidates_tried": 16,
+    "rejections": {
+      "patch_format": 0,
+      "lint": 0,
+      "reproducer": 14,
+      "grow_prefix": 0,
+      "suite_gate": 1
+    },
+    "accepted_patch": {
+      "line": 584,
+      "suspiciousness": -1.0,
+      "patch": "mem_wstrb <= mem_la_wstrb & {4{mem_la_write || !(bug_prev_data_store && bug_phase == 3'd0)}};"
+    }
+  },
+  "stale_latched_branch|oracle": {
+    "bug_id": "stale_latched_branch",
+    "model": "oracle",
+    "detected": true,
+    "accepted": true,
+    "llm_calls": 1,
+    "pipeline_attempts": 1,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "branch",
+    "localized_lines": [
+      [
+        1228,
+        1288
+      ],
+      [
+        1490,
+        1550
+      ],
+      [
+        1489,
+        1553
+      ]
+    ],
+    "minimal_length": 8,
+    "status": "VERIFIED_REGRESSION_FREE",
+    "seconds": 173.5,
+    "held_out_pass": 400,
+    "held_out_total": 400,
+    "correct_on_held_out": true,
+    "exact_fix": true,
+    "candidate_file": "logs/experiments/repair_candidates/stale_latched_branch__oracle.sv",
+    "formal": {
+      "verdict": "identical",
+      "seconds": 0.0
+    },
+    "diff": []
+  },
+  "stale_latched_branch|lint-oracle": {
+    "bug_id": "stale_latched_branch",
+    "model": "lint-oracle",
+    "detected": true,
+    "accepted": true,
+    "llm_calls": 2,
+    "pipeline_attempts": 2,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "branch",
+    "localized_lines": [
+      [
+        1228,
+        1288
+      ],
+      [
+        1490,
+        1550
+      ],
+      [
+        1489,
+        1553
+      ]
+    ],
+    "minimal_length": 8,
+    "status": "VERIFIED_REGRESSION_FREE",
+    "seconds": 206.2,
+    "held_out_pass": 400,
+    "held_out_total": 400,
+    "correct_on_held_out": true,
+    "exact_fix": true,
+    "candidate_file": "logs/experiments/repair_candidates/stale_latched_branch__lint-oracle.sv",
+    "formal": {
+      "verdict": "identical",
+      "seconds": 0.0
+    },
+    "diff": []
+  },
+  "stale_latched_branch|noop": {
+    "bug_id": "stale_latched_branch",
+    "model": "noop",
+    "detected": true,
+    "accepted": false,
+    "llm_calls": 3,
+    "pipeline_attempts": 3,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "branch",
+    "localized_lines": [
+      [
+        1228,
+        1288
+      ],
+      [
+        1490,
+        1550
+      ],
+      [
+        1489,
+        1553
+      ]
+    ],
+    "minimal_length": 8,
+    "status": "REPAIR_FAILED_EXHAUSTED",
+    "seconds": 68.6
+  },
+  "stale_latched_branch|template": {
+    "bug_id": "stale_latched_branch",
+    "model": "template",
+    "detected": true,
+    "accepted": false,
+    "llm_calls": 30,
+    "pipeline_attempts": 30,
+    "suite_gate_rejections": 0,
+    "localized_subsystem": "branch",
+    "localized_lines": [
+      [
+        1228,
+        1288
+      ],
+      [
+        1490,
+        1550
+      ],
+      [
+        1489,
+        1553
+      ]
+    ],
+    "minimal_length": 8,
+    "status": "REPAIR_FAILED_EXHAUSTED",
+    "seconds": 1335.5,
+    "offered_lines": 126,
+    "candidate_pool": 89,
+    "candidates_tried": 30,
+    "rejections": {
+      "patch_format": 0,
+      "lint": 0,
+      "reproducer": 29,
+      "grow_prefix": 0,
+      "suite_gate": 0
+    },
+    "accepted_patch": null
+  }
+}
