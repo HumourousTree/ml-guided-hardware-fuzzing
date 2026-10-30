@@ -1,6 +1,6 @@
 # v0.4 evaluation results
 
-Compact record of every experiment in the paper (`paper/main.tex`). `comparison_report.md` lists every number with its meaning;
+Compact record of every experiment in the paper (Overleaf repo `HumourousTree/Hardware-Fuzzing`). `comparison_report.md` lists every number with its meaning;
 `python tools/compare_literature.py --logs results/v0.4` regenerates the paper's tables and figures from this folder (except the
 unique-coverage-point counts, which need the raw `logs/`).
 

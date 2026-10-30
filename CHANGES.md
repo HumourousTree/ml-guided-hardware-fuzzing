@@ -104,3 +104,13 @@ Not done: anything needing an LLM (semantic/hybrid generation, pass@k) - no API 
   upstream), the superseded master "control" run, split repair result files; accepted repair patches are stored as diffs.
 - `requirements.txt` lists every third-party package (matplotlib added); `hw_design/picorv32.v` (campaign mirror) is ignored;
   result logs under `results/` are committed. README rewritten with a layout map; `results/v0.4/README.md` describes the data.
+
+# v0.4.2 (LLM budget, paper moved to Overleaf repo)
+- `harness/llm_budget.py`: every real Gemini request is metered: per-model daily cap (`GEMINI_DAILY_LIMIT`, default 15),
+  minimum interval (`GEMINI_MIN_INTERVAL_S`, default 10 s), a 429/quota error blocks the model until the Pacific-time reset,
+  state in `logs/llm_budget.json`, call log in `logs/llm_calls.jsonl`; scripted clients (tests, repair baselines) are not
+  metered. Call sites are labelled (`stimulus_expansion`, `rtl_repair`, `semantic_generation`). 5 new tests (80 total).
+- Correction: the Gemini key was available throughout v0.4 (`pico_campaign` loads it from `~/.bashrc`); the LLM experiments
+  were not run, not blocked. Key verified with one metered request on 2026-10-31.
+- The paper text moved to the Overleaf repo HumourousTree/Hardware-Fuzzing; `paper/` here holds only the generated tables,
+  macros and figures (`tools/compare_literature.py --tex` checks the Overleaf copy for undefined macros).

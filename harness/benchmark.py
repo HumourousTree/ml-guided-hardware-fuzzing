@@ -329,7 +329,7 @@ def main():
         from harness.pico_campaign import _get_gemini_client, _generate_with_gemini
         client, models = _get_gemini_client()
         if client is None: raise SystemExit("semantic/hybrid need GEMINI_API_KEY (or run only random/mutation)")
-        llm_fn = lambda prompt: _generate_with_gemini(client, models, prompt)[0]
+        llm_fn = lambda prompt: _generate_with_gemini(client, models, prompt, purpose="semantic_generation")[0]
     for seed in range(a.seed_start, a.seed_start + a.seeds):
         for m in a.methods:
             work = get_space_safe_tempdir(f"bench-{m}-{seed}-")

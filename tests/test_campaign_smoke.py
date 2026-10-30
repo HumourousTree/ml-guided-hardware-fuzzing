@@ -33,7 +33,7 @@ class FakeClient:
     chats = None
 
 
-def fake_generate(client, models, prompt):
+def fake_generate(client, models, prompt, purpose=""):
     client.prompts.append(prompt)
     m = re.search(r"\(lines (\d+)-(\d+)\)", prompt)
     a, b = int(m.group(1)), int(m.group(2))
@@ -133,7 +133,7 @@ class TestCampaign(unittest.TestCase):
         import random
         good = json.dumps(pc.DEFAULT_SEED_PROGRAMS[0]); bad = json.dumps({"id": "b", "base": "0x0", "words": ["0x00000000"] * 5})
         answers = iter([bad, good]); prompts = []
-        def gen(client, models, prompt): prompts.append(prompt); return next(answers), "fake", []
+        def gen(client, models, prompt, purpose=""): prompts.append(prompt); return next(answers), "fake", []
         tel = {}
         with mock.patch.multiple(pc, _get_gemini_client=lambda: (object(), ["fake"]), _generate_with_gemini=gen):
             progs, added, src, called = pc._expand_testbench_with_gemini(list(pc.DEFAULT_SEED_PROGRAMS), 8, tel, [], random.Random(1))

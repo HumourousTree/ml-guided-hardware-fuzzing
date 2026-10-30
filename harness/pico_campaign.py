@@ -53,6 +53,8 @@ _GEMINI_TURNS: dict[str, int] = {}
 _REJECTED_NOTES: dict[tuple[str, str], str] = {}   # (rtl sha, subsystem) -> why the last candidate was rolled back
 _GEMINI_MAX_TURNS = 8      # recreate the chat session so history (huge RTL prompts) cannot grow without bound
 
+from harness.llm_budget import BUDGET as _LLM_BUDGET    # free-tier request budget (daily cap, interval, stop on 429)
+
 from harness.riscv_cosim import (
     HW_PARAMS,
     get_space_safe_tempdir,
@@ -176,10 +178,20 @@ def _get_gemini_client():
     return client, models
 
 
-def _generate_with_gemini(client, models: list[str], prompt: str) -> tuple[str | None, str | None, list[dict]]:
-    """Try each model in order. Chat sessions are recreated every few turns."""
+def _generate_with_gemini(client, models: list[str], prompt: str, purpose: str = "") -> tuple[str | None, str | None, list[dict]]:
+    """Try each model in order. Chat sessions are recreated every few turns.
+
+    Requests to the real Gemini API are metered by harness.llm_budget (daily cap per model, minimum interval, stop on 429);
+    scripted stand-in clients used by tests and the repair baselines are not.
+    """
+    metered = _GENAI_AVAILABLE and isinstance(client, _genai_module.Client)
     attempts = []
     for model in models:
+        if metered:
+            allowed, reason = _LLM_BUDGET.acquire(model)
+            if not allowed:
+                attempts.append({"model": model, "ok": False, "error": f"budget: {reason}"})
+                continue
         try:
             chat = _GEMINI_CHATS.get(model)
             if chat is None or _GEMINI_TURNS.get(model, 0) >= _GEMINI_MAX_TURNS:
@@ -191,11 +203,17 @@ def _generate_with_gemini(client, models: list[str], prompt: str) -> tuple[str |
             text = getattr(response, "text", None)
             if isinstance(text, str) and text.strip():
                 attempts.append({"model": model, "ok": True})
+                if metered:
+                    _LLM_BUDGET.record(model, True, purpose, len(prompt), len(text))
                 return text.strip(), model, attempts
             attempts.append({"model": model, "ok": False, "error": "empty response"})
+            if metered:
+                _LLM_BUDGET.record(model, False, purpose, len(prompt), 0, "empty response")
         except Exception as exc:
             _GEMINI_CHATS.pop(model, None)
             attempts.append({"model": model, "ok": False, "error": f"{type(exc).__name__}: {exc}"})
+            if metered:
+                _LLM_BUDGET.record(model, False, purpose, len(prompt), 0, f"{type(exc).__name__}: {exc}")
     print(f"[pico_campaign] Gemini request failed: {attempts}", file=sys.stderr)
     return None, None, attempts
 
@@ -469,7 +487,7 @@ Return ONLY a JSON object (no markdown):
             stats["attempts"] += 1
             used_model = None
             try:
-                text, used_model, _ = _generate_with_gemini(client, models, prompt)
+                text, used_model, _ = _generate_with_gemini(client, models, prompt, purpose="stimulus_expansion")
                 if not text:
                     stats["api_failures"] += 1
                     break
@@ -603,7 +621,7 @@ def _llm_repair_hardware_with_delta_debug(
         if last_error:
             prompt += f"\n\nYour previous patch was rejected:\n{last_error}\nFix this and answer again."
         try:
-            text, used_model, _ = _generate_with_gemini(client, models, prompt)
+            text, used_model, _ = _generate_with_gemini(client, models, prompt, purpose="rtl_repair")
             if text is None:
                 last_error = "model returned no answer"
                 continue

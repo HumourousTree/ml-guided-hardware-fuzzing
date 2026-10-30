@@ -477,7 +477,7 @@ def section_repair(logs, M, md):
                      f"{'rej.' if n and not n.get('accepted') else 'ACC'} & {ck(t.get('accepted'))} & {t.get('candidates_tried', '--')} & "
                      f"{(str(t.get('held_out_pass')) + '/' + str(t.get('held_out_total'))) if t.get('accepted') else '--'} & "
                      f"{formal if t.get('accepted') else '--'}\\\\")
-    md.append(f"## Guarded repair (no LLM key available: controls + template baseline)\n- oracle accepted {M.items['RepOracleAccepted']}/{len(det)}, "
+    md.append(f"## Guarded repair (LLM not run in v0.4: controls + template baseline)\n- oracle accepted {M.items['RepOracleAccepted']}/{len(det)}, "
               f"lint-broken patch recovered on retry {M.items['RepLintRecovered']}/{len(det)}, no-op rejected {M.items['RepNoopRejected']}/{len(det)}\n"
               f"- template repair: accepted {M.items['RepTplAccepted']}/{len(det)}, correct on held-out {M.items['RepTplCorrect']}, exact {M.items['RepTplExact']}, "
               f"overfitting accepted {M.items['RepTplOverfit']}; rejections by gate: {dict(rej)}")
@@ -693,7 +693,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--logs", default=str(ROOT / "logs"))
     ap.add_argument("--lit", default=str(ROOT / "docs" / "literature_baselines.json"))
-    ap.add_argument("--paper", default=str(ROOT / "paper"))
+    ap.add_argument("--paper", default=str(ROOT / "paper"), help="where generated/ and figures/ are written")
+    ap.add_argument("--tex", default=str(ROOT.parent / "Hardware-Fuzzing_Paper" / "report_v0.4" / "main.tex"),
+                    help="paper source (Overleaf repo HumourousTree/Hardware-Fuzzing) checked for undefined macros")
     a = ap.parse_args()
     logs, paper = Path(a.logs), Path(a.paper)
     gen, figs = paper / "generated", paper / "figures"
@@ -731,7 +733,7 @@ def main():
     (logs / "comparison_report.md").write_text("\n\n".join(md) + "\n")
     print("\n\n".join(md))
     print(f"\n{len(M.items)} macros -> {gen / 'results.tex'}")
-    tex = paper / "main.tex"
+    tex = Path(a.tex)
     if tex.exists():         # every data macro the paper uses must have been generated
         body = tex.read_text(encoding="utf-8")
         defined = set(re.findall(r"\\(?:newcommand|providecommand|def)\{?\\([A-Za-z]+)", body))
