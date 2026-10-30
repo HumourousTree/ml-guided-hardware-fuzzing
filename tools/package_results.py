@@ -9,6 +9,7 @@ comparison report are copied unchanged.  `tools/compare_literature.py --logs res
 except the unique-point analysis, which needs the raw covered_points.
 """
 import argparse
+import difflib
 import json
 import shutil
 import sys
@@ -60,8 +61,13 @@ def main():
     for f in (logs / "experiments").iterdir():
         if f.is_file() and f.suffix in (".json", ".log", ".dat"):
             shutil.copy2(f, exp / f.name)
-    if (logs / "experiments" / "repair_candidates").exists():
-        shutil.copytree(logs / "experiments" / "repair_candidates", exp / "repair_candidates", dirs_exist_ok=True)
+    cands = logs / "experiments" / "repair_candidates"
+    if cands.exists():                       # accepted patches as unified diffs against the golden RTL (not full RTL copies)
+        golden = (ROOT / "hw_design" / "picorv32_golden.sv").read_text().splitlines(keepends=True)
+        (exp / "repair_patches").mkdir(exist_ok=True)
+        for f in sorted(cands.glob("*.sv")):
+            diff = difflib.unified_diff(golden, f.read_text().splitlines(keepends=True), "golden/picorv32.v", f"patched/{f.stem}")
+            (exp / "repair_patches" / f"{f.stem}.diff").write_text("".join(diff))
     for f in ("comparison_report.md",):
         if (logs / f).exists():
             shutil.copy2(logs / f, out / f)

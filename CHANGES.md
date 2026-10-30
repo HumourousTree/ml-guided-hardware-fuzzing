@@ -87,7 +87,7 @@ micro-architectural failure; `fails()` requires a valid simulation (an invalid c
 
 Benchmark: budgets in programs, parallel-safe `--bug` (private RTL copy), pre-built simulator, per-page coverage series, `--save-programs`,
 `--fence-rate`, `--stop-on-mismatch`, mismatch details and failing words saved; per-program artefacts deleted.
-`tools/run_full_evaluation.sh` runs the whole evaluation with N workers.
+`scripts/run_full_evaluation.sh` runs the whole evaluation with N workers.
 
 New: hierarchical delta debugging + 1-minimality (`delta_debugger.hdd_reproducer`, `tools/hdd_eval.py`); guard controls and an
 Ochiai-ranked template-repair baseline driving the unchanged repair pipeline (`harness/template_repair.py`); unified co-coverage
@@ -96,3 +96,11 @@ Ochiai-ranked template-repair baseline driving the unchanged repair pipeline (`h
 (`tools/compare_literature.py`); IEEE-format paper (`paper/main.tex`).
 
 Not done: anything needing an LLM (semantic/hybrid generation, pass@k) - no API key in the evaluation environment.
+
+# v0.4.1 (repository clean-up)
+- Entry points moved to `scripts/` (`run_full_evaluation.sh`, `run_campaign.*`, `start_dashboard.*`); the Windows launchers now
+  derive the WSL path from their own location (the old hard-coded path no longer existed).
+- Removed: `sw_reference/riscv_iss.py` (unused), `tools/apply_fixes.py` (one-off, fully applied; the golden RTL is now pristine
+  upstream), the superseded master "control" run, split repair result files; accepted repair patches are stored as diffs.
+- `requirements.txt` lists every third-party package (matplotlib added); `hw_design/picorv32.v` (campaign mirror) is ignored;
+  result logs under `results/` are committed. README rewritten with a layout map; `results/v0.4/README.md` describes the data.

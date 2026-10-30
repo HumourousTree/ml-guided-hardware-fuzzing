@@ -4,7 +4,7 @@ Everything below was run on Verilator 5.032 / Yosys 0.52 (WSL2 Ubuntu, 8 cores) 
 (compact) and `logs/` (raw, not committed). One command reproduces the whole evaluation:
 
 ```bash
-bash tools/run_full_evaluation.sh 7        # inside WSL, project root, venv active; ~6-8 h on 8 cores
+bash scripts/run_full_evaluation.sh 7        # inside WSL, project root, venv active; ~6-8 h on 8 cores
 python tools/compare_literature.py         # needs matplotlib; writes paper/generated/*.tex and paper/figures/*.pdf
 ```
 

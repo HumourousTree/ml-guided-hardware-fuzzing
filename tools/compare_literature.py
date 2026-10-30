@@ -349,7 +349,6 @@ def section_bugs(logs, M, md, figs, plt, manifest_levels):
 
 def section_p6(logs, M, md):
     rs = load_runs(logs / "bench" / "cascade_p6")
-    ctl = load_runs(logs / "bench" / "cascade_p6_master_control")
     out = []
     for m, runs in rs.items():
         det = [r for r in runs if r.get("bug_detected")]
@@ -362,11 +361,6 @@ def section_p6(logs, M, md):
         M[f"PSix{k}ProgsMax"] = f"{max(progs)}" if progs else "--"
         M[f"PSix{k}Secs"] = f"{st.median(secs):.2f}" if secs else "--"
         out.append(f"- {METHOD_PLAIN[m]} on f00a88c: {len(det)}/{len(runs)} seeds hit P6, median {M.items[f'PSix{k}Progs']} programs, {M.items[f'PSix{k}Secs']} s")
-    for m, runs in ctl.items():
-        fa = sum(1 for r in runs if r.get("bug_detected"))
-        n = sum(n_programs(r) for r in runs)
-        M[f"PSixCtl{macro_name(m)}FalseAlarms"], M[f"PSixCtl{macro_name(m)}Programs"] = fa, f"{n:,}"
-        out.append(f"- control on master ({METHOD_PLAIN[m]}): {fa} mismatches in {n} programs")
     # FENCE with a non-zero reserved rd field on master (found by the mutation fuzzer)
     for m, runs in load_runs(logs / "bench" / "fence_rd_master").items():
         det = [r["bug_detected"] for r in runs if r.get("bug_detected")]

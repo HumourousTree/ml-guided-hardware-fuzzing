@@ -600,7 +600,7 @@ out-of-order core where coverage does not saturate, and Stage~B of the FPGA road
 
 \section*{Artifact}
 Code, compact result logs (\code{results/v0.4}) and the generator of every table and figure: branch \code{v0.4-evaluation} of
-\url{https://github.com/HumourousTree/ml-guided-hardware-fuzzing}; \code{tools/run_full_evaluation.sh} reruns everything and
+\url{https://github.com/HumourousTree/ml-guided-hardware-fuzzing}; \code{scripts/run_full_evaluation.sh} reruns everything and
 \code{tools/compare_literature.py} regenerates \code{paper/generated} and \code{paper/figures}.
 
 \begin{thebibliography}{99}\footnotesize
@@ -644,7 +644,7 @@ Code, compact result logs (\code{results/v0.4}) and the generator of every table
 \section{Reproducibility}
 \begin{tabular}{@{}l@{}}
 \code{python3 tools/fetch_upstream.py --commit ef203c2}\\
-\code{bash tools/run_full_evaluation.sh 7}\\
+\code{bash scripts/run_full_evaluation.sh 7}\\
 \code{python3 -m harness.template_repair --budget 30}\\
 \code{python tools/compare_literature.py}\\
 \end{tabular}

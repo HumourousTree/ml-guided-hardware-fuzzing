@@ -106,3 +106,9 @@ sw_reference/*.pyc
 *.temp
 *~
 .tmp/
+
+# Campaign mirror of the mutable RTL (rewritten every iteration)
+hw_design/picorv32.v
+
+# Result logs are part of the published evaluation record
+!results/**/*.log
