@@ -177,7 +177,7 @@ match after the patch with no previously passing program failing.
 \begin{table}[t]
 \centering\scriptsize
 \caption{Role-separated workflow boundaries.}\label{tab:roles}
-\begin{tabularx}{\columnwidth}{@{}l X X@{}}
+\begin{tabularx}{\columnwidth}{@{}>{\raggedright\arraybackslash}p{2.0cm} >{\raggedright\arraybackslash}X >{\raggedright\arraybackslash}X@{}}
 \toprule
 Role & May read & May write\\
 \midrule
@@ -246,12 +246,12 @@ that is equivalent on valid programs (Sec.~\ref{sec:rq3}), so we also add an obs
 intermittent (timing-gated) variant. Interrupt trap flags are unobservable with \code{ENABLE_IRQ=0} and no interrupt model in the
 reference, so an uncleared \code{latched_branch} flag substitutes.
 
-\begin{table}[t]
+\begin{table*}[t]
 \centering\scriptsize
 \caption{E1: bug suite, targeted stimulus, minimisation of the stimulus and localisation (Hit = an offered block contains the edit).}
 \label{tab:e1}
-\resizebox{\columnwidth}{!}{\gen{tab_e1.tex}}
-\end{table}
+\gen{tab_e1.tex}
+\end{table*}
 
 %% =====================================================================
 \section{Experimental Setup}\label{sec:setup}
@@ -349,11 +349,11 @@ about 100\,s~\cite{cascade}, and it is the main reason why ChipFuzzer-style cove
 \caption{Programs to first lockstep mismatch per bug and seed (log scale). Triangles: seeds that did not detect the bug within the
 budget (dashed line); the number is the count of such seeds.}\label{fig:ttb}
 \end{figure*}
-\begin{table}[t]
+\begin{table*}[t]
 \centering\scriptsize
 \caption{Time-to-bug, blind fuzzing (no targeted stimulus), ten seeds, budget \BugBudget{} programs.}\label{tab:ttb}
-\resizebox{\columnwidth}{!}{\gen{tab_bugs.tex}}
-\end{table}
+\gen{tab_bugs.tex}
+\end{table*}
 \begin{table}[t]
 \centering\scriptsize
 \caption{Detection latency by tier (median over all detecting runs).}\label{tab:tiers}
@@ -378,12 +378,12 @@ and is slower on the signedness fault in the multiplier (median 52 against 10.5 
 11), because its corpus concentrates on programs that toggled new bits rather than on fresh operand combinations.
 
 \subsection{RQ4: How small do failures get, at what cost?}\label{sec:rq4}
-\begin{table}[t]
+\begin{table*}[t]
 \centering\scriptsize
 \caption{Delta debugging of fuzzer-found failures (medians per bug): static length, slice, flat ddmin, HDD, oracle tests, cycles.}
 \label{tab:hdd}
-\resizebox{\columnwidth}{!}{\gen{tab_hdd.tex}}
-\end{table}
+\gen{tab_hdd.tex}
+\end{table*}
 \begin{figure}[t]
 \centering\figpdf{figures/fig_hdd_tests.pdf}{\columnwidth}
 \caption{Oracle cost of minimisation: simulations used by flat ddmin and by HDD against the length of the failing program.}\label{fig:hdd}
@@ -403,14 +403,14 @@ intermittent store fault); this is consistent with HDD paying off for
 long Cascade-style programs whose failure needs distant state set-up that the slice cannot preload, which we have not evaluated.
 
 \subsection{RQ5: Do the repair gates work, and how far does a non-LLM baseline get?}\label{sec:rq5}
-\begin{table}[t]
+\begin{table*}[t]
 \centering\scriptsize
 \caption{Guarded repair on the \RepBugs{} observable bugs. Controls drive the unchanged pipeline through a scripted model; template
 repair searches generic single-line operators ranked by Ochiai; held-out: 200 unseen random programs $\times$ delays 0 and 3; formal:
 Yosys whole-core equivalence with the golden RTL (ident.\ = textually identical, n.p.\ = not proven; $^\dagger$ refuted by a directed
 witness, $^\ddagger$ differs only at the \code{mem_la_write} output).}\label{tab:repair}
-\resizebox{\columnwidth}{!}{\gen{tab_repair.tex}}
-\end{table}
+\gen{tab_repair.tex}
+\end{table*}
 To evaluate the gates independently of any model we drive the unchanged pipeline (slice, ddmin, localisation, patch parsing, block-range
 check, lint with feedback retries, reproducer, prefix growth) through a scripted stand-in for the LLM client, then apply the campaign's
 acceptance rule (Table~\ref{tab:repair}). The \emph{oracle} returns the golden text of the hunks inside the offered blocks and was accepted
@@ -466,7 +466,8 @@ valid programs cannot reach. (iii) The aggregate reverses the RTL ranking: mutat
 (\UniMutationCToggle\% against \UniRandomCToggle\%), but its corpus hits fewer functional bins (\UniMutationCFunc\% against
 \UniRandomCFunc\%), so with equal weights $C_U$ ranks random first (\UniRandomCU\% against \UniMutationCU\%). The reference-side terms
 also lift $C_U$ about 15 points above the RTL components without exercising any more hardware. The only functional bins never hit are
-\UniAlwaysMissing, the signed-overflow corner cases that random operands almost never produce. We therefore report components and use
+\UniAlwaysMissing{} (by no run of any method), i.e.\ instructions our generators never emit; the signed-overflow corner cases were hit by
+some runs but not all. We therefore report components and use
 $C_U$ only for monitoring.
 
 The archived Gemini campaign shows the skew the brief asked about: \MixRunCALUIMM\% of retired instructions were ALU-immediate against
@@ -489,10 +490,10 @@ measurements}: different cores (RocketCore, BOOM, CVA6 versus PicoRV32), coverag
 Verilator line/toggle/branch), budgets (24\,h versus program counts) and references (Spike versus our Python model). Two numbers are
 comparable in kind: our reproduction of Cascade P6 on the same commit, and executed instructions per second as an order of magnitude.
 
-\begin{table}[t]
+\begin{table*}[t]
 \centering\scriptsize
 \caption{Published systems (peer review status as of October 2026).}\label{tab:lit}
-\begin{tabularx}{\columnwidth}{@{}l l X@{}}
+\begin{tabularx}{\textwidth}{@{}l l X@{}}
 \toprule
 System & Venue & Reported result (quoted)\\
 \midrule
@@ -504,7 +505,7 @@ TurboFuzz~\cite{turbofuzz} & arXiv (preprint) & on-SoC fuzzing (XCZU19EG, Rocket
 ChipFuzzer~\cite{chipfuzzer} & arXiv (preprint) & cond.\ coverage +9.1/+1.2/+7.0\,pp (Rocket/BOOM/CVA6, 24\,h); Rocket 89.2\% vs 80.06\% (BMCFuzz); 61.1\% of Encarsia bugs\\
 \bottomrule
 \end{tabularx}
-\end{table}
+\end{table*}
 
 \begin{table}[t]
 \centering\scriptsize
@@ -599,9 +600,10 @@ suite under the same certification, widening the ISA scope to CSRs so that Casca
 out-of-order core where coverage does not saturate, and Stage~B of the FPGA roadmap.
 
 \section*{Artifact}
+{\sloppy
 Code, compact result logs (\code{results/v0.4}) and the generator of every table and figure: branch \code{v0.4-evaluation} of
 \url{https://github.com/HumourousTree/ml-guided-hardware-fuzzing}; \code{scripts/run_full_evaluation.sh} reruns everything and
-\code{tools/compare_literature.py} regenerates \code{paper/generated} and \code{paper/figures}.
+\code{tools/compare_literature.py} regenerates \code{paper/generated} and \code{paper/figures}.\par}
 
 \begin{thebibliography}{99}\footnotesize
 \bibitem{chipfuzzer} K.~Wang, C.~Li, K.~Chang, S.~Cai, Y.~Han, Y.~Wang, ``When fuzzing meets understanding: LLM-driven semantic test
@@ -642,10 +644,10 @@ Code, compact result logs (\code{results/v0.4}) and the generator of every table
 \end{itemize}
 
 \section{Reproducibility}
-\begin{tabular}{@{}l@{}}
+{\scriptsize\begin{tabular}{@{}l@{}}
 \code{python3 tools/fetch_upstream.py --commit ef203c2}\\
 \code{bash scripts/run_full_evaluation.sh 7}\\
 \code{python3 -m harness.template_repair --budget 30}\\
 \code{python tools/compare_literature.py}\\
-\end{tabular}
+\end{tabular}}
 \end{document}

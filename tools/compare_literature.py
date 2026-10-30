@@ -646,7 +646,7 @@ def section_literature(lit, logs, M, md, figs, plt, ours_cov, ours_bugs):
             v99 = [ours_cov[m]["thr99"][0] or 0 for m in ms]
             axs[1].bar([i - .2 for i in range(len(ms))], v90, .4, label="90% of $C^\\ast$", color="#55A868")
             axs[1].bar([i + .2 for i in range(len(ms))], v99, .4, label="99% of $C^\\ast$", color="#8172B3")
-            axs[1].set_xticks(range(len(ms))); axs[1].set_xticklabels([METHOD_PLAIN[m] for m in ms], fontsize=6)
+            axs[1].set_xticks(range(len(ms))); axs[1].set_xticklabels([METHOD_PLAIN[m].replace(" ", chr(10), 1) for m in ms], fontsize=6)
             axs[1].set_yscale("log"); axs[1].legend(fontsize=6); axs[1].grid(alpha=.3, lw=.4, axis="y")
         axs[1].set_title("(b) Measured: BenchFuzz on PicoRV32 (RTL points)", fontsize=7)
         fig.tight_layout(); save(fig, figs, "fig_testcase_efficiency"); plt.close(fig)
