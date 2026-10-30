@@ -54,7 +54,7 @@ edits as Verilog (markers/structure checked, never compiled), observability of t
 - E0: 150/150 runs match on YosysHQ master ef203c2, on Cascade's f00a88c and on the golden copy; 0 mismatches in the 210,000
   programs of the coverage benchmark. The 2019/2016 `mem_addr` discrepancy is a convention gap present on pristine upstream.
 - Cascade P6 (fence trap, CVE-2023-34899) reproduced on f00a88c (probe + blind fuzzing, 10/10 seeds). On current master the
-  mutation fuzzer found that a FENCE with a non-zero reserved rd field writes 0 to rd (9/10 seeds; random 0/10). Related upstream
+  mutation fuzzer found that a FENCE with a non-zero reserved rd field overwrites rd with an undefined value, 0 in Verilator (9/10 seeds; random 0/10). Related upstream
   issue YosysHQ/picorv32#293 was closed as "no side effect".
 - Coverage (7 seeds, 10k programs): mutation 64.57%, hybrid 64.21%, random 63.79% (p<0.002); every reachable line is covered
   within a few hundred programs; all 64 unreached line points are configuration-dead or outside the ISA scope. The ChipFuzzer
@@ -78,7 +78,7 @@ Oracle and DUT
 - E0 on master and on Cascade's commit `f00a88c`: 150/150 runs match. Convention probe: unmodified upstream reports word-aligned
   `mem_addr` (lb 1(x1): 257 expected, 256 actual) -> the 2019/2016 discrepancy is a convention gap.
 - FENCE added to reference/validator/assembler as an architectural no-op. Cascade P6 (fence trap) reproduced on f00a88c; on master the
-  mutation fuzzer found that a FENCE with a non-zero reserved rd field writes 0 to rd (cf. YosysHQ/picorv32#293, closed as "no side
+  mutation fuzzer found that a FENCE with a non-zero reserved rd field overwrites rd with an undefined value (cf. YosysHQ/picorv32#293, closed as "no side
   effect"). Both are E0 probes.
 
 Bug suite (15): + `fast_mul_decode_and_to_or` (literal brief; equivalent mutant, never detected), `fast_mul_rs2_signed_widened`,

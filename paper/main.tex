@@ -52,7 +52,7 @@ unmodified YosysHQ PicoRV32 the oracle produces no false alarm in \EzMasterMatch
 long-open \code{mem_addr} discrepancy as a presentation-convention gap. The same harness reproduces Cascade's PicoRV32 bug P6
 (CVE-2023-34899) on the commit Cascade evaluated, both with a directed probe and with blind fuzzing in a median of \PSixRandomProgs{}
 programs, and its mutation fuzzer exposes a residual specification deviation on current master: a \code{fence} with a non-zero
-reserved \code{rd} field writes zero to that register. Across \CovSeeds{} seeds per method, constrained-random and coverage-guided mutational fuzzing saturate every reachable RTL line of
+reserved \code{rd} field overwrites that register with an undefined value (zero in simulation). Across \CovSeeds{} seeds per method, constrained-random and coverage-guided mutational fuzzing saturate every reachable RTL line of
 the RV32IM configuration within a few hundred programs; all \UnrLineUnreached{} unreached line points are configuration-dead or outside
 the ISA scope. Blind random fuzzing detects \BugRandomAny{} of the \BugCount{} injected bugs, three tiers from bit-level operator faults to an
 intermittent bus-protocol fault, while one literal mutation from the original brief is equivalent on every valid program. Delta debugging
@@ -304,10 +304,15 @@ emits only canonical \code{fence} words, raised no alarm in \FenceRdRandomTotal{
 non-opcode bits, hit a mismatch in \FenceRdMutationDet/\FenceRdMutationRuns{} seeds (median \FenceRdMutationPrograms{} programs), and
 \FenceRdMutationAttributed{} of these first mismatches are a \code{fence} whose reserved \code{rd} field is non-zero. The directed probe
 (Table~\ref{tab:e0}, last column) shows the consequence: after \code{x1=123; fence} with $rd{=}x1$, master holds $x_1{=}0$, i.e.\ the core
-performs an architecturally visible write-back of zero. The unprivileged specification states that base implementations shall ignore
-the reserved \code{rd} and \code{rs1} fields of FENCE. Upstream issue \#293 reported that these fields are decoded and was closed on the
-grounds that decoding them has no side effect; our result shows that it has one. Standard toolchains always emit zero fields, so the
-practical impact is low, but it is a specification deviation that survived the P6 fix and that only a mutational generator found.
+performs an architecturally visible write-back. The RTL explains why: the P6 fix decodes \code{fence} so that it no longer traps, but
+gives it no execution path of its own, so it takes the generic ALU branch, which sets \code{latched_store}; \code{latched_rd} holds the
+instruction's \code{rd} field as for every instruction, and \code{alu_out} keeps its default \code{'bx} because no ALU operation is
+selected. The written value is therefore undefined: Verilator evaluates it as 0, synthesised hardware may produce any value. The
+unprivileged specification states that base implementations shall ignore the reserved \code{rd} and \code{rs1} fields of FENCE.
+Upstream issue \#293 reported that these fields are decoded and was closed on the grounds that decoding them has no side effect; our
+result shows that it has one (the repository has since been archived, so it will not be fixed upstream). Standard toolchains always
+emit zero fields, so the practical impact is low, but it is a specification deviation that survived the P6 fix and that only a
+mutational generator found.
 
 \subsection{RQ2: Coverage, plateaus and efficiency}\label{sec:rq2}
 \begin{figure}[t]
