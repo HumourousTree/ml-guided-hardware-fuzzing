@@ -374,6 +374,89 @@ def ddmin_reproducer(program: dict, fails: Callable[[dict], bool], protect_tail:
     return final, log
 
 
+def basic_blocks(words: list[int]) -> list[list[int]]:
+    """Split straight-line code into basic blocks: a block ends after a branch/JAL/JALR or before a branch target."""
+    leaders = {0}
+    for i, w in enumerate(words):
+        op = w & 0x7F
+        if op in (0x63, 0x6F, 0x67):
+            leaders.add(i + 1)
+        if op == 0x63:
+            imm = (((w >> 31) & 1) << 12) | (((w >> 7) & 1) << 11) | (((w >> 25) & 0x3F) << 5) | (((w >> 8) & 0xF) << 1)
+            leaders.add(i + (imm - (1 << 13) if imm & 0x1000 else imm) // 4)
+        elif op == 0x6F:
+            imm = (((w >> 31) & 1) << 20) | (((w >> 12) & 0xFF) << 12) | (((w >> 20) & 1) << 11) | (((w >> 21) & 0x3FF) << 1)
+            leaders.add(i + (imm - (1 << 21) if imm & 0x100000 else imm) // 4)
+    cuts = sorted(l for l in leaders if 0 <= l < len(words))
+    return [words[a:b] for a, b in zip(cuts, cuts[1:] + [len(words)]) if words[a:b]]
+
+
+def _ddmin_units(units: list[list[int]], still_fails: Callable[[list[int]], bool], budget: int) -> tuple[list[list[int]], int]:
+    """ddmin over a list of units (each a list of words); returns (1-minimal units, tests used)."""
+    cur, n, tests = list(units), 2, 0
+    while len(cur) >= 1 and tests < budget:
+        chunk = -(-len(cur) // n)
+        reduced = False
+        for start in range(0, len(cur), chunk):
+            cand = cur[:start] + cur[start + chunk:]
+            tests += 1
+            if still_fails([w for u in cand for w in u]):
+                cur, n, reduced = cand, max(n - 1, 2), True
+                break
+            if tests >= budget:
+                break
+        if not reduced:
+            if chunk == 1:
+                break
+            n = min(len(cur), n * 2)
+    return cur, tests
+
+
+def hdd_reproducer(program: dict, fails: Callable[[dict], bool], protect_tail: int = 2,
+                   max_tests: int = 300) -> tuple[dict, dict]:
+    """Hierarchical delta debugging (Misherghi & Su, ICSE'06) over the program structure.
+
+    Level 1 minimises whole basic blocks, level 2 minimises single instructions of what survives.  Coarse
+    removals keep control flow intact more often than arbitrary chunks, so fewer candidates are invalid.
+    Returns the minimised program and per-level statistics.
+    """
+    words = [_as_int(w) for w in program.get("words", [])]
+    if len(words) <= protect_tail:
+        return program, {"levels": [], "tests": 0}
+    head, tail = words[:-protect_tail], words[-protect_tail:]
+    n = [0]
+
+    def still_fails(h: list[int]) -> bool:
+        n[0] += 1
+        return bool(fails({"id": f"{program.get('id', 'prog')}-hdd{n[0]}", "description": program.get("description", ""),
+                           "base": program.get("base", "0x00000000"), "words": _words_to_hex(h + tail),
+                           "metadata": dict(program.get("metadata", {}))}))
+
+    blocks = basic_blocks(head)
+    kept_blocks, t1 = _ddmin_units(blocks, still_fails, max_tests)
+    flat = [[w] for b in kept_blocks for w in b]
+    kept, t2 = _ddmin_units(flat, still_fails, max_tests - t1)
+    final_head = [w for u in kept for w in u]
+    final = {"id": f"{program.get('id', 'prog')}-hdd-min", "description": program.get("description", ""),
+             "base": program.get("base", "0x00000000"), "words": _words_to_hex(final_head + tail),
+             "metadata": dict(program.get("metadata", {}), hdd_tests=t1 + t2)}
+    stats = {"levels": [{"level": "basic_block", "units_in": len(blocks), "units_out": len(kept_blocks), "tests": t1},
+                        {"level": "instruction", "units_in": len(flat), "units_out": len(kept), "tests": t2}],
+             "tests": t1 + t2}
+    return final, stats
+
+
+def is_one_minimal(program: dict, fails: Callable[[dict], bool], protect_tail: int = 2) -> tuple[bool, int]:
+    """True iff removing any single unprotected instruction makes the failure disappear (Zeller's 1-minimality)."""
+    words = [_as_int(w) for w in program.get("words", [])]
+    head, tail = words[:-protect_tail], words[-protect_tail:]
+    for i in range(len(head)):
+        cand = dict(program, id=f"{program.get('id', 'prog')}-1min{i}", words=_words_to_hex(head[:i] + head[i + 1:] + tail))
+        if fails(cand):
+            return False, i + 1
+    return True, len(head)
+
+
 def prefix_program(program: dict, failure_index: int, percent: int) -> dict:
     """Valid prefix used to grow a repair back toward its original test set."""
     words = [_as_int(word) for word in program.get("words", [])]
@@ -515,6 +598,16 @@ def localize_rtl_fault(rtl_content: str, failure_record: dict) -> dict:
                          "Memory look-ahead interface: address, strobes, write data, read-data alignment.",
                          lambda l: "assign mem_la_read" in l, 6, 62)
 
+    def mem_fsm():
+        return _anchored(lines, "memory_bus_fsm",
+                         "Memory bus state machine: address / strobe / write-data registers and handshake.",
+                         lambda l: "case (mem_state)" in l, 22, 56)
+
+    def fetch_launch():
+        return _anchored(lines, "fetch_launch",
+                         "Instruction launch in the fetch state: latched_rd / latched_branch / latched_store flags.",
+                         lambda l: "cpu_state_fetch: begin" in l, 2, 62)
+
     def next_pc():
         return _anchored(lines, "next_pc",
                          "Next-PC selection and link-register write in the fetch state.",
@@ -534,6 +627,7 @@ def localize_rtl_fault(rtl_content: str, failure_record: dict) -> dict:
         cands += [next_pc(), regfile()]
     elif opcode in (0x03, 0x23):
         cands.append(memory())
+        cands.append(mem_fsm())
         marker = "cpu_state_ldmem: begin" if opcode == 0x03 else "cpu_state_stmem: begin"
         cands.append(_anchored(lines, "memory_fsm", "Load/store state-machine sequencing.",
                                lambda l, m=marker: m in l, 1, 36))
@@ -543,10 +637,15 @@ def localize_rtl_fault(rtl_content: str, failure_record: dict) -> dict:
         if is_shift:
             cands.append(_anchored(lines, "shift", "Serial shifter state (cpu_state_shift).",
                                    lambda l: "cpu_state_shift: begin" in l, 1, 32))
-        cands += [alu(), regfile()]
+        if opcode in (0x37, 0x17):
+            cands += [fetch_launch(), regfile(), alu()]
+        else:
+            cands += [alu(), regfile()]
 
+    if "rd_addr" in diffs:
+        cands.append(fetch_launch())
     if any(f in diffs for f in ("mem_addr", "mem_wdata", "mem_wmask", "mem_rmask", "mem_rdata")):
-        cands.append(memory())
+        cands += [memory(), mem_fsm()]
     if "pc_wdata" in diffs:
         cands.append(next_pc())
 

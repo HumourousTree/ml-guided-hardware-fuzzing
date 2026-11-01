@@ -1,0 +1,4281 @@
+[
+  {
+    "bug_id": "alu_operator_xor_or",
+    "level": "L1",
+    "method": "mutation",
+    "seed": 0,
+    "detect_programs": 27,
+    "detect_seconds": 12.477,
+    "original_length": 64,
+    "original_retired": 63,
+    "original_cycles": 300,
+    "failure_index_k": 59,
+    "slice_reproduces": true,
+    "slice_length": 24,
+    "slice_seconds": 0.09,
+    "mismatch_fields": [
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 9,
+      "seconds": 0.85,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 10,
+      "seconds": 1.03,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 1,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 22,
+          "units_out": 1,
+          "tests": 9
+        }
+      ]
+    },
+    "length_reduction_pct": 95.3,
+    "cycle_reduction_pct": 92.3
+  },
+  {
+    "bug_id": "alu_operator_xor_or",
+    "level": "L1",
+    "method": "mutation",
+    "seed": 1,
+    "detect_programs": 36,
+    "detect_seconds": 19.241,
+    "original_length": 133,
+    "original_retired": 120,
+    "original_cycles": 696,
+    "failure_index_k": 116,
+    "slice_reproduces": true,
+    "slice_length": 18,
+    "slice_seconds": 0.09,
+    "mismatch_fields": [
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 4,
+      "retired": 4,
+      "cycles": 26,
+      "tests": 16,
+      "seconds": 1.48,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 4,
+      "retired": 4,
+      "cycles": 26,
+      "tests": 17,
+      "seconds": 1.53,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 1,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 16,
+          "units_out": 2,
+          "tests": 16
+        }
+      ]
+    },
+    "length_reduction_pct": 97.0,
+    "cycle_reduction_pct": 96.3
+  },
+  {
+    "bug_id": "alu_operator_xor_or",
+    "level": "L1",
+    "method": "mutation",
+    "seed": 2,
+    "detect_programs": 3,
+    "detect_seconds": 1.745,
+    "original_length": 34,
+    "original_retired": 32,
+    "original_cycles": 135,
+    "failure_index_k": 27,
+    "slice_reproduces": true,
+    "slice_length": 18,
+    "slice_seconds": 0.07,
+    "mismatch_fields": [
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 4,
+      "retired": 4,
+      "cycles": 26,
+      "tests": 22,
+      "seconds": 1.8,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 4,
+      "retired": 4,
+      "cycles": 26,
+      "tests": 23,
+      "seconds": 1.87,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 1,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 16,
+          "units_out": 2,
+          "tests": 22
+        }
+      ]
+    },
+    "length_reduction_pct": 88.2,
+    "cycle_reduction_pct": 80.7
+  },
+  {
+    "bug_id": "alu_operator_xor_or",
+    "level": "L1",
+    "method": "mutation",
+    "seed": 3,
+    "detect_programs": 4,
+    "detect_seconds": 1.7783,
+    "original_length": 33,
+    "original_retired": 31,
+    "original_cycles": 112,
+    "failure_index_k": 23,
+    "slice_reproduces": true,
+    "slice_length": 17,
+    "slice_seconds": 0.07,
+    "mismatch_fields": [
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 5,
+      "retired": 5,
+      "cycles": 29,
+      "tests": 23,
+      "seconds": 1.81,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 5,
+      "retired": 5,
+      "cycles": 29,
+      "tests": 24,
+      "seconds": 1.87,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 1,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 15,
+          "units_out": 3,
+          "tests": 23
+        }
+      ]
+    },
+    "length_reduction_pct": 84.8,
+    "cycle_reduction_pct": 74.1
+  },
+  {
+    "bug_id": "alu_operator_xor_or",
+    "level": "L1",
+    "method": "mutation",
+    "seed": 4,
+    "detect_programs": 14,
+    "detect_seconds": 6.4824,
+    "original_length": 34,
+    "original_retired": 33,
+    "original_cycles": 202,
+    "failure_index_k": 14,
+    "slice_reproduces": true,
+    "slice_length": 15,
+    "slice_seconds": 0.07,
+    "mismatch_fields": [
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 4,
+      "seconds": 0.27,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 5,
+      "seconds": 0.43,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 1,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 13,
+          "units_out": 1,
+          "tests": 4
+        }
+      ]
+    },
+    "length_reduction_pct": 91.2,
+    "cycle_reduction_pct": 88.6
+  },
+  {
+    "bug_id": "alu_operator_xor_or",
+    "level": "L1",
+    "method": "mutation",
+    "seed": 5,
+    "detect_programs": 15,
+    "detect_seconds": 18.0833,
+    "original_length": 32,
+    "original_retired": 31,
+    "original_cycles": 130,
+    "failure_index_k": 27,
+    "slice_reproduces": true,
+    "slice_length": 15,
+    "slice_seconds": 0.08,
+    "mismatch_fields": [
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 7,
+      "seconds": 0.55,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 8,
+      "seconds": 0.59,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 1,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 13,
+          "units_out": 1,
+          "tests": 7
+        }
+      ]
+    },
+    "length_reduction_pct": 90.6,
+    "cycle_reduction_pct": 82.3
+  },
+  {
+    "bug_id": "and_to_or_alu",
+    "level": "L1",
+    "method": "mutation",
+    "seed": 0,
+    "detect_programs": 1,
+    "detect_seconds": 0.4206,
+    "original_length": 37,
+    "original_retired": 35,
+    "original_cycles": 135,
+    "failure_index_k": 18,
+    "slice_reproduces": true,
+    "slice_length": 20,
+    "slice_seconds": 0.08,
+    "mismatch_fields": [
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 7,
+      "seconds": 0.56,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 8,
+      "seconds": 0.61,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 1,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 18,
+          "units_out": 1,
+          "tests": 7
+        }
+      ]
+    },
+    "length_reduction_pct": 91.9,
+    "cycle_reduction_pct": 83.0
+  },
+  {
+    "bug_id": "and_to_or_alu",
+    "level": "L1",
+    "method": "mutation",
+    "seed": 1,
+    "detect_programs": 3,
+    "detect_seconds": 1.3501,
+    "original_length": 32,
+    "original_retired": 31,
+    "original_cycles": 158,
+    "failure_index_k": 15,
+    "slice_reproduces": true,
+    "slice_length": 17,
+    "slice_seconds": 0.08,
+    "mismatch_fields": [
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 8,
+      "seconds": 0.62,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 9,
+      "seconds": 0.71,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 1,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 15,
+          "units_out": 1,
+          "tests": 8
+        }
+      ]
+    },
+    "length_reduction_pct": 90.6,
+    "cycle_reduction_pct": 85.4
+  },
+  {
+    "bug_id": "and_to_or_alu",
+    "level": "L1",
+    "method": "mutation",
+    "seed": 2,
+    "detect_programs": 2,
+    "detect_seconds": 0.9832,
+    "original_length": 37,
+    "original_retired": 34,
+    "original_cycles": 198,
+    "failure_index_k": 17,
+    "slice_reproduces": true,
+    "slice_length": 19,
+    "slice_seconds": 0.08,
+    "mismatch_fields": [
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 20,
+      "tests": 5,
+      "seconds": 0.38,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 20,
+      "tests": 1,
+      "seconds": 0.07,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 0,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 0,
+          "units_out": 0,
+          "tests": 0
+        }
+      ]
+    },
+    "length_reduction_pct": 94.6,
+    "cycle_reduction_pct": 89.9
+  },
+  {
+    "bug_id": "and_to_or_alu",
+    "level": "L1",
+    "method": "mutation",
+    "seed": 3,
+    "detect_programs": 2,
+    "detect_seconds": 0.7734,
+    "original_length": 32,
+    "original_retired": 31,
+    "original_cycles": 164,
+    "failure_index_k": 16,
+    "slice_reproduces": true,
+    "slice_length": 18,
+    "slice_seconds": 0.06,
+    "mismatch_fields": [
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 6,
+      "seconds": 0.47,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 7,
+      "seconds": 0.55,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 1,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 16,
+          "units_out": 1,
+          "tests": 6
+        }
+      ]
+    },
+    "length_reduction_pct": 90.6,
+    "cycle_reduction_pct": 86.0
+  },
+  {
+    "bug_id": "and_to_or_alu",
+    "level": "L1",
+    "method": "mutation",
+    "seed": 4,
+    "detect_programs": 1,
+    "detect_seconds": 0.2735,
+    "original_length": 34,
+    "original_retired": 32,
+    "original_cycles": 159,
+    "failure_index_k": 30,
+    "slice_reproduces": true,
+    "slice_length": 22,
+    "slice_seconds": 0.07,
+    "mismatch_fields": [
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 20,
+      "tests": 5,
+      "seconds": 0.4,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 20,
+      "tests": 1,
+      "seconds": 0.07,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 0,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 0,
+          "units_out": 0,
+          "tests": 0
+        }
+      ]
+    },
+    "length_reduction_pct": 94.1,
+    "cycle_reduction_pct": 87.4
+  },
+  {
+    "bug_id": "and_to_or_alu",
+    "level": "L1",
+    "method": "mutation",
+    "seed": 5,
+    "detect_programs": 3,
+    "detect_seconds": 0.9111,
+    "original_length": 35,
+    "original_retired": 32,
+    "original_cycles": 161,
+    "failure_index_k": 18,
+    "slice_reproduces": true,
+    "slice_length": 21,
+    "slice_seconds": 0.08,
+    "mismatch_fields": [
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 11,
+      "seconds": 0.83,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 12,
+      "seconds": 0.94,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 1,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 19,
+          "units_out": 1,
+          "tests": 11
+        }
+      ]
+    },
+    "length_reduction_pct": 91.4,
+    "cycle_reduction_pct": 85.7
+  },
+  {
+    "bug_id": "approx_multiplier",
+    "level": "L1",
+    "method": "random",
+    "seed": 4,
+    "detect_programs": 696,
+    "detect_seconds": 185.3409,
+    "original_length": 38,
+    "original_retired": 38,
+    "original_cycles": 279,
+    "failure_index_k": 21,
+    "slice_reproduces": true,
+    "slice_length": 23,
+    "slice_seconds": 0.07,
+    "mismatch_fields": [
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 7,
+      "retired": 7,
+      "cycles": 41,
+      "tests": 37,
+      "seconds": 3.03,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 7,
+      "retired": 7,
+      "cycles": 41,
+      "tests": 38,
+      "seconds": 3.25,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 1,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 21,
+          "units_out": 5,
+          "tests": 37
+        }
+      ]
+    },
+    "length_reduction_pct": 81.6,
+    "cycle_reduction_pct": 85.3
+  },
+  {
+    "bug_id": "approx_multiplier",
+    "level": "L1",
+    "method": "random",
+    "seed": 6,
+    "detect_programs": 412,
+    "detect_seconds": 142.8938,
+    "original_length": 35,
+    "original_retired": 35,
+    "original_cycles": 242,
+    "failure_index_k": 33,
+    "slice_reproduces": true,
+    "slice_length": 18,
+    "slice_seconds": 0.09,
+    "mismatch_fields": [
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 4,
+      "retired": 4,
+      "cycles": 29,
+      "tests": 17,
+      "seconds": 1.42,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 4,
+      "retired": 4,
+      "cycles": 29,
+      "tests": 18,
+      "seconds": 1.33,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 1,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 16,
+          "units_out": 2,
+          "tests": 17
+        }
+      ]
+    },
+    "length_reduction_pct": 88.6,
+    "cycle_reduction_pct": 88.0
+  },
+  {
+    "bug_id": "beq_inverted",
+    "level": "L2",
+    "method": "mutation",
+    "seed": 0,
+    "detect_programs": 18,
+    "detect_seconds": 7.1125,
+    "original_length": 62,
+    "original_retired": 60,
+    "original_cycles": 284,
+    "failure_index_k": 54,
+    "slice_reproduces": true,
+    "slice_length": 23,
+    "slice_seconds": 0.07,
+    "mismatch_fields": [
+      "pc_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 20,
+      "tests": 5,
+      "seconds": 0.36,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 20,
+      "tests": 1,
+      "seconds": 0.06,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 0,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 0,
+          "units_out": 0,
+          "tests": 0
+        }
+      ]
+    },
+    "length_reduction_pct": 96.8,
+    "cycle_reduction_pct": 93.0
+  },
+  {
+    "bug_id": "beq_inverted",
+    "level": "L2",
+    "method": "mutation",
+    "seed": 1,
+    "detect_programs": 4,
+    "detect_seconds": 1.4991,
+    "original_length": 33,
+    "original_retired": 31,
+    "original_cycles": 175,
+    "failure_index_k": 28,
+    "slice_reproduces": true,
+    "slice_length": 19,
+    "slice_seconds": 0.07,
+    "mismatch_fields": [
+      "pc_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 20,
+      "tests": 5,
+      "seconds": 0.38,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 20,
+      "tests": 1,
+      "seconds": 0.06,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 0,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 0,
+          "units_out": 0,
+          "tests": 0
+        }
+      ]
+    },
+    "length_reduction_pct": 93.9,
+    "cycle_reduction_pct": 88.6
+  },
+  {
+    "bug_id": "beq_inverted",
+    "level": "L2",
+    "method": "mutation",
+    "seed": 2,
+    "detect_programs": 1,
+    "detect_seconds": 0.277,
+    "original_length": 33,
+    "original_retired": 31,
+    "original_cycles": 185,
+    "failure_index_k": 16,
+    "slice_reproduces": true,
+    "slice_length": 18,
+    "slice_seconds": 0.06,
+    "mismatch_fields": [
+      "pc_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 20,
+      "tests": 5,
+      "seconds": 0.36,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 20,
+      "tests": 1,
+      "seconds": 0.08,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 0,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 0,
+          "units_out": 0,
+          "tests": 0
+        }
+      ]
+    },
+    "length_reduction_pct": 93.9,
+    "cycle_reduction_pct": 89.2
+  },
+  {
+    "bug_id": "beq_inverted",
+    "level": "L2",
+    "method": "mutation",
+    "seed": 3,
+    "detect_programs": 1,
+    "detect_seconds": 0.524,
+    "original_length": 37,
+    "original_retired": 35,
+    "original_cycles": 140,
+    "failure_index_k": 30,
+    "slice_reproduces": true,
+    "slice_length": 24,
+    "slice_seconds": 0.06,
+    "mismatch_fields": [
+      "pc_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 20,
+      "tests": 5,
+      "seconds": 0.35,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 20,
+      "tests": 1,
+      "seconds": 0.08,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 0,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 0,
+          "units_out": 0,
+          "tests": 0
+        }
+      ]
+    },
+    "length_reduction_pct": 94.6,
+    "cycle_reduction_pct": 85.7
+  },
+  {
+    "bug_id": "beq_inverted",
+    "level": "L2",
+    "method": "mutation",
+    "seed": 4,
+    "detect_programs": 3,
+    "detect_seconds": 0.8983,
+    "original_length": 35,
+    "original_retired": 34,
+    "original_cycles": 199,
+    "failure_index_k": 18,
+    "slice_reproduces": true,
+    "slice_length": 21,
+    "slice_seconds": 0.06,
+    "mismatch_fields": [
+      "pc_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 20,
+      "tests": 5,
+      "seconds": 0.33,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 20,
+      "tests": 2,
+      "seconds": 0.14,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 2,
+          "units_out": 0,
+          "tests": 2
+        },
+        {
+          "level": "instruction",
+          "units_in": 0,
+          "units_out": 0,
+          "tests": 0
+        }
+      ]
+    },
+    "length_reduction_pct": 94.3,
+    "cycle_reduction_pct": 89.9
+  },
+  {
+    "bug_id": "beq_inverted",
+    "level": "L2",
+    "method": "mutation",
+    "seed": 5,
+    "detect_programs": 4,
+    "detect_seconds": 1.2346,
+    "original_length": 34,
+    "original_retired": 30,
+    "original_cycles": 121,
+    "failure_index_k": 20,
+    "slice_reproduces": true,
+    "slice_length": 23,
+    "slice_seconds": 0.07,
+    "mismatch_fields": [
+      "pc_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 20,
+      "tests": 5,
+      "seconds": 0.33,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 20,
+      "tests": 2,
+      "seconds": 0.11,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 3,
+          "units_out": 0,
+          "tests": 2
+        },
+        {
+          "level": "instruction",
+          "units_in": 0,
+          "units_out": 0,
+          "tests": 0
+        }
+      ]
+    },
+    "length_reduction_pct": 94.1,
+    "cycle_reduction_pct": 83.5
+  },
+  {
+    "bug_id": "branch_inversion_blt",
+    "level": "L2",
+    "method": "mutation",
+    "seed": 0,
+    "detect_programs": 18,
+    "detect_seconds": 7.2531,
+    "original_length": 62,
+    "original_retired": 61,
+    "original_cycles": 285,
+    "failure_index_k": 51,
+    "slice_reproduces": true,
+    "slice_length": 21,
+    "slice_seconds": 0.08,
+    "mismatch_fields": [
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 9,
+      "seconds": 0.7,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 10,
+      "seconds": 0.77,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 1,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 19,
+          "units_out": 1,
+          "tests": 9
+        }
+      ]
+    },
+    "length_reduction_pct": 95.2,
+    "cycle_reduction_pct": 91.9
+  },
+  {
+    "bug_id": "branch_inversion_blt",
+    "level": "L2",
+    "method": "mutation",
+    "seed": 1,
+    "detect_programs": 18,
+    "detect_seconds": 9.7891,
+    "original_length": 107,
+    "original_retired": 96,
+    "original_cycles": 609,
+    "failure_index_k": 42,
+    "slice_reproduces": true,
+    "slice_length": 49,
+    "slice_seconds": 0.09,
+    "mismatch_fields": [
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 10,
+      "seconds": 0.74,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 10,
+      "seconds": 0.73,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 11,
+          "units_out": 1,
+          "tests": 9
+        },
+        {
+          "level": "instruction",
+          "units_in": 1,
+          "units_out": 1,
+          "tests": 1
+        }
+      ]
+    },
+    "length_reduction_pct": 97.2,
+    "cycle_reduction_pct": 96.2
+  },
+  {
+    "bug_id": "branch_inversion_blt",
+    "level": "L2",
+    "method": "mutation",
+    "seed": 2,
+    "detect_programs": 2,
+    "detect_seconds": 0.6721,
+    "original_length": 37,
+    "original_retired": 35,
+    "original_cycles": 199,
+    "failure_index_k": 21,
+    "slice_reproduces": true,
+    "slice_length": 21,
+    "slice_seconds": 0.07,
+    "mismatch_fields": [
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 9,
+      "seconds": 0.69,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 10,
+      "seconds": 0.66,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 1,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 19,
+          "units_out": 1,
+          "tests": 9
+        }
+      ]
+    },
+    "length_reduction_pct": 91.9,
+    "cycle_reduction_pct": 88.4
+  },
+  {
+    "bug_id": "branch_inversion_blt",
+    "level": "L2",
+    "method": "mutation",
+    "seed": 3,
+    "detect_programs": 1,
+    "detect_seconds": 0.4878,
+    "original_length": 37,
+    "original_retired": 36,
+    "original_cycles": 141,
+    "failure_index_k": 29,
+    "slice_reproduces": true,
+    "slice_length": 24,
+    "slice_seconds": 0.08,
+    "mismatch_fields": [
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 10,
+      "seconds": 0.64,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 11,
+      "seconds": 0.75,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 1,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 22,
+          "units_out": 1,
+          "tests": 10
+        }
+      ]
+    },
+    "length_reduction_pct": 91.9,
+    "cycle_reduction_pct": 83.7
+  },
+  {
+    "bug_id": "branch_inversion_blt",
+    "level": "L2",
+    "method": "mutation",
+    "seed": 4,
+    "detect_programs": 26,
+    "detect_seconds": 9.374,
+    "original_length": 155,
+    "original_retired": 146,
+    "original_cycles": 705,
+    "failure_index_k": 112,
+    "slice_reproduces": true,
+    "slice_length": 17,
+    "slice_seconds": 0.07,
+    "mismatch_fields": [
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 6,
+      "seconds": 0.42,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 7,
+      "seconds": 0.49,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 1,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 15,
+          "units_out": 1,
+          "tests": 6
+        }
+      ]
+    },
+    "length_reduction_pct": 98.1,
+    "cycle_reduction_pct": 96.7
+  },
+  {
+    "bug_id": "branch_inversion_blt",
+    "level": "L2",
+    "method": "mutation",
+    "seed": 5,
+    "detect_programs": 4,
+    "detect_seconds": 1.2202,
+    "original_length": 34,
+    "original_retired": 31,
+    "original_cycles": 122,
+    "failure_index_k": 26,
+    "slice_reproduces": true,
+    "slice_length": 30,
+    "slice_seconds": 0.06,
+    "mismatch_fields": [
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 6,
+      "seconds": 0.38,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 13,
+      "seconds": 0.83,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 7,
+          "units_out": 2,
+          "tests": 6
+        },
+        {
+          "level": "instruction",
+          "units_in": 20,
+          "units_out": 1,
+          "tests": 7
+        }
+      ]
+    },
+    "length_reduction_pct": 91.2,
+    "cycle_reduction_pct": 81.1
+  },
+  {
+    "bug_id": "fast_mul_rs2_signed_widened",
+    "level": "L1",
+    "method": "mutation",
+    "seed": 0,
+    "detect_programs": 115,
+    "detect_seconds": 35.4281,
+    "original_length": 96,
+    "original_retired": 92,
+    "original_cycles": 474,
+    "failure_index_k": 84,
+    "slice_reproduces": true,
+    "slice_length": 21,
+    "slice_seconds": 0.08,
+    "mismatch_fields": [
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 4,
+      "retired": 4,
+      "cycles": 29,
+      "tests": 14,
+      "seconds": 1.1,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 4,
+      "retired": 4,
+      "cycles": 29,
+      "tests": 15,
+      "seconds": 1.15,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 1,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 19,
+          "units_out": 2,
+          "tests": 14
+        }
+      ]
+    },
+    "length_reduction_pct": 95.8,
+    "cycle_reduction_pct": 93.9
+  },
+  {
+    "bug_id": "fast_mul_rs2_signed_widened",
+    "level": "L1",
+    "method": "mutation",
+    "seed": 1,
+    "detect_programs": 78,
+    "detect_seconds": 23.8634,
+    "original_length": 57,
+    "original_retired": 54,
+    "original_cycles": 235,
+    "failure_index_k": 39,
+    "slice_reproduces": true,
+    "slice_length": 20,
+    "slice_seconds": 0.08,
+    "mismatch_fields": [
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 4,
+      "retired": 4,
+      "cycles": 29,
+      "tests": 16,
+      "seconds": 1.21,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 4,
+      "retired": 4,
+      "cycles": 29,
+      "tests": 17,
+      "seconds": 1.34,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 1,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 18,
+          "units_out": 2,
+          "tests": 16
+        }
+      ]
+    },
+    "length_reduction_pct": 93.0,
+    "cycle_reduction_pct": 87.7
+  },
+  {
+    "bug_id": "fast_mul_rs2_signed_widened",
+    "level": "L1",
+    "method": "mutation",
+    "seed": 2,
+    "detect_programs": 5,
+    "detect_seconds": 1.4361,
+    "original_length": 66,
+    "original_retired": 62,
+    "original_cycles": 359,
+    "failure_index_k": 58,
+    "slice_reproduces": true,
+    "slice_length": 16,
+    "slice_seconds": 0.07,
+    "mismatch_fields": [
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 26,
+      "tests": 7,
+      "seconds": 0.56,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 26,
+      "tests": 8,
+      "seconds": 0.61,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 1,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 14,
+          "units_out": 1,
+          "tests": 7
+        }
+      ]
+    },
+    "length_reduction_pct": 95.5,
+    "cycle_reduction_pct": 92.8
+  },
+  {
+    "bug_id": "fast_mul_rs2_signed_widened",
+    "level": "L1",
+    "method": "mutation",
+    "seed": 3,
+    "detect_programs": 34,
+    "detect_seconds": 12.4965,
+    "original_length": 66,
+    "original_retired": 66,
+    "original_cycles": 391,
+    "failure_index_k": 41,
+    "slice_reproduces": true,
+    "slice_length": 18,
+    "slice_seconds": 0.06,
+    "mismatch_fields": [
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 4,
+      "retired": 4,
+      "cycles": 29,
+      "tests": 17,
+      "seconds": 1.13,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 4,
+      "retired": 4,
+      "cycles": 29,
+      "tests": 18,
+      "seconds": 1.17,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 1,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 16,
+          "units_out": 2,
+          "tests": 17
+        }
+      ]
+    },
+    "length_reduction_pct": 93.9,
+    "cycle_reduction_pct": 92.6
+  },
+  {
+    "bug_id": "fast_mul_rs2_signed_widened",
+    "level": "L1",
+    "method": "mutation",
+    "seed": 4,
+    "detect_programs": 8,
+    "detect_seconds": 2.0723,
+    "original_length": 59,
+    "original_retired": 56,
+    "original_cycles": 253,
+    "failure_index_k": 40,
+    "slice_reproduces": true,
+    "slice_length": 22,
+    "slice_seconds": 0.06,
+    "mismatch_fields": [
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 4,
+      "retired": 4,
+      "cycles": 29,
+      "tests": 26,
+      "seconds": 1.76,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 4,
+      "retired": 4,
+      "cycles": 29,
+      "tests": 27,
+      "seconds": 1.79,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 1,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 20,
+          "units_out": 2,
+          "tests": 26
+        }
+      ]
+    },
+    "length_reduction_pct": 93.2,
+    "cycle_reduction_pct": 88.5
+  },
+  {
+    "bug_id": "fast_mul_rs2_signed_widened",
+    "level": "L1",
+    "method": "mutation",
+    "seed": 5,
+    "detect_programs": 16,
+    "detect_seconds": 3.2512,
+    "original_length": 57,
+    "original_retired": 50,
+    "original_cycles": 270,
+    "failure_index_k": 39,
+    "slice_reproduces": true,
+    "slice_length": 22,
+    "slice_seconds": 0.08,
+    "mismatch_fields": [
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 4,
+      "retired": 4,
+      "cycles": 29,
+      "tests": 26,
+      "seconds": 1.83,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 4,
+      "retired": 4,
+      "cycles": 29,
+      "tests": 27,
+      "seconds": 2.58,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 1,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 20,
+          "units_out": 2,
+          "tests": 26
+        }
+      ]
+    },
+    "length_reduction_pct": 93.0,
+    "cycle_reduction_pct": 89.3
+  },
+  {
+    "bug_id": "lui_auipc_rd_x0",
+    "level": "L2",
+    "method": "mutation",
+    "seed": 0,
+    "detect_programs": 1,
+    "detect_seconds": 0.4249,
+    "original_length": 37,
+    "original_retired": 35,
+    "original_cycles": 135,
+    "failure_index_k": 0,
+    "slice_reproduces": true,
+    "slice_length": 2,
+    "slice_seconds": 0.06,
+    "mismatch_fields": [
+      "rd_addr",
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 20,
+      "tests": 0,
+      "seconds": 0.0,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 20,
+      "tests": 0,
+      "seconds": 0.0,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": []
+    },
+    "length_reduction_pct": 94.6,
+    "cycle_reduction_pct": 85.2
+  },
+  {
+    "bug_id": "lui_auipc_rd_x0",
+    "level": "L2",
+    "method": "mutation",
+    "seed": 1,
+    "detect_programs": 1,
+    "detect_seconds": 0.3647,
+    "original_length": 36,
+    "original_retired": 35,
+    "original_cycles": 172,
+    "failure_index_k": 0,
+    "slice_reproduces": true,
+    "slice_length": 2,
+    "slice_seconds": 0.06,
+    "mismatch_fields": [
+      "rd_addr",
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 20,
+      "tests": 0,
+      "seconds": 0.0,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 20,
+      "tests": 0,
+      "seconds": 0.0,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": []
+    },
+    "length_reduction_pct": 94.4,
+    "cycle_reduction_pct": 88.4
+  },
+  {
+    "bug_id": "lui_auipc_rd_x0",
+    "level": "L2",
+    "method": "mutation",
+    "seed": 2,
+    "detect_programs": 1,
+    "detect_seconds": 0.3311,
+    "original_length": 33,
+    "original_retired": 30,
+    "original_cycles": 184,
+    "failure_index_k": 0,
+    "slice_reproduces": true,
+    "slice_length": 2,
+    "slice_seconds": 0.08,
+    "mismatch_fields": [
+      "rd_addr",
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 20,
+      "tests": 0,
+      "seconds": 0.0,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 20,
+      "tests": 0,
+      "seconds": 0.0,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": []
+    },
+    "length_reduction_pct": 93.9,
+    "cycle_reduction_pct": 89.1
+  },
+  {
+    "bug_id": "lui_auipc_rd_x0",
+    "level": "L2",
+    "method": "mutation",
+    "seed": 3,
+    "detect_programs": 1,
+    "detect_seconds": 0.2783,
+    "original_length": 37,
+    "original_retired": 36,
+    "original_cycles": 141,
+    "failure_index_k": 0,
+    "slice_reproduces": true,
+    "slice_length": 2,
+    "slice_seconds": 0.07,
+    "mismatch_fields": [
+      "rd_addr",
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 20,
+      "tests": 0,
+      "seconds": 0.0,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 20,
+      "tests": 0,
+      "seconds": 0.0,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": []
+    },
+    "length_reduction_pct": 94.6,
+    "cycle_reduction_pct": 85.8
+  },
+  {
+    "bug_id": "lui_auipc_rd_x0",
+    "level": "L2",
+    "method": "mutation",
+    "seed": 4,
+    "detect_programs": 1,
+    "detect_seconds": 0.4011,
+    "original_length": 34,
+    "original_retired": 32,
+    "original_cycles": 159,
+    "failure_index_k": 0,
+    "slice_reproduces": true,
+    "slice_length": 2,
+    "slice_seconds": 0.08,
+    "mismatch_fields": [
+      "rd_addr",
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 20,
+      "tests": 0,
+      "seconds": 0.0,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 20,
+      "tests": 0,
+      "seconds": 0.0,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": []
+    },
+    "length_reduction_pct": 94.1,
+    "cycle_reduction_pct": 87.4
+  },
+  {
+    "bug_id": "lui_auipc_rd_x0",
+    "level": "L2",
+    "method": "mutation",
+    "seed": 5,
+    "detect_programs": 1,
+    "detect_seconds": 0.4213,
+    "original_length": 32,
+    "original_retired": 30,
+    "original_cycles": 130,
+    "failure_index_k": 0,
+    "slice_reproduces": true,
+    "slice_length": 2,
+    "slice_seconds": 0.06,
+    "mismatch_fields": [
+      "rd_addr",
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 20,
+      "tests": 0,
+      "seconds": 0.0,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 20,
+      "tests": 0,
+      "seconds": 0.0,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": []
+    },
+    "length_reduction_pct": 93.8,
+    "cycle_reduction_pct": 84.6
+  },
+  {
+    "bug_id": "mem_addr_bit2_stuck",
+    "level": "L1",
+    "method": "mutation",
+    "seed": 0,
+    "detect_programs": 1,
+    "detect_seconds": 0.3089,
+    "original_length": 37,
+    "original_retired": 35,
+    "original_cycles": 135,
+    "failure_index_k": 25,
+    "slice_reproduces": true,
+    "slice_length": 19,
+    "slice_seconds": 0.08,
+    "mismatch_fields": [
+      "mem_addr"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 22,
+      "tests": 5,
+      "seconds": 0.38,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 22,
+      "tests": 1,
+      "seconds": 0.08,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 0,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 0,
+          "units_out": 0,
+          "tests": 0
+        }
+      ]
+    },
+    "length_reduction_pct": 94.6,
+    "cycle_reduction_pct": 83.7
+  },
+  {
+    "bug_id": "mem_addr_bit2_stuck",
+    "level": "L1",
+    "method": "mutation",
+    "seed": 1,
+    "detect_programs": 1,
+    "detect_seconds": 0.295,
+    "original_length": 36,
+    "original_retired": 35,
+    "original_cycles": 172,
+    "failure_index_k": 19,
+    "slice_reproduces": true,
+    "slice_length": 19,
+    "slice_seconds": 0.08,
+    "mismatch_fields": [
+      "mem_addr"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 22,
+      "tests": 5,
+      "seconds": 0.38,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 22,
+      "tests": 1,
+      "seconds": 0.08,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 0,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 0,
+          "units_out": 0,
+          "tests": 0
+        }
+      ]
+    },
+    "length_reduction_pct": 94.4,
+    "cycle_reduction_pct": 87.2
+  },
+  {
+    "bug_id": "mem_addr_bit2_stuck",
+    "level": "L1",
+    "method": "mutation",
+    "seed": 2,
+    "detect_programs": 1,
+    "detect_seconds": 0.2958,
+    "original_length": 33,
+    "original_retired": 32,
+    "original_cycles": 186,
+    "failure_index_k": 25,
+    "slice_reproduces": true,
+    "slice_length": 21,
+    "slice_seconds": 0.08,
+    "mismatch_fields": [
+      "mem_addr"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 22,
+      "tests": 5,
+      "seconds": 0.39,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 22,
+      "tests": 1,
+      "seconds": 0.08,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 0,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 0,
+          "units_out": 0,
+          "tests": 0
+        }
+      ]
+    },
+    "length_reduction_pct": 93.9,
+    "cycle_reduction_pct": 88.2
+  },
+  {
+    "bug_id": "mem_addr_bit2_stuck",
+    "level": "L1",
+    "method": "mutation",
+    "seed": 3,
+    "detect_programs": 2,
+    "detect_seconds": 0.5981,
+    "original_length": 32,
+    "original_retired": 31,
+    "original_cycles": 164,
+    "failure_index_k": 15,
+    "slice_reproduces": true,
+    "slice_length": 18,
+    "slice_seconds": 0.07,
+    "mismatch_fields": [
+      "mem_addr"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 22,
+      "tests": 5,
+      "seconds": 0.32,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 22,
+      "tests": 1,
+      "seconds": 0.06,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 0,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 0,
+          "units_out": 0,
+          "tests": 0
+        }
+      ]
+    },
+    "length_reduction_pct": 93.8,
+    "cycle_reduction_pct": 86.6
+  },
+  {
+    "bug_id": "mem_addr_bit2_stuck",
+    "level": "L1",
+    "method": "mutation",
+    "seed": 4,
+    "detect_programs": 1,
+    "detect_seconds": 0.3657,
+    "original_length": 34,
+    "original_retired": 32,
+    "original_cycles": 159,
+    "failure_index_k": 17,
+    "slice_reproduces": true,
+    "slice_length": 20,
+    "slice_seconds": 0.07,
+    "mismatch_fields": [
+      "mem_addr"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 22,
+      "tests": 5,
+      "seconds": 0.31,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 22,
+      "tests": 2,
+      "seconds": 0.13,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 2,
+          "units_out": 0,
+          "tests": 2
+        },
+        {
+          "level": "instruction",
+          "units_in": 0,
+          "units_out": 0,
+          "tests": 0
+        }
+      ]
+    },
+    "length_reduction_pct": 94.1,
+    "cycle_reduction_pct": 86.2
+  },
+  {
+    "bug_id": "mem_addr_bit2_stuck",
+    "level": "L1",
+    "method": "mutation",
+    "seed": 5,
+    "detect_programs": 1,
+    "detect_seconds": 0.3875,
+    "original_length": 32,
+    "original_retired": 30,
+    "original_cycles": 130,
+    "failure_index_k": 18,
+    "slice_reproduces": true,
+    "slice_length": 14,
+    "slice_seconds": 0.08,
+    "mismatch_fields": [
+      "mem_addr"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 22,
+      "tests": 4,
+      "seconds": 0.26,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 22,
+      "tests": 1,
+      "seconds": 0.07,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 0,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 0,
+          "units_out": 0,
+          "tests": 0
+        }
+      ]
+    },
+    "length_reduction_pct": 93.8,
+    "cycle_reduction_pct": 83.1
+  },
+  {
+    "bug_id": "mem_handshake_drop",
+    "level": "L3",
+    "method": "mutation",
+    "seed": 0,
+    "detect_programs": 1,
+    "detect_seconds": 0.5079,
+    "original_length": 37,
+    "original_retired": 35,
+    "original_cycles": 135,
+    "failure_index_k": 25,
+    "slice_reproduces": true,
+    "slice_length": 19,
+    "slice_seconds": 0.07,
+    "mismatch_fields": [
+      "mem_addr",
+      "mem_rmask",
+      "mem_wmask"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 22,
+      "tests": 5,
+      "seconds": 0.37,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 22,
+      "tests": 1,
+      "seconds": 0.07,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 0,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 0,
+          "units_out": 0,
+          "tests": 0
+        }
+      ]
+    },
+    "length_reduction_pct": 94.6,
+    "cycle_reduction_pct": 83.7
+  },
+  {
+    "bug_id": "mem_handshake_drop",
+    "level": "L3",
+    "method": "mutation",
+    "seed": 1,
+    "detect_programs": 19,
+    "detect_seconds": 9.9995,
+    "original_length": 87,
+    "original_retired": 80,
+    "original_cycles": 545,
+    "failure_index_k": 67,
+    "slice_reproduces": true,
+    "slice_length": 16,
+    "slice_seconds": 0.08,
+    "mismatch_fields": [
+      "mem_addr",
+      "mem_rmask",
+      "mem_wdata",
+      "mem_wmask"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 22,
+      "tests": 4,
+      "seconds": 0.31,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 22,
+      "tests": 1,
+      "seconds": 0.08,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 0,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 0,
+          "units_out": 0,
+          "tests": 0
+        }
+      ]
+    },
+    "length_reduction_pct": 97.7,
+    "cycle_reduction_pct": 96.0
+  },
+  {
+    "bug_id": "mem_handshake_drop",
+    "level": "L3",
+    "method": "mutation",
+    "seed": 2,
+    "detect_programs": 28,
+    "detect_seconds": 14.2002,
+    "original_length": 82,
+    "original_retired": 75,
+    "original_cycles": 368,
+    "failure_index_k": 66,
+    "slice_reproduces": true,
+    "slice_length": 20,
+    "slice_seconds": 0.07,
+    "mismatch_fields": [
+      "mem_addr",
+      "mem_rmask",
+      "mem_wdata",
+      "mem_wmask"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 22,
+      "tests": 5,
+      "seconds": 0.37,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 22,
+      "tests": 1,
+      "seconds": 0.07,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 0,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 0,
+          "units_out": 0,
+          "tests": 0
+        }
+      ]
+    },
+    "length_reduction_pct": 97.6,
+    "cycle_reduction_pct": 94.0
+  },
+  {
+    "bug_id": "mem_handshake_drop",
+    "level": "L3",
+    "method": "mutation",
+    "seed": 3,
+    "detect_programs": 44,
+    "detect_seconds": 18.0611,
+    "original_length": 140,
+    "original_retired": 135,
+    "original_cycles": 820,
+    "failure_index_k": 128,
+    "slice_reproduces": true,
+    "slice_length": 15,
+    "slice_seconds": 0.08,
+    "mismatch_fields": [
+      "mem_addr",
+      "mem_rmask",
+      "mem_wdata",
+      "mem_wmask"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 22,
+      "tests": 4,
+      "seconds": 0.29,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 22,
+      "tests": 1,
+      "seconds": 0.08,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 0,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 0,
+          "units_out": 0,
+          "tests": 0
+        }
+      ]
+    },
+    "length_reduction_pct": 98.6,
+    "cycle_reduction_pct": 97.3
+  },
+  {
+    "bug_id": "mem_handshake_drop",
+    "level": "L3",
+    "method": "mutation",
+    "seed": 4,
+    "detect_programs": 4,
+    "detect_seconds": 1.7243,
+    "original_length": 36,
+    "original_retired": 35,
+    "original_cycles": 180,
+    "failure_index_k": 25,
+    "slice_reproduces": true,
+    "slice_length": 24,
+    "slice_seconds": 0.08,
+    "mismatch_fields": [
+      "mem_addr",
+      "mem_rmask",
+      "mem_wdata",
+      "mem_wmask"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 22,
+      "tests": 5,
+      "seconds": 0.39,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 22,
+      "tests": 1,
+      "seconds": 0.08,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 0,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 0,
+          "units_out": 0,
+          "tests": 0
+        }
+      ]
+    },
+    "length_reduction_pct": 94.4,
+    "cycle_reduction_pct": 87.8
+  },
+  {
+    "bug_id": "mem_handshake_drop",
+    "level": "L3",
+    "method": "mutation",
+    "seed": 5,
+    "detect_programs": 28,
+    "detect_seconds": 12.9227,
+    "original_length": 69,
+    "original_retired": 65,
+    "original_cycles": 322,
+    "failure_index_k": 53,
+    "slice_reproduces": true,
+    "slice_length": 18,
+    "slice_seconds": 0.08,
+    "mismatch_fields": [
+      "mem_addr",
+      "mem_rmask",
+      "mem_wmask"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 22,
+      "tests": 5,
+      "seconds": 0.38,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 22,
+      "tests": 1,
+      "seconds": 0.08,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 0,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 0,
+          "units_out": 0,
+          "tests": 0
+        }
+      ]
+    },
+    "length_reduction_pct": 97.1,
+    "cycle_reduction_pct": 93.2
+  },
+  {
+    "bug_id": "slt_signed_as_unsigned",
+    "level": "L1",
+    "method": "mutation",
+    "seed": 0,
+    "detect_programs": 2,
+    "detect_seconds": 0.7109,
+    "original_length": 36,
+    "original_retired": 35,
+    "original_cycles": 180,
+    "failure_index_k": 19,
+    "slice_reproduces": true,
+    "slice_length": 18,
+    "slice_seconds": 0.06,
+    "mismatch_fields": [
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 20,
+      "tests": 5,
+      "seconds": 0.33,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 20,
+      "tests": 1,
+      "seconds": 0.08,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 0,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 0,
+          "units_out": 0,
+          "tests": 0
+        }
+      ]
+    },
+    "length_reduction_pct": 94.4,
+    "cycle_reduction_pct": 88.9
+  },
+  {
+    "bug_id": "slt_signed_as_unsigned",
+    "level": "L1",
+    "method": "mutation",
+    "seed": 1,
+    "detect_programs": 1,
+    "detect_seconds": 0.299,
+    "original_length": 36,
+    "original_retired": 35,
+    "original_cycles": 172,
+    "failure_index_k": 27,
+    "slice_reproduces": true,
+    "slice_length": 20,
+    "slice_seconds": 0.06,
+    "mismatch_fields": [
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 20,
+      "tests": 5,
+      "seconds": 0.36,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 2,
+      "retired": 2,
+      "cycles": 20,
+      "tests": 1,
+      "seconds": 0.06,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 0,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 0,
+          "units_out": 0,
+          "tests": 0
+        }
+      ]
+    },
+    "length_reduction_pct": 94.4,
+    "cycle_reduction_pct": 88.4
+  },
+  {
+    "bug_id": "slt_signed_as_unsigned",
+    "level": "L1",
+    "method": "mutation",
+    "seed": 2,
+    "detect_programs": 1,
+    "detect_seconds": 0.3803,
+    "original_length": 33,
+    "original_retired": 31,
+    "original_cycles": 185,
+    "failure_index_k": 22,
+    "slice_reproduces": true,
+    "slice_length": 19,
+    "slice_seconds": 0.06,
+    "mismatch_fields": [
+      "pc_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 4,
+      "retired": 4,
+      "cycles": 26,
+      "tests": 24,
+      "seconds": 1.61,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 4,
+      "retired": 4,
+      "cycles": 26,
+      "tests": 26,
+      "seconds": 1.73,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 2,
+          "units_out": 2,
+          "tests": 2
+        },
+        {
+          "level": "instruction",
+          "units_in": 17,
+          "units_out": 2,
+          "tests": 24
+        }
+      ]
+    },
+    "length_reduction_pct": 87.9,
+    "cycle_reduction_pct": 85.9
+  },
+  {
+    "bug_id": "slt_signed_as_unsigned",
+    "level": "L1",
+    "method": "mutation",
+    "seed": 3,
+    "detect_programs": 1,
+    "detect_seconds": 0.2747,
+    "original_length": 37,
+    "original_retired": 36,
+    "original_cycles": 141,
+    "failure_index_k": 29,
+    "slice_reproduces": true,
+    "slice_length": 24,
+    "slice_seconds": 0.08,
+    "mismatch_fields": [
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 10,
+      "seconds": 0.75,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 11,
+      "seconds": 0.79,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 1,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 22,
+          "units_out": 1,
+          "tests": 10
+        }
+      ]
+    },
+    "length_reduction_pct": 91.9,
+    "cycle_reduction_pct": 83.7
+  },
+  {
+    "bug_id": "slt_signed_as_unsigned",
+    "level": "L1",
+    "method": "mutation",
+    "seed": 4,
+    "detect_programs": 1,
+    "detect_seconds": 0.3609,
+    "original_length": 34,
+    "original_retired": 31,
+    "original_cycles": 158,
+    "failure_index_k": 25,
+    "slice_reproduces": true,
+    "slice_length": 21,
+    "slice_seconds": 0.08,
+    "mismatch_fields": [
+      "pc_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 3,
+      "retired": 2,
+      "cycles": 22,
+      "tests": 7,
+      "seconds": 0.53,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 3,
+      "retired": 2,
+      "cycles": 22,
+      "tests": 8,
+      "seconds": 0.61,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 1,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 19,
+          "units_out": 1,
+          "tests": 7
+        }
+      ]
+    },
+    "length_reduction_pct": 91.2,
+    "cycle_reduction_pct": 86.1
+  },
+  {
+    "bug_id": "slt_signed_as_unsigned",
+    "level": "L1",
+    "method": "mutation",
+    "seed": 5,
+    "detect_programs": 4,
+    "detect_seconds": 1.3189,
+    "original_length": 34,
+    "original_retired": 31,
+    "original_cycles": 122,
+    "failure_index_k": 26,
+    "slice_reproduces": true,
+    "slice_length": 30,
+    "slice_seconds": 0.08,
+    "mismatch_fields": [
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 6,
+      "seconds": 0.45,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 13,
+      "seconds": 1.02,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 7,
+          "units_out": 2,
+          "tests": 6
+        },
+        {
+          "level": "instruction",
+          "units_in": 20,
+          "units_out": 1,
+          "tests": 7
+        }
+      ]
+    },
+    "length_reduction_pct": 91.2,
+    "cycle_reduction_pct": 81.1
+  },
+  {
+    "bug_id": "stale_latched_branch",
+    "level": "L3",
+    "method": "mutation",
+    "seed": 0,
+    "detect_programs": 1,
+    "detect_seconds": 0.1973,
+    "original_length": 37,
+    "original_retired": 35,
+    "original_cycles": 135,
+    "failure_index_k": 22,
+    "slice_reproduces": true,
+    "slice_length": 20,
+    "slice_seconds": 0.08,
+    "mismatch_fields": [
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 2,
+      "retired": 1,
+      "cycles": 17,
+      "tests": 5,
+      "seconds": 0.31,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 2,
+      "retired": 1,
+      "cycles": 17,
+      "tests": 1,
+      "seconds": 0.06,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 0,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 0,
+          "units_out": 0,
+          "tests": 0
+        }
+      ]
+    },
+    "length_reduction_pct": 94.6,
+    "cycle_reduction_pct": 87.4
+  },
+  {
+    "bug_id": "stale_latched_branch",
+    "level": "L3",
+    "method": "mutation",
+    "seed": 1,
+    "detect_programs": 1,
+    "detect_seconds": 0.2727,
+    "original_length": 36,
+    "original_retired": 35,
+    "original_cycles": 172,
+    "failure_index_k": 31,
+    "slice_reproduces": true,
+    "slice_length": 17,
+    "slice_seconds": 0.06,
+    "mismatch_fields": [
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 2,
+      "retired": 1,
+      "cycles": 17,
+      "tests": 4,
+      "seconds": 0.29,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 2,
+      "retired": 1,
+      "cycles": 17,
+      "tests": 1,
+      "seconds": 0.07,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 0,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 0,
+          "units_out": 0,
+          "tests": 0
+        }
+      ]
+    },
+    "length_reduction_pct": 94.4,
+    "cycle_reduction_pct": 90.1
+  },
+  {
+    "bug_id": "stale_latched_branch",
+    "level": "L3",
+    "method": "mutation",
+    "seed": 2,
+    "detect_programs": 1,
+    "detect_seconds": 0.283,
+    "original_length": 33,
+    "original_retired": 32,
+    "original_cycles": 186,
+    "failure_index_k": 19,
+    "slice_reproduces": true,
+    "slice_length": 20,
+    "slice_seconds": 0.07,
+    "mismatch_fields": [
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 2,
+      "retired": 1,
+      "cycles": 17,
+      "tests": 5,
+      "seconds": 0.3,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 2,
+      "retired": 1,
+      "cycles": 17,
+      "tests": 1,
+      "seconds": 0.06,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 0,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 0,
+          "units_out": 0,
+          "tests": 0
+        }
+      ]
+    },
+    "length_reduction_pct": 93.9,
+    "cycle_reduction_pct": 90.9
+  },
+  {
+    "bug_id": "stale_latched_branch",
+    "level": "L3",
+    "method": "mutation",
+    "seed": 3,
+    "detect_programs": 1,
+    "detect_seconds": 0.4325,
+    "original_length": 37,
+    "original_retired": 27,
+    "original_cycles": 101,
+    "failure_index_k": 25,
+    "slice_reproduces": false,
+    "slice_length": 26,
+    "slice_seconds": 0.07,
+    "mismatch_fields": [
+      "rd_addr",
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 4,
+      "retired": 3,
+      "cycles": 25,
+      "tests": 25,
+      "seconds": 1.8,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 3,
+      "retired": 2,
+      "cycles": 22,
+      "tests": 7,
+      "seconds": 0.47,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 5,
+          "units_out": 1,
+          "tests": 4
+        },
+        {
+          "level": "instruction",
+          "units_in": 5,
+          "units_out": 1,
+          "tests": 3
+        }
+      ]
+    },
+    "length_reduction_pct": 91.9,
+    "cycle_reduction_pct": 78.2
+  },
+  {
+    "bug_id": "stale_latched_branch",
+    "level": "L3",
+    "method": "mutation",
+    "seed": 4,
+    "detect_programs": 1,
+    "detect_seconds": 0.3553,
+    "original_length": 34,
+    "original_retired": 22,
+    "original_cycles": 123,
+    "failure_index_k": 16,
+    "slice_reproduces": false,
+    "slice_length": 17,
+    "slice_seconds": 0.07,
+    "mismatch_fields": [
+      "rd_addr",
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 4,
+      "retired": 3,
+      "cycles": 25,
+      "tests": 12,
+      "seconds": 0.79,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 3,
+      "retired": 2,
+      "cycles": 22,
+      "tests": 12,
+      "seconds": 0.75,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 7,
+          "units_out": 1,
+          "tests": 7
+        },
+        {
+          "level": "instruction",
+          "units_in": 17,
+          "units_out": 1,
+          "tests": 5
+        }
+      ]
+    },
+    "length_reduction_pct": 91.2,
+    "cycle_reduction_pct": 82.1
+  },
+  {
+    "bug_id": "stale_latched_branch",
+    "level": "L3",
+    "method": "mutation",
+    "seed": 5,
+    "detect_programs": 1,
+    "detect_seconds": 0.2854,
+    "original_length": 32,
+    "original_retired": 30,
+    "original_cycles": 130,
+    "failure_index_k": 19,
+    "slice_reproduces": false,
+    "slice_length": 14,
+    "slice_seconds": 0.08,
+    "mismatch_fields": [
+      "rd_addr",
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 4,
+      "retired": 3,
+      "cycles": 25,
+      "tests": 17,
+      "seconds": 1.28,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 4,
+      "retired": 3,
+      "cycles": 25,
+      "tests": 16,
+      "seconds": 1.23,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 3,
+          "units_out": 1,
+          "tests": 2
+        },
+        {
+          "level": "instruction",
+          "units_in": 9,
+          "units_out": 2,
+          "tests": 14
+        }
+      ]
+    },
+    "length_reduction_pct": 87.5,
+    "cycle_reduction_pct": 80.8
+  },
+  {
+    "bug_id": "store_after_store_dropped",
+    "level": "L3",
+    "method": "mutation",
+    "seed": 0,
+    "detect_programs": 1,
+    "detect_seconds": 0.3258,
+    "original_length": 37,
+    "original_retired": 35,
+    "original_cycles": 135,
+    "failure_index_k": 25,
+    "slice_reproduces": false,
+    "slice_length": 19,
+    "slice_seconds": 0.06,
+    "mismatch_fields": [
+      "mem_rmask",
+      "mem_wmask"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 4,
+      "retired": 4,
+      "cycles": 31,
+      "tests": 16,
+      "seconds": 1.17,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 4,
+      "retired": 4,
+      "cycles": 31,
+      "tests": 29,
+      "seconds": 2.01,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 5,
+          "units_out": 2,
+          "tests": 8
+        },
+        {
+          "level": "instruction",
+          "units_in": 32,
+          "units_out": 2,
+          "tests": 21
+        }
+      ]
+    },
+    "length_reduction_pct": 89.2,
+    "cycle_reduction_pct": 77.0
+  },
+  {
+    "bug_id": "store_after_store_dropped",
+    "level": "L3",
+    "method": "mutation",
+    "seed": 1,
+    "detect_programs": 15,
+    "detect_seconds": 4.2971,
+    "original_length": 42,
+    "original_retired": 39,
+    "original_cycles": 274,
+    "failure_index_k": 34,
+    "slice_reproduces": false,
+    "slice_length": 16,
+    "slice_seconds": 0.08,
+    "mismatch_fields": [
+      "mem_rmask",
+      "mem_wmask"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 4,
+      "retired": 4,
+      "cycles": 30,
+      "tests": 31,
+      "seconds": 2.15,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 4,
+      "retired": 4,
+      "cycles": 30,
+      "tests": 33,
+      "seconds": 2.22,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 7,
+          "units_out": 2,
+          "tests": 12
+        },
+        {
+          "level": "instruction",
+          "units_in": 17,
+          "units_out": 2,
+          "tests": 21
+        }
+      ]
+    },
+    "length_reduction_pct": 90.5,
+    "cycle_reduction_pct": 89.1
+  },
+  {
+    "bug_id": "store_after_store_dropped",
+    "level": "L3",
+    "method": "mutation",
+    "seed": 2,
+    "detect_programs": 3,
+    "detect_seconds": 0.769,
+    "original_length": 34,
+    "original_retired": 32,
+    "original_cycles": 135,
+    "failure_index_k": 30,
+    "slice_reproduces": true,
+    "slice_length": 34,
+    "slice_seconds": 0.07,
+    "mismatch_fields": [
+      "mem_rmask",
+      "mem_wmask"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 27,
+      "tests": 7,
+      "seconds": 0.45,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 27,
+      "tests": 12,
+      "seconds": 0.81,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 7,
+          "units_out": 2,
+          "tests": 5
+        },
+        {
+          "level": "instruction",
+          "units_in": 8,
+          "units_out": 1,
+          "tests": 7
+        }
+      ]
+    },
+    "length_reduction_pct": 91.2,
+    "cycle_reduction_pct": 80.0
+  },
+  {
+    "bug_id": "store_after_store_dropped",
+    "level": "L3",
+    "method": "mutation",
+    "seed": 3,
+    "detect_programs": 1,
+    "detect_seconds": 0.1926,
+    "original_length": 37,
+    "original_retired": 36,
+    "original_cycles": 141,
+    "failure_index_k": 32,
+    "slice_reproduces": false,
+    "slice_length": 24,
+    "slice_seconds": 0.08,
+    "mismatch_fields": [
+      "mem_rmask",
+      "mem_wmask"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 4,
+      "retired": 4,
+      "cycles": 30,
+      "tests": 16,
+      "seconds": 1.29,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 4,
+      "retired": 4,
+      "cycles": 30,
+      "tests": 20,
+      "seconds": 1.53,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 5,
+          "units_out": 3,
+          "tests": 6
+        },
+        {
+          "level": "instruction",
+          "units_in": 8,
+          "units_out": 2,
+          "tests": 14
+        }
+      ]
+    },
+    "length_reduction_pct": 89.2,
+    "cycle_reduction_pct": 78.7
+  },
+  {
+    "bug_id": "store_after_store_dropped",
+    "level": "L3",
+    "method": "mutation",
+    "seed": 4,
+    "detect_programs": 2,
+    "detect_seconds": 0.7813,
+    "original_length": 34,
+    "original_retired": 33,
+    "original_cycles": 202,
+    "failure_index_k": 26,
+    "slice_reproduces": false,
+    "slice_length": 15,
+    "slice_seconds": 0.07,
+    "mismatch_fields": [
+      "mem_rmask",
+      "mem_wmask"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 4,
+      "retired": 4,
+      "cycles": 30,
+      "tests": 14,
+      "seconds": 1.04,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 4,
+      "retired": 4,
+      "cycles": 30,
+      "tests": 14,
+      "seconds": 1.05,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 3,
+          "units_out": 1,
+          "tests": 2
+        },
+        {
+          "level": "instruction",
+          "units_in": 12,
+          "units_out": 2,
+          "tests": 12
+        }
+      ]
+    },
+    "length_reduction_pct": 88.2,
+    "cycle_reduction_pct": 85.1
+  },
+  {
+    "bug_id": "store_after_store_dropped",
+    "level": "L3",
+    "method": "mutation",
+    "seed": 5,
+    "detect_programs": 1,
+    "detect_seconds": 0.3159,
+    "original_length": 32,
+    "original_retired": 30,
+    "original_cycles": 130,
+    "failure_index_k": 25,
+    "slice_reproduces": false,
+    "slice_length": 12,
+    "slice_seconds": 0.07,
+    "mismatch_fields": [
+      "mem_rmask",
+      "mem_wmask"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 4,
+      "retired": 4,
+      "cycles": 30,
+      "tests": 12,
+      "seconds": 0.86,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 4,
+      "retired": 4,
+      "cycles": 30,
+      "tests": 16,
+      "seconds": 1.19,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 3,
+          "units_out": 1,
+          "tests": 2
+        },
+        {
+          "level": "instruction",
+          "units_in": 9,
+          "units_out": 2,
+          "tests": 14
+        }
+      ]
+    },
+    "length_reduction_pct": 87.5,
+    "cycle_reduction_pct": 76.9
+  },
+  {
+    "bug_id": "store_after_store_dropped_intermittent",
+    "level": "L3",
+    "method": "mutation",
+    "seed": 0,
+    "detect_programs": 40,
+    "detect_seconds": 13.1563,
+    "original_length": 58,
+    "original_retired": 57,
+    "original_cycles": 301,
+    "failure_index_k": 44,
+    "slice_reproduces": false,
+    "slice_length": 20,
+    "slice_seconds": 0.07,
+    "mismatch_fields": [
+      "mem_rmask",
+      "mem_wmask"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 24,
+      "retired": 24,
+      "cycles": 99,
+      "tests": 86,
+      "seconds": 6.79,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 19,
+      "retired": 18,
+      "cycles": 91,
+      "tests": 97,
+      "seconds": 13.54,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 9,
+          "units_out": 5,
+          "tests": 33
+        },
+        {
+          "level": "instruction",
+          "units_in": 48,
+          "units_out": 17,
+          "tests": 64
+        }
+      ]
+    },
+    "length_reduction_pct": 67.2,
+    "cycle_reduction_pct": 69.8
+  },
+  {
+    "bug_id": "store_after_store_dropped_intermittent",
+    "level": "L3",
+    "method": "mutation",
+    "seed": 1,
+    "detect_programs": 31,
+    "detect_seconds": 8.0961,
+    "original_length": 82,
+    "original_retired": 80,
+    "original_cycles": 381,
+    "failure_index_k": 73,
+    "slice_reproduces": false,
+    "slice_length": 21,
+    "slice_seconds": 0.11,
+    "mismatch_fields": [
+      "mem_rmask",
+      "mem_wmask"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 7,
+      "retired": 7,
+      "cycles": 48,
+      "tests": 19,
+      "seconds": 1.88,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 6,
+      "retired": 6,
+      "cycles": 48,
+      "tests": 22,
+      "seconds": 2.28,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 18,
+          "units_out": 1,
+          "tests": 11
+        },
+        {
+          "level": "instruction",
+          "units_in": 6,
+          "units_out": 4,
+          "tests": 11
+        }
+      ]
+    },
+    "length_reduction_pct": 92.7,
+    "cycle_reduction_pct": 87.4
+  },
+  {
+    "bug_id": "store_after_store_dropped_intermittent",
+    "level": "L3",
+    "method": "mutation",
+    "seed": 2,
+    "detect_programs": 23,
+    "detect_seconds": 6.131,
+    "original_length": 34,
+    "original_retired": 32,
+    "original_cycles": 128,
+    "failure_index_k": 30,
+    "slice_reproduces": true,
+    "slice_length": 34,
+    "slice_seconds": 0.09,
+    "mismatch_fields": [
+      "mem_rmask",
+      "mem_wmask"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 21,
+      "retired": 20,
+      "cycles": 88,
+      "tests": 63,
+      "seconds": 4.5,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 28,
+      "retired": 27,
+      "cycles": 120,
+      "tests": 90,
+      "seconds": 6.99,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 7,
+          "units_out": 5,
+          "tests": 12
+        },
+        {
+          "level": "instruction",
+          "units_in": 27,
+          "units_out": 26,
+          "tests": 78
+        }
+      ]
+    },
+    "length_reduction_pct": 17.6,
+    "cycle_reduction_pct": 6.2
+  },
+  {
+    "bug_id": "store_after_store_dropped_intermittent",
+    "level": "L3",
+    "method": "mutation",
+    "seed": 3,
+    "detect_programs": 8,
+    "detect_seconds": 2.0584,
+    "original_length": 32,
+    "original_retired": 31,
+    "original_cycles": 158,
+    "failure_index_k": 27,
+    "slice_reproduces": false,
+    "slice_length": 17,
+    "slice_seconds": 0.1,
+    "mismatch_fields": [
+      "mem_rmask",
+      "mem_wmask"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 17,
+      "retired": 17,
+      "cycles": 75,
+      "tests": 67,
+      "seconds": 4.94,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 17,
+      "retired": 17,
+      "cycles": 75,
+      "tests": 77,
+      "seconds": 5.33,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 5,
+          "units_out": 5,
+          "tests": 10
+        },
+        {
+          "level": "instruction",
+          "units_in": 30,
+          "units_out": 15,
+          "tests": 67
+        }
+      ]
+    },
+    "length_reduction_pct": 46.9,
+    "cycle_reduction_pct": 52.5
+  },
+  {
+    "bug_id": "store_after_store_dropped_intermittent",
+    "level": "L3",
+    "method": "mutation",
+    "seed": 4,
+    "detect_programs": 26,
+    "detect_seconds": 8.6342,
+    "original_length": 155,
+    "original_retired": 146,
+    "original_cycles": 704,
+    "failure_index_k": 118,
+    "slice_reproduces": false,
+    "slice_length": 16,
+    "slice_seconds": 0.08,
+    "mismatch_fields": [
+      "mem_rmask",
+      "mem_wmask"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 22,
+      "retired": 22,
+      "cycles": 99,
+      "tests": 238,
+      "seconds": 16.05,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 27,
+      "retired": 26,
+      "cycles": 99,
+      "tests": 220,
+      "seconds": 13.94,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 29,
+          "units_out": 11,
+          "tests": 67
+        },
+        {
+          "level": "instruction",
+          "units_in": 62,
+          "units_out": 25,
+          "tests": 153
+        }
+      ]
+    },
+    "length_reduction_pct": 82.6,
+    "cycle_reduction_pct": 85.9
+  },
+  {
+    "bug_id": "store_after_store_dropped_intermittent",
+    "level": "L3",
+    "method": "mutation",
+    "seed": 5,
+    "detect_programs": 22,
+    "detect_seconds": 4.649,
+    "original_length": 61,
+    "original_retired": 57,
+    "original_cycles": 299,
+    "failure_index_k": 30,
+    "slice_reproduces": false,
+    "slice_length": 12,
+    "slice_seconds": 0.08,
+    "mismatch_fields": [
+      "mem_rmask",
+      "mem_wmask"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 12,
+      "retired": 12,
+      "cycles": 59,
+      "tests": 66,
+      "seconds": 4.91,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 15,
+      "retired": 15,
+      "cycles": 67,
+      "tests": 48,
+      "seconds": 3.79,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 10,
+          "units_out": 3,
+          "tests": 9
+        },
+        {
+          "level": "instruction",
+          "units_in": 35,
+          "units_out": 13,
+          "tests": 39
+        }
+      ]
+    },
+    "length_reduction_pct": 75.4,
+    "cycle_reduction_pct": 77.6
+  },
+  {
+    "bug_id": "writeback_forwarding_drop",
+    "level": "L2",
+    "method": "mutation",
+    "seed": 0,
+    "detect_programs": 1,
+    "detect_seconds": 0.5523,
+    "original_length": 37,
+    "original_retired": 35,
+    "original_cycles": 135,
+    "failure_index_k": 11,
+    "slice_reproduces": true,
+    "slice_length": 14,
+    "slice_seconds": 0.07,
+    "mismatch_fields": [
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 4,
+      "seconds": 0.27,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 5,
+      "seconds": 0.32,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 1,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 12,
+          "units_out": 1,
+          "tests": 4
+        }
+      ]
+    },
+    "length_reduction_pct": 91.9,
+    "cycle_reduction_pct": 83.0
+  },
+  {
+    "bug_id": "writeback_forwarding_drop",
+    "level": "L2",
+    "method": "mutation",
+    "seed": 1,
+    "detect_programs": 3,
+    "detect_seconds": 0.7922,
+    "original_length": 32,
+    "original_retired": 31,
+    "original_cycles": 158,
+    "failure_index_k": 9,
+    "slice_reproduces": true,
+    "slice_length": 11,
+    "slice_seconds": 0.09,
+    "mismatch_fields": [
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 4,
+      "seconds": 0.26,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 5,
+      "seconds": 0.33,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 1,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 9,
+          "units_out": 1,
+          "tests": 4
+        }
+      ]
+    },
+    "length_reduction_pct": 90.6,
+    "cycle_reduction_pct": 85.4
+  },
+  {
+    "bug_id": "writeback_forwarding_drop",
+    "level": "L2",
+    "method": "mutation",
+    "seed": 2,
+    "detect_programs": 1,
+    "detect_seconds": 0.4307,
+    "original_length": 33,
+    "original_retired": 32,
+    "original_cycles": 186,
+    "failure_index_k": 10,
+    "slice_reproduces": true,
+    "slice_length": 13,
+    "slice_seconds": 0.07,
+    "mismatch_fields": [
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 4,
+      "seconds": 0.24,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 5,
+      "seconds": 0.33,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 1,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 11,
+          "units_out": 1,
+          "tests": 4
+        }
+      ]
+    },
+    "length_reduction_pct": 90.9,
+    "cycle_reduction_pct": 87.6
+  },
+  {
+    "bug_id": "writeback_forwarding_drop",
+    "level": "L2",
+    "method": "mutation",
+    "seed": 3,
+    "detect_programs": 1,
+    "detect_seconds": 0.5829,
+    "original_length": 37,
+    "original_retired": 36,
+    "original_cycles": 141,
+    "failure_index_k": 11,
+    "slice_reproduces": true,
+    "slice_length": 14,
+    "slice_seconds": 0.06,
+    "mismatch_fields": [
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 4,
+      "seconds": 0.27,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 5,
+      "seconds": 0.33,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 1,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 12,
+          "units_out": 1,
+          "tests": 4
+        }
+      ]
+    },
+    "length_reduction_pct": 91.9,
+    "cycle_reduction_pct": 83.7
+  },
+  {
+    "bug_id": "writeback_forwarding_drop",
+    "level": "L2",
+    "method": "mutation",
+    "seed": 4,
+    "detect_programs": 1,
+    "detect_seconds": 1.0596,
+    "original_length": 34,
+    "original_retired": 33,
+    "original_cycles": 160,
+    "failure_index_k": 10,
+    "slice_reproduces": true,
+    "slice_length": 12,
+    "slice_seconds": 0.06,
+    "mismatch_fields": [
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 4,
+      "seconds": 0.28,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 5,
+      "seconds": 0.37,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 1,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 10,
+          "units_out": 1,
+          "tests": 4
+        }
+      ]
+    },
+    "length_reduction_pct": 91.2,
+    "cycle_reduction_pct": 85.6
+  },
+  {
+    "bug_id": "writeback_forwarding_drop",
+    "level": "L2",
+    "method": "mutation",
+    "seed": 5,
+    "detect_programs": 3,
+    "detect_seconds": 0.9887,
+    "original_length": 35,
+    "original_retired": 32,
+    "original_cycles": 161,
+    "failure_index_k": 10,
+    "slice_reproduces": true,
+    "slice_length": 13,
+    "slice_seconds": 0.07,
+    "mismatch_fields": [
+      "rd_wdata"
+    ],
+    "mismatch_kind": "field_mismatch",
+    "ddmin": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 4,
+      "seconds": 0.29,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": null
+    },
+    "hdd": {
+      "length": 3,
+      "retired": 3,
+      "cycles": 23,
+      "tests": 5,
+      "seconds": 0.36,
+      "one_minimal": true,
+      "still_fails": true,
+      "levels": [
+        {
+          "level": "basic_block",
+          "units_in": 1,
+          "units_out": 1,
+          "tests": 1
+        },
+        {
+          "level": "instruction",
+          "units_in": 11,
+          "units_out": 1,
+          "tests": 4
+        }
+      ]
+    },
+    "length_reduction_pct": 91.4,
+    "cycle_reduction_pct": 85.7
+  }
+]

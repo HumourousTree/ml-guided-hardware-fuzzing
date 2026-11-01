@@ -1,0 +1,1753 @@
+{
+  "weights": {
+    "C_line": 0.25,
+    "C_toggle": 0.25,
+    "C_ISS": 0.25,
+    "C_func": 0.25
+  },
+  "groups": {
+    "G1_mnemonic": 46,
+    "G2_branch": 12,
+    "G3_memory": 20,
+    "G4_mext": 12,
+    "G5_patterns": 7
+  },
+  "iss_statements": 118,
+  "runs": [
+    {
+      "method": "hybrid-rand",
+      "seed": 0,
+      "programs": 3000,
+      "final": {
+        "n_programs": 3000,
+        "C_line": 65.03,
+        "C_toggle": 64.15,
+        "C_ISS": 89.83,
+        "C_func": 97.46,
+        "C_U": 79.12
+      },
+      "trajectory": [
+        {
+          "n_programs": 1,
+          "C_line": 47.54,
+          "C_toggle": 44.77,
+          "C_ISS": 72.88,
+          "C_func": 26.47,
+          "C_U": 47.91
+        },
+        {
+          "n_programs": 2,
+          "C_line": 56.28,
+          "C_toggle": 52.38,
+          "C_ISS": 77.12,
+          "C_func": 39.77,
+          "C_U": 56.39
+        },
+        {
+          "n_programs": 5,
+          "C_line": 59.02,
+          "C_toggle": 54.82,
+          "C_ISS": 78.81,
+          "C_func": 51.48,
+          "C_U": 61.03
+        },
+        {
+          "n_programs": 10,
+          "C_line": 59.02,
+          "C_toggle": 54.82,
+          "C_ISS": 78.81,
+          "C_func": 51.48,
+          "C_U": 61.03
+        },
+        {
+          "n_programs": 20,
+          "C_line": 59.56,
+          "C_toggle": 54.91,
+          "C_ISS": 78.81,
+          "C_func": 54.58,
+          "C_U": 61.97
+        },
+        {
+          "n_programs": 50,
+          "C_line": 62.84,
+          "C_toggle": 56.54,
+          "C_ISS": 83.9,
+          "C_func": 66.62,
+          "C_U": 67.48
+        },
+        {
+          "n_programs": 100,
+          "C_line": 64.48,
+          "C_toggle": 63.33,
+          "C_ISS": 86.44,
+          "C_func": 87.7,
+          "C_U": 75.49
+        },
+        {
+          "n_programs": 200,
+          "C_line": 65.03,
+          "C_toggle": 63.42,
+          "C_ISS": 89.83,
+          "C_func": 94.13,
+          "C_U": 78.1
+        },
+        {
+          "n_programs": 500,
+          "C_line": 65.03,
+          "C_toggle": 63.42,
+          "C_ISS": 89.83,
+          "C_func": 95.8,
+          "C_U": 78.52
+        },
+        {
+          "n_programs": 1000,
+          "C_line": 65.03,
+          "C_toggle": 63.62,
+          "C_ISS": 89.83,
+          "C_func": 95.8,
+          "C_U": 78.57
+        },
+        {
+          "n_programs": 2000,
+          "C_line": 65.03,
+          "C_toggle": 63.96,
+          "C_ISS": 89.83,
+          "C_func": 97.46,
+          "C_U": 79.07
+        },
+        {
+          "n_programs": 3000,
+          "C_line": 65.03,
+          "C_toggle": 64.15,
+          "C_ISS": 89.83,
+          "C_func": 97.46,
+          "C_U": 79.12
+        }
+      ],
+      "functional": {
+        "groups": {
+          "G1_mnemonic": 95.65,
+          "G2_branch": 100.0,
+          "G3_memory": 100.0,
+          "G4_mext": 91.67,
+          "G5_patterns": 100.0
+        },
+        "C_func": 97.46,
+        "missing": {
+          "G1_mnemonic": [
+            "fence",
+            "jalr"
+          ],
+          "G2_branch": [],
+          "G3_memory": [],
+          "G4_mext": [
+            "div:ovf"
+          ],
+          "G5_patterns": []
+        }
+      },
+      "mnemonic_mix_pct": {
+        "add": 1.03,
+        "addi": 34.37,
+        "and": 1.11,
+        "andi": 1.62,
+        "auipc": 0.8,
+        "beq": 0.99,
+        "bge": 1.11,
+        "bgeu": 1.06,
+        "blt": 1.09,
+        "bltu": 1.0,
+        "bne": 0.97,
+        "div": 0.66,
+        "divu": 0.69,
+        "jal": 1.34,
+        "lb": 0.92,
+        "lbu": 1.03,
+        "lh": 1.0,
+        "lhu": 0.82,
+        "lui": 20.56,
+        "lw": 0.89,
+        "mul": 0.55,
+        "mulh": 0.69,
+        "mulhsu": 0.49,
+        "mulhu": 0.56,
+        "or": 0.86,
+        "ori": 1.94,
+        "rem": 0.51,
+        "remu": 0.51,
+        "sb": 1.44,
+        "sh": 1.69,
+        "sll": 1.27,
+        "slli": 1.05,
+        "slt": 1.08,
+        "slti": 1.81,
+        "sltiu": 1.88,
+        "sltu": 0.93,
+        "sra": 0.91,
+        "srai": 0.84,
+        "srl": 1.38,
+        "srli": 1.09,
+        "sub": 1.16,
+        "sw": 1.43,
+        "xor": 1.0,
+        "xori": 1.86
+      },
+      "iss_unexecuted_lines": [
+        46,
+        47,
+        48,
+        49,
+        50,
+        92,
+        93,
+        150,
+        161,
+        168,
+        169,
+        171
+      ]
+    },
+    {
+      "method": "hybrid-rand",
+      "seed": 1,
+      "programs": 3000,
+      "final": {
+        "n_programs": 3000,
+        "C_line": 65.03,
+        "C_toggle": 64.06,
+        "C_ISS": 89.83,
+        "C_func": 99.13,
+        "C_U": 79.51
+      },
+      "trajectory": [
+        {
+          "n_programs": 1,
+          "C_line": 49.18,
+          "C_toggle": 50.24,
+          "C_ISS": 70.34,
+          "C_func": 28.46,
+          "C_U": 49.55
+        },
+        {
+          "n_programs": 2,
+          "C_line": 56.83,
+          "C_toggle": 53.79,
+          "C_ISS": 83.05,
+          "C_func": 43.77,
+          "C_U": 59.36
+        },
+        {
+          "n_programs": 5,
+          "C_line": 63.93,
+          "C_toggle": 60.82,
+          "C_ISS": 88.98,
+          "C_func": 59.65,
+          "C_U": 68.34
+        },
+        {
+          "n_programs": 10,
+          "C_line": 64.48,
+          "C_toggle": 61.26,
+          "C_ISS": 88.98,
+          "C_func": 62.39,
+          "C_U": 69.28
+        },
+        {
+          "n_programs": 20,
+          "C_line": 64.48,
+          "C_toggle": 61.82,
+          "C_ISS": 88.98,
+          "C_func": 72.03,
+          "C_U": 71.83
+        },
+        {
+          "n_programs": 50,
+          "C_line": 65.03,
+          "C_toggle": 62.62,
+          "C_ISS": 89.83,
+          "C_func": 81.13,
+          "C_U": 74.65
+        },
+        {
+          "n_programs": 100,
+          "C_line": 65.03,
+          "C_toggle": 63.62,
+          "C_ISS": 89.83,
+          "C_func": 92.13,
+          "C_U": 77.65
+        },
+        {
+          "n_programs": 200,
+          "C_line": 65.03,
+          "C_toggle": 63.62,
+          "C_ISS": 89.83,
+          "C_func": 95.8,
+          "C_U": 78.57
+        },
+        {
+          "n_programs": 500,
+          "C_line": 65.03,
+          "C_toggle": 63.76,
+          "C_ISS": 89.83,
+          "C_func": 99.13,
+          "C_U": 79.44
+        },
+        {
+          "n_programs": 1000,
+          "C_line": 65.03,
+          "C_toggle": 63.79,
+          "C_ISS": 89.83,
+          "C_func": 99.13,
+          "C_U": 79.44
+        },
+        {
+          "n_programs": 2000,
+          "C_line": 65.03,
+          "C_toggle": 63.79,
+          "C_ISS": 89.83,
+          "C_func": 99.13,
+          "C_U": 79.44
+        },
+        {
+          "n_programs": 3000,
+          "C_line": 65.03,
+          "C_toggle": 64.06,
+          "C_ISS": 89.83,
+          "C_func": 99.13,
+          "C_U": 79.51
+        }
+      ],
+      "functional": {
+        "groups": {
+          "G1_mnemonic": 95.65,
+          "G2_branch": 100.0,
+          "G3_memory": 100.0,
+          "G4_mext": 100.0,
+          "G5_patterns": 100.0
+        },
+        "C_func": 99.13,
+        "missing": {
+          "G1_mnemonic": [
+            "fence",
+            "jalr"
+          ],
+          "G2_branch": [],
+          "G3_memory": [],
+          "G4_mext": [],
+          "G5_patterns": []
+        }
+      },
+      "mnemonic_mix_pct": {
+        "add": 0.95,
+        "addi": 34.26,
+        "and": 0.97,
+        "andi": 1.69,
+        "auipc": 0.85,
+        "beq": 0.96,
+        "bge": 1.08,
+        "bgeu": 1.23,
+        "blt": 1.02,
+        "bltu": 1.03,
+        "bne": 1.19,
+        "div": 0.76,
+        "divu": 0.83,
+        "jal": 1.45,
+        "lb": 0.83,
+        "lbu": 0.96,
+        "lh": 1.0,
+        "lhu": 0.91,
+        "lui": 20.34,
+        "lw": 0.99,
+        "mul": 0.69,
+        "mulh": 0.65,
+        "mulhsu": 0.69,
+        "mulhu": 0.49,
+        "or": 1.21,
+        "ori": 1.67,
+        "rem": 0.57,
+        "remu": 0.57,
+        "sb": 1.63,
+        "sh": 1.47,
+        "sll": 1.06,
+        "slli": 1.0,
+        "slt": 1.15,
+        "slti": 1.94,
+        "sltiu": 1.7,
+        "sltu": 0.93,
+        "sra": 0.94,
+        "srai": 1.0,
+        "srl": 1.06,
+        "srli": 0.99,
+        "sub": 1.24,
+        "sw": 1.39,
+        "xor": 1.03,
+        "xori": 1.63
+      },
+      "iss_unexecuted_lines": [
+        46,
+        47,
+        48,
+        49,
+        50,
+        92,
+        93,
+        150,
+        161,
+        168,
+        169,
+        171
+      ]
+    },
+    {
+      "method": "hybrid-rand",
+      "seed": 2,
+      "programs": 3000,
+      "final": {
+        "n_programs": 3000,
+        "C_line": 65.03,
+        "C_toggle": 64.32,
+        "C_ISS": 89.83,
+        "C_func": 97.46,
+        "C_U": 79.16
+      },
+      "trajectory": [
+        {
+          "n_programs": 1,
+          "C_line": 42.62,
+          "C_toggle": 49.78,
+          "C_ISS": 68.64,
+          "C_func": 26.73,
+          "C_U": 46.94
+        },
+        {
+          "n_programs": 2,
+          "C_line": 45.36,
+          "C_toggle": 51.07,
+          "C_ISS": 72.03,
+          "C_func": 36.97,
+          "C_U": 51.36
+        },
+        {
+          "n_programs": 5,
+          "C_line": 59.56,
+          "C_toggle": 59.12,
+          "C_ISS": 85.59,
+          "C_func": 62.58,
+          "C_U": 66.71
+        },
+        {
+          "n_programs": 10,
+          "C_line": 59.56,
+          "C_toggle": 59.17,
+          "C_ISS": 85.59,
+          "C_func": 63.45,
+          "C_U": 66.94
+        },
+        {
+          "n_programs": 20,
+          "C_line": 59.56,
+          "C_toggle": 62.21,
+          "C_ISS": 85.59,
+          "C_func": 66.78,
+          "C_U": 68.53
+        },
+        {
+          "n_programs": 50,
+          "C_line": 65.03,
+          "C_toggle": 63.4,
+          "C_ISS": 89.83,
+          "C_func": 85.8,
+          "C_U": 76.02
+        },
+        {
+          "n_programs": 100,
+          "C_line": 65.03,
+          "C_toggle": 63.52,
+          "C_ISS": 89.83,
+          "C_func": 91.13,
+          "C_U": 77.38
+        },
+        {
+          "n_programs": 200,
+          "C_line": 65.03,
+          "C_toggle": 63.59,
+          "C_ISS": 89.83,
+          "C_func": 95.8,
+          "C_U": 78.56
+        },
+        {
+          "n_programs": 500,
+          "C_line": 65.03,
+          "C_toggle": 63.59,
+          "C_ISS": 89.83,
+          "C_func": 95.8,
+          "C_U": 78.56
+        },
+        {
+          "n_programs": 1000,
+          "C_line": 65.03,
+          "C_toggle": 63.98,
+          "C_ISS": 89.83,
+          "C_func": 95.8,
+          "C_U": 78.66
+        },
+        {
+          "n_programs": 2000,
+          "C_line": 65.03,
+          "C_toggle": 64.15,
+          "C_ISS": 89.83,
+          "C_func": 97.46,
+          "C_U": 79.12
+        },
+        {
+          "n_programs": 3000,
+          "C_line": 65.03,
+          "C_toggle": 64.32,
+          "C_ISS": 89.83,
+          "C_func": 97.46,
+          "C_U": 79.16
+        }
+      ],
+      "functional": {
+        "groups": {
+          "G1_mnemonic": 95.65,
+          "G2_branch": 100.0,
+          "G3_memory": 100.0,
+          "G4_mext": 91.67,
+          "G5_patterns": 100.0
+        },
+        "C_func": 97.46,
+        "missing": {
+          "G1_mnemonic": [
+            "fence",
+            "jalr"
+          ],
+          "G2_branch": [],
+          "G3_memory": [],
+          "G4_mext": [
+            "div:ovf"
+          ],
+          "G5_patterns": []
+        }
+      },
+      "mnemonic_mix_pct": {
+        "add": 1.04,
+        "addi": 34.38,
+        "and": 1.12,
+        "andi": 1.82,
+        "auipc": 0.92,
+        "beq": 0.99,
+        "bge": 1.03,
+        "bgeu": 1.07,
+        "blt": 1.37,
+        "bltu": 0.95,
+        "bne": 1.14,
+        "div": 0.64,
+        "divu": 0.49,
+        "jal": 1.44,
+        "lb": 0.93,
+        "lbu": 0.86,
+        "lh": 1.01,
+        "lhu": 0.95,
+        "lui": 20.48,
+        "lw": 0.94,
+        "mul": 0.55,
+        "mulh": 0.7,
+        "mulhsu": 0.63,
+        "mulhu": 0.56,
+        "or": 1.02,
+        "ori": 1.9,
+        "rem": 0.65,
+        "remu": 0.69,
+        "sb": 1.4,
+        "sh": 1.5,
+        "sll": 0.99,
+        "slli": 0.88,
+        "slt": 1.03,
+        "slti": 1.7,
+        "sltiu": 1.81,
+        "sltu": 1.01,
+        "sra": 1.15,
+        "srai": 0.98,
+        "srl": 0.99,
+        "srli": 0.92,
+        "sub": 1.19,
+        "sw": 1.53,
+        "xor": 0.98,
+        "xori": 1.7
+      },
+      "iss_unexecuted_lines": [
+        46,
+        47,
+        48,
+        49,
+        50,
+        92,
+        93,
+        150,
+        161,
+        168,
+        169,
+        171
+      ]
+    },
+    {
+      "method": "mutation",
+      "seed": 0,
+      "programs": 3000,
+      "final": {
+        "n_programs": 3000,
+        "C_line": 65.03,
+        "C_toggle": 64.64,
+        "C_ISS": 89.83,
+        "C_func": 97.46,
+        "C_U": 79.24
+      },
+      "trajectory": [
+        {
+          "n_programs": 1,
+          "C_line": 47.54,
+          "C_toggle": 44.77,
+          "C_ISS": 72.88,
+          "C_func": 26.47,
+          "C_U": 47.91
+        },
+        {
+          "n_programs": 2,
+          "C_line": 56.28,
+          "C_toggle": 52.38,
+          "C_ISS": 77.12,
+          "C_func": 39.77,
+          "C_U": 56.39
+        },
+        {
+          "n_programs": 5,
+          "C_line": 59.02,
+          "C_toggle": 54.82,
+          "C_ISS": 78.81,
+          "C_func": 51.48,
+          "C_U": 61.03
+        },
+        {
+          "n_programs": 10,
+          "C_line": 59.02,
+          "C_toggle": 54.82,
+          "C_ISS": 78.81,
+          "C_func": 51.48,
+          "C_U": 61.03
+        },
+        {
+          "n_programs": 20,
+          "C_line": 59.56,
+          "C_toggle": 54.91,
+          "C_ISS": 78.81,
+          "C_func": 54.58,
+          "C_U": 61.97
+        },
+        {
+          "n_programs": 50,
+          "C_line": 62.84,
+          "C_toggle": 56.54,
+          "C_ISS": 83.9,
+          "C_func": 66.62,
+          "C_U": 67.48
+        },
+        {
+          "n_programs": 100,
+          "C_line": 64.48,
+          "C_toggle": 63.33,
+          "C_ISS": 86.44,
+          "C_func": 87.7,
+          "C_U": 75.49
+        },
+        {
+          "n_programs": 200,
+          "C_line": 65.03,
+          "C_toggle": 63.42,
+          "C_ISS": 89.83,
+          "C_func": 94.13,
+          "C_U": 78.1
+        },
+        {
+          "n_programs": 500,
+          "C_line": 65.03,
+          "C_toggle": 63.62,
+          "C_ISS": 89.83,
+          "C_func": 95.8,
+          "C_U": 78.57
+        },
+        {
+          "n_programs": 1000,
+          "C_line": 65.03,
+          "C_toggle": 63.81,
+          "C_ISS": 89.83,
+          "C_func": 97.46,
+          "C_U": 79.03
+        },
+        {
+          "n_programs": 2000,
+          "C_line": 65.03,
+          "C_toggle": 64.64,
+          "C_ISS": 89.83,
+          "C_func": 97.46,
+          "C_U": 79.24
+        },
+        {
+          "n_programs": 3000,
+          "C_line": 65.03,
+          "C_toggle": 64.64,
+          "C_ISS": 89.83,
+          "C_func": 97.46,
+          "C_U": 79.24
+        }
+      ],
+      "functional": {
+        "groups": {
+          "G1_mnemonic": 95.65,
+          "G2_branch": 100.0,
+          "G3_memory": 100.0,
+          "G4_mext": 91.67,
+          "G5_patterns": 100.0
+        },
+        "C_func": 97.46,
+        "missing": {
+          "G1_mnemonic": [
+            "fence",
+            "jalr"
+          ],
+          "G2_branch": [],
+          "G3_memory": [],
+          "G4_mext": [
+            "rem:ovf"
+          ],
+          "G5_patterns": []
+        }
+      },
+      "mnemonic_mix_pct": {
+        "add": 1.11,
+        "addi": 27.47,
+        "and": 1.71,
+        "andi": 2.73,
+        "auipc": 0.35,
+        "beq": 0.76,
+        "bge": 1.47,
+        "bgeu": 1.45,
+        "blt": 1.79,
+        "bltu": 1.15,
+        "bne": 0.73,
+        "div": 0.62,
+        "divu": 1.1,
+        "jal": 0.86,
+        "lb": 1.03,
+        "lbu": 1.53,
+        "lh": 1.03,
+        "lhu": 0.75,
+        "lui": 15.96,
+        "lw": 0.46,
+        "mul": 0.69,
+        "mulh": 1.07,
+        "mulhsu": 0.15,
+        "mulhu": 0.41,
+        "or": 0.52,
+        "ori": 3.86,
+        "rem": 0.21,
+        "remu": 0.32,
+        "sb": 1.14,
+        "sh": 2.0,
+        "sll": 2.4,
+        "slli": 1.82,
+        "slt": 1.99,
+        "slti": 2.93,
+        "sltiu": 2.99,
+        "sltu": 0.77,
+        "sra": 0.55,
+        "srai": 0.48,
+        "srl": 3.51,
+        "srli": 2.19,
+        "sub": 2.2,
+        "sw": 0.83,
+        "xor": 0.51,
+        "xori": 2.39
+      },
+      "iss_unexecuted_lines": [
+        46,
+        47,
+        48,
+        49,
+        50,
+        92,
+        93,
+        150,
+        161,
+        168,
+        169,
+        171
+      ]
+    },
+    {
+      "method": "mutation",
+      "seed": 1,
+      "programs": 3000,
+      "final": {
+        "n_programs": 3000,
+        "C_line": 65.03,
+        "C_toggle": 64.76,
+        "C_ISS": 89.83,
+        "C_func": 95.8,
+        "C_U": 78.86
+      },
+      "trajectory": [
+        {
+          "n_programs": 1,
+          "C_line": 49.18,
+          "C_toggle": 50.24,
+          "C_ISS": 70.34,
+          "C_func": 28.46,
+          "C_U": 49.55
+        },
+        {
+          "n_programs": 2,
+          "C_line": 56.83,
+          "C_toggle": 53.79,
+          "C_ISS": 83.05,
+          "C_func": 43.77,
+          "C_U": 59.36
+        },
+        {
+          "n_programs": 5,
+          "C_line": 63.93,
+          "C_toggle": 60.82,
+          "C_ISS": 88.98,
+          "C_func": 59.65,
+          "C_U": 68.34
+        },
+        {
+          "n_programs": 10,
+          "C_line": 64.48,
+          "C_toggle": 61.26,
+          "C_ISS": 88.98,
+          "C_func": 62.39,
+          "C_U": 69.28
+        },
+        {
+          "n_programs": 20,
+          "C_line": 64.48,
+          "C_toggle": 61.82,
+          "C_ISS": 88.98,
+          "C_func": 72.03,
+          "C_U": 71.83
+        },
+        {
+          "n_programs": 50,
+          "C_line": 65.03,
+          "C_toggle": 62.62,
+          "C_ISS": 89.83,
+          "C_func": 81.13,
+          "C_U": 74.65
+        },
+        {
+          "n_programs": 100,
+          "C_line": 65.03,
+          "C_toggle": 63.62,
+          "C_ISS": 89.83,
+          "C_func": 92.13,
+          "C_U": 77.65
+        },
+        {
+          "n_programs": 200,
+          "C_line": 65.03,
+          "C_toggle": 63.62,
+          "C_ISS": 89.83,
+          "C_func": 95.8,
+          "C_U": 78.57
+        },
+        {
+          "n_programs": 500,
+          "C_line": 65.03,
+          "C_toggle": 64.37,
+          "C_ISS": 89.83,
+          "C_func": 95.8,
+          "C_U": 78.76
+        },
+        {
+          "n_programs": 1000,
+          "C_line": 65.03,
+          "C_toggle": 64.69,
+          "C_ISS": 89.83,
+          "C_func": 95.8,
+          "C_U": 78.84
+        },
+        {
+          "n_programs": 2000,
+          "C_line": 65.03,
+          "C_toggle": 64.69,
+          "C_ISS": 89.83,
+          "C_func": 95.8,
+          "C_U": 78.84
+        },
+        {
+          "n_programs": 3000,
+          "C_line": 65.03,
+          "C_toggle": 64.76,
+          "C_ISS": 89.83,
+          "C_func": 95.8,
+          "C_U": 78.86
+        }
+      ],
+      "functional": {
+        "groups": {
+          "G1_mnemonic": 95.65,
+          "G2_branch": 100.0,
+          "G3_memory": 100.0,
+          "G4_mext": 83.33,
+          "G5_patterns": 100.0
+        },
+        "C_func": 95.8,
+        "missing": {
+          "G1_mnemonic": [
+            "fence",
+            "jalr"
+          ],
+          "G2_branch": [],
+          "G3_memory": [],
+          "G4_mext": [
+            "div:ovf",
+            "rem:ovf"
+          ],
+          "G5_patterns": []
+        }
+      },
+      "mnemonic_mix_pct": {
+        "add": 0.76,
+        "addi": 28.19,
+        "and": 0.43,
+        "andi": 1.44,
+        "auipc": 0.27,
+        "beq": 1.13,
+        "bge": 1.42,
+        "bgeu": 2.96,
+        "blt": 0.81,
+        "bltu": 1.22,
+        "bne": 1.68,
+        "div": 2.25,
+        "divu": 1.99,
+        "jal": 2.1,
+        "lb": 0.55,
+        "lbu": 0.91,
+        "lh": 1.65,
+        "lhu": 0.84,
+        "lui": 16.13,
+        "lw": 0.92,
+        "mul": 1.38,
+        "mulh": 0.97,
+        "mulhsu": 1.08,
+        "mulhu": 0.14,
+        "or": 2.0,
+        "ori": 2.66,
+        "rem": 0.54,
+        "remu": 0.35,
+        "sb": 2.17,
+        "sh": 1.28,
+        "sll": 1.1,
+        "slli": 1.7,
+        "slt": 2.17,
+        "slti": 2.46,
+        "sltiu": 1.29,
+        "sltu": 0.68,
+        "sra": 1.07,
+        "srai": 1.25,
+        "srl": 0.96,
+        "srli": 1.55,
+        "sub": 2.14,
+        "sw": 0.72,
+        "xor": 1.46,
+        "xori": 1.24
+      },
+      "iss_unexecuted_lines": [
+        46,
+        47,
+        48,
+        49,
+        50,
+        92,
+        93,
+        150,
+        161,
+        168,
+        169,
+        171
+      ]
+    },
+    {
+      "method": "mutation",
+      "seed": 2,
+      "programs": 3000,
+      "final": {
+        "n_programs": 3000,
+        "C_line": 65.03,
+        "C_toggle": 64.69,
+        "C_ISS": 89.83,
+        "C_func": 95.8,
+        "C_U": 78.84
+      },
+      "trajectory": [
+        {
+          "n_programs": 1,
+          "C_line": 42.62,
+          "C_toggle": 49.78,
+          "C_ISS": 68.64,
+          "C_func": 26.73,
+          "C_U": 46.94
+        },
+        {
+          "n_programs": 2,
+          "C_line": 45.36,
+          "C_toggle": 51.07,
+          "C_ISS": 72.03,
+          "C_func": 36.97,
+          "C_U": 51.36
+        },
+        {
+          "n_programs": 5,
+          "C_line": 59.56,
+          "C_toggle": 59.12,
+          "C_ISS": 85.59,
+          "C_func": 62.58,
+          "C_U": 66.71
+        },
+        {
+          "n_programs": 10,
+          "C_line": 59.56,
+          "C_toggle": 59.17,
+          "C_ISS": 85.59,
+          "C_func": 63.45,
+          "C_U": 66.94
+        },
+        {
+          "n_programs": 20,
+          "C_line": 59.56,
+          "C_toggle": 62.21,
+          "C_ISS": 85.59,
+          "C_func": 66.78,
+          "C_U": 68.53
+        },
+        {
+          "n_programs": 50,
+          "C_line": 65.03,
+          "C_toggle": 63.4,
+          "C_ISS": 89.83,
+          "C_func": 85.8,
+          "C_U": 76.02
+        },
+        {
+          "n_programs": 100,
+          "C_line": 65.03,
+          "C_toggle": 63.52,
+          "C_ISS": 89.83,
+          "C_func": 91.13,
+          "C_U": 77.38
+        },
+        {
+          "n_programs": 200,
+          "C_line": 65.03,
+          "C_toggle": 63.59,
+          "C_ISS": 89.83,
+          "C_func": 95.8,
+          "C_U": 78.56
+        },
+        {
+          "n_programs": 500,
+          "C_line": 65.03,
+          "C_toggle": 64.15,
+          "C_ISS": 89.83,
+          "C_func": 95.8,
+          "C_U": 78.7
+        },
+        {
+          "n_programs": 1000,
+          "C_line": 65.03,
+          "C_toggle": 64.57,
+          "C_ISS": 89.83,
+          "C_func": 95.8,
+          "C_U": 78.81
+        },
+        {
+          "n_programs": 2000,
+          "C_line": 65.03,
+          "C_toggle": 64.69,
+          "C_ISS": 89.83,
+          "C_func": 95.8,
+          "C_U": 78.84
+        },
+        {
+          "n_programs": 3000,
+          "C_line": 65.03,
+          "C_toggle": 64.69,
+          "C_ISS": 89.83,
+          "C_func": 95.8,
+          "C_U": 78.84
+        }
+      ],
+      "functional": {
+        "groups": {
+          "G1_mnemonic": 95.65,
+          "G2_branch": 100.0,
+          "G3_memory": 100.0,
+          "G4_mext": 83.33,
+          "G5_patterns": 100.0
+        },
+        "C_func": 95.8,
+        "missing": {
+          "G1_mnemonic": [
+            "fence",
+            "jalr"
+          ],
+          "G2_branch": [],
+          "G3_memory": [],
+          "G4_mext": [
+            "div:ovf",
+            "rem:ovf"
+          ],
+          "G5_patterns": []
+        }
+      },
+      "mnemonic_mix_pct": {
+        "add": 1.05,
+        "addi": 27.91,
+        "and": 1.48,
+        "andi": 2.44,
+        "auipc": 1.33,
+        "beq": 0.32,
+        "bge": 0.74,
+        "bgeu": 1.58,
+        "blt": 2.98,
+        "bltu": 0.7,
+        "bne": 2.07,
+        "div": 0.8,
+        "divu": 0.53,
+        "jal": 1.97,
+        "lb": 0.98,
+        "lbu": 1.41,
+        "lh": 1.48,
+        "lhu": 1.07,
+        "lui": 16.5,
+        "lw": 1.2,
+        "mul": 0.39,
+        "mulh": 1.01,
+        "mulhsu": 0.92,
+        "mulhu": 0.53,
+        "or": 1.21,
+        "ori": 2.45,
+        "rem": 0.59,
+        "remu": 1.41,
+        "sb": 1.04,
+        "sh": 1.75,
+        "sll": 1.02,
+        "slli": 0.54,
+        "slt": 1.29,
+        "slti": 2.07,
+        "sltiu": 2.02,
+        "sltu": 1.25,
+        "sra": 1.87,
+        "srai": 1.63,
+        "srl": 0.77,
+        "srli": 1.42,
+        "sub": 1.9,
+        "sw": 1.44,
+        "xor": 0.99,
+        "xori": 1.99
+      },
+      "iss_unexecuted_lines": [
+        46,
+        47,
+        48,
+        49,
+        50,
+        92,
+        93,
+        150,
+        161,
+        168,
+        169,
+        171
+      ]
+    },
+    {
+      "method": "random",
+      "seed": 0,
+      "programs": 3000,
+      "final": {
+        "n_programs": 3000,
+        "C_line": 65.03,
+        "C_toggle": 63.84,
+        "C_ISS": 89.83,
+        "C_func": 97.46,
+        "C_U": 79.04
+      },
+      "trajectory": [
+        {
+          "n_programs": 1,
+          "C_line": 46.99,
+          "C_toggle": 56.3,
+          "C_ISS": 70.34,
+          "C_func": 29.23,
+          "C_U": 50.72
+        },
+        {
+          "n_programs": 2,
+          "C_line": 55.19,
+          "C_toggle": 59.51,
+          "C_ISS": 82.2,
+          "C_func": 42.33,
+          "C_U": 59.81
+        },
+        {
+          "n_programs": 5,
+          "C_line": 60.66,
+          "C_toggle": 62.6,
+          "C_ISS": 83.05,
+          "C_func": 57.35,
+          "C_U": 65.91
+        },
+        {
+          "n_programs": 10,
+          "C_line": 63.93,
+          "C_toggle": 62.86,
+          "C_ISS": 89.83,
+          "C_func": 74.36,
+          "C_U": 72.75
+        },
+        {
+          "n_programs": 20,
+          "C_line": 65.03,
+          "C_toggle": 62.89,
+          "C_ISS": 89.83,
+          "C_func": 82.8,
+          "C_U": 75.14
+        },
+        {
+          "n_programs": 50,
+          "C_line": 65.03,
+          "C_toggle": 63.11,
+          "C_ISS": 89.83,
+          "C_func": 94.8,
+          "C_U": 78.19
+        },
+        {
+          "n_programs": 100,
+          "C_line": 65.03,
+          "C_toggle": 63.11,
+          "C_ISS": 89.83,
+          "C_func": 95.8,
+          "C_U": 78.44
+        },
+        {
+          "n_programs": 200,
+          "C_line": 65.03,
+          "C_toggle": 63.11,
+          "C_ISS": 89.83,
+          "C_func": 95.8,
+          "C_U": 78.44
+        },
+        {
+          "n_programs": 500,
+          "C_line": 65.03,
+          "C_toggle": 63.11,
+          "C_ISS": 89.83,
+          "C_func": 95.8,
+          "C_U": 78.44
+        },
+        {
+          "n_programs": 1000,
+          "C_line": 65.03,
+          "C_toggle": 63.55,
+          "C_ISS": 89.83,
+          "C_func": 95.8,
+          "C_U": 78.55
+        },
+        {
+          "n_programs": 2000,
+          "C_line": 65.03,
+          "C_toggle": 63.76,
+          "C_ISS": 89.83,
+          "C_func": 97.46,
+          "C_U": 79.02
+        },
+        {
+          "n_programs": 3000,
+          "C_line": 65.03,
+          "C_toggle": 63.84,
+          "C_ISS": 89.83,
+          "C_func": 97.46,
+          "C_U": 79.04
+        }
+      ],
+      "functional": {
+        "groups": {
+          "G1_mnemonic": 95.65,
+          "G2_branch": 100.0,
+          "G3_memory": 100.0,
+          "G4_mext": 91.67,
+          "G5_patterns": 100.0
+        },
+        "C_func": 97.46,
+        "missing": {
+          "G1_mnemonic": [
+            "fence",
+            "jalr"
+          ],
+          "G2_branch": [],
+          "G3_memory": [],
+          "G4_mext": [
+            "div:ovf"
+          ],
+          "G5_patterns": []
+        }
+      },
+      "mnemonic_mix_pct": {
+        "add": 1.07,
+        "addi": 35.14,
+        "and": 1.06,
+        "andi": 1.64,
+        "auipc": 0.91,
+        "beq": 1.03,
+        "bge": 0.98,
+        "bgeu": 1.02,
+        "blt": 1.04,
+        "bltu": 1.03,
+        "bne": 1.03,
+        "div": 0.59,
+        "divu": 0.59,
+        "jal": 1.39,
+        "lb": 0.93,
+        "lbu": 0.93,
+        "lh": 0.97,
+        "lhu": 0.91,
+        "lui": 20.88,
+        "lw": 0.92,
+        "mul": 0.55,
+        "mulh": 0.64,
+        "mulhsu": 0.54,
+        "mulhu": 0.62,
+        "or": 0.96,
+        "ori": 1.65,
+        "rem": 0.58,
+        "remu": 0.53,
+        "sb": 1.56,
+        "sh": 1.56,
+        "sll": 1.11,
+        "slli": 0.95,
+        "slt": 1.01,
+        "slti": 1.67,
+        "sltiu": 1.69,
+        "sltu": 1.01,
+        "sra": 1.0,
+        "srai": 0.91,
+        "srl": 1.03,
+        "srli": 0.93,
+        "sub": 1.07,
+        "sw": 1.57,
+        "xor": 1.05,
+        "xori": 1.76
+      },
+      "iss_unexecuted_lines": [
+        46,
+        47,
+        48,
+        49,
+        50,
+        92,
+        93,
+        150,
+        161,
+        168,
+        169,
+        171
+      ]
+    },
+    {
+      "method": "random",
+      "seed": 1,
+      "programs": 3000,
+      "final": {
+        "n_programs": 3000,
+        "C_line": 65.03,
+        "C_toggle": 63.55,
+        "C_ISS": 89.83,
+        "C_func": 99.13,
+        "C_U": 79.38
+      },
+      "trajectory": [
+        {
+          "n_programs": 1,
+          "C_line": 49.73,
+          "C_toggle": 45.96,
+          "C_ISS": 65.25,
+          "C_func": 26.95,
+          "C_U": 46.97
+        },
+        {
+          "n_programs": 2,
+          "C_line": 54.64,
+          "C_toggle": 52.92,
+          "C_ISS": 76.27,
+          "C_func": 36.62,
+          "C_U": 55.11
+        },
+        {
+          "n_programs": 5,
+          "C_line": 62.84,
+          "C_toggle": 55.5,
+          "C_ISS": 83.9,
+          "C_func": 60.22,
+          "C_U": 65.62
+        },
+        {
+          "n_programs": 10,
+          "C_line": 64.48,
+          "C_toggle": 62.33,
+          "C_ISS": 87.29,
+          "C_func": 77.26,
+          "C_U": 72.84
+        },
+        {
+          "n_programs": 20,
+          "C_line": 65.03,
+          "C_toggle": 63.04,
+          "C_ISS": 89.83,
+          "C_func": 90.46,
+          "C_U": 77.09
+        },
+        {
+          "n_programs": 50,
+          "C_line": 65.03,
+          "C_toggle": 63.04,
+          "C_ISS": 89.83,
+          "C_func": 95.8,
+          "C_U": 78.42
+        },
+        {
+          "n_programs": 100,
+          "C_line": 65.03,
+          "C_toggle": 63.23,
+          "C_ISS": 89.83,
+          "C_func": 99.13,
+          "C_U": 79.3
+        },
+        {
+          "n_programs": 200,
+          "C_line": 65.03,
+          "C_toggle": 63.25,
+          "C_ISS": 89.83,
+          "C_func": 99.13,
+          "C_U": 79.31
+        },
+        {
+          "n_programs": 500,
+          "C_line": 65.03,
+          "C_toggle": 63.25,
+          "C_ISS": 89.83,
+          "C_func": 99.13,
+          "C_U": 79.31
+        },
+        {
+          "n_programs": 1000,
+          "C_line": 65.03,
+          "C_toggle": 63.28,
+          "C_ISS": 89.83,
+          "C_func": 99.13,
+          "C_U": 79.32
+        },
+        {
+          "n_programs": 2000,
+          "C_line": 65.03,
+          "C_toggle": 63.28,
+          "C_ISS": 89.83,
+          "C_func": 99.13,
+          "C_U": 79.32
+        },
+        {
+          "n_programs": 3000,
+          "C_line": 65.03,
+          "C_toggle": 63.55,
+          "C_ISS": 89.83,
+          "C_func": 99.13,
+          "C_U": 79.38
+        }
+      ],
+      "functional": {
+        "groups": {
+          "G1_mnemonic": 95.65,
+          "G2_branch": 100.0,
+          "G3_memory": 100.0,
+          "G4_mext": 100.0,
+          "G5_patterns": 100.0
+        },
+        "C_func": 99.13,
+        "missing": {
+          "G1_mnemonic": [
+            "fence",
+            "jalr"
+          ],
+          "G2_branch": [],
+          "G3_memory": [],
+          "G4_mext": [],
+          "G5_patterns": []
+        }
+      },
+      "mnemonic_mix_pct": {
+        "add": 1.01,
+        "addi": 35.04,
+        "and": 1.05,
+        "andi": 1.74,
+        "auipc": 0.95,
+        "beq": 0.99,
+        "bge": 1.01,
+        "bgeu": 0.97,
+        "blt": 1.05,
+        "bltu": 0.97,
+        "bne": 1.07,
+        "div": 0.5,
+        "divu": 0.58,
+        "jal": 1.39,
+        "lb": 0.91,
+        "lbu": 0.92,
+        "lh": 0.94,
+        "lhu": 0.95,
+        "lui": 20.81,
+        "lw": 1.02,
+        "mul": 0.61,
+        "mulh": 0.55,
+        "mulhsu": 0.61,
+        "mulhu": 0.57,
+        "or": 1.1,
+        "ori": 1.65,
+        "rem": 0.56,
+        "remu": 0.62,
+        "sb": 1.56,
+        "sh": 1.57,
+        "sll": 1.02,
+        "slli": 0.88,
+        "slt": 1.02,
+        "slti": 1.82,
+        "sltiu": 1.76,
+        "sltu": 0.99,
+        "sra": 0.99,
+        "srai": 0.98,
+        "srl": 1.02,
+        "srli": 0.92,
+        "sub": 1.07,
+        "sw": 1.55,
+        "xor": 1.0,
+        "xori": 1.71
+      },
+      "iss_unexecuted_lines": [
+        46,
+        47,
+        48,
+        49,
+        50,
+        92,
+        93,
+        150,
+        161,
+        168,
+        169,
+        171
+      ]
+    },
+    {
+      "method": "random",
+      "seed": 2,
+      "programs": 3000,
+      "final": {
+        "n_programs": 3000,
+        "C_line": 65.03,
+        "C_toggle": 63.84,
+        "C_ISS": 89.83,
+        "C_func": 97.46,
+        "C_U": 79.04
+      },
+      "trajectory": [
+        {
+          "n_programs": 1,
+          "C_line": 44.81,
+          "C_toggle": 44.53,
+          "C_ISS": 56.78,
+          "C_func": 26.89,
+          "C_U": 43.25
+        },
+        {
+          "n_programs": 2,
+          "C_line": 56.83,
+          "C_toggle": 56.32,
+          "C_ISS": 73.73,
+          "C_func": 44.33,
+          "C_U": 57.8
+        },
+        {
+          "n_programs": 5,
+          "C_line": 59.56,
+          "C_toggle": 57.88,
+          "C_ISS": 80.51,
+          "C_func": 62.78,
+          "C_U": 65.18
+        },
+        {
+          "n_programs": 10,
+          "C_line": 63.93,
+          "C_toggle": 62.65,
+          "C_ISS": 87.29,
+          "C_func": 77.93,
+          "C_U": 72.95
+        },
+        {
+          "n_programs": 20,
+          "C_line": 65.03,
+          "C_toggle": 62.79,
+          "C_ISS": 89.83,
+          "C_func": 91.46,
+          "C_U": 77.28
+        },
+        {
+          "n_programs": 50,
+          "C_line": 65.03,
+          "C_toggle": 63.06,
+          "C_ISS": 89.83,
+          "C_func": 94.8,
+          "C_U": 78.18
+        },
+        {
+          "n_programs": 100,
+          "C_line": 65.03,
+          "C_toggle": 63.11,
+          "C_ISS": 89.83,
+          "C_func": 95.8,
+          "C_U": 78.44
+        },
+        {
+          "n_programs": 200,
+          "C_line": 65.03,
+          "C_toggle": 63.11,
+          "C_ISS": 89.83,
+          "C_func": 95.8,
+          "C_U": 78.44
+        },
+        {
+          "n_programs": 500,
+          "C_line": 65.03,
+          "C_toggle": 63.23,
+          "C_ISS": 89.83,
+          "C_func": 95.8,
+          "C_U": 78.47
+        },
+        {
+          "n_programs": 1000,
+          "C_line": 65.03,
+          "C_toggle": 63.67,
+          "C_ISS": 89.83,
+          "C_func": 95.8,
+          "C_U": 78.58
+        },
+        {
+          "n_programs": 2000,
+          "C_line": 65.03,
+          "C_toggle": 63.79,
+          "C_ISS": 89.83,
+          "C_func": 97.46,
+          "C_U": 79.03
+        },
+        {
+          "n_programs": 3000,
+          "C_line": 65.03,
+          "C_toggle": 63.84,
+          "C_ISS": 89.83,
+          "C_func": 97.46,
+          "C_U": 79.04
+        }
+      ],
+      "functional": {
+        "groups": {
+          "G1_mnemonic": 95.65,
+          "G2_branch": 100.0,
+          "G3_memory": 100.0,
+          "G4_mext": 91.67,
+          "G5_patterns": 100.0
+        },
+        "C_func": 97.46,
+        "missing": {
+          "G1_mnemonic": [
+            "fence",
+            "jalr"
+          ],
+          "G2_branch": [],
+          "G3_memory": [],
+          "G4_mext": [
+            "div:ovf"
+          ],
+          "G5_patterns": []
+        }
+      },
+      "mnemonic_mix_pct": {
+        "add": 1.08,
+        "addi": 35.03,
+        "and": 1.01,
+        "andi": 1.68,
+        "auipc": 0.92,
+        "beq": 1.03,
+        "bge": 1.07,
+        "bgeu": 0.97,
+        "blt": 1.02,
+        "bltu": 1.0,
+        "bne": 1.0,
+        "div": 0.64,
+        "divu": 0.54,
+        "jal": 1.42,
+        "lb": 0.94,
+        "lbu": 0.91,
+        "lh": 0.93,
+        "lhu": 0.94,
+        "lui": 20.92,
+        "lw": 0.94,
+        "mul": 0.58,
+        "mulh": 0.62,
+        "mulhsu": 0.56,
+        "mulhu": 0.6,
+        "or": 1.04,
+        "ori": 1.72,
+        "rem": 0.6,
+        "remu": 0.58,
+        "sb": 1.49,
+        "sh": 1.55,
+        "sll": 1.05,
+        "slli": 0.96,
+        "slt": 1.04,
+        "slti": 1.7,
+        "sltiu": 1.75,
+        "sltu": 1.01,
+        "sra": 0.98,
+        "srai": 0.9,
+        "srl": 1.06,
+        "srli": 0.93,
+        "sub": 1.08,
+        "sw": 1.56,
+        "xor": 0.99,
+        "xori": 1.66
+      },
+      "iss_unexecuted_lines": [
+        46,
+        47,
+        48,
+        49,
+        50,
+        92,
+        93,
+        150,
+        161,
+        168,
+        169,
+        171
+      ]
+    }
+  ]
+}

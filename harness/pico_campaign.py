@@ -50,7 +50,10 @@ except ImportError:
 
 _GEMINI_CHATS: dict[str, object] = {}
 _GEMINI_TURNS: dict[str, int] = {}
+_REJECTED_NOTES: dict[tuple[str, str], str] = {}   # (rtl sha, subsystem) -> why the last candidate was rolled back
 _GEMINI_MAX_TURNS = 8      # recreate the chat session so history (huge RTL prompts) cannot grow without bound
+
+from harness.llm_budget import BUDGET as _LLM_BUDGET    # free-tier request budget (daily cap, interval, stop on 429)
 
 from harness.riscv_cosim import (
     HW_PARAMS,
@@ -175,10 +178,20 @@ def _get_gemini_client():
     return client, models
 
 
-def _generate_with_gemini(client, models: list[str], prompt: str) -> tuple[str | None, str | None, list[dict]]:
-    """Try each model in order. Chat sessions are recreated every few turns."""
+def _generate_with_gemini(client, models: list[str], prompt: str, purpose: str = "") -> tuple[str | None, str | None, list[dict]]:
+    """Try each model in order. Chat sessions are recreated every few turns.
+
+    Requests to the real Gemini API are metered by harness.llm_budget (daily cap per model, minimum interval, stop on 429);
+    scripted stand-in clients used by tests and the repair baselines are not.
+    """
+    metered = _GENAI_AVAILABLE and isinstance(client, _genai_module.Client)
     attempts = []
     for model in models:
+        if metered:
+            allowed, reason = _LLM_BUDGET.acquire(model)
+            if not allowed:
+                attempts.append({"model": model, "ok": False, "error": f"budget: {reason}"})
+                continue
         try:
             chat = _GEMINI_CHATS.get(model)
             if chat is None or _GEMINI_TURNS.get(model, 0) >= _GEMINI_MAX_TURNS:
@@ -190,11 +203,17 @@ def _generate_with_gemini(client, models: list[str], prompt: str) -> tuple[str |
             text = getattr(response, "text", None)
             if isinstance(text, str) and text.strip():
                 attempts.append({"model": model, "ok": True})
+                if metered:
+                    _LLM_BUDGET.record(model, True, purpose, len(prompt), len(text))
                 return text.strip(), model, attempts
             attempts.append({"model": model, "ok": False, "error": "empty response"})
+            if metered:
+                _LLM_BUDGET.record(model, False, purpose, len(prompt), 0, "empty response")
         except Exception as exc:
             _GEMINI_CHATS.pop(model, None)
             attempts.append({"model": model, "ok": False, "error": f"{type(exc).__name__}: {exc}"})
+            if metered:
+                _LLM_BUDGET.record(model, False, purpose, len(prompt), 0, f"{type(exc).__name__}: {exc}")
     print(f"[pico_campaign] Gemini request failed: {attempts}", file=sys.stderr)
     return None, None, attempts
 
@@ -361,6 +380,25 @@ def _generate_bug_targeted_stimulus(bug_id: str, iteration: int = 0) -> dict | N
                                               _r(0, 7, 6, 0, 8), NOP],
         "mem_handshake_drop": lambda: [_i(0x100, 0, 0, 1), _i(10, 0, 0, 2), _s(2, 2, 1, 1),
                                        _i(2, 1, 1, 3, opcode=0x03), _s(2, 2, 1, 1), NOP],
+        # ---- suite v2 (hw_design/bug_manifest_v2.json) ----
+        "and_to_or_alu": lambda: [_i(0x0F, 0, 0, 1), _i(0x3C, 0, 0, 2), _r(0, 2, 1, 7, 3), _i(0x33, 1, 7, 4), NOP],
+        # every R-type the core can hand to the PCPI bus (MUL*, DIV*, REM*) plus plain R-type ALU ops around them
+        "fast_mul_decode_and_to_or": lambda: [_i(7, 0, 0, 1), _i(-3, 0, 0, 2)] + [_r(1, 2, 1, f3, 3 + f3) for f3 in range(8)]
+                                             + [_r(0, 2, 1, 0, 11), _r(0x20, 2, 1, 0, 12), _r(0, 2, 1, 7, 13), NOP],
+        "fast_mul_rs2_signed_widened": lambda: [_i(2, 0, 0, 1), _i(-1, 0, 0, 2), _r(1, 2, 1, 2, 3), _r(1, 2, 1, 3, 4), NOP],
+        "store_after_store_dropped_intermittent": lambda: [_i(0x100, 0, 0, 1), _i(0x11, 0, 0, 2)]
+                                                          + [_s(4 * k, 2, 1, 2) for k in range(12)]
+                                                          + [_i(4 * k, 1, 2, 3 + k % 4, opcode=0x03) for k in range(12)] + [NOP],
+        "mem_addr_bit2_stuck": lambda: [_i(0x100, 0, 0, 1), _i(0x5A, 0, 0, 2), _s(4, 2, 1, 2), _s(0, 0, 1, 2),
+                                        _i(4, 1, 2, 3, opcode=0x03), _i(0, 1, 2, 4, opcode=0x03), NOP],
+        "slt_signed_as_unsigned": lambda: [_i(-1, 0, 0, 1), _i(1, 0, 0, 2), _r(0, 2, 1, 2, 3), _b(1, 2, 8, 4),
+                                           _i(5, 0, 0, 4), NOP],
+        "beq_inverted": lambda: [_i(7, 0, 0, 1), _i(7, 0, 0, 2), _b(1, 2, 8, 0), _i(99, 0, 0, 3), _i(1, 0, 0, 4), NOP],
+        "lui_auipc_rd_x0": lambda: [_lui(1, 0x12345), (1 << 12) | (2 << 7) | 0x17, _i(1, 1, 0, 3), _r(0, 2, 1, 0, 4), NOP],
+        "store_after_store_dropped": lambda: [_i(0x100, 0, 0, 1), _i(0x11, 0, 0, 2), _s(0, 2, 1, 2), _s(4, 2, 1, 2),
+                                              _s(8, 2, 1, 2), _i(4, 1, 2, 3, opcode=0x03), NOP],
+        "stale_latched_branch": lambda: [_i(1, 0, 0, 1), _i(1, 0, 0, 2), _b(1, 2, 8, 0), _i(9, 0, 0, 9),
+                                         _i(3, 0, 0, 3), _i(4, 3, 0, 4), _i(5, 4, 0, 5), NOP],
     }.get(bug_id)
     if mk is None:
         return None
@@ -397,9 +435,21 @@ def _merge_corpus(programs: list[dict], new_prog: dict) -> list[dict]:
 
 def _expand_testbench_with_gemini(programs: list[dict], iteration: int, telemetry: dict,
                                   validation_log: list[dict], rng: random.Random) -> tuple[list[dict], bool, str, bool]:
-    """Returns (programs, program_added, source, gemini_called)."""
+    """Returns (programs, program_added, source, gemini_called).
+
+    Gemini gets one retry with the validator's rejection reason; the seeded local fallback is retried with
+    different mutations until one passes the validator (a single draw failed ~50% of the time in the field).
+    ``telemetry["gemini_expansion"]`` records attempts, acceptances, per-model counts and normalised rejection reasons.
+    """
     client, models = _get_gemini_client()
     gemini_called = False
+    stats = telemetry.setdefault("gemini_expansion", {"attempts": 0, "accepted": 0, "rejected": 0,
+                                                      "api_failures": 0, "reject_reasons": {}})
+
+    def count_reject(reason: str) -> None:
+        stats["rejected"] += 1
+        key = re.sub(r"0x[0-9a-fA-F]+|\d+", "N", reason)[:80]
+        stats["reject_reasons"][key] = stats["reject_reasons"].get(key, 0) + 1
 
     if client is not None:
         gemini_called = True
@@ -410,7 +460,7 @@ def _expand_testbench_with_gemini(programs: list[dict], iteration: int, telemetr
             mul_nudge = ("\n5. PRIORITY: MUL_DIV coverage is zero. Include MUL/MULH/MULHU/DIV/REM instructions "
                          "(opcode 0x33, funct7=0x01) with operands loaded via LUI/ADDI first "
                          "(e.g. rs1=0x900, rs2=0xC0).\n")
-        prompt = f"""You are an expert RISC-V processor verification engineer performing target-guided hardware fuzzing.
+        base_prompt = f"""You are an expert RISC-V processor verification engineer performing target-guided hardware fuzzing.
 
 {context}
 === GENERATION DIRECTIVE ===
@@ -430,31 +480,50 @@ Hard constraints (programs violating them are discarded):
 Return ONLY a JSON object (no markdown):
 {{"id": "rv32i-gemini-exp-{iteration}", "description": "...", "base": "0x00000000", "words": ["0x...", "..."]}}
 """
-        try:
-            text, used_model, _ = _generate_with_gemini(client, models, prompt)
-            if text:
+        last_reason = ""
+        for _attempt in range(2):
+            prompt = base_prompt + (f"\nYour previous program was rejected: {last_reason}\nFix that and answer again.\n"
+                                    if last_reason else "")
+            stats["attempts"] += 1
+            used_model = None
+            try:
+                text, used_model, _ = _generate_with_gemini(client, models, prompt, purpose="stimulus_expansion")
+                if not text:
+                    stats["api_failures"] += 1
+                    break
                 text = text.removeprefix("```json").removeprefix("```").removesuffix("```").strip()
                 data = json.loads(text)
                 data.setdefault("id", f"rv32i-gemini-exp-{iteration}")
                 data["base"] = "0x00000000"
-                if isinstance(data.get("words"), list) and len(data["words"]) >= 4:
-                    res = validate_program(data)
-                    validation_log.append({
-                        "iteration": iteration, "program_id": data["id"], "mutation_type": "gemini_expansion",
-                        "valid": res["valid"], "reason": res["reason"] or "Valid RV32IM sequence",
-                        "instruction_count": res["instruction_count"], "timestamp": _utc()})
-                    if res["valid"]:
-                        return _merge_corpus(programs, data), True, f"gemini:{used_model}", True
-        except Exception as exc:
-            print(f"[pico_campaign] Gemini expansion failed: {exc}. Using local seed mutator.", file=sys.stderr)
+                if not (isinstance(data.get("words"), list) and len(data["words"]) >= 4):
+                    raise ValueError("fewer than 4 words")
+                res = validate_program(data)
+            except Exception as exc:
+                last_reason = f"unusable answer ({type(exc).__name__}: {exc})"
+                count_reject(last_reason)
+                bm = stats.setdefault("by_model", {}).setdefault(str(used_model), {"accepted": 0, "rejected": 0})
+                bm["rejected"] += 1
+                continue
+            validation_log.append({
+                "iteration": iteration, "program_id": data["id"], "mutation_type": "gemini_expansion",
+                "valid": res["valid"], "reason": res["reason"] or "Valid RV32IM sequence",
+                "instruction_count": res["instruction_count"], "timestamp": _utc()})
+            bm = stats.setdefault("by_model", {}).setdefault(str(used_model), {"accepted": 0, "rejected": 0})
+            bm["accepted" if res["valid"] else "rejected"] += 1
+            if res["valid"]:
+                stats["accepted"] += 1
+                return _merge_corpus(programs, data), True, f"gemini:{used_model}", True
+            last_reason = res["reason"]
+            count_reject(last_reason)
 
-    fb = _local_seed_mutator_fallback(programs, iteration, rng)
-    res = validate_program(fb)
-    validation_log.append({"iteration": iteration, "program_id": fb["id"], "mutation_type": "seed_mutator_fallback",
-                           "valid": res["valid"], "reason": res["reason"] or "Valid RV32IM sequence",
-                           "instruction_count": res["instruction_count"], "timestamp": _utc()})
-    if res["valid"]:
-        return _merge_corpus(programs, fb), True, "local_seed_mutator_fallback", gemini_called
+    for _try in range(10):
+        fb = _local_seed_mutator_fallback(programs, iteration, rng)
+        res = validate_program(fb)
+        validation_log.append({"iteration": iteration, "program_id": fb["id"], "mutation_type": "seed_mutator_fallback",
+                               "valid": res["valid"], "reason": res["reason"] or "Valid RV32IM sequence",
+                               "instruction_count": res["instruction_count"], "timestamp": _utc()})
+        if res["valid"]:
+            return _merge_corpus(programs, fb), True, "local_seed_mutator_fallback", gemini_called
     return programs, False, "none", gemini_called
 
 
@@ -538,6 +607,7 @@ def _llm_repair_hardware_with_delta_debug(
     allowed = [(c["start_line"], c["end_line"]) for c in localization["candidates"]]
     info["localized_subsystem"] = localization["subsystem"]
     info["localized_lines"] = allowed
+    rkey = (hashlib.sha256(rtl.encode()).hexdigest(), localization["subsystem"])
     print(f"[pico_campaign] Localised to {localization['subsystem']} {allowed}", file=sys.stderr)
 
     cand_dir = workdir / "candidate"
@@ -546,10 +616,12 @@ def _llm_repair_hardware_with_delta_debug(
     for attempt in range(1, max_retries + 1):
         attempts = attempt
         prompt = format_localized_repair_prompt(reproducer, record, localization, state or None)
+        if rkey in _REJECTED_NOTES:
+            prompt += f"\n\nAn earlier candidate for this same RTL was rolled back: {_REJECTED_NOTES[rkey]}"
         if last_error:
             prompt += f"\n\nYour previous patch was rejected:\n{last_error}\nFix this and answer again."
         try:
-            text, used_model, _ = _generate_with_gemini(client, models, prompt)
+            text, used_model, _ = _generate_with_gemini(client, models, prompt, purpose="rtl_repair")
             if text is None:
                 last_error = "model returned no answer"
                 continue
@@ -856,6 +928,8 @@ def run_pico_campaign(seconds: int = 180, max_iterations: int | None = 3, contin
                 all_cycles += sim.get("cycles", 0)
 
             comparison_ok = bool(active_programs) and all(r["ok"] for r in iter_results)
+            bug_programs_failing = [r["program_id"] for r in iter_results
+                                    if str(r["program_id"]).startswith("bug-targeted-") and not r["ok"]]
             match_rate = round(all_matches / max(1, all_matches + all_mismatches) * 100.0, 1)
             iter_avg_cpi = round(all_cycles / max(1, all_retired), 2)
 
@@ -912,10 +986,18 @@ def run_pico_campaign(seconds: int = 180, max_iterations: int | None = 3, contin
                     HW_ALT.write_text(candidate)
 
                     after_ok, rep_matches, rep_mism, rep_ret, rep_cyc = [], 0, 0, 0, 0
-                    for prog in active_programs:
-                        s2 = build_and_simulate_program(HW, prog, workdir, iteration=iteration, generate_vcd=False)
+                    regressed: list[dict] = []
+                    for idx, prog in enumerate(active_programs):
+                        # same memory-delay as the "before" run, else delay-sensitive programs look like regressions
+                        s2 = build_and_simulate_program(HW, prog, workdir, iteration=iteration, generate_vcd=False,
+                                                        mem_delay=iter_results[idx]["mem_delay"])
                         c2 = compare_rvfi_trace(prog, s2.get("hardware_trace", []), hardware_trap=s2.get("hardware_trap", False))
                         after_ok.append(bool(s2["ok"] and c2["ok"]))
+                        if before_ok[len(after_ok) - 1] and not after_ok[-1]:
+                            mm0 = (c2.get("mismatches") or [{}])[0]
+                            regressed.append({"program_id": prog.get("id"), "kind": mm0.get("kind") or s2.get("error"),
+                                              "insn": mm0.get("insn_disasm"),
+                                              "fields": sorted((mm0.get("differences") or {}).keys())})
                         rep_matches += len(c2.get("matches", []))
                         rep_mism += len(c2.get("mismatches", []))
                         rep_ret += s2.get("retired", 0)
@@ -937,6 +1019,14 @@ def run_pico_campaign(seconds: int = 180, max_iterations: int | None = 3, contin
                     else:
                         HW.write_text(previous_rtl)
                         HW_ALT.write_text(previous_rtl)
+                        delta_debug_summary["rollback"] = {"regressed_programs": regressed,
+                                                           "failing_before": before_ok.count(False),
+                                                           "failing_after": after_ok.count(False)}
+                        if regressed:
+                            _REJECTED_NOTES[(hashlib.sha256(previous_rtl.encode()).hexdigest(),
+                                             delta_debug_summary.get("localized_subsystem", ""))] = (
+                                "it passed the reproducer but made previously passing programs fail: "
+                                + json.dumps(regressed[:3], default=str) + ". Do not change behaviour outside the faulty statement.")
                         delta_debug_summary["status"] = "CANDIDATE_ROLLED_BACK_NO_FULL_SUITE_IMPROVEMENT"
                         llm_source = f"{repair_src}:rolled_back"
                         print(f"[iter {iteration}] Candidate rolled back (regression={not no_regression}).", file=sys.stderr)
@@ -956,6 +1046,7 @@ def run_pico_campaign(seconds: int = 180, max_iterations: int | None = 3, contin
                 "llm_called": llm_called, "llm_source": llm_source, "repair_attempts": repair_attempts,
                 "rtl_improved": rtl_improved, "golden_recovered": golden_recovered,
                 "delta_debug_info": delta_debug_summary, "active_bugs": active_bugs,
+                "bug_programs_failing": bug_programs_failing,
                 "bug_targeted_programs": len(bug_programs), "rtl_sha256": new_hash, "vcd_path": latest_vcd,
                 "verilator_coverage": verilator_cov, "lint_log": "\n".join(all_lint_logs[:2]),
                 "first_mismatch": first_mismatch, "results": iter_results, "finished_at": _utc(),

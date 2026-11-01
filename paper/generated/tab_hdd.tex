@@ -1,0 +1,17 @@
+\begin{tabular}{@{}l r r r r r r r@{}}\toprule
+Bug & $n$ & Orig. & Slice & ddmin & HDD & Tests dd/HDD & Cycles orig.$\rightarrow$min.\\\midrule
+\texttt{alu\_operator\_xor\_or} & 6 & 34 & 18 & 3.5 & 3.5 & 12/14 & 168$\rightarrow$24\\
+\texttt{and\_to\_or\_alu} & 6 & 34 & 20 & 3.0 & 3.0 & 6/8 & 160$\rightarrow$23\\
+\texttt{approx\_multiplier} & 2 & 36 & 20 & 5.5 & 5.5 & 27/28 & 260$\rightarrow$35\\
+\texttt{fast\_mul\_rs2\_signed\_widened} & 6 & 62 & 20 & 4.0 & 4.0 & 16/18 & 314$\rightarrow$29\\
+\texttt{mem\_addr\_bit2\_stuck} & 6 & 34 & 19 & 2.0 & 2.0 & 5/1 & 162$\rightarrow$22\\
+\texttt{slt\_signed\_as\_unsigned} & 6 & 35 & 20 & 3.0 & 3.0 & 6/10 & 165$\rightarrow$22\\
+\texttt{beq\_inverted} & 6 & 34 & 22 & 2.0 & 2.0 & 5/1 & 180$\rightarrow$20\\
+\texttt{branch\_inversion\_blt} & 6 & 50 & 22 & 3.0 & 3.0 & 9/10 & 242$\rightarrow$23\\
+\texttt{lui\_auipc\_rd\_x0} & 6 & 35 & 2 & 2.0 & 2.0 & 0/0 & 150$\rightarrow$20\\
+\texttt{writeback\_forwarding\_drop} & 6 & 34 & 13 & 3.0 & 3.0 & 4/5 & 159$\rightarrow$23\\
+\texttt{mem\_handshake\_drop} & 6 & 76 & 18 & 2.0 & 2.0 & 5/1 & 345$\rightarrow$22\\
+\texttt{stale\_latched\_branch} & 6 & 35 & 18 & 3.0 & 2.5 & 8/4 & 132$\rightarrow$20\\
+\texttt{store\_after\_store\_dropped} & 6 & 36 & 18 & 4.0 & 4.0 & 15/18 & 138$\rightarrow$30\\
+\texttt{store\_after\_store\_dropped\_intermittent} & 6 & 60 & 18 & 19.0 & 18.0 & 66/84 & 300$\rightarrow$83\\
+\bottomrule\end{tabular}

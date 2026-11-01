@@ -22,12 +22,18 @@ def fake_sim(rtl_path, prog, workdir, iteration=0, generate_vcd=True, mem_delay=
             "vcd_path": None, "coverage_path": None, "validation": val, "lint_log": ""}
 
 
+SIM_CALLS = []
+def recording_sim(rtl_path, prog, workdir, iteration=0, generate_vcd=True, mem_delay=0, vcd_name=None):
+    SIM_CALLS.append((prog["id"], mem_delay))
+    return fake_sim(rtl_path, prog, workdir, iteration, generate_vcd, mem_delay, vcd_name)
+
+
 class FakeClient:
     def __init__(self): self.prompts = []
     chats = None
 
 
-def fake_generate(client, models, prompt):
+def fake_generate(client, models, prompt, purpose=""):
     client.prompts.append(prompt)
     m = re.search(r"\(lines (\d+)-(\d+)\)", prompt)
     a, b = int(m.group(1)), int(m.group(2))
@@ -69,6 +75,25 @@ class TestCampaign(unittest.TestCase):
         self.assertEqual(res["hardware_config"], {"ENABLE_FAST_MUL": True, "ENABLE_DIV": True, "REGS_INIT_ZERO": True})
         self.assertEqual(it[0]["llm_called"], True); self.assertEqual(it[1]["llm_called"], False)
 
+    def test_post_repair_suite_uses_same_mem_delay_as_before_run(self):
+        d = Path(tempfile.mkdtemp())
+        (d / "hw_design").mkdir(); (d / "logs").mkdir(); (d / "test_corpus").mkdir(); (d / "logs/ck").mkdir()
+        hw = d / "hw_design" / "picorv32_mutable.sv"; hw.write_text(RTL); SIM_CALLS.clear()
+        patches = dict(HW=hw, HW_ALT=d / "hw_design" / "picorv32.v", LOGS=d / "logs", TELEMETRY=d / "logs/t.json",
+                       TELEMETRY_ALT=d / "logs/t2.json", CHECKPOINTS=d / "logs/ck", STOP_FILE=d / "logs/stop",
+                       RUN_STATE=d / "logs/pid", PROGRAMS=d / "test_corpus/p.json", PROGRAMS_ALT=d / "test_corpus/p2.json",
+                       HIGH_YIELD=d / "test_corpus/hy", GOLDEN_CHECKPOINT=d / "none.v", HW_GOLDEN_SV=d / "none.sv")
+        with mock.patch.multiple(pc, build_and_simulate_program=recording_sim, run_verilator_lint=lambda **k: (True, ""),
+                                 estimate_yosys_stats=lambda *a, **k: {"total_cells": 5},
+                                 get_active_bugs=lambda: ["alu_operator_xor_or"],
+                                 _get_gemini_client=lambda: (FakeClient(), ["fake"]), _generate_with_gemini=fake_generate, **patches):
+            res = pc.run_pico_campaign(seconds=60, max_iterations=1, fuzz_interval=50)
+        self.assertTrue(res["iterations"][0]["rtl_improved"])
+        n = res["iterations"][0]["program_count"]
+        first, last = SIM_CALLS[:n], SIM_CALLS[-n:]
+        self.assertEqual([p for p, _ in first], [p for p, _ in last])
+        self.assertEqual([d_ for _, d_ in first], [d_ for _, d_ in last])
+
     def test_no_key_never_counts_golden_as_repair(self):
         d = Path(tempfile.mkdtemp()); hw = d / "m.sv"; hw.write_text(RTL)
         with mock.patch.multiple(pc, HW=hw, HW_ALT=d / "a.v", _get_gemini_client=lambda: (None, None)):
@@ -94,6 +119,28 @@ class TestCampaign(unittest.TestCase):
                 for o, n in zip(p["words"], c["words"]):
                     o, n = int(o, 0), int(n, 0)
                     if o != n and (o & 0x7F) == 0x33: self.assertEqual((o >> 12) & 7, (n >> 12) & 7)
+
+    def test_fallback_expansion_always_yields_valid_program(self):
+        import random
+        progs = list(pc.DEFAULT_SEED_PROGRAMS); rng = random.Random(7); tel = {}
+        with mock.patch.object(pc, "_get_gemini_client", lambda: (None, None)):
+            for it in range(8, 8 * 60, 8):
+                progs, added, src, called = pc._expand_testbench_with_gemini(progs, it, tel, [], rng)
+                self.assertTrue(added, it); self.assertFalse(called)
+        self.assertTrue(all(validate_program(p)["valid"] for p in progs))
+
+    def test_gemini_rejection_is_retried_with_reason_and_counted(self):
+        import random
+        good = json.dumps(pc.DEFAULT_SEED_PROGRAMS[0]); bad = json.dumps({"id": "b", "base": "0x0", "words": ["0x00000000"] * 5})
+        answers = iter([bad, good]); prompts = []
+        def gen(client, models, prompt, purpose=""): prompts.append(prompt); return next(answers), "fake", []
+        tel = {}
+        with mock.patch.multiple(pc, _get_gemini_client=lambda: (object(), ["fake"]), _generate_with_gemini=gen):
+            progs, added, src, called = pc._expand_testbench_with_gemini(list(pc.DEFAULT_SEED_PROGRAMS), 8, tel, [], random.Random(1))
+        self.assertTrue(added and called and src.startswith("gemini:"))
+        self.assertIn("previous program was rejected", prompts[1])
+        st = tel["gemini_expansion"]; self.assertEqual((st["attempts"], st["accepted"], st["rejected"]), (2, 1, 1))
+        self.assertEqual(st["by_model"]["fake"], {"accepted": 1, "rejected": 1})
 
     def test_corpus_pins_seeds(self):
         progs = list(pc.DEFAULT_SEED_PROGRAMS)

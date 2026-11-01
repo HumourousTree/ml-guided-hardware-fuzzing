@@ -4,3 +4,4 @@
 *.py text eol=lf
 *.sv text eol=lf
 *.v text eol=lf
+*.sh text eol=lf
