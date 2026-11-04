@@ -1,0 +1,18 @@
+\begin{tabular}{@{}l c c c c c c@{}}\toprule
+& \multicolumn{3}{c}{gemini-3.5-flash-lite (informed)} & Blind & Template & --\\\cmidrule(lr){2-4}
+Bug & pass@1 & pass@1 cert. & pass@5 cert. & pass@1 cert. & certified & pass@1 cert.\\\midrule
+\texttt{alu\_operator\_xor\_or} & 1.00 & 1.00 & 1.00 & 1.00 & \checkmark & --\\
+\texttt{and\_to\_or\_alu} & 1.00 & 1.00 & 1.00 & 1.00 & \checkmark & --\\
+\texttt{approx\_multiplier} & 1.00 & 1.00 & 1.00 & 1.00 & $\times$ & --\\
+\texttt{beq\_inverted} & 0.40 & 0.40 & 1.00 & 1.00 & \checkmark & --\\
+\texttt{branch\_inversion\_blt} & 0.00 & 0.00 & 0.00 & 0.00 & $\times$ & --\\
+\texttt{fast\_mul\_rs2\_signed\_widened} & 1.00 & 1.00 & 1.00 & 0.00 & \checkmark & --\\
+\texttt{lui\_auipc\_rd\_x0} & 1.00 & 1.00 & 1.00 & 0.00 & $\times$ & --\\
+\texttt{mem\_addr\_bit2\_stuck} & 1.00 & 1.00 & 1.00 & 0.00 & \checkmark & --\\
+\texttt{mem\_handshake\_drop} & 0.00 & 0.00 & 0.00 & 0.00 & $\times$ & --\\
+\texttt{slt\_signed\_as\_unsigned} & 1.00 & 1.00 & 1.00 & 1.00 & $\times$ & --\\
+\texttt{stale\_latched\_branch} & 0.00 & 0.00 & 0.00 & 0.00 & $\times$ & --\\
+\texttt{store\_after\_store\_dropped} & 1.00 & 1.00 & 1.00 & 0.00 & \checkmark & --\\
+\texttt{store\_after\_store\_dropped\_intermittent} & 1.00 & 1.00 & 1.00 & 0.00 & \checkmark & --\\
+\texttt{writeback\_forwarding\_drop} & 1.00 & 1.00 & 1.00 & 0.60 & $\times$ & --\\
+\bottomrule\end{tabular}

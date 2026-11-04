@@ -1,0 +1,19 @@
+\begin{tabular}{@{}l r r r r@{}}\toprule
+& \multicolumn{2}{c}{Detected (runs)} & \multicolumn{2}{c}{Programs to detection (median)}\\\cmidrule(lr){2-3}\cmidrule(l){4-5}
+Bug & Lockstep & End-state & Lockstep & End-state\\\midrule
+\texttt{alu\_operator\_xor\_or} & 20/20 & 20/20 & 8 & 12\\
+\texttt{and\_to\_or\_alu} & 20/20 & 20/20 & 2 & 2\\
+\texttt{approx\_multiplier} & 2/20 & 2/20 & 554 & 554\\
+\texttt{beq\_inverted} & 20/20 & 20/20 & 3 & 3\\
+\texttt{branch\_inversion\_blt} & 20/20 & 20/20 & 4 & 6\\
+\texttt{fast\_mul\_decode\_and\_to\_or} & 0/20 & 0/20 & -- & --\\
+\texttt{fast\_mul\_rs2\_signed\_widened} & 20/20 & 20/20 & 16 & 35\\
+\texttt{lui\_auipc\_rd\_x0} & 20/20 & 20/20 & 1 & 1\\
+\texttt{mem\_addr\_bit2\_stuck} & 20/20 & 20/20 & 1 & 1\\
+\texttt{mem\_handshake\_drop} & 20/20 & 20/20 & 4 & 4\\
+\texttt{slt\_signed\_as\_unsigned} & 20/20 & 20/20 & 1 & 2\\
+\texttt{stale\_latched\_branch} & 20/20 & 20/20 & 1 & 1\\
+\texttt{store\_after\_store\_dropped} & 20/20 & 20/20 & 2 & 2\\
+\texttt{store\_after\_store\_dropped\_intermittent} & 20/20 & 20/20 & 13 & 13\\
+\texttt{writeback\_forwarding\_drop} & 20/20 & 20/20 & 1 & 2\\
+\bottomrule\end{tabular}

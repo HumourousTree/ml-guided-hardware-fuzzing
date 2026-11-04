@@ -642,6 +642,15 @@ def section_llm_repair(logs, M, md):
     M["LlmSolved"], M["TplSolved"] = len(llm_ok), len(tpl_ok & set(done))
     M["LlmOnly"], M["TplOnly"] = len(llm_ok - tpl_ok), len((tpl_ok & set(done)) - llm_ok)
     M["LlmOnlyList"] = tex_escape(", ".join(sorted(llm_ok - tpl_ok))) or "none"
+    # reading-vs-reasoning: informed vs blind pass@1 (certified) on legacy bugs (conspicuous constants) and plain mutations
+    legacy = set(json.loads((ROOT / "hw_design" / "bug_manifest.json").read_text()))
+    bl = blind.get(main_model, {})
+    for grp, name in ((legacy, "Legacy"), (set(done) - legacy, "Plain")):
+        bs = [b for b in done if b in grp and bl.get(b, {}).get("complete")]
+        if bs:
+            M[f"LlmInf{name}PassOneCert"] = f"{sum(done[b]['pass@1_certified'] for b in bs) / len(bs):.2f}"
+            M[f"LlmBlind{name}PassOneCert"] = f"{sum(bl[b]['pass@1_certified'] for b in bs) / len(bs):.2f}"
+            M[f"Llm{name}Bugs"] = len(bs)
     M["LlmUnsolvedList"] = tex_escape(", ".join(sorted(set(done) - llm_ok))) or "none"
     strong = {m: r for m, r in informed.items() if m != main_model}
     for m, recs in strong.items():
@@ -667,8 +676,8 @@ def section_llm_repair(logs, M, md):
         tcert = "--" if not t else ("\\checkmark" if t.get("accepted") and (t.get("formal") or {}).get("verdict") in ("identical", "proven") else "$\\times$")
         st_ = next((recs.get(b, {}) for recs in strong.values()), {})
         lines.append(f"\\texttt{{{tex_escape(b)}}} & {r['pass@1']:.2f} & {r['pass@1_certified']:.2f} & {r.get('pass@5_certified', 0):.2f} & "
-                     f"{bl.get('pass@1_certified', float('nan')) if bl.get('complete') else '--'} & {tcert} & "
-                     f"{st_.get('pass@1_certified') if st_.get('complete') else '--'}\\\\")
+                     f"{format(bl['pass@1_certified'], '.2f') if bl.get('complete') else '--'} & {tcert} & "
+                     f"{format(st_['pass@1_certified'], '.2f') if st_.get('complete') else '--'}\\\\")
     md.append(f"## LLM repair ({main_model}, certified)\n"
               + "\n".join(f"- {k}: {v}" for k, v in M.items.items() if k.startswith("Llm")))
     return "\n".join(lines + ["\\bottomrule\\end{tabular}"])
