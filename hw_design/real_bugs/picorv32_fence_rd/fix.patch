@@ -1,0 +1,12 @@
+--- a/picorv32.v
++++ b/picorv32.v
+@@ -879,7 +879,8 @@
+ 
+ 			{ decoded_imm_j[31:20], decoded_imm_j[10:1], decoded_imm_j[11], decoded_imm_j[19:12], decoded_imm_j[0] } <= $signed({mem_rdata_latched[31:12], 1'b0});
+ 
+-			decoded_rd <= mem_rdata_latched[11:7];
++			// FENCE (MISC-MEM): rd is reserved and must be ignored -> decode it as x0 so no write-back happens
++			decoded_rd <= (mem_rdata_latched[6:0] == 7'b0001111) ? 0 : mem_rdata_latched[11:7];
+ 			decoded_rs1 <= mem_rdata_latched[19:15];
+ 			decoded_rs2 <= mem_rdata_latched[24:20];
+ 

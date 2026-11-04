@@ -597,6 +597,152 @@ def section_unreached(logs, M, md):
     return "\n".join(lines + ["\\bottomrule\\end{tabular}"])
 
 
+def _llm_runs(logs: Path, mode: str) -> dict:
+    """{model: {bug: record}} for logs/experiments/llm_repair_<mode>_<model>.json."""
+    out = {}
+    for f in sorted((logs / "experiments").glob(f"llm_repair_{mode}_*.json")):
+        out[f.stem[len(f"llm_repair_{mode}_"):]] = json.loads(f.read_text())
+    return out
+
+
+def section_llm_repair(logs, M, md):
+    """A1 (informed), A2 (blind control), A5 (stronger model) against the template baseline, all formally certified."""
+    informed, blind = _llm_runs(logs, "informed"), _llm_runs(logs, "blind")
+    if not informed:
+        return ""
+    model_file = logs / "experiments" / "llm_track_model.txt"
+    main_model = model_file.read_text().strip() if model_file.exists() else next(iter(informed))
+    M["LlmModel"] = tex_escape(main_model)
+    tpl = load(logs / "experiments" / "repair_baselines.json") or {}
+
+    def agg(recs: dict, key: str):
+        xs = [r[key] for r in recs.values() if r.get("complete") and key in r]
+        return (sum(xs) / len(xs), len(xs)) if xs else (None, 0)
+
+    rows = {}
+    for tag, recs in (("Inf", informed.get(main_model, {})), ("Blind", blind.get(main_model, {}))):
+        for key, name in (("pass@1", "PassOne"), ("pass@1_certified", "PassOneCert"), ("pass@5", "PassFive"),
+                          ("pass@5_certified", "PassFiveCert")):
+            v, n = agg(recs, key)
+            M[f"Llm{tag}{name}"] = "--" if v is None else f"{v:.2f}"
+        M[f"Llm{tag}Bugs"] = agg(recs, "pass@1")[1]
+        ind = [s for r in recs.values() for s in r.get("independent", [])]
+        M[f"Llm{tag}Samples"] = len(ind)
+        M[f"Llm{tag}GateNotCert"] = sum(1 for s in ind if s["gate_accepted"] and not s["certified"])
+        M[f"Llm{tag}HeldOutWrong"] = sum(1 for s in ind if s.get("correct_on_held_out") and not s["certified"])
+        rows[tag] = recs
+    fb = [r["feedback_run"] for r in informed.get(main_model, {}).values() if "feedback_run" in r]
+    M["LlmFeedbackRuns"], M["LlmFeedbackCert"] = len(fb), sum(x["certified"] for x in fb)
+    strong = {m: r for m, r in informed.items() if m != main_model}
+    for m, recs in strong.items():
+        v, n = agg(recs, "pass@1_certified")
+        M["LlmStrongModel"], M["LlmStrongBugs"] = tex_escape(m), n
+        M["LlmStrongPassOneCert"] = "--" if v is None else f"{v:.2f}"
+        mine = [informed[main_model][b]["pass@1_certified"] for b in recs if informed[main_model].get(b, {}).get("complete")]
+        M["LlmMainSameBugsPassOneCert"] = f"{sum(mine) / len(mine):.2f}" if mine else "--"
+    calls = logs / "llm_calls.jsonl"
+    if calls.exists():
+        recs_ = [json.loads(l) for l in calls.read_text().splitlines() if l.strip()]
+        rep = [r for r in recs_ if r["purpose"].startswith("rtl_repair")]
+        M["LlmRepairRequests"], M["LlmRepairRequestsOk"] = len(rep), sum(r["ok"] for r in rep)
+    lines = ["\\begin{tabular}{@{}l c c c c c c@{}}\\toprule",
+             "& \\multicolumn{3}{c}{" + tex_escape(main_model) + " (informed)} & Blind & Template & "
+             + (tex_escape(next(iter(strong))) if strong else "--") + "\\\\\\cmidrule(lr){2-4}",
+             "Bug & pass@1 & pass@1 cert. & pass@5 cert. & pass@1 cert. & certified & pass@1 cert.\\\\\\midrule"]
+    for b, r in sorted(informed.get(main_model, {}).items()):
+        if not r.get("complete"):
+            continue
+        bl = rows.get("Blind", {}).get(b, {})
+        t = tpl.get(f"{b}|template", {})
+        tcert = "--" if not t else ("\\checkmark" if t.get("accepted") and (t.get("formal") or {}).get("verdict") in ("identical", "proven") else "$\\times$")
+        st_ = next((recs.get(b, {}) for recs in strong.values()), {})
+        lines.append(f"\\texttt{{{tex_escape(b)}}} & {r['pass@1']:.2f} & {r['pass@1_certified']:.2f} & {r.get('pass@5_certified', 0):.2f} & "
+                     f"{bl.get('pass@1_certified', float('nan')) if bl.get('complete') else '--'} & {tcert} & "
+                     f"{st_.get('pass@1_certified') if st_.get('complete') else '--'}\\\\")
+    md.append(f"## LLM repair ({main_model}, certified)\n"
+              + "\n".join(f"- {k}: {v}" for k, v in M.items.items() if k.startswith("Llm")))
+    return "\n".join(lines + ["\\bottomrule\\end{tabular}"])
+
+
+def section_oracle(logs, M, md):
+    """B1: lockstep vs end-state oracle, paired on the same programs."""
+    d = logs / "bench" / "oracle"
+    per = defaultdict(lambda: defaultdict(list))
+    for f in sorted(d.glob("*_bug-*_seed*.json")) if d.exists() else []:
+        r = json.loads(f.read_text())
+        per[r["bug"]][r["method"]].append(r)
+    if not per:
+        return ""
+    lines = ["\\begin{tabular}{@{}l r r r r@{}}\\toprule",
+             "& \\multicolumn{2}{c}{Detected (runs)} & \\multicolumn{2}{c}{Programs to detection (median)}\\\\"
+             "\\cmidrule(lr){2-3}\\cmidrule(l){4-5}", "Bug & Lockstep & End-state & Lockstep & End-state\\\\\\midrule"]
+    tot = {"ls": 0, "es": 0, "runs": 0}
+    only_ls, slower = [], []
+    for b in sorted(per):
+        rs = [r for m in per[b].values() for r in m]
+        ls = [r["bug_detected"]["n_programs"] for r in rs if r.get("bug_detected")]
+        es = [r["bug_detected_end_state"]["n_programs"] for r in rs if r.get("bug_detected_end_state")]
+        tot["ls"] += len(ls); tot["es"] += len(es); tot["runs"] += len(rs)
+        if ls and not es:
+            only_ls.append(b)
+        if ls and es and st.median(es) > st.median(ls):
+            slower.append(b)
+        lines.append(f"\\texttt{{{tex_escape(b)}}} & {len(ls)}/{len(rs)} & {len(es)}/{len(rs)} & "
+                     f"{fmt(st.median(ls), 0) if ls else '--'} & {fmt(st.median(es), 0) if es else '--'}\\\\")
+    M["OrcRuns"], M["OrcLockstepDet"], M["OrcEndStateDet"] = tot["runs"], tot["ls"], tot["es"]
+    M["OrcBugs"], M["OrcOnlyLockstep"], M["OrcEndStateSlower"] = len(per), len(only_ls), len(slower)
+    M["OrcOnlyLockstepList"] = tex_escape(", ".join(only_ls)) or "none"
+    md.append(f"## Oracle study (lockstep vs end-state, {tot['runs']} runs)\n- detections: lockstep {tot['ls']}, end-state {tot['es']}\n"
+              f"- bugs found only by lockstep: {only_ls}\n- bugs found later by end-state: {slower}")
+    return "\n".join(lines + ["\\bottomrule\\end{tabular}"])
+
+
+def section_llm_campaign(logs, M, md):
+    t = load(logs / "experiments" / "llm_campaign" / "telemetry.json")
+    if not t:
+        return
+    g = t.get("gemini_expansion") or {}
+    M["CampIters"], M["CampMatch"], M["CampLlmCalls"] = t["total_iterations"], t["overall_match_rate"], t["llm_call_count"]
+    M["CampRepairs"], M["CampModel"] = t["rtl_improvement_count"], tex_escape(str(t.get("gemini_model")))
+    M["CampGemAttempts"], M["CampGemAccepted"] = g.get("attempts", 0), g.get("accepted", 0)
+    M["CampGemValidPct"] = f"{100 * g.get('accepted', 0) / max(1, g.get('attempts', 0)):.0f}"
+    last = (t.get("iterations") or [{}])[-1]
+    M["CampBugsActive"] = len(last.get("active_bugs") or [])
+    md.append(f"## LLM campaign ({t.get('gemini_model')}): {t['total_iterations']} iterations, match {t['overall_match_rate']}%, "
+              f"{t['rtl_improvement_count']} accepted repairs, expansion {g.get('accepted')}/{g.get('attempts')} valid")
+
+
+def section_llm_hybrid(logs, M, md):
+    r = load(logs / "bench" / "llm_hybrid" / "hybrid_seed0.json")
+    if not r:
+        return
+    s = r.get("semantic_stats") or {}
+    M["HybLlmCalls"], M["HybTargets"], M["HybTargetHit"] = s.get("llm_calls", 0), s.get("targets", 0), s.get("target_hit", 0)
+    M["HybSyntaxFixes"], M["HybSemanticFixes"], M["HybGaveUp"] = s.get("syntax_fixes", 0), s.get("semantic_fixes", 0), s.get("gave_up", 0)
+    M["HybIllegal"] = s.get("illegal", 0)
+    n = r["series"][-1]["n_programs"]
+    M["HybPrograms"], M["HybFinal"] = n, f"{r['series'][-1]['pct']:.2f}"
+    sw = (r.get("switched_at") or {}).get("programs")
+    M["HybSwitch"] = sw if sw else "--"
+    for m in ("mutation", "hybrid-rand"):
+        ref = load(logs / "bench" / "coverage" / f"{m}_seed0.json")
+        if ref:
+            M[f"HybRef{macro_name(m)}"] = f"{at_programs(ref['series'], n):.2f}"
+    sem = [p for p in r["series"] if p.get("src") == "semantic"]
+    M["HybSemanticPrograms"], M["HybSemanticNewPoints"] = len(sem), sum(p["new_points"] for p in sem)
+    md.append(f"## LLM generator after the plateau: {s} | final {r['series'][-1]['pct']:.2f}% at {n} programs")
+
+
+def section_real_bug(M, md):
+    v = load(ROOT / "hw_design" / "real_bugs" / "picorv32_fence_rd" / "verification.json")
+    if not v:
+        return
+    M["RbCases"], M["RbUpstreamDiv"], M["RbFixedDiv"] = v["cases"], v["upstream_divergent_cases"], v["fixed_divergent_cases"]
+    M["RbFixedEZero"] = f"{v['fixed_e0']['matched']}/{v['fixed_e0']['runs']}"
+    M["RbFuzzPrograms"], M["RbFuzzMismatches"] = f"{v['fixed_fuzz']['programs']:,}", v["fixed_fuzz"]["mismatches"]
+    md.append(f"## Real bug (FENCE rd): {v['verdict']}")
+
+
 def section_yosys(logs, M, md):
     p = logs / "experiments" / "yosys_synth_xilinx_xcup.log"
     if not p.exists():
@@ -726,6 +872,11 @@ def main():
     tabs["unreached"] = section_unreached(logs, M, md)
     section_campaign(logs, M, md, figs, plt)
     section_yosys(logs, M, md)
+    tabs["llm_repair"] = section_llm_repair(logs, M, md)
+    tabs["oracle"] = section_oracle(logs, M, md)
+    section_llm_campaign(logs, M, md)
+    section_llm_hybrid(logs, M, md)
+    section_real_bug(M, md)
     tabs["lit_testcases"], tabs["lit_encarsia"] = section_literature(json.loads(Path(a.lit).read_text()), logs, M, md, figs, plt, cov, bugagg)
     for k, v in tabs.items():
         (gen / f"tab_{k}.tex").write_text(v or "\\emph{(no data)}")
