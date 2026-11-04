@@ -1,0 +1,20 @@
+{
+  "bug": "FENCE with a non-zero reserved rd field writes an undefined ALU value (0 in Verilator) to rd",
+  "upstream_commit": "ef203c2b0a3fb793280f5114941416c425c5b461",
+  "upstream_divergent_cases": 31,
+  "fixed_divergent_cases": 0,
+  "cases": 31,
+  "fixed_lint_ok": true,
+  "fixed_e0": {
+    "matched": 150,
+    "runs": 150,
+    "fence_rd_probe_ok": true,
+    "p6_probe_ok": true
+  },
+  "fixed_fuzz": {
+    "runs": 6,
+    "programs": 18000,
+    "mismatches": 0
+  },
+  "verdict": "CONFIRMED: bug present on upstream, removed by the fix without regressions"
+}
