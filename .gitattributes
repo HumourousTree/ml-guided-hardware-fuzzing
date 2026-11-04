@@ -5,3 +5,4 @@
 *.sv text eol=lf
 *.v text eol=lf
 *.sh text eol=lf
+*.patch text eol=lf
