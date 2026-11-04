@@ -114,3 +114,14 @@ Not done: anything needing an LLM (semantic/hybrid generation, pass@k) - no API 
   were not run, not blocked. Key verified with one metered request on 2026-10-31.
 - The paper text moved to the Overleaf repo HumourousTree/Hardware-Fuzzing; `paper/` here holds only the generated tables,
   macros and figures (`tools/compare_literature.py --tex` checks the Overleaf copy for undefined macros).
+
+# v0.5 (LLM experiments on the free tier, oracle study, real-bug entry)
+- Track A (`scripts/run_llm_experiments.sh`): certified LLM repair pass@k (A1), blind reading-vs-reasoning control (A2), LLM campaign
+  with the legacy bugs (A3), ChipFuzzer-style generator after the plateau, capped at 100 requests (A4), stronger-model check (A5).
+  `gemini-3.8-flash` returned 503 for ~5 h, so A1-A4 are pinned to `gemini-3.5-flash-lite` (A5: `gemini-3.1-pro-preview`).
+- Track B1 (`scripts/run_oracle_study.sh`): lockstep vs end-state oracle (`riscv_cosim.compare_end_state`, `benchmark --end-state`)
+  paired on the same programs, 15 bugs x 10 seeds x 2 methods: identical detections (262/300 runs), end-state slower on 5 bugs.
+- Real-bug benchmark entry `hw_design/real_bugs/picorv32_fence_rd` (+ `tools/check_real_bug.py`).
+- Budget per model and per API key; transient 5xx retried with backoff; `repair_eval` resumable, model-pinned, private RTL copy,
+  unanswered samples not scored, held-out runs skipped for textually identical candidates.
+- `scripts/run_tracks.cmd`: resumable runner for all tracks (run in an open terminal if the session closes).
