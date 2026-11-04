@@ -1,0 +1,83 @@
+{
+  "_note": "Every value is quoted from the cited source (checked against the PDF/HTML on 2026-10-29). None was re-measured. 'peer_reviewed' is false for arXiv preprints. Values are NOT comparable with BenchFuzz-on-PicoRV32 measurements except where 'comparable_with_benchfuzz' says so.",
+  "systems": {
+    "ChipFuzzer": {
+      "citation": "Wang et al., When Fuzzing Meets Understanding: LLM-Driven Semantic Test Generation for RTL Verification, arXiv:2607.10340v1, 11 Jul 2026",
+      "peer_reviewed": false,
+      "designs": ["RocketCore", "BOOM", "CVA6"],
+      "oracle": "Spike (ISA simulator), Verilator RTL",
+      "coverage_metric": "condition coverage (also register-toggle, mux-toggle)",
+      "budget": "24 h",
+      "condition_cov_gain_pp_over_strongest_baseline": {"RocketCore": 9.1, "BOOM": 1.2, "CVA6": 7.0, "mean": 5.8, "source": "Sec. 5.2"},
+      "rocket_condition_cov_24h_pct": {"ChipFuzzer (GPT-5.3)": 89.2, "ChipFuzzer (Gemini 3)": 86.7, "ChipFuzzer (DeepSeek-V3)": 84.1,
+                                        "TheHuzz": 72.21, "Cascade": 79.32, "BMCFuzz": 80.06, "source": "Sec. 5.2, Sec. 5.4, Fig. 6/7"},
+      "ablation_rocket_condition_cov_pct": {"LLM only": 61.4, "coverage-guided": 88.1, "coverage+bug-guided": 89.2, "source": "Sec. 5.4"},
+      "testcases_to_threshold": {
+        "RocketCore@75%": {"ChipFuzzer": 645, "BMCFuzz": 4352, "Cascade": 5946, "TheHuzz": 17126},
+        "BOOM@90%": {"ChipFuzzer": 734, "BMCFuzz": 5600, "Cascade": 7694, "TheHuzz": 23005},
+        "source": "Table 2"
+      },
+      "encarsia_bugs_detected": {
+        "per_design_of_30": {
+          "TheHuzz": {"RocketCore": 10, "BOOM": 15, "CVA6": 8},
+          "Cascade": {"RocketCore": 11, "BOOM": 15, "CVA6": 10},
+          "BMCFuzz": {"RocketCore": 12, "BOOM": 16, "CVA6": 8},
+          "ChipFuzzer (CBG)": {"RocketCore": 20, "BOOM": 20, "CVA6": 15},
+          "ChipFuzzer CG only": {"RocketCore": 1, "BOOM": 2, "CVA6": 2},
+          "ChipFuzzer BG only": {"RocketCore": 12, "BOOM": 12, "CVA6": 11}
+        },
+        "rate_pct_of_90": {"TheHuzz": 36.7, "Cascade": 40.0, "BMCFuzz": 40.0, "ChipFuzzer (CBG)": 61.1, "ChipFuzzer CG only": 5.6,
+                           "ChipFuzzer BG only": 38.9, "ChipFuzzer LLM only": 0.0},
+        "source": "Sec. 5.3, Sec. 5.4, Fig. 8 (per-design counts read from the figure labels; they sum to the stated rates)"
+      },
+      "plateau_rule": "cumulative condition-coverage gain < 0.1% over 100 consecutive validated testcases (Sec. 5.1)",
+      "comparable_with_benchfuzz": "method only (plateau rule); numbers no"
+    },
+    "Cascade": {
+      "citation": "Solt, Ceesay-Seitz, Razavi, Cascade: CPU Fuzzing via Intricate Program Generation, USENIX Security 2024",
+      "peer_reviewed": true,
+      "designs": ["VexRiscv", "PicoRV32 (f00a88c, rv32im)", "Kronos", "CVA6", "Rocket", "BOOM"],
+      "headline": "same coverage 28.2x faster than TheHuzz and 97x faster than DifuzzRTL; 37 new bugs (29 CVEs) in 5 of 6 designs",
+      "picorv32_coverage_points": 172,
+      "picorv32_bugs": {
+        "P1": "Accessing a non-implemented CSR causes the CPU to hang (CVE-2023-34898)",
+        "P2": "Spurious exceptions when reading mandatory CSRs (CVE-2023-34897)",
+        "P3": "Performance counters are not writable (CVE-2023-34900)",
+        "P4": "Performance counters can only be read using some opcodes (CVE-2023-34914)",
+        "P5": "Performance counter addresses are incorrect (CVE-2023-34913)",
+        "P6": "Spurious exception when decoding fence instructions (CVE-2023-34899)"
+      },
+      "source": "Sec. 1, Sec. 7 (coverage), Table 4 (bug list), Appendix (DUT commits)",
+      "comparable_with_benchfuzz": "P6 only: same DUT commit f00a88c, reproduced by BenchFuzz (E0 P6 probe and blind fuzzing)"
+    },
+    "TheHuzz": {
+      "citation": "Kande et al., TheHuzz: Instruction Fuzzing of Processors Using Golden-Reference Models for Finding Software-Exploitable Vulnerabilities, USENIX Security 2022",
+      "peer_reviewed": true,
+      "designs": ["or1200", "mor1kx", "Ariane (CVA6)", "Rocket"],
+      "headline": "reaches coverage 1.98x faster than random regression and 3.33x faster than DifuzzRTL; 11 bugs (8 new)",
+      "comparable_with_benchfuzz": "no"
+    },
+    "TurboFuzz": {
+      "citation": "TurboFuzz: FPGA Accelerated Hardware Fuzzing for Processor Agile Verification, arXiv:2509.10400v2, 3 Feb 2026",
+      "peer_reviewed": false,
+      "platform": "Fidus Sidewinder, AMD Zynq UltraScale+ XCZU19EG, Rocket at 100 MHz",
+      "headline": "up to 2.23x more coverage than software fuzzers in the same time; up to 571x faster detection of real-world issues",
+      "throughput_table_I": {"DifuzzRTL (with FPGA)": {"hz": 4.13, "insn_per_s": 728}, "Cascade": {"hz": 12.80, "insn_per_s": 2489},
+                             "TurboFuzz": {"hz": 75.12, "insn_per_s": 309676}},
+      "coverage_vs_cascade": "1.26x-1.31x at 1, 2 and 4 h (Sec. VII-F); vs DifuzzRTL 1.64x-2.23x",
+      "comparable_with_benchfuzz": "throughput order of magnitude only (different DUT and harness)"
+    },
+    "BMCFuzz": {
+      "citation": "BMCFuzz: Hybrid Verification of Processors by Synergistic Integration of Bound Model Checking and Fuzzing (IEEE, 2025)",
+      "peer_reviewed": true,
+      "note": "Only the figures reported by ChipFuzzer were retrievable (Table 2, Fig. 8, Sec. 5.4); the primary paper's own numbers were not accessible.",
+      "comparable_with_benchfuzz": "no"
+    },
+    "Encarsia": {
+      "citation": "Bolcskei, Solt, Ceesay-Seitz, Razavi, Encarsia: Evaluating CPU Fuzzers via Automatic Bug Injection, USENIX Security 2025",
+      "peer_reviewed": true,
+      "corpus_as_used_by_chipfuzzer": "90 injected bugs, 30 per design (RocketCore, BOOM, CVA6)",
+      "comparable_with_benchfuzz": "no (different designs); our 15-bug PicoRV32 suite follows the same 'one bug per design copy, detection = ISA-visible divergence' protocol"
+    }
+  }
+}

@@ -56,13 +56,15 @@ def _u32(value: int) -> int:
 
 # ── Program validation ───────────────────────────────────────────────────────
 
-_SUPPORTED_OPCODES = {0x03, 0x13, 0x17, 0x23, 0x33, 0x37, 0x63, 0x67, 0x6F}
+_SUPPORTED_OPCODES = {0x03, 0x0F, 0x13, 0x17, 0x23, 0x33, 0x37, 0x63, 0x67, 0x6F}
 
 
 def _static_check(index: int, word: int) -> str | None:
     opcode, funct3, funct7 = word & 0x7F, (word >> 12) & 7, (word >> 25) & 0x7F
     if opcode not in _SUPPORTED_OPCODES:
         return f"instruction {index}: unsupported opcode 0x{opcode:02x}"
+    if opcode == 0x0F and funct3 != 0:
+        return f"instruction {index}: only FENCE (funct3 0) is supported, not FENCE.I"
     if opcode == 0x03 and funct3 not in {0, 1, 2, 4, 5}:
         return f"instruction {index}: invalid load funct3 {funct3}"
     if opcode == 0x23 and funct3 not in {0, 1, 2}:
@@ -599,7 +601,7 @@ def _lane_mask(mask: int) -> int:
 
 
 def compare_rvfi_trace(program: dict, hardware_trace: list[dict], normalize_pc: bool = False,
-                       hardware_trap: bool = False) -> dict:
+                       hardware_trap: bool = False, aligned_mem: bool | None = None) -> dict:
     """Compare the DUT retirement trace against the ISS in lockstep.
 
     Beyond per-field comparison this reports
@@ -651,7 +653,7 @@ def compare_rvfi_trace(program: dict, hardware_trace: list[dict], normalize_pc: 
         for field in ("pc_rdata", "pc_wdata", "insn", "rd_addr", "rd_wdata", "mem_addr", "mem_rmask", "mem_wmask"):
             hw_val = _as_int(actual.get(field, -1))
             sw_val = expected[field]
-            if field == "mem_addr" and RVFI_ALIGNED_MEM and (expected["mem_rmask"] or expected["mem_wmask"]):
+            if field == "mem_addr" and (RVFI_ALIGNED_MEM if aligned_mem is None else aligned_mem) and (expected["mem_rmask"] or expected["mem_wmask"]):
                 sw_val &= ~3          # DUT convention: word address + byte-lane mask
             if normalize_pc and field in {"pc_rdata", "pc_wdata"}:
                 hw_val = _u32(hw_val - hardware_pc_base)

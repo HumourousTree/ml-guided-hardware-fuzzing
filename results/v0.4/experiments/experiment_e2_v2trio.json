@@ -1,0 +1,30 @@
+{
+  "experiment": "E2",
+  "timestamp": "2026-10-28T21:46:42.056879+00:00",
+  "injected_bugs": [
+    "and_to_or_alu",
+    "beq_inverted",
+    "store_after_store_dropped"
+  ],
+  "isolated_count": 3,
+  "details": [
+    {
+      "bug_id": "and_to_or_alu",
+      "detected": true,
+      "failing_insn": "and x3, x1, x2",
+      "localized_subsystem": "alu"
+    },
+    {
+      "bug_id": "beq_inverted",
+      "detected": true,
+      "failing_insn": "beq x1, x2, 8",
+      "localized_subsystem": "branch"
+    },
+    {
+      "bug_id": "store_after_store_dropped",
+      "detected": true,
+      "failing_insn": "sw x2, 4(x1)",
+      "localized_subsystem": "memory"
+    }
+  ]
+}

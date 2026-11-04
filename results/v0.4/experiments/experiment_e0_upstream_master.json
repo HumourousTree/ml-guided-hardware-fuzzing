@@ -1,0 +1,1262 @@
+{
+  "experiment": "E0",
+  "timestamp": "2026-10-29T00:15:33.395746+00:00",
+  "lint_ok": true,
+  "all_matched": true,
+  "upstream_file": "upstream_picorv32.v",
+  "upstream_commit": "ef203c2b0a3fb793280f5114941416c425c5b461",
+  "programs": 50,
+  "mem_delays": [
+    0,
+    1,
+    3
+  ],
+  "runs_matched": 150,
+  "match_rate_pct": 100.0,
+  "wall_seconds": 244.4,
+  "convention_probe": {
+    "raw_mismatch_fields": [
+      "mem_addr"
+    ],
+    "aligned_convention_ok": true,
+    "conclusion": "CONVENTION GAP: unmodified upstream reports word-aligned mem_addr (e.g. 2016 for byte address 2019); it passes lockstep once the scoreboard applies the aligned convention. Not a DUT defect.",
+    "first_raw_mismatch": {
+      "insn_disasm": "lb x3, 1(x1)",
+      "differences": {
+        "mem_addr": {
+          "expected": 257,
+          "actual": 256
+        }
+      }
+    }
+  },
+  "cascade_p6_fence_probe": {
+    "ok": true,
+    "hardware_trap": false,
+    "error": null,
+    "first_mismatch": null
+  },
+  "fence_rd_probe": {
+    "ok": false,
+    "hardware_trap": false,
+    "x2_after_fence": 0,
+    "x2_expected": 123,
+    "first_mismatch": {
+      "kind": "field_mismatch",
+      "insn_disasm": "raw 0x0ff0008f",
+      "differences": {
+        "rd_addr": {
+          "expected": 0,
+          "actual": 1
+        }
+      },
+      "error": null
+    }
+  },
+  "golden_equals_upstream": true,
+  "upstream_sha256": "0836050971b3c6cdd28ac3b1e5719a67fb645161912bef1e472e63995ceb0622",
+  "runs": 150,
+  "total_instructions": 1599,
+  "results": [
+    {
+      "program_id": "rv32i-seed-001-alu-edge",
+      "mem_delay": 0,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-002-mem-deps",
+      "mem_delay": 0,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-003-branch-jump",
+      "mem_delay": 0,
+      "retired": 10,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "e0-m-extension",
+      "mem_delay": 0,
+      "retired": 10,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-approx_multiplier",
+      "mem_delay": 0,
+      "retired": 6,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-alu_operator_xor_or",
+      "mem_delay": 0,
+      "retired": 4,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-branch_inversion_blt",
+      "mem_delay": 0,
+      "retired": 5,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-writeback_forwarding_drop",
+      "mem_delay": 0,
+      "retired": 5,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-mem_handshake_drop",
+      "mem_delay": 0,
+      "retired": 6,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-and_to_or_alu",
+      "mem_delay": 0,
+      "retired": 5,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-fast_mul_decode_and_to_or",
+      "mem_delay": 0,
+      "retired": 14,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-fast_mul_rs2_signed_widened",
+      "mem_delay": 0,
+      "retired": 5,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-mem_addr_bit2_stuck",
+      "mem_delay": 0,
+      "retired": 7,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-slt_signed_as_unsigned",
+      "mem_delay": 0,
+      "retired": 5,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-beq_inverted",
+      "mem_delay": 0,
+      "retired": 5,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-lui_auipc_rd_x0",
+      "mem_delay": 0,
+      "retired": 5,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-store_after_store_dropped",
+      "mem_delay": 0,
+      "retired": 7,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-store_after_store_dropped_intermittent",
+      "mem_delay": 0,
+      "retired": 27,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-stale_latched_branch",
+      "mem_delay": 0,
+      "retired": 7,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "e0-alignment-probe",
+      "mem_delay": 0,
+      "retired": 11,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-001-alu-edge-fuzz-k0",
+      "mem_delay": 0,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-001-alu-edge-fuzz-k1",
+      "mem_delay": 0,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-001-alu-edge-fuzz-k2",
+      "mem_delay": 0,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-001-alu-edge-fuzz-k3",
+      "mem_delay": 0,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-001-alu-edge-fuzz-k4",
+      "mem_delay": 0,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-001-alu-edge-fuzz-k5",
+      "mem_delay": 0,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-001-alu-edge-fuzz-k6",
+      "mem_delay": 0,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-001-alu-edge-fuzz-k7",
+      "mem_delay": 0,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-001-alu-edge-fuzz-k8",
+      "mem_delay": 0,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-001-alu-edge-fuzz-k9",
+      "mem_delay": 0,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-002-mem-deps-fuzz-k0",
+      "mem_delay": 0,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-002-mem-deps-fuzz-k1",
+      "mem_delay": 0,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-002-mem-deps-fuzz-k2",
+      "mem_delay": 0,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-002-mem-deps-fuzz-k3",
+      "mem_delay": 0,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-002-mem-deps-fuzz-k4",
+      "mem_delay": 0,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-002-mem-deps-fuzz-k5",
+      "mem_delay": 0,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-002-mem-deps-fuzz-k6",
+      "mem_delay": 0,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-002-mem-deps-fuzz-k7",
+      "mem_delay": 0,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-002-mem-deps-fuzz-k8",
+      "mem_delay": 0,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-002-mem-deps-fuzz-k9",
+      "mem_delay": 0,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-003-branch-jump-fuzz-k0",
+      "mem_delay": 0,
+      "retired": 10,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-003-branch-jump-fuzz-k1",
+      "mem_delay": 0,
+      "retired": 10,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-003-branch-jump-fuzz-k2",
+      "mem_delay": 0,
+      "retired": 10,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-003-branch-jump-fuzz-k3",
+      "mem_delay": 0,
+      "retired": 11,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-003-branch-jump-fuzz-k4",
+      "mem_delay": 0,
+      "retired": 10,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-003-branch-jump-fuzz-k5",
+      "mem_delay": 0,
+      "retired": 11,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-003-branch-jump-fuzz-k6",
+      "mem_delay": 0,
+      "retired": 10,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-003-branch-jump-fuzz-k7",
+      "mem_delay": 0,
+      "retired": 11,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-003-branch-jump-fuzz-k8",
+      "mem_delay": 0,
+      "retired": 10,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-003-branch-jump-fuzz-k9",
+      "mem_delay": 0,
+      "retired": 10,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-001-alu-edge",
+      "mem_delay": 1,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-002-mem-deps",
+      "mem_delay": 1,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-003-branch-jump",
+      "mem_delay": 1,
+      "retired": 10,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "e0-m-extension",
+      "mem_delay": 1,
+      "retired": 10,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-approx_multiplier",
+      "mem_delay": 1,
+      "retired": 6,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-alu_operator_xor_or",
+      "mem_delay": 1,
+      "retired": 4,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-branch_inversion_blt",
+      "mem_delay": 1,
+      "retired": 5,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-writeback_forwarding_drop",
+      "mem_delay": 1,
+      "retired": 5,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-mem_handshake_drop",
+      "mem_delay": 1,
+      "retired": 6,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-and_to_or_alu",
+      "mem_delay": 1,
+      "retired": 5,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-fast_mul_decode_and_to_or",
+      "mem_delay": 1,
+      "retired": 14,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-fast_mul_rs2_signed_widened",
+      "mem_delay": 1,
+      "retired": 5,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-mem_addr_bit2_stuck",
+      "mem_delay": 1,
+      "retired": 7,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-slt_signed_as_unsigned",
+      "mem_delay": 1,
+      "retired": 5,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-beq_inverted",
+      "mem_delay": 1,
+      "retired": 5,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-lui_auipc_rd_x0",
+      "mem_delay": 1,
+      "retired": 5,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-store_after_store_dropped",
+      "mem_delay": 1,
+      "retired": 7,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-store_after_store_dropped_intermittent",
+      "mem_delay": 1,
+      "retired": 27,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-stale_latched_branch",
+      "mem_delay": 1,
+      "retired": 7,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "e0-alignment-probe",
+      "mem_delay": 1,
+      "retired": 11,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-001-alu-edge-fuzz-k0",
+      "mem_delay": 1,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-001-alu-edge-fuzz-k1",
+      "mem_delay": 1,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-001-alu-edge-fuzz-k2",
+      "mem_delay": 1,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-001-alu-edge-fuzz-k3",
+      "mem_delay": 1,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-001-alu-edge-fuzz-k4",
+      "mem_delay": 1,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-001-alu-edge-fuzz-k5",
+      "mem_delay": 1,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-001-alu-edge-fuzz-k6",
+      "mem_delay": 1,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-001-alu-edge-fuzz-k7",
+      "mem_delay": 1,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-001-alu-edge-fuzz-k8",
+      "mem_delay": 1,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-001-alu-edge-fuzz-k9",
+      "mem_delay": 1,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-002-mem-deps-fuzz-k0",
+      "mem_delay": 1,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-002-mem-deps-fuzz-k1",
+      "mem_delay": 1,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-002-mem-deps-fuzz-k2",
+      "mem_delay": 1,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-002-mem-deps-fuzz-k3",
+      "mem_delay": 1,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-002-mem-deps-fuzz-k4",
+      "mem_delay": 1,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-002-mem-deps-fuzz-k5",
+      "mem_delay": 1,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-002-mem-deps-fuzz-k6",
+      "mem_delay": 1,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-002-mem-deps-fuzz-k7",
+      "mem_delay": 1,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-002-mem-deps-fuzz-k8",
+      "mem_delay": 1,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-002-mem-deps-fuzz-k9",
+      "mem_delay": 1,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-003-branch-jump-fuzz-k0",
+      "mem_delay": 1,
+      "retired": 10,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-003-branch-jump-fuzz-k1",
+      "mem_delay": 1,
+      "retired": 10,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-003-branch-jump-fuzz-k2",
+      "mem_delay": 1,
+      "retired": 10,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-003-branch-jump-fuzz-k3",
+      "mem_delay": 1,
+      "retired": 11,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-003-branch-jump-fuzz-k4",
+      "mem_delay": 1,
+      "retired": 10,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-003-branch-jump-fuzz-k5",
+      "mem_delay": 1,
+      "retired": 11,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-003-branch-jump-fuzz-k6",
+      "mem_delay": 1,
+      "retired": 10,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-003-branch-jump-fuzz-k7",
+      "mem_delay": 1,
+      "retired": 11,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-003-branch-jump-fuzz-k8",
+      "mem_delay": 1,
+      "retired": 10,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-003-branch-jump-fuzz-k9",
+      "mem_delay": 1,
+      "retired": 10,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-001-alu-edge",
+      "mem_delay": 3,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-002-mem-deps",
+      "mem_delay": 3,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-003-branch-jump",
+      "mem_delay": 3,
+      "retired": 10,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "e0-m-extension",
+      "mem_delay": 3,
+      "retired": 10,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-approx_multiplier",
+      "mem_delay": 3,
+      "retired": 6,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-alu_operator_xor_or",
+      "mem_delay": 3,
+      "retired": 4,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-branch_inversion_blt",
+      "mem_delay": 3,
+      "retired": 5,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-writeback_forwarding_drop",
+      "mem_delay": 3,
+      "retired": 5,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-mem_handshake_drop",
+      "mem_delay": 3,
+      "retired": 6,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-and_to_or_alu",
+      "mem_delay": 3,
+      "retired": 5,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-fast_mul_decode_and_to_or",
+      "mem_delay": 3,
+      "retired": 14,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-fast_mul_rs2_signed_widened",
+      "mem_delay": 3,
+      "retired": 5,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-mem_addr_bit2_stuck",
+      "mem_delay": 3,
+      "retired": 7,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-slt_signed_as_unsigned",
+      "mem_delay": 3,
+      "retired": 5,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-beq_inverted",
+      "mem_delay": 3,
+      "retired": 5,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-lui_auipc_rd_x0",
+      "mem_delay": 3,
+      "retired": 5,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-store_after_store_dropped",
+      "mem_delay": 3,
+      "retired": 7,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-store_after_store_dropped_intermittent",
+      "mem_delay": 3,
+      "retired": 27,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "bug-targeted-stale_latched_branch",
+      "mem_delay": 3,
+      "retired": 7,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "e0-alignment-probe",
+      "mem_delay": 3,
+      "retired": 11,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-001-alu-edge-fuzz-k0",
+      "mem_delay": 3,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-001-alu-edge-fuzz-k1",
+      "mem_delay": 3,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-001-alu-edge-fuzz-k2",
+      "mem_delay": 3,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-001-alu-edge-fuzz-k3",
+      "mem_delay": 3,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-001-alu-edge-fuzz-k4",
+      "mem_delay": 3,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-001-alu-edge-fuzz-k5",
+      "mem_delay": 3,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-001-alu-edge-fuzz-k6",
+      "mem_delay": 3,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-001-alu-edge-fuzz-k7",
+      "mem_delay": 3,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-001-alu-edge-fuzz-k8",
+      "mem_delay": 3,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-001-alu-edge-fuzz-k9",
+      "mem_delay": 3,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-002-mem-deps-fuzz-k0",
+      "mem_delay": 3,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-002-mem-deps-fuzz-k1",
+      "mem_delay": 3,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-002-mem-deps-fuzz-k2",
+      "mem_delay": 3,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-002-mem-deps-fuzz-k3",
+      "mem_delay": 3,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-002-mem-deps-fuzz-k4",
+      "mem_delay": 3,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-002-mem-deps-fuzz-k5",
+      "mem_delay": 3,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-002-mem-deps-fuzz-k6",
+      "mem_delay": 3,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-002-mem-deps-fuzz-k7",
+      "mem_delay": 3,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-002-mem-deps-fuzz-k8",
+      "mem_delay": 3,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-002-mem-deps-fuzz-k9",
+      "mem_delay": 3,
+      "retired": 13,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-003-branch-jump-fuzz-k0",
+      "mem_delay": 3,
+      "retired": 10,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-003-branch-jump-fuzz-k1",
+      "mem_delay": 3,
+      "retired": 10,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-003-branch-jump-fuzz-k2",
+      "mem_delay": 3,
+      "retired": 10,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-003-branch-jump-fuzz-k3",
+      "mem_delay": 3,
+      "retired": 11,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-003-branch-jump-fuzz-k4",
+      "mem_delay": 3,
+      "retired": 10,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-003-branch-jump-fuzz-k5",
+      "mem_delay": 3,
+      "retired": 11,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-003-branch-jump-fuzz-k6",
+      "mem_delay": 3,
+      "retired": 10,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-003-branch-jump-fuzz-k7",
+      "mem_delay": 3,
+      "retired": 11,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-003-branch-jump-fuzz-k8",
+      "mem_delay": 3,
+      "retired": 10,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    },
+    {
+      "program_id": "rv32i-seed-003-branch-jump-fuzz-k9",
+      "mem_delay": 3,
+      "retired": 10,
+      "ok": true,
+      "error": null,
+      "first_mismatch": null
+    }
+  ]
+}

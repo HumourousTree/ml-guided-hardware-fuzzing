@@ -1,0 +1,127 @@
+{
+  "and_to_or_alu": {
+    "name": "Bitwise AND mutated to OR in the ALU",
+    "level": "L1",
+    "subsystem": "alu",
+    "note": "The brief named picorv32_pcpi_fast_mul, but that module contains no bitwise AND; the AND/OR operator mutation lives in the ALU.",
+    "edits": [
+      {
+        "marker": "alu_out = reg_op1 & reg_op2;",
+        "replacement": "alu_out = reg_op1 | reg_op2;"
+      }
+    ]
+  },
+  "fast_mul_decode_and_to_or": {
+    "name": "Logical AND mutated to OR in the picorv32_pcpi_fast_mul instruction decode (literal brief)",
+    "level": "L1",
+    "subsystem": "multiplier",
+    "note": "The only AND operators in picorv32_pcpi_fast_mul are logical (&&). Mutating the decode term is the literal reading of the brief; it is expected to be an equivalent mutant in this configuration because the funct3 case below it still selects only MUL/MULH/MULHSU/MULHU.",
+    "edits": [
+      {
+        "marker": "wire pcpi_insn_valid = pcpi_valid && pcpi_insn[6:0] == 7'b0110011 && pcpi_insn[31:25] == 7'b0000001;",
+        "replacement": "wire pcpi_insn_valid = pcpi_valid && (pcpi_insn[6:0] == 7'b0110011 || pcpi_insn[31:25] == 7'b0000001);"
+      }
+    ]
+  },
+  "fast_mul_rs2_signed_widened": {
+    "name": "Signedness mask widened in picorv32_pcpi_fast_mul (MULHSU treats rs2 as signed)",
+    "level": "L1",
+    "subsystem": "multiplier",
+    "note": "Observable bit-level operator fault inside picorv32_pcpi_fast_mul: the reduction-OR that selects signed rs2 gains MULHSU.",
+    "edits": [
+      {
+        "marker": "wire instr_rs2_signed = |{instr_mulh};\n\n\treg shift_out;",
+        "replacement": "wire instr_rs2_signed = |{instr_mulh, instr_mulhsu};\n\n\treg shift_out;"
+      }
+    ]
+  },
+  "mem_addr_bit2_stuck": {
+    "name": "Stuck-at-0 on data address bit 2",
+    "level": "L1",
+    "subsystem": "memory",
+    "note": "Bit 0/1 are already zero (word-aligned address), so a stuck-at there is a no-op; bit 2 is the lowest observable bit. Fetch addresses are left intact.",
+    "edits": [
+      {
+        "marker": "mem_addr <= mem_la_addr;",
+        "replacement": "mem_addr <= (mem_do_prefetch || mem_do_rinst) ? mem_la_addr : (mem_la_addr & ~32'h00000004);"
+      }
+    ]
+  },
+  "slt_signed_as_unsigned": {
+    "name": "Signed less-than computed unsigned (subtle, no magic constants)",
+    "level": "L1",
+    "subsystem": "alu",
+    "edits": [
+      {
+        "marker": "alu_lts = $signed(reg_op1) < $signed(reg_op2);",
+        "replacement": "alu_lts = reg_op1 < reg_op2;"
+      }
+    ]
+  },
+  "beq_inverted": {
+    "name": "BEQ condition inverted",
+    "level": "L2",
+    "subsystem": "branch",
+    "edits": [
+      {
+        "marker": "alu_out_0 = alu_eq;",
+        "replacement": "alu_out_0 = !alu_eq;"
+      }
+    ]
+  },
+  "lui_auipc_rd_x0": {
+    "name": "LUI/AUIPC write-back routed to x0",
+    "level": "L2",
+    "subsystem": "regfile",
+    "edits": [
+      {
+        "marker": "latched_rd <= decoded_rd;",
+        "replacement": "latched_rd <= (instr_lui || instr_auipc) ? 6'd0 : decoded_rd;"
+      }
+    ]
+  },
+  "store_after_store_dropped": {
+    "name": "Second of two back-to-back data stores loses its write strobe",
+    "level": "L3",
+    "subsystem": "memory",
+    "note": "Bus-level back-to-back = a data store completes and no data load intervenes (instruction fetches are ignored). mem_ready itself is a testbench input, so the fault is injected in the core's reaction to it.",
+    "edits": [
+      {
+        "marker": "assign mem_xfer = (mem_valid && mem_ready) || (mem_la_use_prefetched_high_word && mem_do_rinst);",
+        "replacement": "assign mem_xfer = (mem_valid && mem_ready) || (mem_la_use_prefetched_high_word && mem_do_rinst);\n\treg bug_prev_data_store;\n\talways @(posedge clk) begin\n\t\tif (!resetn) bug_prev_data_store <= 0;\n\t\telse if (mem_state == 2 && mem_xfer) bug_prev_data_store <= 1;\n\t\telse if (mem_state == 1 && mem_xfer && !mem_instr) bug_prev_data_store <= 0;\n\tend"
+      },
+      {
+        "marker": "mem_wstrb <= mem_la_wstrb & {4{mem_la_write}};",
+        "replacement": "mem_wstrb <= mem_la_wstrb & {4{mem_la_write && !bug_prev_data_store}};"
+      }
+    ]
+  },
+  "store_after_store_dropped_intermittent": {
+    "name": "Intermittent write-strobe drop on back-to-back stores (fires when a free-running 3-bit counter is 0)",
+    "level": "L3",
+    "subsystem": "memory",
+    "note": "Closer to the brief's 'intermittent mem_ready handshake drop': the fault depends on cycle timing, so whether a given back-to-back store pair is hit depends on program layout and memory wait states.",
+    "edits": [
+      {
+        "marker": "assign mem_xfer = (mem_valid && mem_ready) || (mem_la_use_prefetched_high_word && mem_do_rinst);",
+        "replacement": "assign mem_xfer = (mem_valid && mem_ready) || (mem_la_use_prefetched_high_word && mem_do_rinst);\n\treg bug_prev_data_store;\n\treg [2:0] bug_phase;\n\talways @(posedge clk) begin\n\t\tbug_phase <= resetn ? bug_phase + 3'd1 : 3'd0;\n\t\tif (!resetn) bug_prev_data_store <= 0;\n\t\telse if (mem_state == 2 && mem_xfer) bug_prev_data_store <= 1;\n\t\telse if (mem_state == 1 && mem_xfer && !mem_instr) bug_prev_data_store <= 0;\n\tend"
+      },
+      {
+        "marker": "mem_wstrb <= mem_la_wstrb & {4{mem_la_write}};",
+        "replacement": "mem_wstrb <= mem_la_wstrb & {4{mem_la_write && !(bug_prev_data_store && bug_phase == 3'd0)}};"
+      }
+    ]
+  },
+  "stale_latched_branch": {
+    "name": "latched_branch not cleared at instruction launch (uncleared state flag)",
+    "level": "L3",
+    "subsystem": "control",
+    "note": "Substitute for 'uncleaned interrupt trap flags': ENABLE_IRQ=0 in this build and the ISS has no interrupt model, so an IRQ flag fault would be unobservable by construction.",
+    "edits": [
+      {
+        "marker": "latched_stalu <= 0;\n\t\t\t\tlatched_branch <= 0;",
+        "replacement": "latched_stalu <= 0;"
+      }
+    ]
+  }
+}

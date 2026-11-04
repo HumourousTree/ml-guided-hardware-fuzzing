@@ -1,0 +1,15 @@
+--- golden/picorv32.v
++++ patched/store_after_store_dropped__lint-oracle
+@@ -371,6 +371,12 @@
+ 
+ 	wire mem_la_use_prefetched_high_word = COMPRESSED_ISA && mem_la_firstword && prefetched_high_word && !clear_prefetched_high_word;
+ 	assign mem_xfer = (mem_valid && mem_ready) || (mem_la_use_prefetched_high_word && mem_do_rinst);
++	reg bug_prev_data_store;
++	always @(posedge clk) begin
++		if (!resetn) bug_prev_data_store <= 0;
++		else if (mem_state == 2 && mem_xfer) bug_prev_data_store <= 1;
++		else if (mem_state == 1 && mem_xfer && !mem_instr) bug_prev_data_store <= 0;
++	end
+ 
+ 	wire mem_busy = |{mem_do_prefetch, mem_do_rinst, mem_do_rdata, mem_do_wdata};
+ 	wire mem_done = resetn && ((mem_xfer && |mem_state && (mem_do_rinst || mem_do_rdata || mem_do_wdata)) || (&mem_state && mem_do_rinst)) &&

@@ -1,2 +1,3 @@
-google-genai
-streamlit
+google-genai        # LLM generation / repair (optional; needs GEMINI_API_KEY)
+streamlit           # dashboard.py
+matplotlib          # tools/compare_literature.py figures

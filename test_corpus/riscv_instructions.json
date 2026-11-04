@@ -58,5 +58,67 @@
       "0x00300313",
       "0x00000013"
     ]
+  },
+  {
+    "id": "rv32i-seed-mut-exp-536",
+    "description": "High-yield seed fallback mutation with boundary arithmetic and hazard chains",
+    "base": "0x00000000",
+    "words": [
+      "0x00100713",
+      "0x00e702b3",
+      "0x40570333",
+      "0x3ff00413",
+      "0x008400b3",
+      "0x00809733",
+      "0x0262c433",
+      "0x0251e4b3",
+      "0x00100113",
+      "0x01f11113",
+      "0x00708023",
+      "0x00009603",
+      "0x0062c463",
+      "0x00000013",
+      "0x00000013"
+    ]
+  },
+  {
+    "id": "rv32i-seed-mut-exp-544",
+    "description": "High-yield seed fallback mutation with boundary arithmetic and hazard chains",
+    "base": "0x00000000",
+    "words": [
+      "0x7ff00313",
+      "0x00630533",
+      "0x40a306b3",
+      "0x00a413b3",
+      "0x06300193",
+      "0x00100193",
+      "0x0020c463",
+      "0x06300213",
+      "0x80000493",
+      "0x00948533",
+      "0x00951133",
+      "0x00300313",
+      "0x00000013"
+    ]
+  },
+  {
+    "id": "rv32i-seed-mut-exp-552",
+    "description": "High-yield seed fallback mutation with boundary arithmetic and hazard chains",
+    "base": "0x00000000",
+    "words": [
+      "0x7ff00293",
+      "0x005281b3",
+      "0x403286b3",
+      "0x00209463",
+      "0x06300193",
+      "0x80000213",
+      "0x004206b3",
+      "0x00469133",
+      "0x00200213",
+      "0x008002ef",
+      "0x06300313",
+      "0x00300313",
+      "0x00000013"
+    ]
   }
 ]

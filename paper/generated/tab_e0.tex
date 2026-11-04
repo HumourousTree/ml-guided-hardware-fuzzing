@@ -1,0 +1,7 @@
+\begin{tabular}{@{}l l r r c c c@{}}\toprule
+RTL & Commit & Matched & Retired & Aligned & FENCE & FENCE rd$\neq$0\\
+& & runs & insns & conv. & (P6) & ($x_2{=}123$?)\\\midrule
+YosysHQ master & \texttt{ef203c2} & 150/150 & 1,599 & yes & matches & x2=0\\
+f00a88c (Cascade) & \texttt{f00a88c} & 150/150 & 1,599 & yes & trap & trap\\
+golden copy & \texttt{--} & 150/150 & 1,599 & yes & matches & x2=0\\
+\bottomrule\end{tabular}

@@ -1,0 +1,9 @@
+{
+ "unproven": [
+  [
+   "\\mem_la_write_gold",
+   "\\mem_la_write_gate"
+  ]
+ ],
+ "summary": "Found a total of 1 unproven $equiv cells.\n\nEnd of script. Logfile hash: c5424a2298, CPU: user 70.49s system 0.43s, MEM: 641.22 MB peak\nYosys 0.52 (git sha1 fee39a3284c90249e1d9684cf6944ffbbcbb8f90)\nTime spent: 86% 1x equiv_induct (61 sec), 7% 1x equiv_simple (5 sec), ...\n"
+}

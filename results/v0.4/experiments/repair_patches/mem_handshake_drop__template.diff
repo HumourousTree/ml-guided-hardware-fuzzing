@@ -1,0 +1,11 @@
+--- golden/picorv32.v
++++ patched/mem_handshake_drop__template
+@@ -376,7 +376,7 @@
+ 	wire mem_done = resetn && ((mem_xfer && |mem_state && (mem_do_rinst || mem_do_rdata || mem_do_wdata)) || (&mem_state && mem_do_rinst)) &&
+ 			(!mem_la_firstword || (~&mem_rdata_latched[1:0] && mem_xfer));
+ 
+-	assign mem_la_write = resetn && !mem_state && mem_do_wdata;
++	assign mem_la_write = resetn && !mem_state || mem_do_wdata && !(reg_op1[1:0] == 2'b10 && mem_wordsize == 1);
+ 	assign mem_la_read = resetn && ((!mem_la_use_prefetched_high_word && !mem_state && (mem_do_rinst || mem_do_prefetch || mem_do_rdata)) ||
+ 			(COMPRESSED_ISA && mem_xfer && (!last_mem_valid ? mem_la_firstword : mem_la_firstword_reg) && !mem_la_secondword && &mem_rdata_latched[1:0]));
+ 	assign mem_la_addr = (mem_do_prefetch || mem_do_rinst) ? {next_pc[31:2] + mem_la_firstword_xfer, 2'b00} : {reg_op1[31:2], 2'b00};

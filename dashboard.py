@@ -115,15 +115,15 @@ with st.sidebar:
     st.markdown("---")
     col_btn1, col_btn2 = st.columns(2)
     with col_btn1:
-        launch = st.button("Start Campaign", type="primary", use_container_width=True, disabled=worker_running)
+        launch = st.button("Start Campaign", type="primary", width="stretch", disabled=worker_running)
     with col_btn2:
-        stop = st.button("Stop Campaign", use_container_width=True, disabled=not worker_running)
+        stop = st.button("Stop Campaign", width="stretch", disabled=not worker_running)
 
     col_btn3, col_btn4 = st.columns(2)
     with col_btn3:
-        refresh = st.button("Refresh", use_container_width=True)
+        refresh = st.button("Refresh", width="stretch")
     with col_btn4:
-        reset = st.button("Clear History", use_container_width=True, disabled=worker_running)
+        reset = st.button("Clear History", width="stretch", disabled=worker_running)
 
     # ── Bug Injection Panel ────────────────────────────────────────────────────
     st.markdown("---")
@@ -164,7 +164,7 @@ with st.sidebar:
 
             _inj_col, _rst_col = st.columns(2)
             with _inj_col:
-                if st.button("Inject Selected", use_container_width=True,
+                if st.button("Inject Selected", width="stretch",
                              disabled=worker_running or not _selected_bugs):
                     try:
                         ok = _inject_multiple(_selected_bugs)
@@ -177,7 +177,7 @@ with st.sidebar:
                     st.rerun()
 
             with _rst_col:
-                if st.button("Restore Golden", use_container_width=True,
+                if st.button("Restore Golden", width="stretch",
                              disabled=worker_running):
                     try:
                         _restore_golden()
@@ -413,7 +413,7 @@ def render_dashboard():
                 "Details / Filter Reason": v.get("reason"),
                 "Instructions": v.get("instruction_count"),
             })
-        st.dataframe(fuzz_table, use_container_width=True, hide_index=True)
+        st.dataframe(fuzz_table, width="stretch", hide_index=True)
 
     # ── Section: Adaptive Delta-Debugging & Root-Cause Pinpointing ─────────────
     delta_debug = telemetry.get("delta_debug", {})
@@ -516,7 +516,7 @@ def render_dashboard():
             "Timestamp": it.get("finished_at", "")[-12:-4],
         })
     if rows:
-        st.dataframe(rows, use_container_width=True, hide_index=True)
+        st.dataframe(rows, width="stretch", hide_index=True)
 
     # ── Section: Verilator & Process Diagnostics Log ──────────────────────────
     with st.expander("Verilator Compiler & Worker Process Diagnostics", expanded=False):

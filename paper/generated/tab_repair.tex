@@ -1,0 +1,18 @@
+\begin{tabular}{@{}l c c c c r c c@{}}\toprule
+& \multicolumn{3}{c}{Guard controls} & \multicolumn{4}{c}{SBFL template repair (budget 30)}\\\cmidrule(lr){2-4}\cmidrule(l){5-8}
+Bug & Oracle & Lint$\rightarrow$retry & No-op & Acc. & Tried & Held-out & Formal\\\midrule
+\texttt{alu\_operator\_xor\_or} & \checkmark & \checkmark & rej. & \checkmark & 15 & 400/400 & proven\\
+\texttt{and\_to\_or\_alu} & \checkmark & \checkmark & rej. & \checkmark & 14 & 400/400 & ident.\\
+\texttt{approx\_multiplier} & \checkmark & \checkmark & rej. & \checkmark & 27 & 400/400 & n.p.$^\dagger$\\
+\texttt{beq\_inverted} & \checkmark & \checkmark & rej. & \checkmark & 15 & 400/400 & ident.\\
+\texttt{branch\_inversion\_blt} & \checkmark & \checkmark & rej. & $\times$ & 30 & -- & --\\
+\texttt{fast\_mul\_rs2\_signed\_widened} & \checkmark & \checkmark & rej. & \checkmark & 11 & 400/400 & ident.\\
+\texttt{lui\_auipc\_rd\_x0} & \checkmark & \checkmark & rej. & $\times$ & 30 & -- & --\\
+\texttt{mem\_addr\_bit2\_stuck} & \checkmark & \checkmark & rej. & \checkmark & 18 & 400/400 & ident.\\
+\texttt{mem\_handshake\_drop} & \checkmark & \checkmark & rej. & \checkmark & 6 & 400/400 & n.p.$^\ddagger$\\
+\texttt{slt\_signed\_as\_unsigned} & \checkmark & \checkmark & rej. & $\times$ & 30 & -- & --\\
+\texttt{stale\_latched\_branch} & \checkmark & \checkmark & rej. & $\times$ & 30 & -- & --\\
+\texttt{store\_after\_store\_dropped} & \checkmark & \checkmark & rej. & \checkmark & 16 & 400/400 & proven\\
+\texttt{store\_after\_store\_dropped\_intermittent} & \checkmark & \checkmark & rej. & \checkmark & 16 & 400/400 & proven\\
+\texttt{writeback\_forwarding\_drop} & \checkmark & \checkmark & rej. & $\times$ & 30 & -- & --\\
+\bottomrule\end{tabular}

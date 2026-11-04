@@ -1,0 +1,10 @@
+{
+  "fast_mul_decode_and_to_or": {
+    "verdict": "not_proven",
+    "seconds": 600.3
+  },
+  "fast_mul_rs2_signed_widened": {
+    "verdict": "not_proven",
+    "seconds": 600.4
+  }
+}
