@@ -633,6 +633,16 @@ def section_llm_repair(logs, M, md):
         rows[tag] = recs
     fb = [r["feedback_run"] for r in informed.get(main_model, {}).values() if "feedback_run" in r]
     M["LlmFeedbackRuns"], M["LlmFeedbackCert"] = len(fb), sum(x["certified"] for x in fb)
+    # bugs repaired (certified) by the LLM in any of its samples or its feedback run, versus the template baseline
+    done = {b: r for b, r in informed.get(main_model, {}).items() if r.get("complete")}
+    llm_ok = {b for b, r in done.items()
+              if any(s["certified"] for s in r["independent"]) or (r.get("feedback_run") or {}).get("certified")}
+    tpl_ok = {k.split("|")[0] for k, r in tpl.items() if k.endswith("|template") and r.get("accepted")
+              and (r.get("formal") or {}).get("verdict") in ("identical", "proven")}
+    M["LlmSolved"], M["TplSolved"] = len(llm_ok), len(tpl_ok & set(done))
+    M["LlmOnly"], M["TplOnly"] = len(llm_ok - tpl_ok), len((tpl_ok & set(done)) - llm_ok)
+    M["LlmOnlyList"] = tex_escape(", ".join(sorted(llm_ok - tpl_ok))) or "none"
+    M["LlmUnsolvedList"] = tex_escape(", ".join(sorted(set(done) - llm_ok))) or "none"
     strong = {m: r for m, r in informed.items() if m != main_model}
     for m, recs in strong.items():
         v, n = agg(recs, "pass@1_certified")
