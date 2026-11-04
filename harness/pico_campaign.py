@@ -54,6 +54,8 @@ _REJECTED_NOTES: dict[tuple[str, str], str] = {}   # (rtl sha, subsystem) -> why
 _GEMINI_MAX_TURNS = 8      # recreate the chat session so history (huge RTL prompts) cannot grow without bound
 
 from harness.llm_budget import BUDGET as _LLM_BUDGET    # free-tier request budget (daily cap, interval, stop on 429)
+_TRANSIENT_MARKERS = ("503", "UNAVAILABLE", "500 INTERNAL", "504", "DEADLINE_EXCEEDED", "timed out", "ReadTimeout")
+_TRANSIENT_BACKOFF_S = (15, 45, 120, 240)               # retries of the same model on a temporary server-side error
 
 from harness.riscv_cosim import (
     HW_PARAMS,
@@ -187,33 +189,41 @@ def _generate_with_gemini(client, models: list[str], prompt: str, purpose: str =
     metered = _GENAI_AVAILABLE and isinstance(client, _genai_module.Client)
     attempts = []
     for model in models:
-        if metered:
-            allowed, reason = _LLM_BUDGET.acquire(model)
-            if not allowed:
-                attempts.append({"model": model, "ok": False, "error": f"budget: {reason}"})
-                continue
-        try:
-            chat = _GEMINI_CHATS.get(model)
-            if chat is None or _GEMINI_TURNS.get(model, 0) >= _GEMINI_MAX_TURNS:
-                chat = client.chats.create(model=model)
-                _GEMINI_CHATS[model] = chat
-                _GEMINI_TURNS[model] = 0
-            _GEMINI_TURNS[model] += 1
-            response = chat.send_message(prompt)
-            text = getattr(response, "text", None)
-            if isinstance(text, str) and text.strip():
-                attempts.append({"model": model, "ok": True})
+        for retry in range(len(_TRANSIENT_BACKOFF_S) + 1):
+            if metered:
+                allowed, reason = _LLM_BUDGET.acquire(model)
+                if not allowed:
+                    attempts.append({"model": model, "ok": False, "error": f"budget: {reason}"})
+                    break
+            try:
+                chat = _GEMINI_CHATS.get(model)
+                if chat is None or _GEMINI_TURNS.get(model, 0) >= _GEMINI_MAX_TURNS:
+                    chat = client.chats.create(model=model)
+                    _GEMINI_CHATS[model] = chat
+                    _GEMINI_TURNS[model] = 0
+                _GEMINI_TURNS[model] += 1
+                response = chat.send_message(prompt)
+                text = getattr(response, "text", None)
+                if isinstance(text, str) and text.strip():
+                    attempts.append({"model": model, "ok": True})
+                    if metered:
+                        _LLM_BUDGET.record(model, True, purpose, len(prompt), len(text))
+                    return text.strip(), model, attempts
+                attempts.append({"model": model, "ok": False, "error": "empty response"})
                 if metered:
-                    _LLM_BUDGET.record(model, True, purpose, len(prompt), len(text))
-                return text.strip(), model, attempts
-            attempts.append({"model": model, "ok": False, "error": "empty response"})
-            if metered:
-                _LLM_BUDGET.record(model, False, purpose, len(prompt), 0, "empty response")
-        except Exception as exc:
-            _GEMINI_CHATS.pop(model, None)
-            attempts.append({"model": model, "ok": False, "error": f"{type(exc).__name__}: {exc}"})
-            if metered:
-                _LLM_BUDGET.record(model, False, purpose, len(prompt), 0, f"{type(exc).__name__}: {exc}")
+                    _LLM_BUDGET.record(model, False, purpose, len(prompt), 0, "empty response")
+                break
+            except Exception as exc:
+                _GEMINI_CHATS.pop(model, None)
+                err = f"{type(exc).__name__}: {exc}"
+                attempts.append({"model": model, "ok": False, "error": err})
+                if metered:
+                    _LLM_BUDGET.record(model, False, purpose, len(prompt), 0, err)
+                # temporary server-side overload: wait and retry the same model; anything else (incl. quota) moves on
+                if metered and retry < len(_TRANSIENT_BACKOFF_S) and any(m in err for m in _TRANSIENT_MARKERS):
+                    time.sleep(_TRANSIENT_BACKOFF_S[retry])
+                    continue
+                break
     print(f"[pico_campaign] Gemini request failed: {attempts}", file=sys.stderr)
     return None, None, attempts
 

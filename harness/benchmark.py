@@ -20,23 +20,26 @@ import time
 from pathlib import Path
 
 from harness.asm import assemble
-from harness.riscv_cosim import (analyze_program, build_and_simulate_program, compare_rvfi_trace, parse_verilator_dat,
+from harness.riscv_cosim import (analyze_program, build_and_simulate_program, compare_end_state, compare_rvfi_trace,
+                                 parse_verilator_dat,
                                  get_space_safe_tempdir, prepare_simulator, validate_program)
 
 
 # ── backends ─────────────────────────────────────────────────────────────────
 
 class RunResult:
-    def __init__(self, ok, retired, covered, mismatch, error=None, mismatch_info=None):
+    def __init__(self, ok, retired, covered, mismatch, error=None, mismatch_info=None, mismatch_end=None):
         self.ok, self.retired, self.covered, self.mismatch, self.error = ok, retired, covered, mismatch, error
         self.mismatch_info = mismatch_info
+        self.mismatch_end = mismatch_end          # end-state oracle verdict (None = not evaluated)
 
 
 class VerilatorBackend:
     """Runs a program on the Verilated RTL; covered = coverage points with a non-zero count in *this* run."""
 
-    def __init__(self, rtl_path: Path, workdir: Path, mem_delay: int = 0):
+    def __init__(self, rtl_path: Path, workdir: Path, mem_delay: int = 0, end_state: bool = False):
         self.rtl_path, self.workdir, self.mem_delay = Path(rtl_path), Path(workdir), mem_delay
+        self.end_state = end_state
         self.universe: set[str] = set()
 
     def run(self, program: dict) -> RunResult:
@@ -55,7 +58,8 @@ class VerilatorBackend:
         mm = (cmp["mismatches"] or [None])[0]
         info = mm and {"kind": mm.get("kind"), "insn_hex": mm.get("insn_hex"), "insn": mm.get("insn_disasm"),
                        "retire_order": mm.get("retire_order"), "fields": sorted((mm.get("differences") or {}).keys())}
-        return RunResult(True, sim["retired"], covered, bool(cmp["mismatches"]), mismatch_info=info)
+        end = (not compare_end_state(program, sim["hardware_trace"])["ok"]) if self.end_state else None
+        return RunResult(True, sim["retired"], covered, bool(cmp["mismatches"]), mismatch_info=info, mismatch_end=end)
 
 
 # ── generators ───────────────────────────────────────────────────────────────
@@ -250,7 +254,7 @@ def run_campaign(backend, gen, *, budget_seconds: float | None = None, budget_pr
     t0 = clock()
     covered: set[str] = set()
     pages: dict[str, int] = {}
-    series, n_prog, n_ins, bug, harness_error = [], 0, 0, None, None
+    series, n_prog, n_ins, bug, bug_end, harness_error = [], 0, 0, None, None, None
     state = {"covered": covered, "universe": backend.universe, "pct_history": [], "n_programs": 0, "t": 0.0}
     while harness_error is None:
         state["t"] = clock() - t0
@@ -286,15 +290,21 @@ def run_campaign(backend, gen, *, budget_seconds: float | None = None, budget_pr
                 bug = {"program": prog.get("id"), "n_programs": n_prog, "n_instructions": n_ins, "t": round(clock() - t0, 4),
                        "words": prog.get("words"),      # kept so the failure can be re-run and delta-debugged later
                        "mismatch": getattr(res, "mismatch_info", None)}
-                if stop_on_bug: break
-        if stop_on_bug and bug: break
+            if getattr(res, "mismatch_end", None) and bug_end is None:
+                bug_end = {"program": prog.get("id"), "n_programs": n_prog, "n_instructions": n_ins,
+                           "t": round(clock() - t0, 4), "words": prog.get("words")}
+            # with the end-state oracle on, keep going after the lockstep detection until it fires too (paired latency)
+            done = bug is not None and (bug_end is not None or not getattr(backend, "end_state", False))
+            if stop_on_bug and done: break
+        if stop_on_bug and bug is not None and (bug_end is not None or not getattr(backend, "end_state", False)): break
     universe_pages: dict[str, int] = {}
     for k in backend.universe:
         universe_pages[page_of(k)] = universe_pages.get(page_of(k), 0) + 1
     return {"label": label or gen.name, "method": gen.name, "series": series, "universe": len(backend.universe),
             "harness_error": harness_error,
             "universe_pages": universe_pages,
-            "bug_detected": bug, "switched_at": getattr(gen, "switched_at", None),
+            "bug_detected": bug, "bug_detected_end_state": bug_end, "end_state_oracle": getattr(backend, "end_state", False),
+            "switched_at": getattr(gen, "switched_at", None),
             "covered_points": sorted(covered), "wall_seconds": round(clock() - t0, 3)}
 
 
@@ -312,6 +322,9 @@ def main():
     ap.add_argument("--mem-delay", type=int, default=0, help="max random memory wait states (same for every method)")
     ap.add_argument("--fence-rate", type=float, default=0.0, help="probability of a FENCE per generated slot (Cascade P6 study)")
     ap.add_argument("--stop-on-mismatch", action="store_true", help="stop at the first mismatch even without --bug")
+    ap.add_argument("--llm-calls", type=int, default=None, help="cap on LLM requests per run (semantic/hybrid)")
+    ap.add_argument("--end-state", action="store_true",
+                    help="also evaluate the end-state oracle (final registers + memory) and record its first detection")
     ap.add_argument("--save-programs", action="store_true", help="write every validated program to <out>/<run>.programs.jsonl")
     a = ap.parse_args()
 
@@ -324,16 +337,22 @@ def main():
         rtl_copy = out / "rtl" / f"{a.bug}_s{a.seed_start}.sv"; rtl_copy.parent.mkdir(exist_ok=True); rtl_copy.write_text(text)
         a.rtl = str(rtl_copy)
     rtl_text = Path(a.rtl).read_text()
-    llm_fn = None
+    llm_fn, models = None, None
     if any(m in ("semantic", "hybrid") for m in a.methods):
         from harness.pico_campaign import _get_gemini_client, _generate_with_gemini
         client, models = _get_gemini_client()
         if client is None: raise SystemExit("semantic/hybrid need GEMINI_API_KEY (or run only random/mutation)")
-        llm_fn = lambda prompt: _generate_with_gemini(client, models, prompt, purpose="semantic_generation")[0]
+        llm_used = {"calls": 0}
+
+        def llm_fn(prompt):
+            if a.llm_calls is not None and llm_used["calls"] >= a.llm_calls:
+                return None                    # request allowance spent: the generator falls back to mutation
+            llm_used["calls"] += 1
+            return _generate_with_gemini(client, models, prompt, purpose="semantic_generation")[0]
     for seed in range(a.seed_start, a.seed_start + a.seeds):
         for m in a.methods:
             work = get_space_safe_tempdir(f"bench-{m}-{seed}-")
-            backend = VerilatorBackend(a.rtl, work, mem_delay=a.mem_delay)
+            backend = VerilatorBackend(a.rtl, work, mem_delay=a.mem_delay, end_state=a.end_state)
             prepare_simulator(Path(a.rtl), work)            # one-off Verilator build stays outside the timed region
             rng = random.Random(1000 + seed)
             rnd, mut = RandomGen(rng, a.length, a.fence_rate), MutationGen(random.Random(2000 + seed), a.length)
@@ -353,6 +372,9 @@ def main():
                 if plog: plog.close()
             res.update(seed=seed, bug=a.bug, rtl=a.rtl, mem_delay=a.mem_delay, length=a.length,
                        budget_seconds=a.budget_seconds, budget_programs=a.budget_programs, fence_rate=a.fence_rate)
+            sem = getattr(gen, "second", gen)
+            if hasattr(sem, "sg"):                     # semantic generator statistics (calls, fixes, hits, give-ups)
+                res.update(semantic_stats=dict(sem.sg.stats), llm_model=(models or [None])[0], llm_calls_cap=a.llm_calls)
             (out / f"{stem}.json").write_text(json.dumps(res))
             print(f"[{m} seed {seed}] programs={len(res['series'])} final={res['series'][-1]['pct'] if res['series'] else 0:.2f}% "
                   f"bug={res['bug_detected']} t={res['wall_seconds']}s", flush=True)

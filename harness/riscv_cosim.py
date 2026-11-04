@@ -600,6 +600,49 @@ def _lane_mask(mask: int) -> int:
     return sum(0xFF << (8 * i) for i in range(4) if mask & (1 << i))
 
 
+def _apply_retirement(regs: dict, mem: dict, rec: dict) -> None:
+    """Architectural effect of one retirement record: register write and byte-lane memory writes (word-aligned address)."""
+    rd = _as_int(rec.get("rd_addr", 0))
+    if rd:
+        regs[rd] = _u32(_as_int(rec.get("rd_wdata", 0)))
+    wmask = _as_int(rec.get("mem_wmask", 0)) & 0xF
+    if wmask:
+        base, data = _as_int(rec.get("mem_addr", 0)) & ~3, _as_int(rec.get("mem_wdata", 0))
+        for lane in range(4):
+            if wmask >> lane & 1:
+                mem[_u32(base + lane)] = (data >> (8 * lane)) & 0xFF
+
+
+def compare_end_state(program: dict, hardware_trace: list[dict]) -> dict:
+    """End-state oracle (TheHuzz/ChipFuzzer style): compare only the final register file and the bytes written to memory.
+
+    The RTL side is rebuilt from its own retirement records, the reference side from the reference model run to the end of
+    the program.  Intermediate divergences that leave no trace in the final state (overwritten registers, a wrong value
+    stored and later overwritten, a wrong branch that rejoins) are invisible to it, unlike the lockstep oracle.
+    """
+    words = [_as_int(w) for w in program.get("words", [])]
+    base = _as_int(program.get("base", 0))
+    prog_end = base + len(words) * 4
+    reference = RV32IReference(words, base)
+    exp_regs, exp_mem, act_regs, act_mem = {}, {}, {}, {}
+    steps = analyze_program(words, base).get("dynamic_steps", 0) or len(words) * 64
+    for _ in range(steps):
+        if not (base <= reference.pc < prog_end):
+            break
+        try:
+            _apply_retirement(exp_regs, exp_mem, reference.step())
+        except ValueError:
+            break
+    for rec in hardware_trace:
+        if rec.get("valid", False):
+            _apply_retirement(act_regs, act_mem, rec)
+    reg_diffs = {f"x{r}": {"expected": exp_regs.get(r, 0), "actual": act_regs.get(r, 0)}
+                 for r in sorted(set(exp_regs) | set(act_regs)) if exp_regs.get(r, 0) != act_regs.get(r, 0)}
+    mem_diffs = {f"0x{a:08x}": {"expected": exp_mem.get(a), "actual": act_mem.get(a)}
+                 for a in sorted(set(exp_mem) | set(act_mem)) if exp_mem.get(a) != act_mem.get(a)}
+    return {"ok": not reg_diffs and not mem_diffs, "reg_diffs": reg_diffs, "mem_diffs": dict(list(mem_diffs.items())[:16])}
+
+
 def compare_rvfi_trace(program: dict, hardware_trace: list[dict], normalize_pc: bool = False,
                        hardware_trap: bool = False, aligned_mem: bool | None = None) -> dict:
     """Compare the DUT retirement trace against the ISS in lockstep.

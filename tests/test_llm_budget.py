@@ -21,7 +21,8 @@ class FakeClock:
 def budget(limit=3, interval=10.0):
     d = Path(tempfile.mkdtemp())
     clk = FakeClock()
-    return LLMBudget(d / "b.json", d / "calls.jsonl", daily_limit=limit, min_interval_s=interval, clock=clk, sleep=clk.sleep), clk, d
+    return LLMBudget(d / "b.json", d / "calls.jsonl", daily_limit=limit, min_interval_s=interval, clock=clk, sleep=clk.sleep,
+                     model_limits={}), clk, d
 
 
 class TestLLMBudget(unittest.TestCase):
@@ -55,7 +56,26 @@ class TestLLMBudget(unittest.TestCase):
         b, clk, d = budget(limit=2, interval=0)
         b.acquire("m")
         b2 = LLMBudget(d / "b.json", d / "calls.jsonl", daily_limit=2, min_interval_s=0, clock=clk, sleep=clk.sleep)
-        self.assertEqual(b2.status()["used"], {"m": 1})
+        self.assertEqual(list(b2.status()["used"].values()), [1])
+
+    def test_per_model_limits_and_intervals(self):
+        d = Path(tempfile.mkdtemp()); clk = FakeClock()
+        b = LLMBudget(d / "b.json", d / "c.jsonl", daily_limit=1, min_interval_s=100, clock=clk, sleep=clk.sleep,
+                      model_limits={"fast": (3, 2.0)})
+        for _ in range(3):
+            self.assertTrue(b.acquire("fast")[0])
+        self.assertFalse(b.acquire("fast")[0])                    # its own cap (3), not the generic one (1)
+        self.assertTrue(all(abs(x - 2.0) < 1e-9 for x in clk.slept))  # its own interval (2 s), not 100 s
+
+    def test_counters_are_per_api_key(self):
+        import os
+        from unittest import mock
+        b, clk, _ = budget(limit=1, interval=0)
+        with mock.patch.dict(os.environ, {"GEMINI_API_KEY": "key-A"}):
+            self.assertTrue(b.acquire("m")[0]); self.assertFalse(b.acquire("m")[0])
+        with mock.patch.dict(os.environ, {"GEMINI_API_KEY": "key-B"}):
+            self.assertTrue(b.acquire("m")[0])
+        self.assertNotIn("key-A", (b.state_file).read_text())     # only a hash is stored
 
 
 if __name__ == "__main__":
