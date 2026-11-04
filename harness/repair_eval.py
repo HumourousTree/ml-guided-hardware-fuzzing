@@ -115,9 +115,13 @@ def evaluate_bug(bug_id: str, model: str, mode: str, samples: int, feedback_atte
                 passed, total = _suite_result(f, regression, cand_dir, delays=(0, 1))
                 r["gate_accepted"] = passed == total
                 if r["gate_accepted"]:
-                    h_ok, h_tot = _suite_result(f, held_out, cand_dir, delays=(0, 3))
-                    r.update(correct_on_held_out=h_ok == h_tot, held_out=f"{h_ok}/{h_tot}",
-                             exact_fix=cand.strip() == golden.strip(), formal=formal_equivalence(golden, cand))
+                    r["exact_fix"] = cand.strip() == golden.strip()
+                    r["formal"] = formal_equivalence(golden, cand)
+                    if r["exact_fix"]:          # the candidate IS the golden RTL: held-out runs cannot add information
+                        r.update(correct_on_held_out=True, held_out="skipped (identical)")
+                    else:
+                        h_ok, h_tot = _suite_result(f, held_out, cand_dir, delays=(0, 3))
+                        r.update(correct_on_held_out=h_ok == h_tot, held_out=f"{h_ok}/{h_tot}")
                     r["certified"] = r["formal"]["verdict"] in ("identical", "proven")
                     saved = Path("logs/experiments/llm_repair_candidates") / f"{bug_id}__{mode}__{model}__{tag}.sv"
                     saved.parent.mkdir(parents=True, exist_ok=True); saved.write_text(cand)
