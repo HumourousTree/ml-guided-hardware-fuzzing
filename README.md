@@ -13,7 +13,7 @@ certification of accepted patches. The v0.4 evaluation and the IEEE-format paper
 | `hw_design/` | RTL: `picorv32_golden.sv` (= YosysHQ master `ef203c2`), `upstream_picorv32*.v` (+ `.commit` pins), `picorv32_mutable.sv` (working copy), bug manifests and injector |
 | `tools/` | Analysis: `compare_literature.py` (all paper tables/figures/numbers), `hdd_eval.py`, `unified_coverage.py`, `uncovered_lines.py`, `certify_repairs.py`, `analyze_bench.py`, `package_results.py`, `fetch_upstream.py` |
 | `scripts/` | Entry points: `run_full_evaluation.sh` (whole evaluation, WSL), `run_llm_experiments.sh` + `run_llm_extra.sh` (LLM experiments A1-A5), `run_oracle_study.sh` (B1), `run_tracks.cmd` (Windows runner), `run_campaign.ps1/.cmd`, `start_dashboard.ps1/.cmd` (Windows → WSL) |
-| `tests/` | 91 unit tests (`python3 -m unittest discover -s tests -t .`) |
+| `tests/` | 97 unit tests (`python3 -m unittest discover -s tests -t .`) |
 | `docs/` | `EXPERIMENTS.md` (LLM and oracle experiments: protocol, results, budget, known problems), `BENCHMARK_PLAN.md` (runbook), `literature_baselines.json` (published numbers with sources) |
 | `paper/` | `generated/` (macros + tables) and `figures/` for the paper, written by `tools/compare_literature.py`; the paper text lives in the Overleaf repo `HumourousTree/Hardware-Fuzzing` |
 | `results/v0.4/` | Compact, committed results of every v0.4 experiment (`comparison_report.md` summarises them) |
@@ -24,7 +24,7 @@ certification of accepted patches. The v0.4 evaluation and the IEEE-format paper
 ## Quick start (inside WSL, project root)
 ```bash
 source venv/bin/activate && python3 -m pip install -r requirements.txt
-python3 -m unittest discover -s tests -t .                 # 91 tests
+python3 -m unittest discover -s tests -t .                 # 97 tests
 python3 -m harness.run_experiments --experiment E0          # control on unmodified upstream: must be 100% matching
 bash scripts/run_full_evaluation.sh 7                       # full v0.4 evaluation (hours)
 python tools/compare_literature.py                          # regenerate paper/generated + paper/figures (needs matplotlib)

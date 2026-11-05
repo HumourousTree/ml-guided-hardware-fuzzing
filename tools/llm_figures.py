@@ -194,30 +194,48 @@ def fig_llm_hybrid(logs: Path, figs: Path, plt, save, at_programs) -> None:
 
 
 def fig_encarsia_rocket(logs: Path, figs: Path, plt, save) -> None:
-    """Step 3: detection matrix on Encarsia's 30 Rocket bugs, BenchFuzz (shade = fraction of seeds) vs published."""
+    """Step 3: detection matrix on Encarsia's 30 Rocket bugs. BenchFuzz rows (base and ext generator profile; fill =
+    fraction of seeds that detected the bug) vs the published 24 h results; a bracket marks bugs in Rocket's CSRFile."""
     p = logs / "bench" / "rocket" / "_figdata.json"
     if not p.exists():
         return
-    rows = json.loads(p.read_text())           # [(name, detected_seeds, seeds, [DF, PF, CA])]
-    names = ["BenchFuzz", "DifuzzRTL", "ProcessorFuzz", "Cascade"]
-    fig, ax = plt.subplots(figsize=(7.1, 1.55))
-    for x, (bug, det, n, pub) in enumerate(rows):
-        frac = det / n if n else 0
-        ax.scatter([x], [3], s=34, marker="s", facecolor=C["informed"] if frac else "white", alpha=max(frac, .0) or 1,
-                   edgecolor=C["informed"], lw=.7, zorder=3)
-        if 0 < frac < 1:
-            ax.text(x, 3, f"{det}", fontsize=4.2, ha="center", va="center", color="white", zorder=4)
-        for yy, hit in zip((2, 1, 0), pub):
-            ax.scatter([x], [yy], s=30, marker="o", facecolor="#555555" if hit else "white", edgecolor="#555555", lw=.6,
+    rows = json.loads(p.read_text())           # [{bug, base: [det, n], ext: [det, n]?, pub: [DF, PF, CA], module}]
+    if rows and not isinstance(rows[0], dict):  # older format: (name, det, n, pub)
+        rows = [{"bug": r[0], "base": [r[1], r[2]], "pub": r[3], "module": ""} for r in rows]
+    ours = [("base", "BenchFuzz", C["informed"])] + ([("ext", "BenchFuzz +CSR/traps/RVC", C["strong"])]
+                                                     if any("ext" in r for r in rows) else [])
+    pubn = ["DifuzzRTL", "ProcessorFuzz", "Cascade"]
+    ny = len(ours) + len(pubn)
+    fig, ax = plt.subplots(figsize=(7.1, 0.42 * ny + .55))
+    for x, r in enumerate(rows):
+        for j, (key, _, col) in enumerate(ours):
+            y = ny - 1 - j
+            det, n = r.get(key, [0, 0])
+            frac = det / n if n else 0
+            if not n:                                   # not run (yet)
+                ax.scatter([x], [y], s=8, marker="x", color="#bbbbbb", lw=.6, zorder=3)
+                continue
+            ax.scatter([x], [y], s=34, marker="s", facecolor=col if frac else "white", alpha=frac or 1,
+                       edgecolor=col, lw=.7, zorder=3)
+            if 0 < frac < 1:
+                ax.text(x, y, f"{det}", fontsize=4.2, ha="center", va="center", color="white", zorder=4)
+        for k, hit in enumerate(r["pub"]):
+            y = len(pubn) - 1 - k
+            ax.scatter([x], [y], s=30, marker="o", facecolor="#555555" if hit else "white", edgecolor="#555555", lw=.6,
                        zorder=3)
-    n_mix = sum(1 for r in rows if r[0].startswith("Mix"))
+    n_mix = sum(1 for r in rows if r["bug"].startswith("Mix"))
     ax.axvline(n_mix - .5, color="#999999", lw=.6, ls="--")
-    ax.set_yticks([3, 2, 1, 0]); ax.set_yticklabels(names, fontsize=6)
-    ax.set_xticks(range(len(rows))); ax.set_xticklabels([r[0].split()[-1] for r in rows], fontsize=5)
-    ax.set_xlim(-.7, len(rows) - .3); ax.set_ylim(-.6, 3.6)
-    ax.text((n_mix - 1) / 2, 3.95, "signal mix-ups", ha="center", fontsize=6, color="#444444")
-    ax.text(n_mix + (len(rows) - n_mix - 1) / 2, 3.95, "broken conditionals", ha="center", fontsize=6, color="#444444")
-    for s in ("top", "right", "left"):
+    ax.axhline(len(pubn) - .5, color="#dddddd", lw=.6)
+    ax.set_yticks(range(ny)); ax.set_yticklabels([n for n in reversed(pubn)] + [o[1] for o in reversed(ours)], fontsize=6)
+    ax.set_xticks(range(len(rows))); ax.set_xticklabels([r["bug"].split()[-1] for r in rows], fontsize=5)
+    ax.set_xlim(-.7, len(rows) - .3); ax.set_ylim(-1.25, ny - .4)
+    ax.text((n_mix - 1) / 2, ny - .05, "signal mix-ups", ha="center", fontsize=6, color="#444444")
+    ax.text(n_mix + (len(rows) - n_mix - 1) / 2, ny - .05, "broken conditionals", ha="center", fontsize=6, color="#444444")
+    csr = [x for x, r in enumerate(rows) if r.get("module") == "CSRFile"]
+    if csr:                                             # bracket under the CSRFile conditionals
+        ax.plot([min(csr) - .3, max(csr) + .3], [-.7, -.7], color="#777777", lw=.7, clip_on=False)
+        ax.text((min(csr) + max(csr)) / 2, -.98, "in CSRFile", ha="center", va="center", fontsize=5.2, color="#555555")
+    for s in ("top", "right", "left", "bottom"):
         ax.spines[s].set_visible(False)
     ax.tick_params(length=0)
     fig.tight_layout(pad=.3)

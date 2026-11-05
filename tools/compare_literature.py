@@ -802,64 +802,112 @@ def section_llm_hybrid(logs, M, md):
 
 def section_rocket(logs, M, md):
     """Step 3: BenchFuzz (RV64 generator, Spike end-state oracle) on Encarsia's 30 Rocket bugs vs the published
-    DifuzzRTL / ProcessorFuzz / Cascade detections (docs/encarsia_published.json)."""
+    DifuzzRTL / ProcessorFuzz / Cascade detections (docs/encarsia_published.json). Two generator profiles: "base"
+    (macros Roc*) and "ext" = base + machine-mode CSRs, exceptions and compressed instructions (macros RocExt*)."""
     d = logs / "bench" / "rocket"
     pub_f = ROOT / "docs" / "encarsia_published.json"
     if not d.exists() or not pub_f.exists():
         return ""
     pub = json.loads(pub_f.read_text())["rocket"]
-    runs = defaultdict(list)
-    for f in sorted(d.glob("*_seed*.json")):
-        r = json.loads(f.read_text())
-        runs[(r["kind"], r["dir"])].append(r)
-    if not runs:
+    profiles = {"base": "_seed?.json", "ext": "_seed?_ext.json"}
+    runs = {p: defaultdict(list) for p in profiles}
+    for p, pat in profiles.items():
+        for f in sorted(d.glob("*" + pat)):
+            r = json.loads(f.read_text())
+            runs[p][(r["kind"], r["dir"])].append(r)
+    if not runs["base"]:
         return ""
-    for k in ("driver", "multiplexer"):
-        g = load(d / f"golden_{k}.json")
-        if g:
-            M[f"Roc{'Mix' if k == 'driver' else 'Cond'}GoldenProgs"], M[f"Roc{'Mix' if k == 'driver' else 'Cond'}GoldenMis"] = \
-                g["programs"], g["mismatches"] + g["nonterminating"]
+    have_ext = bool(runs["ext"])
+    mods = (load(d / "bug_modules.json") or {}).get("multiplexer", {})
     fuzzers = ["DifuzzRTL", "ProcessorFuzz", "Cascade"]
-    lines = ["\\begin{tabular}{@{}l r r r c c c@{}}\\toprule",
-             "& & \\multicolumn{2}{c}{BenchFuzz} & \\multicolumn{3}{c}{Published (24\\,h)}\\\\\\cmidrule(lr){3-4}\\cmidrule(l){5-7}",
-             "Bug & Dir & seeds & progs & DF & PF & CA\\\\\\midrule"]
-    tot = defaultdict(int)
-    ours_sets = {}
+    for p in profiles:
+        pre = "Roc" if p == "base" else "RocExt"
+        for k in ("driver", "multiplexer"):
+            g = load(d / f"golden_{k}{'' if p == 'base' else '_' + p}.json")
+            if g:
+                tag = "Mix" if k == "driver" else "Cond"
+                M[f"{pre}{tag}GoldenProgs"], M[f"{pre}{tag}GoldenMis"] = g["programs"], g["mismatches"] + g["nonterminating"]
+    short = {"CSRFile": "CSR", "RVCExpander": "RVC", "Rocket": "core", "IBuf": "IBuf"}
+    nb = 2 if have_ext else 1
+    head = (f"& & \\multicolumn{{{nb}}}{{c}}{{BenchFuzz}} & \\multicolumn{{3}}{{c}}{{Published (24\\,h)}}\\\\"
+            f"\\cmidrule(lr){{3-{2 + nb}}}\\cmidrule(l){{{3 + nb}-{5 + nb}}}")
+    lines = [f"\\begin{{tabular}}{{@{{}}l l {'r ' * nb}c c c@{{}}}}\\toprule", head,
+             "Bug & Mod. & base" + (" & ext" if have_ext else "") + " & DF & PF & CA\\\\\\midrule"]
     fig = []
+    ours_sets = {p: {} for p in profiles}
+
+    def cell(rs):
+        det = [r for r in rs if r.get("first_detection")]
+        progs = [r["first_detection"]["n_programs"] for r in det]
+        if not rs:
+            return det, "--"
+        return det, f"{len(det)}/{len(rs)}" + (f"\\,({fmt(st.median(progs), 0)})" if progs else "")
+
     for kind, label, key, dirs in (("driver", "Mix-up", "mixups", pub["driver_dirs"]),
                                    ("multiplexer", "Cond.", "conditionals", pub["multiplexer_dirs"])):
-        ours = set()
+        ours = {p: set() for p in profiles}
         for i, dd in enumerate(dirs, start=1):
-            rs = runs.get((kind, dd), [])
-            det = [r for r in rs if r.get("first_detection")]
-            progs = [r["first_detection"]["n_programs"] for r in det]
-            if det:
-                ours.add(i)
+            row, figrow = [], {"bug": f"{label} {i}", "pub": [i in pub["detected"][key][fz] for fz in fuzzers]}
+            for p in profiles:
+                if p == "ext" and not have_ext:
+                    continue
+                rs = runs[p].get((kind, dd), [])
+                det, txt = cell(rs)
+                if det:
+                    ours[p].add(i)
+                row.append(txt); figrow[p] = [len(det), len(rs)]
             marks = ["\\checkmark" if i in pub["detected"][key][fz] else "$\\times$" for fz in fuzzers]
-            lines.append(f"{label} {i} & {dd} & {len(det)}/{len(rs)} & {fmt(st.median(progs), 0) if progs else '--'} & "
-                         + " & ".join(marks) + "\\\\")
-            fig.append((f"{label} {i}", len(det), len(rs), [i in pub["detected"][key][fz] for fz in fuzzers]))
-        ours_sets[key] = ours
+            mod = mods.get(str(dd), "") if kind == "multiplexer" else ""
+            lines.append(f"{label} {i} & {short.get(mod, mod)} & " + " & ".join(row) + " & " + " & ".join(marks) + "\\\\")
+            figrow["module"] = mod
+            fig.append(figrow)
         tag = "Mix" if kind == "driver" else "Cond"
-        M[f"Roc{tag}Ours"] = len(ours)
-        M[f"Roc{tag}Runs"] = sum(len(runs.get((kind, dd), [])) for dd in dirs)
+        union = set().union(*(set(pub["detected"][key][fz]) for fz in fuzzers))
         for fz in fuzzers:
             M[f"Roc{tag}{fz}"] = len(pub["detected"][key][fz])
-        union = set().union(*(set(pub["detected"][key][fz]) for fz in fuzzers))
         M[f"Roc{tag}Union"] = len(union)
-        M[f"Roc{tag}OnlyOurs"] = len(ours - union)
-        M[f"Roc{tag}OnlyOursList"] = ", ".join(str(x) for x in sorted(ours - union)) or "none"
-        M[f"Roc{tag}MissedList"] = ", ".join(str(x) for x in sorted(union - ours)) or "none"
-        M[f"Roc{tag}Missed"] = len(union - ours)
-        lines.append("\\midrule" if kind == "driver" else "")
-    M["RocOurs"] = sum(len(s) for s in ours_sets.values())          # (macro values are stored as strings)
-    all_progs = [r["first_detection"]["n_programs"] for rs in runs.values() for r in rs if r.get("first_detection")]
-    M["RocMedianProgs"] = fmt(st.median(all_progs), 0) if all_progs else "--"
-    M["RocSeeds"] = max(len(v) for v in runs.values())
-    M["RocBudget"] = f"{max(r.get('budget_programs', 0) for rs in runs.values() for r in rs):,}"
-    secs = [r["seconds"] for rs in runs.values() for r in rs]
-    M["RocHours"] = f"{sum(secs) / 3600:.1f}"
-    md.append("## Rocket / Encarsia (step 3)\n" + "\n".join(f"- {n}: {a}/{b} seeds; published DF/PF/CA {p}" for n, a, b, p in fig))
+        for p in profiles:
+            if p == "ext" and not have_ext:
+                continue
+            pre = "Roc" if p == "base" else "RocExt"
+            o = ours[p]
+            ours_sets[p][key] = o
+            M[f"{pre}{tag}Ours"] = len(o)
+            M[f"{pre}{tag}Runs"] = sum(len(runs[p].get((kind, dd), [])) for dd in dirs)
+            M[f"{pre}{tag}OnlyOurs"] = len(o - union)
+            M[f"{pre}{tag}OnlyOursList"] = ", ".join(str(x) for x in sorted(o - union)) or "none"
+            M[f"{pre}{tag}MissedList"] = ", ".join(str(x) for x in sorted(union - o)) or "none"
+            M[f"{pre}{tag}Missed"] = len(union - o)
+            M[f"{pre}{tag}OursList"] = ", ".join(str(x) for x in sorted(o)) or "none"
+        if have_ext:
+            both = ours["base"] | ours["ext"]
+            M[f"RocAny{tag}Ours"] = len(both)
+            M[f"RocAny{tag}OnlyOursList"] = ", ".join(str(x) for x in sorted(both - union)) or "none"
+            M[f"RocAny{tag}MissedList"] = ", ".join(str(x) for x in sorted(union - both)) or "none"
+            M[f"RocExt{tag}NewList"] = ", ".join(str(x) for x in sorted(ours["ext"] - ours["base"])) or "none"
+            M[f"RocExt{tag}LostList"] = ", ".join(str(x) for x in sorted(ours["base"] - ours["ext"])) or "none"
+        if kind == "driver":
+            lines.append("\\midrule")
+    M["RocCondCsrFile"] = sum(1 for dd in pub["multiplexer_dirs"] if mods.get(str(dd)) == "CSRFile")
+    for p in profiles:
+        if p == "ext" and not have_ext:
+            continue
+        pre = "Roc" if p == "base" else "RocExt"
+        rr = runs[p]
+        M[f"{pre}Ours"] = sum(len(s) for s in ours_sets[p].values())          # (macro values are stored as strings)
+        all_progs = [r["first_detection"]["n_programs"] for rs in rr.values() for r in rs if r.get("first_detection")]
+        M[f"{pre}MedianProgs"] = fmt(st.median(all_progs), 0) if all_progs else "--"
+        M[f"{pre}Seeds"] = max(len(v) for v in rr.values())
+        M[f"{pre}Budget"] = f"{max(r.get('budget_programs', 0) for rs in rr.values() for r in rs):,}"
+        M[f"{pre}Hours"] = f"{sum(r['seconds'] for rs in rr.values() for r in rs) / 3600:.1f}"
+        # all-or-nothing: a bug found by some seed is found by every seed
+        part = sum(1 for rs in rr.values() if 0 < sum(bool(r.get("first_detection")) for r in rs) < len(rs))
+        M[f"{pre}PartialBugs"] = part
+    if have_ext:
+        M["RocAnyOurs"] = int(M.items["RocAnyMixOurs"]) + int(M.items["RocAnyCondOurs"])
+    md.append("## Rocket / Encarsia (step 3)\n" + "\n".join(
+        f"- {r['bug']}: base {r['base'][0]}/{r['base'][1]}" + (f", ext {r['ext'][0]}/{r['ext'][1]}" if 'ext' in r else "")
+        + f"; published DF/PF/CA {r['pub']} {r['module']}" for r in fig))
     (logs / "bench" / "rocket" / "_figdata.json").write_text(json.dumps(fig))
     return "\n".join(l for l in lines if l) + "\n\\bottomrule\\end{tabular}"
 
