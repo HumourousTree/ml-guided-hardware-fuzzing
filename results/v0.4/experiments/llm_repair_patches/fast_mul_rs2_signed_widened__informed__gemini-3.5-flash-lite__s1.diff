@@ -1,0 +1,11 @@
+--- golden/picorv32.v
++++ patched/fast_mul_rs2_signed_widened__informed__gemini-3.5-flash-lite__s1
+@@ -2335,7 +2335,7 @@
+ 	wire instr_any_mul = |{instr_mul, instr_mulh, instr_mulhsu, instr_mulhu};
+ 	wire instr_any_mulh = |{instr_mulh, instr_mulhsu, instr_mulhu};
+ 	wire instr_rs1_signed = |{instr_mulh, instr_mulhsu};
+-	wire instr_rs2_signed = |{instr_mulh};
++	wire instr_rs2_signed = instr_mulh;
+ 
+ 	reg shift_out;
+ 	reg [3:0] active;

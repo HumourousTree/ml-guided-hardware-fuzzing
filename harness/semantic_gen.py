@@ -117,8 +117,10 @@ class SemanticGenerator:
         self.max_syntax, self.max_semantic, self.max_fail = max_syntax_fix, max_semantic_fix, max_target_failures
         self.seeds = SeedDB()
         self.fail_counts: dict[tuple[int, int], int] = {}
+        # llm_calls: answered requests; targets/gave_up count only targets that received at least one answer
+        # (a target picked after the request allowance is spent is counted in no_llm instead)
         self.stats = {"llm_calls": 0, "targets": 0, "target_hit": 0, "syntax_fixes": 0, "semantic_fixes": 0,
-                      "illegal": 0, "gave_up": 0, "asm_errors": {}}
+                      "illegal": 0, "gave_up": 0, "no_llm": 0, "asm_errors": {}, "target_segments": {}}
 
     def add_seed(self, program: dict, points: set[str]) -> None:
         self.seeds.add(program, points)
@@ -132,14 +134,16 @@ class SemanticGenerator:
         return self.rng.choice(top[:8])
 
     def _call(self, prompt: str) -> str | None:
-        self.stats["llm_calls"] += 1
-        return self.llm(prompt)
+        text = self.llm(prompt)
+        if text is not None:
+            self.stats["llm_calls"] += 1
+        return text
 
     def generate(self, covered: set[str], pid: str) -> list[tuple[dict, object]]:
         """Run the generation loop for one target. Returns every (program, run_result) that was executed."""
         seg = self.pick_target(covered)
         if seg is None: return []
-        self.stats["targets"] += 1
+        answered = False
         template = self.seeds.retrieve(seg)
         prompt, executed, note = build_prompt(self.rtl_lines, seg, template), [], ""
         seg_keys = {k for k in self.backend.universe if decode_point(k)["kind"] == "v_line"
@@ -148,6 +152,10 @@ class SemanticGenerator:
         while True:
             text = self._call(prompt + note)
             if text is None: break
+            if not answered:
+                answered = True; self.stats["targets"] += 1
+                key = f"{seg[0]}-{seg[1]}"
+                self.stats["target_segments"][key] = self.stats["target_segments"].get(key, 0) + 1
             try:
                 words = assemble(extract_asm(text))
             except AsmError as e:
@@ -179,6 +187,9 @@ class SemanticGenerator:
             note = (f"\n\nThe program ran but did not execute the marked lines {missing}. Execution feedback: it covered "
                     f"{len(res.covered)} RTL points, none of them in the target. Revise the previous program (do not start over): "
                     f"re-check the guarding condition and the state preparation, then answer again.")
+        if not answered:                       # no request allowance left: not a failed attempt of the generator
+            self.stats["no_llm"] += 1
+            return executed
         self.fail_counts[seg] = self.fail_counts.get(seg, 0) + 1
         self.stats["gave_up"] += 1
         return executed

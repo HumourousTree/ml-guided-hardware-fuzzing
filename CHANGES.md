@@ -118,9 +118,26 @@ Not done: anything needing an LLM (semantic/hybrid generation, pass@k) - no API 
 # v0.5 (LLM experiments on the free tier, oracle study, real-bug entry)
 - Track A (`scripts/run_llm_experiments.sh`): certified LLM repair pass@k (A1), blind reading-vs-reasoning control (A2), LLM campaign
   with the legacy bugs (A3), ChipFuzzer-style generator after the plateau, capped at 100 requests (A4), stronger-model check (A5).
-  `gemini-3.8-flash` returned 503 for ~5 h, so A1-A4 are pinned to `gemini-3.5-flash-lite` (A5: `gemini-3.1-pro-preview`).
+  `gemini-3.8-flash` returned 503 for ~5 h, so A1-A4 are pinned to `gemini-3.5-flash-lite`. A5 (`gemini-3.1-pro-preview`) was not
+  run: the API reports a free-tier quota of 0 for `gemini-3.1-pro` on this key (requests per day and input tokens per minute).
+- Results (14 observable bugs, 5 independent samples each, Yosys-certified):
+  - A1 informed: certified pass@1 0.74, pass@5 0.79; feedback loop certifies 12/14 (template repair 7/14); 0 gate-accepted but
+    uncertified LLM patches (template: 2/9). Unsolved: `branch_inversion_blt`, `stale_latched_branch`.
+  - A2 blind: certified pass@1 0.40 (legacy 0.60 -> 0.52, plain 0.82 -> 0.33).
+  - A3 campaign, 5 legacy bugs at once: all removed by iteration 10/200 (5 accepted patches, 20 repair requests); final RTL proven
+    equivalent to golden; stimulus expansion 10/41 programs valid.
+  - A4 target-line generator after the plateau (100 requests): 0/14 target attempts hit, all 7 targeted segments are
+    configuration-dead or outside RV32IM; 64.24% vs 63.56% for mutation at 400 programs (1 seed).
+- Fixes found while running Track A:
+  - one `genai.Client` per key: google-genai closes its connection in `Client.__del__`, so a client per call left cached chats on
+    a closed client (14 of 67 calls of the first A3 run failed; A3 was re-run, the first run is in `logs/archive/`).
+  - a per-minute 429 waits for the API's retry hint and retries (max 3); only a daily or zero quota blocks the model for the day.
+    `gemini-3.5-flash-lite` allows 15 RPM on this key, so its interval is 4.5 s. The quota metric is kept in `llm_calls.jsonl`.
+  - `semantic_gen` counts only answered requests, and targets that got no request (allowance spent) separately (`no_llm`);
+    the targeted line segments are recorded and classified like the unreached-line analysis.
+  - A3 saves and certifies its final RTL; A5 is skipped (not retried for hours) when the strong model does not answer.
 - Track B1 (`scripts/run_oracle_study.sh`): lockstep vs end-state oracle (`riscv_cosim.compare_end_state`, `benchmark --end-state`)
-  paired on the same programs, 15 bugs x 10 seeds x 2 methods: identical detections (262/300 runs), end-state slower on 5 bugs.
+  paired on the same programs, 15 bugs x 10 seeds x 2 methods (random, mutation): identical detections (262/300 runs), end-state slower on 5 bugs.
 - Real-bug benchmark entry `hw_design/real_bugs/picorv32_fence_rd` (+ `tools/check_real_bug.py`).
 - Budget per model and per API key; transient 5xx retried with backoff; `repair_eval` resumable, model-pinned, private RTL copy,
   unanswered samples not scored, held-out runs skipped for textually identical candidates.

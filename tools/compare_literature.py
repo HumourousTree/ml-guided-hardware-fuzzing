@@ -752,6 +752,19 @@ def section_llm_hybrid(logs, M, md):
     M["HybLlmCalls"], M["HybTargets"], M["HybTargetHit"] = s.get("llm_calls", 0), s.get("targets", 0), s.get("target_hit", 0)
     M["HybSyntaxFixes"], M["HybSemanticFixes"], M["HybGaveUp"] = s.get("syntax_fixes", 0), s.get("semantic_fixes", 0), s.get("gave_up", 0)
     M["HybIllegal"] = s.get("illegal", 0)
+    M["HybNoLlm"] = s.get("no_llm", 0)
+    # classify every targeted line segment with the same rules as the unreached-line analysis (same golden RTL)
+    segs = s.get("target_segments") or {}
+    rtl = (ROOT / "hw_design" / "picorv32_golden.sv").read_text().splitlines()
+    cats = defaultdict(int)
+    for key in segs:
+        a, b = (int(x) for x in key.split("-"))
+        text, ctx = "\n".join(rtl[a - 1:b]), "\n".join(rtl[max(0, a - 41):a - 1])
+        cats[next((c for c, f in UNREACHED_RULES if f(a, text, ctx)), "Other (unexplained)")] += 1
+    M["HybTargetSegs"] = len(segs)
+    M["HybTargetSegsExplained"] = len(segs) - cats.get("Other (unexplained)", 0)
+    if segs:
+        md.append("## LLM generator targets by cause: " + ", ".join(f"{c}: {n}" for c, n in sorted(cats.items(), key=lambda kv: -kv[1])))
     n = r["series"][-1]["n_programs"]
     M["HybPrograms"], M["HybFinal"] = n, f"{r['series'][-1]['pct']:.2f}"
     sw = (r.get("switched_at") or {}).get("programs")

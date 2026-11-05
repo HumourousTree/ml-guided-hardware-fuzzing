@@ -1,0 +1,9 @@
+{
+  "final_rtl.sv": {
+    "identical": false,
+    "formal": {
+      "verdict": "proven",
+      "seconds": 28.4
+    }
+  }
+}

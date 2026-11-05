@@ -1,0 +1,1550 @@
+{
+  "approx_multiplier": {
+    "bug_id": "approx_multiplier",
+    "level": "L1",
+    "model": "gemini-3.5-flash-lite",
+    "mode": "blind",
+    "independent": [
+      {
+        "tag": "s0",
+        "source": "gemini_block_patch:gemini-3.5-flash-lite",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 35.2,
+        "localized": "multiplier",
+        "status": "VERIFIED_REGRESSION_FREE",
+        "gate_accepted": true,
+        "correct_on_held_out": true,
+        "exact_fix": true,
+        "certified": true,
+        "formal": {
+          "verdict": "identical",
+          "seconds": 0.0
+        },
+        "held_out": "skipped (identical)",
+        "candidate_file": "logs/experiments/llm_repair_candidates/approx_multiplier__blind__gemini-3.5-flash-lite__s0.sv"
+      },
+      {
+        "tag": "s1",
+        "source": "gemini_block_patch:gemini-3.5-flash-lite",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 5.6,
+        "localized": "multiplier",
+        "status": "VERIFIED_REGRESSION_FREE",
+        "gate_accepted": true,
+        "correct_on_held_out": true,
+        "exact_fix": true,
+        "certified": true,
+        "formal": {
+          "verdict": "identical",
+          "seconds": 0.0
+        },
+        "held_out": "skipped (identical)",
+        "candidate_file": "logs/experiments/llm_repair_candidates/approx_multiplier__blind__gemini-3.5-flash-lite__s1.sv"
+      },
+      {
+        "tag": "s2",
+        "source": "gemini_block_patch:gemini-3.5-flash-lite",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 16.1,
+        "localized": "multiplier",
+        "status": "VERIFIED_REGRESSION_FREE",
+        "gate_accepted": true,
+        "correct_on_held_out": true,
+        "exact_fix": true,
+        "certified": true,
+        "formal": {
+          "verdict": "identical",
+          "seconds": 0.0
+        },
+        "held_out": "skipped (identical)",
+        "candidate_file": "logs/experiments/llm_repair_candidates/approx_multiplier__blind__gemini-3.5-flash-lite__s2.sv"
+      },
+      {
+        "tag": "s3",
+        "source": "gemini_block_patch:gemini-3.5-flash-lite",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 12.9,
+        "localized": "multiplier",
+        "status": "VERIFIED_REGRESSION_FREE",
+        "gate_accepted": true,
+        "correct_on_held_out": true,
+        "exact_fix": true,
+        "certified": true,
+        "formal": {
+          "verdict": "identical",
+          "seconds": 0.0
+        },
+        "held_out": "skipped (identical)",
+        "candidate_file": "logs/experiments/llm_repair_candidates/approx_multiplier__blind__gemini-3.5-flash-lite__s3.sv"
+      },
+      {
+        "tag": "s4",
+        "source": "gemini_block_patch:gemini-3.5-flash-lite",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 3.6,
+        "localized": "multiplier",
+        "status": "VERIFIED_REGRESSION_FREE",
+        "gate_accepted": true,
+        "correct_on_held_out": true,
+        "exact_fix": true,
+        "certified": true,
+        "formal": {
+          "verdict": "identical",
+          "seconds": 0.0
+        },
+        "held_out": "skipped (identical)",
+        "candidate_file": "logs/experiments/llm_repair_candidates/approx_multiplier__blind__gemini-3.5-flash-lite__s4.sv"
+      }
+    ],
+    "detected": true,
+    "samples": 5,
+    "gate_accepted": 5,
+    "certified": 5,
+    "pass@1": 1.0,
+    "pass@1_certified": 1.0,
+    "pass@5": 1.0,
+    "pass@5_certified": 1.0,
+    "exact_fix_rate": 1.0,
+    "complete": true
+  },
+  "alu_operator_xor_or": {
+    "bug_id": "alu_operator_xor_or",
+    "level": "L1",
+    "model": "gemini-3.5-flash-lite",
+    "mode": "blind",
+    "independent": [
+      {
+        "tag": "s0",
+        "source": "gemini_block_patch:gemini-3.5-flash-lite",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 29.6,
+        "localized": "alu",
+        "status": "VERIFIED_REGRESSION_FREE",
+        "gate_accepted": true,
+        "correct_on_held_out": true,
+        "exact_fix": true,
+        "certified": true,
+        "formal": {
+          "verdict": "identical",
+          "seconds": 0.0
+        },
+        "held_out": "skipped (identical)",
+        "candidate_file": "logs/experiments/llm_repair_candidates/alu_operator_xor_or__blind__gemini-3.5-flash-lite__s0.sv"
+      },
+      {
+        "tag": "s1",
+        "source": "gemini_block_patch:gemini-3.5-flash-lite",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 2.6,
+        "localized": "alu",
+        "status": "VERIFIED_REGRESSION_FREE",
+        "gate_accepted": true,
+        "correct_on_held_out": true,
+        "exact_fix": true,
+        "certified": true,
+        "formal": {
+          "verdict": "identical",
+          "seconds": 0.0
+        },
+        "held_out": "skipped (identical)",
+        "candidate_file": "logs/experiments/llm_repair_candidates/alu_operator_xor_or__blind__gemini-3.5-flash-lite__s1.sv"
+      },
+      {
+        "tag": "s2",
+        "source": "gemini_block_patch:gemini-3.5-flash-lite",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 2.6,
+        "localized": "alu",
+        "status": "VERIFIED_REGRESSION_FREE",
+        "gate_accepted": true,
+        "correct_on_held_out": true,
+        "exact_fix": true,
+        "certified": true,
+        "formal": {
+          "verdict": "identical",
+          "seconds": 0.0
+        },
+        "held_out": "skipped (identical)",
+        "candidate_file": "logs/experiments/llm_repair_candidates/alu_operator_xor_or__blind__gemini-3.5-flash-lite__s2.sv"
+      },
+      {
+        "tag": "s3",
+        "source": "gemini_block_patch:gemini-3.5-flash-lite",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 2.8,
+        "localized": "alu",
+        "status": "VERIFIED_REGRESSION_FREE",
+        "gate_accepted": true,
+        "correct_on_held_out": true,
+        "exact_fix": true,
+        "certified": true,
+        "formal": {
+          "verdict": "identical",
+          "seconds": 0.0
+        },
+        "held_out": "skipped (identical)",
+        "candidate_file": "logs/experiments/llm_repair_candidates/alu_operator_xor_or__blind__gemini-3.5-flash-lite__s3.sv"
+      },
+      {
+        "tag": "s4",
+        "source": "gemini_block_patch:gemini-3.5-flash-lite",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 2.8,
+        "localized": "alu",
+        "status": "VERIFIED_REGRESSION_FREE",
+        "gate_accepted": true,
+        "correct_on_held_out": true,
+        "exact_fix": true,
+        "certified": true,
+        "formal": {
+          "verdict": "identical",
+          "seconds": 0.0
+        },
+        "held_out": "skipped (identical)",
+        "candidate_file": "logs/experiments/llm_repair_candidates/alu_operator_xor_or__blind__gemini-3.5-flash-lite__s4.sv"
+      }
+    ],
+    "detected": true,
+    "samples": 5,
+    "gate_accepted": 5,
+    "certified": 5,
+    "pass@1": 1.0,
+    "pass@1_certified": 1.0,
+    "pass@5": 1.0,
+    "pass@5_certified": 1.0,
+    "exact_fix_rate": 1.0,
+    "complete": true
+  },
+  "branch_inversion_blt": {
+    "bug_id": "branch_inversion_blt",
+    "level": "L2",
+    "model": "gemini-3.5-flash-lite",
+    "mode": "blind",
+    "independent": [
+      {
+        "tag": "s0",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 28.4,
+        "localized": "branch",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      },
+      {
+        "tag": "s1",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 2.5,
+        "localized": "branch",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      },
+      {
+        "tag": "s2",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 31.2,
+        "localized": "branch",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      },
+      {
+        "tag": "s3",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 2.3,
+        "localized": "branch",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      },
+      {
+        "tag": "s4",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 2.8,
+        "localized": "branch",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      }
+    ],
+    "detected": true,
+    "samples": 5,
+    "gate_accepted": 0,
+    "certified": 0,
+    "pass@1": 0.0,
+    "pass@1_certified": 0.0,
+    "pass@5": 0.0,
+    "pass@5_certified": 0.0,
+    "exact_fix_rate": 0.0,
+    "complete": true
+  },
+  "writeback_forwarding_drop": {
+    "bug_id": "writeback_forwarding_drop",
+    "level": "L2",
+    "model": "gemini-3.5-flash-lite",
+    "mode": "blind",
+    "independent": [
+      {
+        "tag": "s0",
+        "source": "gemini_block_patch:gemini-3.5-flash-lite",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 29.6,
+        "localized": "alu",
+        "status": "VERIFIED_REGRESSION_FREE",
+        "gate_accepted": true,
+        "correct_on_held_out": true,
+        "exact_fix": true,
+        "certified": true,
+        "formal": {
+          "verdict": "identical",
+          "seconds": 0.0
+        },
+        "held_out": "skipped (identical)",
+        "candidate_file": "logs/experiments/llm_repair_candidates/writeback_forwarding_drop__blind__gemini-3.5-flash-lite__s0.sv"
+      },
+      {
+        "tag": "s1",
+        "source": "gemini_block_patch:gemini-3.5-flash-lite",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 2.9,
+        "localized": "alu",
+        "status": "VERIFIED_REGRESSION_FREE",
+        "gate_accepted": true,
+        "correct_on_held_out": true,
+        "exact_fix": true,
+        "certified": true,
+        "formal": {
+          "verdict": "identical",
+          "seconds": 0.0
+        },
+        "held_out": "skipped (identical)",
+        "candidate_file": "logs/experiments/llm_repair_candidates/writeback_forwarding_drop__blind__gemini-3.5-flash-lite__s1.sv"
+      },
+      {
+        "tag": "s2",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 1.9,
+        "localized": "alu",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      },
+      {
+        "tag": "s3",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 2.5,
+        "localized": "alu",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      },
+      {
+        "tag": "s4",
+        "source": "gemini_block_patch:gemini-3.5-flash-lite",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 3.3,
+        "localized": "alu",
+        "status": "VERIFIED_REGRESSION_FREE",
+        "gate_accepted": true,
+        "correct_on_held_out": true,
+        "exact_fix": true,
+        "certified": true,
+        "formal": {
+          "verdict": "identical",
+          "seconds": 0.0
+        },
+        "held_out": "skipped (identical)",
+        "candidate_file": "logs/experiments/llm_repair_candidates/writeback_forwarding_drop__blind__gemini-3.5-flash-lite__s4.sv"
+      }
+    ],
+    "detected": true,
+    "samples": 5,
+    "gate_accepted": 3,
+    "certified": 3,
+    "pass@1": 0.6,
+    "pass@1_certified": 0.6,
+    "pass@5": 1.0,
+    "pass@5_certified": 1.0,
+    "exact_fix_rate": 0.6,
+    "complete": true
+  },
+  "mem_handshake_drop": {
+    "bug_id": "mem_handshake_drop",
+    "level": "L3",
+    "model": "gemini-3.5-flash-lite",
+    "mode": "blind",
+    "independent": [
+      {
+        "tag": "s0",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 23.4,
+        "localized": "memory",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      },
+      {
+        "tag": "s1",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 2.4,
+        "localized": "memory",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      },
+      {
+        "tag": "s2",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 27.2,
+        "localized": "memory",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      },
+      {
+        "tag": "s3",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 27.9,
+        "localized": "memory",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      },
+      {
+        "tag": "s4",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 2.3,
+        "localized": "memory",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      }
+    ],
+    "detected": true,
+    "samples": 5,
+    "gate_accepted": 0,
+    "certified": 0,
+    "pass@1": 0.0,
+    "pass@1_certified": 0.0,
+    "pass@5": 0.0,
+    "pass@5_certified": 0.0,
+    "exact_fix_rate": 0.0,
+    "complete": true
+  },
+  "and_to_or_alu": {
+    "bug_id": "and_to_or_alu",
+    "level": "L1",
+    "model": "gemini-3.5-flash-lite",
+    "mode": "blind",
+    "independent": [
+      {
+        "tag": "s0",
+        "source": "gemini_block_patch:gemini-3.5-flash-lite",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 29.7,
+        "localized": "alu",
+        "status": "VERIFIED_REGRESSION_FREE",
+        "gate_accepted": true,
+        "correct_on_held_out": true,
+        "exact_fix": true,
+        "certified": true,
+        "formal": {
+          "verdict": "identical",
+          "seconds": 0.0
+        },
+        "held_out": "skipped (identical)",
+        "candidate_file": "logs/experiments/llm_repair_candidates/and_to_or_alu__blind__gemini-3.5-flash-lite__s0.sv"
+      },
+      {
+        "tag": "s1",
+        "source": "gemini_block_patch:gemini-3.5-flash-lite",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 2.5,
+        "localized": "alu",
+        "status": "VERIFIED_REGRESSION_FREE",
+        "gate_accepted": true,
+        "correct_on_held_out": true,
+        "exact_fix": true,
+        "certified": true,
+        "formal": {
+          "verdict": "identical",
+          "seconds": 0.0
+        },
+        "held_out": "skipped (identical)",
+        "candidate_file": "logs/experiments/llm_repair_candidates/and_to_or_alu__blind__gemini-3.5-flash-lite__s1.sv"
+      },
+      {
+        "tag": "s2",
+        "source": "gemini_block_patch:gemini-3.5-flash-lite",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 2.8,
+        "localized": "alu",
+        "status": "VERIFIED_REGRESSION_FREE",
+        "gate_accepted": true,
+        "correct_on_held_out": true,
+        "exact_fix": true,
+        "certified": true,
+        "formal": {
+          "verdict": "identical",
+          "seconds": 0.0
+        },
+        "held_out": "skipped (identical)",
+        "candidate_file": "logs/experiments/llm_repair_candidates/and_to_or_alu__blind__gemini-3.5-flash-lite__s2.sv"
+      },
+      {
+        "tag": "s3",
+        "source": "gemini_block_patch:gemini-3.5-flash-lite",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 3.1,
+        "localized": "alu",
+        "status": "VERIFIED_REGRESSION_FREE",
+        "gate_accepted": true,
+        "correct_on_held_out": true,
+        "exact_fix": true,
+        "certified": true,
+        "formal": {
+          "verdict": "identical",
+          "seconds": 0.0
+        },
+        "held_out": "skipped (identical)",
+        "candidate_file": "logs/experiments/llm_repair_candidates/and_to_or_alu__blind__gemini-3.5-flash-lite__s3.sv"
+      },
+      {
+        "tag": "s4",
+        "source": "gemini_block_patch:gemini-3.5-flash-lite",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 3.2,
+        "localized": "alu",
+        "status": "VERIFIED_REGRESSION_FREE",
+        "gate_accepted": true,
+        "correct_on_held_out": true,
+        "exact_fix": true,
+        "certified": true,
+        "formal": {
+          "verdict": "identical",
+          "seconds": 0.0
+        },
+        "held_out": "skipped (identical)",
+        "candidate_file": "logs/experiments/llm_repair_candidates/and_to_or_alu__blind__gemini-3.5-flash-lite__s4.sv"
+      }
+    ],
+    "detected": true,
+    "samples": 5,
+    "gate_accepted": 5,
+    "certified": 5,
+    "pass@1": 1.0,
+    "pass@1_certified": 1.0,
+    "pass@5": 1.0,
+    "pass@5_certified": 1.0,
+    "exact_fix_rate": 1.0,
+    "complete": true
+  },
+  "fast_mul_decode_and_to_or": {
+    "bug_id": "fast_mul_decode_and_to_or",
+    "level": "L1",
+    "model": "gemini-3.5-flash-lite",
+    "mode": "blind",
+    "independent": [],
+    "detected": false
+  },
+  "fast_mul_rs2_signed_widened": {
+    "bug_id": "fast_mul_rs2_signed_widened",
+    "level": "L1",
+    "model": "gemini-3.5-flash-lite",
+    "mode": "blind",
+    "independent": [
+      {
+        "tag": "s0",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 29.6,
+        "localized": "multiplier",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      },
+      {
+        "tag": "s1",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 30.9,
+        "localized": "multiplier",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      },
+      {
+        "tag": "s2",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 31.2,
+        "localized": "multiplier",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      },
+      {
+        "tag": "s3",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 29.7,
+        "localized": "multiplier",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      },
+      {
+        "tag": "s4",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 1.9,
+        "localized": "multiplier",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      }
+    ],
+    "detected": true,
+    "samples": 5,
+    "gate_accepted": 0,
+    "certified": 0,
+    "pass@1": 0.0,
+    "pass@1_certified": 0.0,
+    "pass@5": 0.0,
+    "pass@5_certified": 0.0,
+    "exact_fix_rate": 0.0,
+    "complete": true
+  },
+  "mem_addr_bit2_stuck": {
+    "bug_id": "mem_addr_bit2_stuck",
+    "level": "L1",
+    "model": "gemini-3.5-flash-lite",
+    "mode": "blind",
+    "independent": [
+      {
+        "tag": "s0",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 33.2,
+        "localized": "memory",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      },
+      {
+        "tag": "s1",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 2.7,
+        "localized": "memory",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      },
+      {
+        "tag": "s2",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 3.1,
+        "localized": "memory",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      },
+      {
+        "tag": "s3",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 2.4,
+        "localized": "memory",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      },
+      {
+        "tag": "s4",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 2.4,
+        "localized": "memory",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      }
+    ],
+    "detected": true,
+    "samples": 5,
+    "gate_accepted": 0,
+    "certified": 0,
+    "pass@1": 0.0,
+    "pass@1_certified": 0.0,
+    "pass@5": 0.0,
+    "pass@5_certified": 0.0,
+    "exact_fix_rate": 0.0,
+    "complete": true
+  },
+  "slt_signed_as_unsigned": {
+    "bug_id": "slt_signed_as_unsigned",
+    "level": "L1",
+    "model": "gemini-3.5-flash-lite",
+    "mode": "blind",
+    "independent": [
+      {
+        "tag": "s0",
+        "source": "gemini_block_patch:gemini-3.5-flash-lite",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 32.3,
+        "localized": "alu",
+        "status": "VERIFIED_REGRESSION_FREE",
+        "gate_accepted": true,
+        "correct_on_held_out": true,
+        "exact_fix": true,
+        "certified": true,
+        "formal": {
+          "verdict": "identical",
+          "seconds": 0.0
+        },
+        "held_out": "skipped (identical)",
+        "candidate_file": "logs/experiments/llm_repair_candidates/slt_signed_as_unsigned__blind__gemini-3.5-flash-lite__s0.sv"
+      },
+      {
+        "tag": "s1",
+        "source": "gemini_block_patch:gemini-3.5-flash-lite",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 3.3,
+        "localized": "alu",
+        "status": "VERIFIED_REGRESSION_FREE",
+        "gate_accepted": true,
+        "correct_on_held_out": true,
+        "exact_fix": true,
+        "certified": true,
+        "formal": {
+          "verdict": "identical",
+          "seconds": 0.0
+        },
+        "held_out": "skipped (identical)",
+        "candidate_file": "logs/experiments/llm_repair_candidates/slt_signed_as_unsigned__blind__gemini-3.5-flash-lite__s1.sv"
+      },
+      {
+        "tag": "s2",
+        "source": "gemini_block_patch:gemini-3.5-flash-lite",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 2.9,
+        "localized": "alu",
+        "status": "VERIFIED_REGRESSION_FREE",
+        "gate_accepted": true,
+        "correct_on_held_out": true,
+        "exact_fix": true,
+        "certified": true,
+        "formal": {
+          "verdict": "identical",
+          "seconds": 0.0
+        },
+        "held_out": "skipped (identical)",
+        "candidate_file": "logs/experiments/llm_repair_candidates/slt_signed_as_unsigned__blind__gemini-3.5-flash-lite__s2.sv"
+      },
+      {
+        "tag": "s3",
+        "source": "gemini_block_patch:gemini-3.5-flash-lite",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 3.3,
+        "localized": "alu",
+        "status": "VERIFIED_REGRESSION_FREE",
+        "gate_accepted": true,
+        "correct_on_held_out": true,
+        "exact_fix": true,
+        "certified": true,
+        "formal": {
+          "verdict": "identical",
+          "seconds": 0.0
+        },
+        "held_out": "skipped (identical)",
+        "candidate_file": "logs/experiments/llm_repair_candidates/slt_signed_as_unsigned__blind__gemini-3.5-flash-lite__s3.sv"
+      },
+      {
+        "tag": "s4",
+        "source": "gemini_block_patch:gemini-3.5-flash-lite",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 3.4,
+        "localized": "alu",
+        "status": "VERIFIED_REGRESSION_FREE",
+        "gate_accepted": true,
+        "correct_on_held_out": true,
+        "exact_fix": true,
+        "certified": true,
+        "formal": {
+          "verdict": "identical",
+          "seconds": 0.0
+        },
+        "held_out": "skipped (identical)",
+        "candidate_file": "logs/experiments/llm_repair_candidates/slt_signed_as_unsigned__blind__gemini-3.5-flash-lite__s4.sv"
+      }
+    ],
+    "detected": true,
+    "samples": 5,
+    "gate_accepted": 5,
+    "certified": 5,
+    "pass@1": 1.0,
+    "pass@1_certified": 1.0,
+    "pass@5": 1.0,
+    "pass@5_certified": 1.0,
+    "exact_fix_rate": 1.0,
+    "complete": true
+  },
+  "beq_inverted": {
+    "bug_id": "beq_inverted",
+    "level": "L2",
+    "model": "gemini-3.5-flash-lite",
+    "mode": "blind",
+    "independent": [
+      {
+        "tag": "s0",
+        "source": "gemini_block_patch:gemini-3.5-flash-lite",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 30.6,
+        "localized": "branch",
+        "status": "VERIFIED_REGRESSION_FREE",
+        "gate_accepted": true,
+        "correct_on_held_out": true,
+        "exact_fix": true,
+        "certified": true,
+        "formal": {
+          "verdict": "identical",
+          "seconds": 0.0
+        },
+        "held_out": "skipped (identical)",
+        "candidate_file": "logs/experiments/llm_repair_candidates/beq_inverted__blind__gemini-3.5-flash-lite__s0.sv"
+      },
+      {
+        "tag": "s1",
+        "source": "gemini_block_patch:gemini-3.5-flash-lite",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 2.9,
+        "localized": "branch",
+        "status": "VERIFIED_REGRESSION_FREE",
+        "gate_accepted": true,
+        "correct_on_held_out": true,
+        "exact_fix": true,
+        "certified": true,
+        "formal": {
+          "verdict": "identical",
+          "seconds": 0.0
+        },
+        "held_out": "skipped (identical)",
+        "candidate_file": "logs/experiments/llm_repair_candidates/beq_inverted__blind__gemini-3.5-flash-lite__s1.sv"
+      },
+      {
+        "tag": "s2",
+        "source": "gemini_block_patch:gemini-3.5-flash-lite",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 3.0,
+        "localized": "branch",
+        "status": "VERIFIED_REGRESSION_FREE",
+        "gate_accepted": true,
+        "correct_on_held_out": true,
+        "exact_fix": true,
+        "certified": true,
+        "formal": {
+          "verdict": "identical",
+          "seconds": 0.0
+        },
+        "held_out": "skipped (identical)",
+        "candidate_file": "logs/experiments/llm_repair_candidates/beq_inverted__blind__gemini-3.5-flash-lite__s2.sv"
+      },
+      {
+        "tag": "s3",
+        "source": "gemini_block_patch:gemini-3.5-flash-lite",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 3.0,
+        "localized": "branch",
+        "status": "VERIFIED_REGRESSION_FREE",
+        "gate_accepted": true,
+        "correct_on_held_out": true,
+        "exact_fix": true,
+        "certified": true,
+        "formal": {
+          "verdict": "identical",
+          "seconds": 0.0
+        },
+        "held_out": "skipped (identical)",
+        "candidate_file": "logs/experiments/llm_repair_candidates/beq_inverted__blind__gemini-3.5-flash-lite__s3.sv"
+      },
+      {
+        "tag": "s4",
+        "source": "gemini_block_patch:gemini-3.5-flash-lite",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 3.4,
+        "localized": "branch",
+        "status": "VERIFIED_REGRESSION_FREE",
+        "gate_accepted": true,
+        "correct_on_held_out": true,
+        "exact_fix": true,
+        "certified": true,
+        "formal": {
+          "verdict": "identical",
+          "seconds": 0.0
+        },
+        "held_out": "skipped (identical)",
+        "candidate_file": "logs/experiments/llm_repair_candidates/beq_inverted__blind__gemini-3.5-flash-lite__s4.sv"
+      }
+    ],
+    "detected": true,
+    "samples": 5,
+    "gate_accepted": 5,
+    "certified": 5,
+    "pass@1": 1.0,
+    "pass@1_certified": 1.0,
+    "pass@5": 1.0,
+    "pass@5_certified": 1.0,
+    "exact_fix_rate": 1.0,
+    "complete": true
+  },
+  "lui_auipc_rd_x0": {
+    "bug_id": "lui_auipc_rd_x0",
+    "level": "L2",
+    "model": "gemini-3.5-flash-lite",
+    "mode": "blind",
+    "independent": [
+      {
+        "tag": "s0",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 30.0,
+        "localized": "fetch_launch",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      },
+      {
+        "tag": "s1",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 3.4,
+        "localized": "fetch_launch",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      },
+      {
+        "tag": "s2",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 2.5,
+        "localized": "fetch_launch",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      },
+      {
+        "tag": "s3",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 2.4,
+        "localized": "fetch_launch",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      },
+      {
+        "tag": "s4",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 29.3,
+        "localized": "fetch_launch",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      }
+    ],
+    "detected": true,
+    "samples": 5,
+    "gate_accepted": 0,
+    "certified": 0,
+    "pass@1": 0.0,
+    "pass@1_certified": 0.0,
+    "pass@5": 0.0,
+    "pass@5_certified": 0.0,
+    "exact_fix_rate": 0.0,
+    "complete": true
+  },
+  "store_after_store_dropped": {
+    "bug_id": "store_after_store_dropped",
+    "level": "L3",
+    "model": "gemini-3.5-flash-lite",
+    "mode": "blind",
+    "independent": [
+      {
+        "tag": "s0",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 24.8,
+        "localized": "memory",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      },
+      {
+        "tag": "s1",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 3.5,
+        "localized": "memory",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      },
+      {
+        "tag": "s2",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 2.8,
+        "localized": "memory",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      },
+      {
+        "tag": "s3",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 33.1,
+        "localized": "memory",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      },
+      {
+        "tag": "s4",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 40.0,
+        "localized": "memory",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      }
+    ],
+    "detected": true,
+    "samples": 5,
+    "gate_accepted": 0,
+    "certified": 0,
+    "pass@1": 0.0,
+    "pass@1_certified": 0.0,
+    "pass@5": 0.0,
+    "pass@5_certified": 0.0,
+    "exact_fix_rate": 0.0,
+    "complete": true
+  },
+  "store_after_store_dropped_intermittent": {
+    "bug_id": "store_after_store_dropped_intermittent",
+    "level": "L3",
+    "model": "gemini-3.5-flash-lite",
+    "mode": "blind",
+    "independent": [
+      {
+        "tag": "s0",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 27.9,
+        "localized": "memory",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      },
+      {
+        "tag": "s1",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 1.9,
+        "localized": "memory",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      },
+      {
+        "tag": "s2",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 2.5,
+        "localized": "memory",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      },
+      {
+        "tag": "s3",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 3.0,
+        "localized": "memory",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      },
+      {
+        "tag": "s4",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 2.3,
+        "localized": "memory",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      }
+    ],
+    "detected": true,
+    "samples": 5,
+    "gate_accepted": 0,
+    "certified": 0,
+    "pass@1": 0.0,
+    "pass@1_certified": 0.0,
+    "pass@5": 0.0,
+    "pass@5_certified": 0.0,
+    "exact_fix_rate": 0.0,
+    "complete": true
+  },
+  "stale_latched_branch": {
+    "bug_id": "stale_latched_branch",
+    "level": "L3",
+    "model": "gemini-3.5-flash-lite",
+    "mode": "blind",
+    "independent": [
+      {
+        "tag": "s0",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 23.6,
+        "localized": "branch",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      },
+      {
+        "tag": "s1",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 2.0,
+        "localized": "branch",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      },
+      {
+        "tag": "s2",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 2.6,
+        "localized": "branch",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      },
+      {
+        "tag": "s3",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 5.7,
+        "localized": "branch",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      },
+      {
+        "tag": "s4",
+        "source": "exhausted",
+        "attempts": 1,
+        "answered_by": [
+          "gemini-3.5-flash-lite"
+        ],
+        "llm_calls": 1,
+        "seconds": 5.4,
+        "localized": "branch",
+        "status": "REPAIR_FAILED_EXHAUSTED",
+        "gate_accepted": false,
+        "correct_on_held_out": null,
+        "exact_fix": false,
+        "certified": false
+      }
+    ],
+    "detected": true,
+    "samples": 5,
+    "gate_accepted": 0,
+    "certified": 0,
+    "pass@1": 0.0,
+    "pass@1_certified": 0.0,
+    "pass@5": 0.0,
+    "pass@5_certified": 0.0,
+    "exact_fix_rate": 0.0,
+    "complete": true
+  }
+}

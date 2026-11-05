@@ -1,0 +1,11 @@
+--- golden/picorv32.v
++++ patched/mem_addr_bit2_stuck__informed__gemini-3.5-flash-lite__s0
+@@ -572,7 +572,7 @@
+ 			prefetched_high_word <= 0;
+ 		end else begin
+ 			if (mem_la_read || mem_la_write) begin
+-				mem_addr <= mem_la_addr;
++				mem_addr <= (mem_do_prefetch || mem_do_rinst) ? mem_la_addr : mem_la_addr;
+ 				mem_wstrb <= mem_la_wstrb & {4{mem_la_write}};
+ 			end
+ 			if (mem_la_write) begin

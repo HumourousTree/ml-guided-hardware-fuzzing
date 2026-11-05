@@ -68,6 +68,31 @@ def main():
         for f in sorted(cands.glob("*.sv")):
             diff = difflib.unified_diff(golden, f.read_text().splitlines(keepends=True), "golden/picorv32.v", f"patched/{f.stem}")
             (exp / "repair_patches" / f"{f.stem}.diff").write_text("".join(diff))
+    llm_cands = logs / "experiments" / "llm_repair_candidates"
+    if llm_cands.exists():                   # LLM patches that passed the gates, as diffs against the golden RTL
+        golden = (ROOT / "hw_design" / "picorv32_golden.sv").read_text().splitlines(keepends=True)
+        (exp / "llm_repair_patches").mkdir(exist_ok=True)
+        for f in sorted(llm_cands.glob("*.sv")):
+            diff = difflib.unified_diff(golden, f.read_text().splitlines(keepends=True), "golden/picorv32.v", f"patched/{f.stem}")
+            (exp / "llm_repair_patches" / f"{f.stem}.diff").write_text("".join(diff))
+    camp = logs / "experiments" / "llm_campaign"
+    if camp.exists():                        # A3: compact telemetry, final-RTL proof, final RTL as a diff
+        (exp / "llm_campaign").mkdir(exist_ok=True)
+        t = json.loads((camp / "telemetry.json").read_text())
+        t["iterations"] = [{k: it.get(k) for k in ("iteration", "mode", "comparison_ok", "match_rate_pct", "llm_called",
+                                                   "llm_source", "repair_attempts", "rtl_improved", "active_bugs",
+                                                   "bug_programs_failing", "mismatch_total")} for it in t.get("iterations", [])]
+        (exp / "llm_campaign" / "telemetry.json").write_text(json.dumps(t))
+        if (camp / "final_rtl_formal.json").exists():
+            shutil.copy2(camp / "final_rtl_formal.json", exp / "llm_campaign" / "final_rtl_formal.json")
+        if (camp / "final_rtl.sv").exists():
+            golden = (ROOT / "hw_design" / "picorv32_golden.sv").read_text().splitlines(keepends=True)
+            diff = difflib.unified_diff(golden, (camp / "final_rtl.sv").read_text().splitlines(keepends=True),
+                                        "golden/picorv32.v", "campaign/final_rtl.sv")
+            (exp / "llm_campaign" / "final_rtl.diff").write_text("".join(diff))
+    for f in ("llm_calls.jsonl", "llm_budget.json"):   # request log: model, purpose, sizes, outcome, key hash (never the key)
+        if (logs / f).exists():
+            shutil.copy2(logs / f, exp / f)
     for f in ("comparison_report.md",):
         if (logs / f).exists():
             shutil.copy2(logs / f, out / f)

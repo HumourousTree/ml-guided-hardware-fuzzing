@@ -39,8 +39,6 @@
 ## Cascade P6 (FENCE) reproduction
 - Cov.-guided mutation on f00a88c: 10/10 seeds hit P6, median 4 programs, 0.74 s
 - Random on f00a88c: 10/10 seeds hit P6, median 2 programs, 0.15 s
-- control on master (Cov.-guided mutation): 1 mismatches in 1249 programs
-- control on master (Random): 0 mismatches in 2000 programs
 - master, Cov.-guided mutation: 9/10 seeds hit a mismatch (9 at a FENCE with rd!=0), median 872 programs
 - master, Random: 0/10 seeds hit a mismatch (0 at a FENCE with rd!=0), median -- programs
 
@@ -50,7 +48,7 @@
 
 - mem_handshake_drop template patch: only ['mem_la_write (top-level output, look-ahead memory interface)'] not proven equal (2400 points proven)
 
-## Guarded repair (no LLM key available: controls + template baseline)
+## Guarded repair (LLM not run in v0.4: controls + template baseline)
 - oracle accepted 14/14, lint-broken patch recovered on retry 14/14, no-op rejected 14/14
 - template repair: accepted 9/14, correct on held-out 9, exact 4, overfitting accepted 0; rejections by gate: {'patch_format': 0, 'lint': 0, 'reproducer': 269, 'grow_prefix': 0, 'suite_gate': 5}
 
@@ -82,6 +80,52 @@
 
 ## Yosys synth_xilinx (xcup) for PicoRV32 in the harness configuration
 - 1502 LUTs, 945 FFs, 4 DSP48E2 (0.29% of XCZU19EG LUTs; pre place-and-route estimate)
+
+## LLM repair (gemini-3.5-flash-lite, certified)
+- LlmModel: gemini-3.5-flash-lite
+- LlmInfPassOne: 0.74
+- LlmInfPassOneCert: 0.74
+- LlmInfPassFive: 0.79
+- LlmInfPassFiveCert: 0.79
+- LlmInfBugs: 14
+- LlmInfSamples: 70
+- LlmInfGateNotCert: 0
+- LlmInfHeldOutWrong: 0
+- LlmBlindPassOne: 0.40
+- LlmBlindPassOneCert: 0.40
+- LlmBlindPassFive: 0.43
+- LlmBlindPassFiveCert: 0.43
+- LlmBlindBugs: 14
+- LlmBlindSamples: 70
+- LlmBlindGateNotCert: 0
+- LlmBlindHeldOutWrong: 0
+- LlmFeedbackRuns: 14
+- LlmFeedbackCert: 12
+- LlmSolved: 12
+- LlmOnly: 5
+- LlmOnlyList: approx\_multiplier, lui\_auipc\_rd\_x0, mem\_handshake\_drop, slt\_signed\_as\_unsigned, writeback\_forwarding\_drop
+- LlmInfLegacyPassOneCert: 0.60
+- LlmBlindLegacyPassOneCert: 0.52
+- LlmLegacyBugs: 5
+- LlmInfPlainPassOneCert: 0.82
+- LlmBlindPlainPassOneCert: 0.33
+- LlmPlainBugs: 9
+- LlmUnsolvedList: branch\_inversion\_blt, stale\_latched\_branch
+- LlmRepairRequests: 209
+- LlmRepairRequestsOk: 199
+
+## Oracle study (lockstep vs end-state, 300 runs)
+- detections: lockstep 262, end-state 262
+- bugs found only by lockstep: []
+- bugs found later by end-state: ['alu_operator_xor_or', 'branch_inversion_blt', 'fast_mul_rs2_signed_widened', 'slt_signed_as_unsigned', 'writeback_forwarding_drop']
+
+## LLM campaign (gemini-3.5-flash-lite): 200 iterations, match 99.9%, 5 accepted repairs, expansion 10/41 valid
+
+## LLM generator targets by cause: Compressed ISA (COMPRESSED_ISA=0): 4, Counter CSRs (outside RV32IM scope): 1, ld_rs2 state (unused, ENABLE_REGS_DUALPORT=1): 1, ALU options (BARREL_SHIFTER, TWO_CYCLE_*): 1
+
+## LLM generator after the plateau: {'llm_calls': 100, 'targets': 14, 'target_hit': 0, 'syntax_fixes': 30, 'semantic_fixes': 57, 'illegal': 9, 'gave_up': 14, 'no_llm': 118, 'asm_errors': {'unknown or unsupported instruction': 24, 'invalid immediate': 1}, 'target_segments': {'1629-1635': 3, '922-924': 3, '508-510': 1, '1768-1770': 2, '454-456': 3, '985-987': 1, '1280-1282': 1}} | final 64.24% at 400 programs
+
+## Real bug (FENCE rd): CONFIRMED: bug present on upstream, removed by the fix without regressions
 
 ## Literature (quoted, not re-measured)
 - ChipFuzzer: Wang et al., When Fuzzing Meets Understanding: LLM-Driven Semantic Test Generation for RTL Verification, arXiv:2607.10340v1, 11 Jul 2026 (peer-reviewed: False); comparable: method only (plateau rule); numbers no
