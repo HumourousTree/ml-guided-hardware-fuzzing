@@ -825,6 +825,11 @@ def section_rocket(logs, M, md):
     M["RocDetConfirmed"] = sum(1 for n in det_files if conf.get(n, {}).get("confirmed"))
     M["RocDetUnconfirmed"] = unconfirmed
     M["RocDetNotReplayed"] = sum(1 for n in det_files if n not in conf)
+    M["RocDetGoldenDiffers"] = sum(1 for n in det_files if n in conf and not conf[n]["golden_matches_spike"])
+    M["RocDetNotReproduced"] = sum(1 for n in det_files if n in conf and conf[n]["golden_matches_spike"]
+                                   and not conf[n]["bug_differs"])
+    M["RocExtGoldenDiffers"] = sum(1 for n in det_files if n.endswith("_ext.json") and n in conf
+                                   and not conf[n]["golden_matches_spike"])
     if not runs["base"]:
         return ""
     have_ext = bool(runs["ext"])
@@ -893,12 +898,19 @@ def section_rocket(logs, M, md):
             both = ours["base"] | ours["ext"]
             M[f"RocAny{tag}Ours"] = len(both)
             M[f"RocAny{tag}OnlyOursList"] = ", ".join(str(x) for x in sorted(both - union)) or "none"
+            M[f"RocAny{tag}OnlyOurs"] = len(both - union)
+            M[f"RocAny{tag}OursList"] = ", ".join(str(x) for x in sorted(both)) or "none"
+            M[f"RocAll{tag}"] = len(both | union)                   # found by anyone (us or a published fuzzer)
             M[f"RocAny{tag}MissedList"] = ", ".join(str(x) for x in sorted(union - both)) or "none"
             M[f"RocExt{tag}NewList"] = ", ".join(str(x) for x in sorted(ours["ext"] - ours["base"])) or "none"
             M[f"RocExt{tag}LostList"] = ", ".join(str(x) for x in sorted(ours["base"] - ours["ext"])) or "none"
         if kind == "driver":
             lines.append("\\midrule")
     M["RocCondCsrFile"] = sum(1 for dd in pub["multiplexer_dirs"] if mods.get(str(dd)) == "CSRFile")
+    found_cond = set().union(*(set(pub["detected"]["conditionals"][fz]) for fz in fuzzers),
+                             *(s.get("conditionals", set()) for s in ours_sets.values()))
+    M["RocCondCsrNobody"] = sum(1 for i, dd in enumerate(pub["multiplexer_dirs"], 1)
+                                if mods.get(str(dd)) == "CSRFile" and i not in found_cond)
     for p in profiles:
         if p == "ext" and not have_ext:
             continue

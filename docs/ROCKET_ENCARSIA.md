@@ -87,13 +87,70 @@ compressed branch `c.bnez a1` (Spike and the golden Rocket do not), visible in t
 | driver reference (bug 767's `reference_driver.rtlil`) | 500 | 0 | 0 |
 | multiplexer reference, `$amt` lowered | 500 | 0 | 0 |
 
-A one-bit change of the expected values is detected by the comparison (sanity check of the oracle).
+A one-bit change of the expected values is detected by the comparison (sanity check of the oracle). The ext profile is
+calibrated separately (`golden_<kind>_ext.json`): 500 programs per reference, 0 mismatches.
+
+## Replay of every detection (`rocket/confirm_detections.py`)
+
+Calibration is a sample. After the campaigns, the first detecting program of every run is replayed on the bug-free Rocket and
+on the buggy one; a detection counts only if the bug-free Rocket matches Spike and the buggy one does not.
+
+| | detections | confirmed | bug-free Rocket also differs from Spike | did not reproduce |
+|---|---|---|---|---|
+| base + ext | 150 | 133 | 16 (all ext) | 1 (base, mix-up 13 seed 0) |
+
+All 16 reference disagreements come from ext programs that switch the FPU off (mstatus.FS = Off): Spike then traps FP
+instructions and FP-CSR accesses that the bug-free Rocket executes in some cases. 500 calibration programs did not reveal
+this. Whether it is a Rocket deviation was not investigated. These runs count as not detected (they stopped at the false
+alarm, so the true bug was not searched for further in that seed). A future ext revision should avoid FS = Off.
+
+## Results (2026-11-05)
+
+Replay-confirmed detecting seeds out of 5 (median programs to the detection). Published: Encarsia Tables 8-10, 24 h.
+Mod. = module of the injected broken conditional (`rocket/locate_bugs.py`).
+
+| Bug | base (2,000 progs/seed) | ext (400 progs/seed) | DifuzzRTL | ProcessorFuzz | Cascade |
+|---|---|---|---|---|---|
+| Mix-up 1 | 5/5 (1) | 5/5 (1) | | | x |
+| Mix-up 2-4 | 5/5 (1) | 5/5 (1) | x | x | x |
+| Mix-up 5 | 0/5 | 5/5 (1) | | | |
+| Mix-up 6 | 5/5 (2) | 5/5 (11) | | | x |
+| Mix-up 7 | 0/5 | 5/5 (2) | | | |
+| Mix-up 8 | 0/5 | 5/5 (3) | | | |
+| Mix-up 9 | 0/5 | 4/5 (46) | | | |
+| Mix-up 10 | 0/5 | 5/5 (1) | | | |
+| Mix-up 11 | 0/5 | 0/5 | | | |
+| Mix-up 12 | 0/5 | 5/5 (1) | | | |
+| Mix-up 13 | 4/5 (2) | 5/5 (1) | x | x | x |
+| Mix-up 14 | 0/5 | 0/5 | | | |
+| Mix-up 15 | 5/5 (1) | 5/5 (1) | x | x | x |
+| Cond. 1-5 (CSR) | 0/5 | 0/5 | | | Cond. 2 |
+| Cond. 6 (CSR) | 0/5 | 5/5 (1) | x | x | x |
+| Cond. 7 (CSR) | 5/5 (1) | 5/5 (2) | x | x | |
+| Cond. 8-11 (CSR) | 0/5 | 0/5 | Cond. 10 | Cond. 10 | |
+| Cond. 12 (IBuf) | 5/5 (1) | 5/5 (1) | x | x | x |
+| Cond. 13 (RVC), 14 (core) | 0/5 | 0/5 | | | |
+| Cond. 15 (core) | 5/5 (1) | 5/5 (1) | x | x | x |
+
+* Signal mix-ups: base 7/15 (exactly Cascade's set), ext 13/15; **6 mix-ups (5, 7, 8, 9, 10, 12) are detected by none of
+  the published fuzzers**. Only 11 and 14 are found by nobody.
+* Broken conditionals: base 3/15, ext 4/15 (6, 7, 12, 15), against 5 (DifuzzRTL, ProcessorFuzz) and 4 (Cascade). Missed:
+  2 (Cascade) and 10 (DifuzzRTL/ProcessorFuzz), both in `CSRFile`. 7 of the 11 `CSRFile` conditionals are found by no fuzzer.
+* Detection is all-or-nothing per bug and fast (median 1 program); budgets are minutes per bug against 24 h.
+* Example (mix-up 7, `RVCExpander`): the buggy core takes an exception on the legal compressed branch `c.bnez`.
+
+Paper: Sec. "Same bugs, same core", Table `tab:rocket`, Fig. `fig:rocket` (`paper/figures/fig_encarsia_rocket.pdf`).
+Packaged results: `results/v0.4/bench/rocket/` (runs with the detecting program, calibrations, `confirmations.json`,
+`bug_modules.json`).
 
 ## Reproduce
 
 ```bash
 bash scripts/setup_rocket_env.sh
-python3 rocket/run_encarsia.py --seeds 5 --programs 2000 --jobs 6 --build-jobs 2    # -> logs/bench/rocket/
+python3 rocket/run_encarsia.py --seeds 5 --programs 2000 --jobs 6 --build-jobs 2    # base profile -> logs/bench/rocket/
+python3 rocket/run_encarsia.py --profile ext --seeds 5 --programs 400 --jobs 6      # ext profile (*_ext.json)
+python3 rocket/locate_bugs.py                                                       # module of each bug
+python3 rocket/confirm_detections.py 6                                              # replay every detection
 python tools/compare_literature.py                                                  # table tab_rocket, figure fig_encarsia_rocket
 ```
 

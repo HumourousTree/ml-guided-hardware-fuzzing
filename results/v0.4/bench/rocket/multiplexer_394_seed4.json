@@ -1,0 +1,1 @@
+{"seed": 4, "length": 40, "fp": true, "programs": 2000, "mismatches": 0, "nonterminating": 0, "spike_failures": 0, "first_detection": null, "t_start": 1793861686.9754055, "seconds": 869.1, "kind": "multiplexer", "dir": 394, "budget_programs": 2000}

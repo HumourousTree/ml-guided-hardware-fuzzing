@@ -1,0 +1,36 @@
+{
+ "driver": {
+  "144": "ALU, BreakpointUnit, CSRFile, IBuf, MulDiv",
+  "293": "ALU, BreakpointUnit, CSRFile, IBuf",
+  "347": "ALU, BreakpointUnit, CSRFile, IBuf",
+  "361": "ALU, BreakpointUnit, CSRFile, IBuf",
+  "640": "IBuf",
+  "673": "IBuf",
+  "767": "RVCExpander",
+  "774": "RVCExpander",
+  "804": "RVCExpander",
+  "826": "RVCExpander",
+  "832": "RVCExpander",
+  "858": "RVCExpander",
+  "863": "RVCExpander",
+  "1081": "RVCExpander, Rocket",
+  "1094": "RVCExpander, Rocket"
+ },
+ "multiplexer": {
+  "14": "CSRFile",
+  "28": "CSRFile",
+  "46": "CSRFile",
+  "66": "CSRFile",
+  "71": "CSRFile",
+  "277": "CSRFile",
+  "285": "CSRFile",
+  "295": "CSRFile",
+  "305": "CSRFile",
+  "394": "CSRFile",
+  "397": "CSRFile",
+  "408": "IBuf",
+  "588": "RVCExpander",
+  "633": "Rocket",
+  "718": "Rocket"
+ }
+}

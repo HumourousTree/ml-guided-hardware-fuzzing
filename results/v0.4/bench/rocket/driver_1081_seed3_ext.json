@@ -1,0 +1,1 @@
+{"seed": 3, "length": 40, "fp": true, "profile": "ext", "programs": 400, "mismatches": 0, "nonterminating": 0, "spike_failures": 0, "first_detection": null, "t_start": 1793865810.2300334, "seconds": 205.0, "kind": "driver", "dir": 1081, "budget_programs": 400}

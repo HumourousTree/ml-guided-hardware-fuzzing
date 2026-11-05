@@ -115,6 +115,19 @@ Not done: anything needing an LLM (semantic/hybrid generation, pass@k) - no API 
 - The paper text moved to the Overleaf repo HumourousTree/Hardware-Fuzzing; `paper/` here holds only the generated tables,
   macros and figures (`tools/compare_literature.py --tex` checks the Overleaf copy for undefined macros).
 
+# v0.6 (Rocket head-to-head on Encarsia's bugs)
+- `rocket/`: BenchFuzz on Encarsia's 30 Rocket bugs (Cascade's tiny SoC, Spike, end-state oracle), compared per bug with the
+  published DifuzzRTL / ProcessorFuzz / Cascade results. Details, problems and results: `docs/ROCKET_ENCARSIA.md`.
+- Generator profiles `base` and `ext` (machine-mode CSRs, exceptions, compressed instructions); five implementation-defined
+  Rocket/Spike differences neutralised; golden calibration before fuzzing; every detection replayed on the bug-free core.
+- Results: base 7/15 mix-ups (= Cascade) and 3/15 conditionals; ext 13/15 mix-ups (6 detected by no published fuzzer) and
+  4/15 conditionals. 133/150 detections confirmed; 16 rejected because the bug-free Rocket and Spike disagree after the FPU
+  is switched off, 1 did not reproduce.
+- `rocket/locate_bugs.py` (11/15 broken conditionals are in CSRFile), `rocket/confirm_detections.py`,
+  `scripts/resume_background.sh` (restart unfinished long runs), `tests/test_rv64fuzz.py` (97 tests in total).
+- Paper: new Sec. "Same bugs, same core" with Table `tab:rocket` and Fig. `fig:rocket`; abstract, contributions, threats and
+  conclusion updated. A4 now reports 2 seeds (seed 2 running).
+
 # v0.5 (LLM experiments on the free tier, oracle study, real-bug entry)
 - Track A (`scripts/run_llm_experiments.sh`): certified LLM repair pass@k (A1), blind reading-vs-reasoning control (A2), LLM campaign
   with the legacy bugs (A3), ChipFuzzer-style generator after the plateau, capped at 100 requests (A4), stronger-model check (A5).

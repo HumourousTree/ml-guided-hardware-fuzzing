@@ -122,11 +122,43 @@
 
 ## LLM campaign (gemini-3.5-flash-lite): 200 iterations, match 99.9%, 5 accepted repairs, expansion 10/41 valid
 
-## LLM generator targets by cause: Compressed ISA (COMPRESSED_ISA=0): 4, Counter CSRs (outside RV32IM scope): 1, ld_rs2 state (unused, ENABLE_REGS_DUALPORT=1): 1, ALU options (BARREL_SHIFTER, TWO_CYCLE_*): 1
+## LLM generator targets by cause: Compressed ISA (COMPRESSED_ISA=0): 5, Counter CSRs (outside RV32IM scope): 1, ld_rs2 state (unused, ENABLE_REGS_DUALPORT=1): 1, ALU options (BARREL_SHIFTER, TWO_CYCLE_*): 1
 
-## LLM generator after the plateau (1 seeds): {'llm_calls': 100, 'targets': 14, 'target_hit': 0, 'syntax_fixes': 30, 'semantic_fixes': 57, 'gave_up': 14, 'illegal': 9, 'no_llm': 118, 'target_segments': {'1629-1635': 3, '922-924': 3, '508-510': 1, '1768-1770': 2, '454-456': 3, '985-987': 1, '1280-1282': 1}} | mean final 64.24% at 400 programs | seeds above mutation / mutation-then-random: {'mutation': 1, 'hybrid-rand': 1}
+## LLM generator after the plateau (2 seeds): {'llm_calls': 200, 'targets': 29, 'target_hit': 0, 'syntax_fixes': 59, 'semantic_fixes': 114, 'gave_up': 29, 'illegal': 11, 'no_llm': 259, 'target_segments': {'1629-1635': 6, '922-924': 4, '508-510': 3, '1768-1770': 3, '454-456': 4, '985-987': 4, '1280-1282': 2, '903-905': 3}} | mean final 64.24% at 400 programs | seeds above mutation / mutation-then-random: {'mutation': 2, 'hybrid-rand': 2}
 
 ## Real bug (FENCE rd): CONFIRMED: bug present on upstream, removed by the fix without regressions
+
+## Rocket / Encarsia (step 3)
+- Mix-up 1: base 5/5, ext 5/5; published DF/PF/CA [False, False, True] 
+- Mix-up 2: base 5/5, ext 5/5; published DF/PF/CA [True, True, True] 
+- Mix-up 3: base 5/5, ext 5/5; published DF/PF/CA [True, True, True] 
+- Mix-up 4: base 5/5, ext 5/5; published DF/PF/CA [True, True, True] 
+- Mix-up 5: base 0/5, ext 5/5; published DF/PF/CA [False, False, False] 
+- Mix-up 6: base 5/5, ext 5/5; published DF/PF/CA [False, False, True] 
+- Mix-up 7: base 0/5, ext 5/5; published DF/PF/CA [False, False, False] 
+- Mix-up 8: base 0/5, ext 5/5; published DF/PF/CA [False, False, False] 
+- Mix-up 9: base 0/5, ext 4/5; published DF/PF/CA [False, False, False] 
+- Mix-up 10: base 0/5, ext 5/5; published DF/PF/CA [False, False, False] 
+- Mix-up 11: base 0/5, ext 0/5; published DF/PF/CA [False, False, False] 
+- Mix-up 12: base 0/5, ext 5/5; published DF/PF/CA [False, False, False] 
+- Mix-up 13: base 4/5, ext 5/5; published DF/PF/CA [True, True, True] 
+- Mix-up 14: base 0/5, ext 0/5; published DF/PF/CA [False, False, False] 
+- Mix-up 15: base 5/5, ext 5/5; published DF/PF/CA [True, True, True] 
+- Cond. 1: base 0/5, ext 0/5; published DF/PF/CA [False, False, False] CSRFile
+- Cond. 2: base 0/5, ext 0/5; published DF/PF/CA [False, False, True] CSRFile
+- Cond. 3: base 0/5, ext 0/5; published DF/PF/CA [False, False, False] CSRFile
+- Cond. 4: base 0/5, ext 0/5; published DF/PF/CA [False, False, False] CSRFile
+- Cond. 5: base 0/5, ext 0/5; published DF/PF/CA [False, False, False] CSRFile
+- Cond. 6: base 0/5, ext 5/5; published DF/PF/CA [True, True, True] CSRFile
+- Cond. 7: base 5/5, ext 5/5; published DF/PF/CA [True, True, False] CSRFile
+- Cond. 8: base 0/5, ext 0/5; published DF/PF/CA [False, False, False] CSRFile
+- Cond. 9: base 0/5, ext 0/5; published DF/PF/CA [False, False, False] CSRFile
+- Cond. 10: base 0/5, ext 0/5; published DF/PF/CA [True, True, False] CSRFile
+- Cond. 11: base 0/5, ext 0/5; published DF/PF/CA [False, False, False] CSRFile
+- Cond. 12: base 5/5, ext 5/5; published DF/PF/CA [True, True, True] IBuf
+- Cond. 13: base 0/5, ext 0/5; published DF/PF/CA [False, False, False] RVCExpander
+- Cond. 14: base 0/5, ext 0/5; published DF/PF/CA [False, False, False] Rocket
+- Cond. 15: base 5/5, ext 5/5; published DF/PF/CA [True, True, True] Rocket
 
 ## Literature (quoted, not re-measured)
 - ChipFuzzer: Wang et al., When Fuzzing Meets Understanding: LLM-Driven Semantic Test Generation for RTL Verification, arXiv:2607.10340v1, 11 Jul 2026 (peer-reviewed: False); comparable: method only (plateau rule); numbers no

@@ -51,6 +51,12 @@ def main():
     for d in sorted((logs / "bench").iterdir()):
         if not d.is_dir():
             continue
+        if d.name == "rocket":               # Rocket/Encarsia: runs (with the detecting program), calibrations, replays
+            (out / "bench" / "rocket").mkdir(parents=True, exist_ok=True)
+            for f in sorted(d.glob("*.json")):
+                shutil.copy2(f, out / "bench" / "rocket" / f.name)
+                n += "_seed" in f.name
+            continue
         for f in sorted(d.rglob("*_seed*.json")):
             dst = out / "bench" / f.relative_to(logs / "bench")
             dst.parent.mkdir(parents=True, exist_ok=True)
