@@ -811,10 +811,20 @@ def section_rocket(logs, M, md):
     pub = json.loads(pub_f.read_text())["rocket"]
     profiles = {"base": "_seed?.json", "ext": "_seed?_ext.json"}
     runs = {p: defaultdict(list) for p in profiles}
+    conf = load(d / "confirmations.json") or {}          # rocket/confirm_detections.py: replay on the golden Rocket
+    unconfirmed = 0
     for p, pat in profiles.items():
         for f in sorted(d.glob("*" + pat)):
             r = json.loads(f.read_text())
+            if r.get("first_detection") and f.name in conf and not conf[f.name]["confirmed"]:
+                r["first_detection"] = None; unconfirmed += 1          # not counted as a detection
             runs[p][(r["kind"], r["dir"])].append(r)
+    det_files = [f.name for p, pat in profiles.items() for f in d.glob("*" + pat)
+                 if json.loads(f.read_text()).get("first_detection")]
+    M["RocDetections"] = len(det_files)
+    M["RocDetConfirmed"] = sum(1 for n in det_files if conf.get(n, {}).get("confirmed"))
+    M["RocDetUnconfirmed"] = unconfirmed
+    M["RocDetNotReplayed"] = sum(1 for n in det_files if n not in conf)
     if not runs["base"]:
         return ""
     have_ext = bool(runs["ext"])

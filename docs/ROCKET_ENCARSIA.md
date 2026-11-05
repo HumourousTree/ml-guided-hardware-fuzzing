@@ -13,13 +13,47 @@ which BenchFuzz can be compared with other fuzzers on *the same bugs*. The publi
 | | BenchFuzz (this repo) | Published (Encarsia) |
 |---|---|---|
 | DUT | Encarsia's Rocket SoC (Cascade "tiny SoC", `cascade_receptor.v`) with one EnCorpus host netlist | same netlists |
-| Stimulus | `rocket/rv64fuzz.py`: random RV64IMFD + Zicsr programs, no coverage feedback | DifuzzRTL / ProcessorFuzz (coverage on and off), Cascade |
+| Stimulus | `rocket/rv64fuzz.py`, no coverage feedback. Profile **base**: random RV64IMFD + Zicsr on fcsr/frm/fflags/mscratch, no exceptions. Profile **ext**: base + machine-mode CSRs, exceptions and compressed instructions (below) | DifuzzRTL / ProcessorFuzz (coverage on and off), Cascade |
 | Reference | Spike (riscv-isa-sim, pinned commit) | Spike (DifuzzRTL, ProcessorFuzz); Cascade checks its own programs |
-| Oracle | end state: x1-x30, f0-f31, fcsr, mscratch and 32 data dwords dumped through Cascade's MMIO port, compared with Spike; non-termination is also a detection | per fuzzer |
-| Budget | 5 seeds x up to 2,000 programs per bug (minutes per bug) | 24 h per bug on one core |
+| Oracle | end state: x1-x30, f0-f31, fcsr, mscratch and 32 data dwords (ext: also mstatus, mepc, mcause, mtval, mie) dumped through Cascade's MMIO port, compared with Spike; non-termination is also a detection | per fuzzer |
+| Budget | base: 5 seeds x up to 2,000 programs per bug; ext: 5 seeds x up to 400 (minutes per bug) | 24 h per bug on one core |
 
 BenchFuzz's per-retirement (lockstep) oracle is not used here: the Rocket netlists have no RVFI port. On PicoRV32 the
 end-state oracle detects the same bugs as lockstep, only later (study B1, `docs/EXPERIMENTS.md`).
+
+## The ext profile, and why it exists
+
+The base campaign missed three broken conditionals that published fuzzers find. `rocket/locate_bugs.py` shows that 11 of
+the 15 broken conditionals (including all three) are in Rocket's `CSRFile`, which the base profile reaches only through the
+FP CSRs and mscratch, and that most undetected signal mix-ups touch `RVCExpander`, the compressed-instruction decoder, while
+the base profile emits no compressed code. The ext profile adds exactly these, so it was designed *after* seeing the base
+misses: its results are diagnostic, not a blind second trial.
+
+* machine-mode CSR traffic: set/clear of mstatus FS and MPIE bits, reads of mstatus/mepc/mcause/mtval, read-write of mie;
+* exceptions: ecall, ebreak, illegal encodings, misaligned loads and stores, FP instructions with an invalid frm or with the
+  FPU switched off. A trap handler folds mcause, mepc and (for address faults) mtval into x29 and resumes after the
+  faulting instruction (x28 is its temporary; neither is a body destination);
+* compressed instructions: the assembler may compress everything except the trapping instructions (always 4 bytes, since
+  the handler skips 4), plus explicit `c.*` ALU operations and `c.beqz`/`c.bnez` forward branches (about 20% of the
+  executed instructions are compressed).
+
+Comparing against Spike without false alarms required neutralising behaviour the ISA leaves to the implementation. Each was
+found by calibration on the golden references and is commented in the code:
+
+| Difference between Rocket and Spike | Handling |
+|---|---|
+| reset value of mstatus.MPP (Rocket M, Spike U) | the prologue clears MPP |
+| mtval after ebreak / illegal instruction (Rocket 0, Spike pc / instruction bits; both allowed) | handler folds mtval only for address faults, then clears it |
+| WARL width of mepc / mtval / mcause writes (Rocket keeps ~40 address bits) | those CSRs are only read in the body |
+| mstatus.FS becomes Dirty conservatively on Rocket | FS and SD are masked out of body reads of mstatus (the epilogue sets FS = Dirty on both) |
+| Spike's timer interrupt is always pending (the tiny SoC has none) | mstatus.MIE is never set |
+
+`--priv=m` for Spike is *not* a fix: Rocket implements S and U (mstatus.UXL/SXL = 2). With these rules both golden
+references give 0 mismatches on 500 calibration programs each, and base-profile programs are byte-identical to before
+(`tests/test_rv64fuzz.py`).
+
+Example: mix-up 7 (dir 767, `RVCExpander`), found by no published fuzzer. The buggy core takes an exception on the legal
+compressed branch `c.bnez a1` (Spike and the golden Rocket do not), visible in the dump as a non-zero trap accumulator x29.
 
 ## Pipeline (all user space, inside WSL)
 
