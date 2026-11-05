@@ -800,6 +800,70 @@ def section_llm_hybrid(logs, M, md):
               f" | seeds above mutation / mutation-then-random: {wins}")
 
 
+def section_rocket(logs, M, md):
+    """Step 3: BenchFuzz (RV64 generator, Spike end-state oracle) on Encarsia's 30 Rocket bugs vs the published
+    DifuzzRTL / ProcessorFuzz / Cascade detections (docs/encarsia_published.json)."""
+    d = logs / "bench" / "rocket"
+    pub_f = ROOT / "docs" / "encarsia_published.json"
+    if not d.exists() or not pub_f.exists():
+        return ""
+    pub = json.loads(pub_f.read_text())["rocket"]
+    runs = defaultdict(list)
+    for f in sorted(d.glob("*_seed*.json")):
+        r = json.loads(f.read_text())
+        runs[(r["kind"], r["dir"])].append(r)
+    if not runs:
+        return ""
+    for k in ("driver", "multiplexer"):
+        g = load(d / f"golden_{k}.json")
+        if g:
+            M[f"Roc{'Mix' if k == 'driver' else 'Cond'}GoldenProgs"], M[f"Roc{'Mix' if k == 'driver' else 'Cond'}GoldenMis"] = \
+                g["programs"], g["mismatches"] + g["nonterminating"]
+    fuzzers = ["DifuzzRTL", "ProcessorFuzz", "Cascade"]
+    lines = ["\\begin{tabular}{@{}l r r r c c c@{}}\\toprule",
+             "& & \\multicolumn{2}{c}{BenchFuzz} & \\multicolumn{3}{c}{Published (24\\,h)}\\\\\\cmidrule(lr){3-4}\\cmidrule(l){5-7}",
+             "Bug & Dir & seeds & progs & DF & PF & CA\\\\\\midrule"]
+    tot = defaultdict(int)
+    ours_sets = {}
+    fig = []
+    for kind, label, key, dirs in (("driver", "Mix-up", "mixups", pub["driver_dirs"]),
+                                   ("multiplexer", "Cond.", "conditionals", pub["multiplexer_dirs"])):
+        ours = set()
+        for i, dd in enumerate(dirs, start=1):
+            rs = runs.get((kind, dd), [])
+            det = [r for r in rs if r.get("first_detection")]
+            progs = [r["first_detection"]["n_programs"] for r in det]
+            if det:
+                ours.add(i)
+            marks = ["\\checkmark" if i in pub["detected"][key][fz] else "$\\times$" for fz in fuzzers]
+            lines.append(f"{label} {i} & {dd} & {len(det)}/{len(rs)} & {fmt(st.median(progs), 0) if progs else '--'} & "
+                         + " & ".join(marks) + "\\\\")
+            fig.append((f"{label} {i}", len(det), len(rs), [i in pub["detected"][key][fz] for fz in fuzzers]))
+        ours_sets[key] = ours
+        tag = "Mix" if kind == "driver" else "Cond"
+        M[f"Roc{tag}Ours"] = len(ours)
+        M[f"Roc{tag}Runs"] = sum(len(runs.get((kind, dd), [])) for dd in dirs)
+        for fz in fuzzers:
+            M[f"Roc{tag}{fz}"] = len(pub["detected"][key][fz])
+        union = set().union(*(set(pub["detected"][key][fz]) for fz in fuzzers))
+        M[f"Roc{tag}Union"] = len(union)
+        M[f"Roc{tag}OnlyOurs"] = len(ours - union)
+        M[f"Roc{tag}OnlyOursList"] = ", ".join(str(x) for x in sorted(ours - union)) or "none"
+        M[f"Roc{tag}MissedList"] = ", ".join(str(x) for x in sorted(union - ours)) or "none"
+        M[f"Roc{tag}Missed"] = len(union - ours)
+        lines.append("\\midrule" if kind == "driver" else "")
+    M["RocOurs"] = sum(len(s) for s in ours_sets.values())          # (macro values are stored as strings)
+    all_progs = [r["first_detection"]["n_programs"] for rs in runs.values() for r in rs if r.get("first_detection")]
+    M["RocMedianProgs"] = fmt(st.median(all_progs), 0) if all_progs else "--"
+    M["RocSeeds"] = max(len(v) for v in runs.values())
+    M["RocBudget"] = f"{max(r.get('budget_programs', 0) for rs in runs.values() for r in rs):,}"
+    secs = [r["seconds"] for rs in runs.values() for r in rs]
+    M["RocHours"] = f"{sum(secs) / 3600:.1f}"
+    md.append("## Rocket / Encarsia (step 3)\n" + "\n".join(f"- {n}: {a}/{b} seeds; published DF/PF/CA {p}" for n, a, b, p in fig))
+    (logs / "bench" / "rocket" / "_figdata.json").write_text(json.dumps(fig))
+    return "\n".join(l for l in lines if l) + "\n\\bottomrule\\end{tabular}"
+
+
 def section_real_bug(M, md):
     v = load(ROOT / "hw_design" / "real_bugs" / "picorv32_fence_rd" / "verification.json")
     if not v:
@@ -944,6 +1008,7 @@ def main():
     section_llm_campaign(logs, M, md)
     section_llm_hybrid(logs, M, md)
     section_real_bug(M, md)
+    tabs["rocket"] = section_rocket(logs, M, md)
     from llm_figures import all_figures
     all_figures(logs, figs, plt, save, ROOT, at_programs)
     tabs["lit_testcases"], tabs["lit_encarsia"] = section_literature(json.loads(Path(a.lit).read_text()), logs, M, md, figs, plt, cov, bugagg)

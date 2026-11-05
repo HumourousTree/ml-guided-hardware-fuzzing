@@ -193,6 +193,37 @@ def fig_llm_hybrid(logs: Path, figs: Path, plt, save, at_programs) -> None:
     save(fig, figs, "fig_llm_hybrid"); plt.close(fig)
 
 
+def fig_encarsia_rocket(logs: Path, figs: Path, plt, save) -> None:
+    """Step 3: detection matrix on Encarsia's 30 Rocket bugs, BenchFuzz (shade = fraction of seeds) vs published."""
+    p = logs / "bench" / "rocket" / "_figdata.json"
+    if not p.exists():
+        return
+    rows = json.loads(p.read_text())           # [(name, detected_seeds, seeds, [DF, PF, CA])]
+    names = ["BenchFuzz", "DifuzzRTL", "ProcessorFuzz", "Cascade"]
+    fig, ax = plt.subplots(figsize=(7.1, 1.55))
+    for x, (bug, det, n, pub) in enumerate(rows):
+        frac = det / n if n else 0
+        ax.scatter([x], [3], s=34, marker="s", facecolor=C["informed"] if frac else "white", alpha=max(frac, .0) or 1,
+                   edgecolor=C["informed"], lw=.7, zorder=3)
+        if 0 < frac < 1:
+            ax.text(x, 3, f"{det}", fontsize=4.2, ha="center", va="center", color="white", zorder=4)
+        for yy, hit in zip((2, 1, 0), pub):
+            ax.scatter([x], [yy], s=30, marker="o", facecolor="#555555" if hit else "white", edgecolor="#555555", lw=.6,
+                       zorder=3)
+    n_mix = sum(1 for r in rows if r[0].startswith("Mix"))
+    ax.axvline(n_mix - .5, color="#999999", lw=.6, ls="--")
+    ax.set_yticks([3, 2, 1, 0]); ax.set_yticklabels(names, fontsize=6)
+    ax.set_xticks(range(len(rows))); ax.set_xticklabels([r[0].split()[-1] for r in rows], fontsize=5)
+    ax.set_xlim(-.7, len(rows) - .3); ax.set_ylim(-.6, 3.6)
+    ax.text((n_mix - 1) / 2, 3.95, "signal mix-ups", ha="center", fontsize=6, color="#444444")
+    ax.text(n_mix + (len(rows) - n_mix - 1) / 2, 3.95, "broken conditionals", ha="center", fontsize=6, color="#444444")
+    for s in ("top", "right", "left"):
+        ax.spines[s].set_visible(False)
+    ax.tick_params(length=0)
+    fig.tight_layout(pad=.3)
+    save(fig, figs, "fig_encarsia_rocket"); plt.close(fig)
+
+
 def all_figures(logs: Path, figs: Path, plt, save, root: Path, at_programs) -> None:
     if plt is None:
         return
@@ -204,3 +235,4 @@ def all_figures(logs: Path, figs: Path, plt, save, root: Path, at_programs) -> N
     fig_llm_campaign(logs, figs, plt, save)
     fig_oracle(logs, figs, plt, save)
     fig_llm_hybrid(logs, figs, plt, save, at_programs)
+    fig_encarsia_rocket(logs, figs, plt, save)
