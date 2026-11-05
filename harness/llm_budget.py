@@ -5,7 +5,8 @@ Every real LLM request goes through `LLMBudget.acquire(model)` / `record(...)`:
     GEMINI_LIMITS="model:daily:interval_s,..."; other models use GEMINI_DAILY_LIMIT / GEMINI_MIN_INTERVAL_S, default 15 / 10 s),
     persisted in logs/llm_budget.json so they survive restarts and are shared by every tool;
   * counters are kept per API key (a short hash, never the key) and per model;
-  * a 429 / RESOURCE_EXHAUSTED answer blocks that model until the quota resets, instead of retrying;
+  * a 429 for a daily limit (or a quota of 0) blocks that model until the quota resets; a 429 for a per-minute limit
+    is retried after the delay the API asks for (pico_campaign._generate_with_gemini, at most 3 times);
   * every request is appended to logs/llm_calls.jsonl (time, model, purpose, prompt/response size, outcome).
 The day is counted in US Pacific time because that is when the Gemini free-tier quota resets.
 """
@@ -29,9 +30,27 @@ except Exception:         # pragma: no cover - no tz database
 
 ROOT = Path(__file__).resolve().parents[1]
 QUOTA_MARKERS = ("429", "RESOURCE_EXHAUSTED", "quota")
-# Free-tier limits as stated by the user (RPM / RPD): 3.8-flash 15 / 1500, 3.5-flash-lite 30 / 1500, 3.1-pro-preview 2 / 50.
-# Caps keep ~20% headroom; intervals keep the request rate below the per-minute limit.
-MODEL_LIMITS = {"gemini-3.8-flash": (1200, 5.0), "gemini-3.5-flash-lite": (1200, 2.5), "gemini-3.1-pro-preview": (40, 35.0)}
+# Daily caps keep ~20% headroom below the stated 1500 RPD; intervals keep the rate below the per-minute limit that the API
+# itself reports (gemini-3.5-flash-lite: 15 RPM on this key, measured 2026-11-05, so 4.5 s = 13 RPM).
+# gemini-3.1-pro has a free-tier quota of 0 on this key (API reply, 2026-11-05); its entry only matters on a paid key.
+MODEL_LIMITS = {"gemini-3.8-flash": (1200, 5.0), "gemini-3.5-flash-lite": (1200, 4.5), "gemini-3.1-pro-preview": (40, 35.0)}
+MAX_MINUTE_WAIT_S = 120.0
+
+
+def quota_kind(error: str | None) -> str | None:
+    """None (not a quota error), 'minute' (per-minute limit: wait and retry) or 'day' (daily limit or no quota: stop)."""
+    if not error or not any(m in error for m in QUOTA_MARKERS):
+        return None
+    if "per minute" in error and "per day" not in error and "limit: 0" not in error:
+        return "minute"
+    return "day"
+
+
+def retry_delay_s(error: str) -> float:
+    """The 'Please retry in 9.98s' hint of a per-minute 429, capped; 60 s when there is none."""
+    import re
+    m = re.search(r"retry in (\d+(?:\.\d+)?)s", error or "")
+    return min(MAX_MINUTE_WAIT_S, float(m.group(1)) + 2.0) if m else 60.0
 
 
 def _key_id() -> str:
@@ -100,15 +119,20 @@ class LLMBudget:
 
     def record(self, model: str, ok: bool, purpose: str = "", prompt_chars: int = 0, response_chars: int = 0,
                error: str | None = None) -> None:
-        if error and any(m in error for m in QUOTA_MARKERS):
+        kind = quota_kind(error)
+        if kind == "day":
             with self._locked_state() as st:
                 if self._slot(model) not in st["exhausted"]:
                     st["exhausted"].append(self._slot(model))
+        logged = (error or "")[:300]
+        if kind:                                    # keep the quota metric and limit, which sit far into the message
+            i = error.find("Quota exceeded")
+            logged = f"429 {kind}: " + (error[i:i + 400] if i >= 0 else logged)
         self.call_log.parent.mkdir(parents=True, exist_ok=True)
         with open(self.call_log, "a") as f:
             f.write(json.dumps({"time": datetime.fromtimestamp(self.clock(), timezone.utc).isoformat(), "key": _key_id(), "model": model,
                                 "purpose": purpose, "ok": ok, "prompt_chars": prompt_chars,
-                                "response_chars": response_chars, "error": (error or "")[:300]}) + "\n")
+                                "response_chars": response_chars, "error": logged}) + "\n")
 
     def status(self) -> dict:
         with self._locked_state() as st:

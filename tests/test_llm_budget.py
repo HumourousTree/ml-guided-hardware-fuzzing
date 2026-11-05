@@ -77,6 +77,47 @@ class TestLLMBudget(unittest.TestCase):
             self.assertTrue(b.acquire("m")[0])
         self.assertNotIn("key-A", (b.state_file).read_text())     # only a hash is stored
 
+    # real 429 texts from the API (2026-11-05), shortened
+    MINUTE = ("ClientError: 429 RESOURCE_EXHAUSTED. You exceeded your current quota ... * Quota exceeded for metric: "
+              "generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15, model: gemini-3.5-flash-lite, "
+              "description: Generate content requests per minute limit exceeded on Free Tier.\\nPlease retry in 9.980955495s.")
+    ZERO = ("ClientError: 429 RESOURCE_EXHAUSTED. * Quota exceeded for metric: generativelanguage.googleapis.com/"
+            "generate_content_free_tier_requests, limit: 0, model: gemini-3.1-pro, description: Generate content requests per "
+            "day limit exceeded on Free Tier. * Quota exceeded for metric: ..._input_token_count, limit: 0, model: gemini-3.1-pro,"
+            " description: Generate content input tokens per minute limit exceeded on Free Tier.")
+
+    def test_per_minute_429_does_not_block_the_day(self):
+        from harness.llm_budget import quota_kind, retry_delay_s
+        self.assertEqual(quota_kind(self.MINUTE), "minute")
+        self.assertAlmostEqual(retry_delay_s(self.MINUTE), 11.980955495)
+        b, clk, d = budget(limit=10, interval=0)
+        b.acquire("m"); b.record("m", False, "x", 1, 0, self.MINUTE)
+        self.assertTrue(b.acquire("m")[0])
+        self.assertIn("limit: 15", json.loads((d / "calls.jsonl").read_text().splitlines()[0])["error"])
+
+    def test_daily_or_zero_quota_429_blocks_the_day(self):
+        from harness.llm_budget import quota_kind
+        self.assertEqual(quota_kind(self.ZERO), "day")
+        self.assertEqual(quota_kind("429 RESOURCE_EXHAUSTED"), "day")
+        self.assertIsNone(quota_kind("503 UNAVAILABLE"))
+
+
+class TestGeminiClientReuse(unittest.TestCase):
+    def test_one_client_per_key(self):
+        import os
+        from unittest import mock
+        from harness import pico_campaign as pc
+        if not pc._GENAI_AVAILABLE:
+            self.skipTest("google-genai not installed")
+        pc._GEMINI_CLIENT.clear()
+        with mock.patch.dict(os.environ, {"GEMINI_API_KEY": "test-key-not-real"}):
+            c1, _ = pc._get_gemini_client()
+            pc._GEMINI_CHATS["m"] = object()
+            c2, _ = pc._get_gemini_client()
+        self.assertIs(c1, c2)                       # a second call must not create (and later close) another client
+        self.assertIn("m", pc._GEMINI_CHATS)        # cached chats survive while the client does
+        pc._GEMINI_CLIENT.clear(); pc._GEMINI_CHATS.clear()
+
 
 if __name__ == "__main__":
     unittest.main()

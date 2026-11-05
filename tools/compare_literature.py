@@ -727,6 +727,16 @@ def section_llm_campaign(logs, M, md):
     M["CampGemValidPct"] = f"{100 * g.get('accepted', 0) / max(1, g.get('attempts', 0)):.0f}"
     last = (t.get("iterations") or [{}])[-1]
     M["CampBugsActive"] = len(last.get("active_bugs") or [])
+    its = t.get("iterations") or []
+    rep = [it for it in its if "Repair" in str(it.get("mode"))]
+    M["CampRepairIters"] = len(rep)
+    M["CampRolledBack"] = sum("rolled_back" in str(it.get("llm_source")) for it in rep)
+    M["CampExhausted"] = sum(str(it.get("llm_source")) == "exhausted" for it in rep)
+    M["CampLastRepairIter"] = max((it["iteration"] for it in rep), default="--")
+    M["CampGoldenRecoveries"] = t.get("golden_recovery_count", 0)
+    f = load(logs / "experiments" / "llm_campaign" / "final_rtl_formal.json") or {}
+    final = f[sorted(f)[-1]] if f else {}
+    M["CampFinalVerdict"] = (final.get("formal") or {}).get("verdict", "--")
     md.append(f"## LLM campaign ({t.get('gemini_model')}): {t['total_iterations']} iterations, match {t['overall_match_rate']}%, "
               f"{t['rtl_improvement_count']} accepted repairs, expansion {g.get('accepted')}/{g.get('attempts')} valid")
 

@@ -50,10 +50,12 @@ except ImportError:
 
 _GEMINI_CHATS: dict[str, object] = {}
 _GEMINI_TURNS: dict[str, int] = {}
+_GEMINI_CLIENT: dict[str, object] = {}
 _REJECTED_NOTES: dict[tuple[str, str], str] = {}   # (rtl sha, subsystem) -> why the last candidate was rolled back
 _GEMINI_MAX_TURNS = 8      # recreate the chat session so history (huge RTL prompts) cannot grow without bound
 
 from harness.llm_budget import BUDGET as _LLM_BUDGET    # free-tier request budget (daily cap, interval, stop on 429)
+from harness.llm_budget import quota_kind, retry_delay_s
 _TRANSIENT_MARKERS = ("503", "UNAVAILABLE", "500 INTERNAL", "504", "DEADLINE_EXCEEDED", "timed out", "ReadTimeout")
 _TRANSIENT_BACKOFF_S = (15, 45, 120, 240)               # retries of the same model on a temporary server-side error
 
@@ -175,8 +177,15 @@ def _get_gemini_client():
     primary = os.environ.get("GEMINI_MODEL", "gemini-3.6-flash")
     fallback = os.environ.get("GEMINI_FALLBACK_MODEL", "gemini-3.5-flash-lite")
     models = list(dict.fromkeys(m for m in (primary, fallback) if m))
-    http_options = _genai_types.HttpOptions(timeout=60000) if _genai_types else {"timeout": 60000}
-    client = _genai_module.Client(api_key=api_key, http_options=http_options)
+    # One client per key: google-genai closes its HTTP connection in Client.__del__, so a fresh client per call would
+    # leave the cached chat sessions (_GEMINI_CHATS) pointing at a closed connection ("client has been closed").
+    cache_key = hashlib.sha256(api_key.encode()).hexdigest()
+    client = _GEMINI_CLIENT.get(cache_key)
+    if client is None:
+        http_options = _genai_types.HttpOptions(timeout=60000) if _genai_types else {"timeout": 60000}
+        client = _genai_module.Client(api_key=api_key, http_options=http_options)
+        _GEMINI_CLIENT.clear(); _GEMINI_CHATS.clear(); _GEMINI_TURNS.clear()
+        _GEMINI_CLIENT[cache_key] = client
     return client, models
 
 
@@ -219,7 +228,11 @@ def _generate_with_gemini(client, models: list[str], prompt: str, purpose: str =
                 attempts.append({"model": model, "ok": False, "error": err})
                 if metered:
                     _LLM_BUDGET.record(model, False, purpose, len(prompt), 0, err)
-                # temporary server-side overload: wait and retry the same model; anything else (incl. quota) moves on
+                # temporary server-side overload or a per-minute quota: wait and retry the same model;
+                # anything else (incl. a daily quota) moves on
+                if metered and retry < len(_TRANSIENT_BACKOFF_S) and quota_kind(err) == "minute" and retry < 3:
+                    time.sleep(retry_delay_s(err))
+                    continue
                 if metered and retry < len(_TRANSIENT_BACKOFF_S) and any(m in err for m in _TRANSIENT_MARKERS):
                     time.sleep(_TRANSIENT_BACKOFF_S[retry])
                     continue

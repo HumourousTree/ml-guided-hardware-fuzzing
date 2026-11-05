@@ -61,6 +61,17 @@ if [ ! -f logs/experiments/llm_campaign_done ]; then
   GEMINI_MODEL="$MODEL" GEMINI_FALLBACK_MODEL="" python3 -m harness.pico_campaign --seconds 86400 --iterations 200 \
       --seed 20260825 --fuzz-every 8 >> logs/llm_campaign.log 2>&1
   mkdir -p logs/experiments/llm_campaign && cp logs/pico_campaign_telemetry.json logs/experiments/llm_campaign/telemetry.json
+  cp hw_design/picorv32_mutable.sv logs/experiments/llm_campaign/final_rtl.sv
+  python3 - <<'PY'
+import json
+from pathlib import Path
+from harness.template_repair import formal_equivalence
+from hw_design.bug_injector import GOLDEN_RTL
+g, c = GOLDEN_RTL.read_text(), Path("logs/experiments/llm_campaign/final_rtl.sv").read_text()
+r = {"identical": g.strip() == c.strip(), "formal": formal_equivalence(g, c)}
+Path("logs/experiments/llm_campaign/final_rtl_formal.json").write_text(json.dumps({"final_rtl.sv": r}, indent=2, default=str))
+print("final RTL vs golden:", r["formal"].get("verdict"))
+PY
   python3 -c "from hw_design.bug_injector import restore_golden; restore_golden()"
   touch logs/experiments/llm_campaign_done
 fi
@@ -72,6 +83,11 @@ if [ ! -f logs/bench/llm_hybrid/hybrid_seed0.json ]; then
 fi
 
 log "A5 stronger model ($STRONG) on the plain-mutation bugs (5 samples, no feedback loop)"
-retry python3 -m harness.repair_eval --model "$STRONG" --mode informed --samples 5 --feedback-attempts 1 --bugs $PLAIN | tee -a "$LOG"
+if probe "$STRONG"; then
+  retry python3 -m harness.repair_eval --model "$STRONG" --mode informed --samples 5 --feedback-attempts 1 --bugs $PLAIN | tee -a "$LOG"
+else   # e.g. gemini-3.1-pro has a free-tier quota of 0 on this key (API reply 2026-11-05): record it, do not retry for hours
+  log "A5 skipped: $STRONG does not answer on this key (see logs/llm_calls.jsonl for the quota reply)"
+  echo "$STRONG: no answer on this key; see logs/llm_calls.jsonl" > logs/experiments/llm_strong_skipped.txt
+fi
 
 log "TRACK A DONE"; python3 -m harness.llm_budget | tee -a "$LOG"
