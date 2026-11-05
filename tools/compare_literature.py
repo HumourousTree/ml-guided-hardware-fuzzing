@@ -730,6 +730,9 @@ def section_llm_campaign(logs, M, md):
     its = t.get("iterations") or []
     rep = [it for it in its if "Repair" in str(it.get("mode"))]
     M["CampRepairIters"] = len(rep)
+    rep_req = sum(int(it.get("repair_attempts") or 0) for it in rep)
+    M["CampRepairRequests"] = rep_req
+    M["CampRequests"] = rep_req + g.get("attempts", 0)     # CampLlmCalls counts iterations, not requests
     M["CampRolledBack"] = sum("rolled_back" in str(it.get("llm_source")) for it in rep)
     M["CampExhausted"] = sum(str(it.get("llm_source")) == "exhausted" for it in rep)
     M["CampLastRepairIter"] = max((it["iteration"] for it in rep), default="--")
