@@ -62,3 +62,9 @@ bash scripts/setup_rocket_env.sh
 python3 rocket/run_encarsia.py --seeds 5 --programs 2000 --jobs 6 --build-jobs 2    # -> logs/bench/rocket/
 python tools/compare_literature.py                                                  # table tab_rocket, figure fig_encarsia_rocket
 ```
+
+The campaign is resumable: each bug and seed writes its own result file as soon as it finishes, and finished files are
+skipped on a rerun (only runs in progress at the interruption start over). After a closed session, a reboot or a WSL
+restart, `bash scripts/resume_background.sh` restarts whatever is unfinished (Rocket campaign and the LLM runner, see
+`docs/EXPERIMENTS.md`), and `bash scripts/resume_background.sh status` shows what is running. From Windows, detached:
+`Start-Process wsl -WindowStyle Hidden -ArgumentList '-d Ubuntu -- bash "<repo in /mnt/c>/scripts/resume_background.sh"'`.

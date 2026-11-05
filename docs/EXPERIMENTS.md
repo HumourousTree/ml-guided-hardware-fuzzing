@@ -107,6 +107,15 @@ Status: `python3 -m harness.llm_budget`.
 All figures use one colour-blind-safe palette (Okabe-Ito), are saved as PDF (paper) and PNG (preview) with a tight bounding box,
 and are skipped silently when their data is missing.
 
+## Interruptions and resuming
+
+All long runs keep their results on disk as they go and skip finished work when rerun: A4b one file per seed
+(`logs/bench/llm_hybrid/`; a seed starved of LLM answers is archived and rerun), A5 one result per bug, Rocket one file
+per bug and seed (`logs/bench/rocket/`). Only the item in progress at the interruption starts over. LLM requests and the
+daily budget are logged in `logs/llm_calls.jsonl` / `logs/llm_budget.json`, so a restart does not reset the request cap.
+After a closed session, reboot or WSL restart run `bash scripts/resume_background.sh` (inside WSL), which restarts only
+unfinished, not-running jobs; `bash scripts/resume_background.sh status` shows progress.
+
 ## Reproducing the paper numbers
 
 ```bash
