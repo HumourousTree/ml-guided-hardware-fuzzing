@@ -30,10 +30,11 @@ except Exception:         # pragma: no cover - no tz database
 
 ROOT = Path(__file__).resolve().parents[1]
 QUOTA_MARKERS = ("429", "RESOURCE_EXHAUSTED", "quota")
-# Daily caps keep ~20% headroom below the stated 1500 RPD; intervals keep the rate below the per-minute limit that the API
-# itself reports (gemini-3.5-flash-lite: 15 RPM on this key, measured 2026-11-05, so 4.5 s = 13 RPM).
-# gemini-3.1-pro has a free-tier quota of 0 on this key (API reply, 2026-11-05); its entry only matters on a paid key.
-MODEL_LIMITS = {"gemini-3.8-flash": (1200, 5.0), "gemini-3.5-flash-lite": (1200, 4.5), "gemini-3.1-pro-preview": (40, 35.0)}
+# Limits as the API itself reports them for this key (429 replies, 2026-11-05), not as advertised (1500 RPD):
+#   gemini-3.5-flash-lite 15 RPM / 500 RPD -> 4.5 s interval, 400/day (20% headroom)
+#   gemini-3.1-pro        0 (no free-tier quota on this key); its entry only matters on a paid key
+#   gemini-3.8-flash      not yet observed (503/504 outage); same caps as flash-lite until a 429 says otherwise
+MODEL_LIMITS = {"gemini-3.8-flash": (400, 5.0), "gemini-3.5-flash-lite": (400, 4.5), "gemini-3.1-pro-preview": (40, 35.0)}
 MAX_MINUTE_WAIT_S = 120.0
 
 

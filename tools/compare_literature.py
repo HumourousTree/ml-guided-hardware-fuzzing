@@ -662,8 +662,11 @@ def section_llm_repair(logs, M, md):
     calls = logs / "llm_calls.jsonl"
     if calls.exists():
         recs_ = [json.loads(l) for l in calls.read_text().splitlines() if l.strip()]
-        rep = [r for r in recs_ if r["purpose"].startswith("rtl_repair")]
+        # A1 only: repair_eval tags its requests 'rtl_repair:<mode>:<bug>'; the campaign's plain 'rtl_repair' calls are A3
+        rep = [r for r in recs_ if r["purpose"].startswith("rtl_repair:informed:") and r["model"] == main_model]
         M["LlmRepairRequests"], M["LlmRepairRequestsOk"] = len(rep), sum(r["ok"] for r in rep)
+        repb = [r for r in recs_ if r["purpose"].startswith("rtl_repair:blind:") and r["model"] == main_model]
+        M["LlmBlindRepairRequests"] = len(repb)
     lines = ["\\begin{tabular}{@{}l c c c c c c@{}}\\toprule",
              "& \\multicolumn{3}{c}{" + tex_escape(main_model) + " (informed)} & Blind & Template & "
              + (tex_escape(next(iter(strong))) if strong else "--") + "\\\\\\cmidrule(lr){2-4}",
@@ -745,16 +748,29 @@ def section_llm_campaign(logs, M, md):
 
 
 def section_llm_hybrid(logs, M, md):
-    r = load(logs / "bench" / "llm_hybrid" / "hybrid_seed0.json")
-    if not r:
+    """A4: target-line LLM generator after the plateau, every seed in logs/bench/llm_hybrid, paired with the
+    mutation and mutation-then-random runs of the same seeds (logs/bench/coverage)."""
+    d = logs / "bench" / "llm_hybrid"
+    runs = [json.loads(f.read_text()) for f in sorted(d.glob("hybrid_seed*.json"))] if d.exists() else []
+    starved = [r["seed"] for r in runs if r.get("llm_starved")]
+    runs = [r for r in runs if not r.get("llm_starved")]       # the model stopped answering: not a measurement of it
+    if starved:
+        md.append(f"## LLM generator: seeds {starved} excluded (model stopped answering before the request cap)")
+    if not runs:
         return
-    s = r.get("semantic_stats") or {}
-    M["HybLlmCalls"], M["HybTargets"], M["HybTargetHit"] = s.get("llm_calls", 0), s.get("targets", 0), s.get("target_hit", 0)
-    M["HybSyntaxFixes"], M["HybSemanticFixes"], M["HybGaveUp"] = s.get("syntax_fixes", 0), s.get("semantic_fixes", 0), s.get("gave_up", 0)
-    M["HybIllegal"] = s.get("illegal", 0)
-    M["HybNoLlm"] = s.get("no_llm", 0)
+    keys = ("llm_calls", "targets", "target_hit", "syntax_fixes", "semantic_fixes", "gave_up", "illegal", "no_llm")
+    s = {k: sum((r.get("semantic_stats") or {}).get(k, 0) for r in runs) for k in keys}
+    s["target_segments"] = {}
+    for r in runs:
+        for k, v in ((r.get("semantic_stats") or {}).get("target_segments") or {}).items():
+            s["target_segments"][k] = s["target_segments"].get(k, 0) + v
+    M["HybSeeds"] = len(runs)
+    M["HybCap"] = max((r.get("llm_calls_cap") or 0) for r in runs) or "--"
+    M["HybLlmCalls"], M["HybTargets"], M["HybTargetHit"] = s["llm_calls"], s["targets"], s["target_hit"]
+    M["HybSyntaxFixes"], M["HybSemanticFixes"], M["HybGaveUp"] = s["syntax_fixes"], s["semantic_fixes"], s["gave_up"]
+    M["HybIllegal"], M["HybNoLlm"] = s["illegal"], s["no_llm"]
     # classify every targeted line segment with the same rules as the unreached-line analysis (same golden RTL)
-    segs = s.get("target_segments") or {}
+    segs = s["target_segments"]
     rtl = (ROOT / "hw_design" / "picorv32_golden.sv").read_text().splitlines()
     cats = defaultdict(int)
     for key in segs:
@@ -765,17 +781,23 @@ def section_llm_hybrid(logs, M, md):
     M["HybTargetSegsExplained"] = len(segs) - cats.get("Other (unexplained)", 0)
     if segs:
         md.append("## LLM generator targets by cause: " + ", ".join(f"{c}: {n}" for c, n in sorted(cats.items(), key=lambda kv: -kv[1])))
-    n = r["series"][-1]["n_programs"]
-    M["HybPrograms"], M["HybFinal"] = n, f"{r['series'][-1]['pct']:.2f}"
-    sw = (r.get("switched_at") or {}).get("programs")
-    M["HybSwitch"] = sw if sw else "--"
+    n = min(r["series"][-1]["n_programs"] for r in runs)
+    finals = [at_programs(r["series"], n) for r in runs]
+    M["HybPrograms"], M["HybFinal"] = n, f"{st.mean(finals):.2f}"
+    sws = [(r.get("switched_at") or {}).get("programs") for r in runs if (r.get("switched_at") or {}).get("programs")]
+    M["HybSwitch"] = f"{st.median(sws):.0f}" if sws else "--"
+    wins = {}
     for m in ("mutation", "hybrid-rand"):
-        ref = load(logs / "bench" / "coverage" / f"{m}_seed0.json")
-        if ref:
-            M[f"HybRef{macro_name(m)}"] = f"{at_programs(ref['series'], n):.2f}"
-    sem = [p for p in r["series"] if p.get("src") == "semantic"]
+        refs = [load(logs / "bench" / "coverage" / f"{m}_seed{r['seed']}.json") for r in runs]
+        if all(refs):
+            vals = [at_programs(x["series"], n) for x in refs]
+            M[f"HybRef{macro_name(m)}"] = f"{st.mean(vals):.2f}"
+            wins[m] = sum(a > b for a, b in zip(finals, vals))
+            M[f"HybBeats{macro_name(m)}"] = wins[m]             # seeds on which the LLM run ends higher
+    sem = [p for r in runs for p in r["series"] if p.get("src") == "semantic"]
     M["HybSemanticPrograms"], M["HybSemanticNewPoints"] = len(sem), sum(p["new_points"] for p in sem)
-    md.append(f"## LLM generator after the plateau: {s} | final {r['series'][-1]['pct']:.2f}% at {n} programs")
+    md.append(f"## LLM generator after the plateau ({len(runs)} seeds): {s} | mean final {st.mean(finals):.2f}% at {n} programs"
+              f" | seeds above mutation / mutation-then-random: {wins}")
 
 
 def section_real_bug(M, md):
@@ -922,6 +944,8 @@ def main():
     section_llm_campaign(logs, M, md)
     section_llm_hybrid(logs, M, md)
     section_real_bug(M, md)
+    from llm_figures import all_figures
+    all_figures(logs, figs, plt, save, ROOT, at_programs)
     tabs["lit_testcases"], tabs["lit_encarsia"] = section_literature(json.loads(Path(a.lit).read_text()), logs, M, md, figs, plt, cov, bugagg)
     for k, v in tabs.items():
         (gen / f"tab_{k}.tex").write_text(v or "\\emph{(no data)}")

@@ -342,13 +342,17 @@ def main():
         from harness.pico_campaign import _get_gemini_client, _generate_with_gemini
         client, models = _get_gemini_client()
         if client is None: raise SystemExit("semantic/hybrid need GEMINI_API_KEY (or run only random/mutation)")
-        llm_used = {"calls": 0}
+        llm_used = {"calls": 0, "unanswered": 0}
 
         def llm_fn(prompt):
             if a.llm_calls is not None and llm_used["calls"] >= a.llm_calls:
                 return None                    # request allowance spent: the generator falls back to mutation
-            llm_used["calls"] += 1
-            return _generate_with_gemini(client, models, prompt, purpose="semantic_generation")[0]
+            text = _generate_with_gemini(client, models, prompt, purpose="semantic_generation")[0]
+            if text is None:                   # quota or outage: the run no longer measures the LLM generator
+                llm_used["unanswered"] += 1
+            else:
+                llm_used["calls"] += 1
+            return text
     for seed in range(a.seed_start, a.seed_start + a.seeds):
         for m in a.methods:
             work = get_space_safe_tempdir(f"bench-{m}-{seed}-")
@@ -374,7 +378,11 @@ def main():
                        budget_seconds=a.budget_seconds, budget_programs=a.budget_programs, fence_rate=a.fence_rate)
             sem = getattr(gen, "second", gen)
             if hasattr(sem, "sg"):                     # semantic generator statistics (calls, fixes, hits, give-ups)
-                res.update(semantic_stats=dict(sem.sg.stats), llm_model=(models or [None])[0], llm_calls_cap=a.llm_calls)
+                res.update(semantic_stats=dict(sem.sg.stats), llm_model=(models or [None])[0], llm_calls_cap=a.llm_calls,
+                           llm_unanswered=llm_used["unanswered"],
+                           # starved: the model stopped answering before the request allowance was spent
+                           llm_starved=llm_used["unanswered"] > 0 and (a.llm_calls is None or llm_used["calls"] < a.llm_calls))
+                llm_used["calls"] = llm_used["unanswered"] = 0     # per run (seed)
             (out / f"{stem}.json").write_text(json.dumps(res))
             print(f"[{m} seed {seed}] programs={len(res['series'])} final={res['series'][-1]['pct'] if res['series'] else 0:.2f}% "
                   f"bug={res['bug_detected']} t={res['wall_seconds']}s", flush=True)

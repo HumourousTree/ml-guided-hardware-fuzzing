@@ -111,8 +111,9 @@
 - LlmBlindPlainPassOneCert: 0.33
 - LlmPlainBugs: 9
 - LlmUnsolvedList: branch\_inversion\_blt, stale\_latched\_branch
-- LlmRepairRequests: 209
-- LlmRepairRequestsOk: 199
+- LlmRepairRequests: 87
+- LlmRepairRequestsOk: 87
+- LlmBlindRepairRequests: 70
 
 ## Oracle study (lockstep vs end-state, 300 runs)
 - detections: lockstep 262, end-state 262
@@ -123,7 +124,7 @@
 
 ## LLM generator targets by cause: Compressed ISA (COMPRESSED_ISA=0): 4, Counter CSRs (outside RV32IM scope): 1, ld_rs2 state (unused, ENABLE_REGS_DUALPORT=1): 1, ALU options (BARREL_SHIFTER, TWO_CYCLE_*): 1
 
-## LLM generator after the plateau: {'llm_calls': 100, 'targets': 14, 'target_hit': 0, 'syntax_fixes': 30, 'semantic_fixes': 57, 'illegal': 9, 'gave_up': 14, 'no_llm': 118, 'asm_errors': {'unknown or unsupported instruction': 24, 'invalid immediate': 1}, 'target_segments': {'1629-1635': 3, '922-924': 3, '508-510': 1, '1768-1770': 2, '454-456': 3, '985-987': 1, '1280-1282': 1}} | final 64.24% at 400 programs
+## LLM generator after the plateau (1 seeds): {'llm_calls': 100, 'targets': 14, 'target_hit': 0, 'syntax_fixes': 30, 'semantic_fixes': 57, 'gave_up': 14, 'illegal': 9, 'no_llm': 118, 'target_segments': {'1629-1635': 3, '922-924': 3, '508-510': 1, '1768-1770': 2, '454-456': 3, '985-987': 1, '1280-1282': 1}} | mean final 64.24% at 400 programs | seeds above mutation / mutation-then-random: {'mutation': 1, 'hybrid-rand': 1}
 
 ## Real bug (FENCE rd): CONFIRMED: bug present on upstream, removed by the fix without regressions
 
