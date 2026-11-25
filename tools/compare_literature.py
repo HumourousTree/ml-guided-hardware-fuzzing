@@ -811,7 +811,7 @@ def section_encarsia(logs, M, md, core="rocket", P="Roc"):
     pub = json.loads(pub_f.read_text()).get(core)
     if not pub:
         return ""
-    profiles = {"base": "_seed?.json", "ext": "_seed?_ext.json"}
+    profiles = {"base": "_seed?.json", "llmflash": "_seed?_llmflash.json", "ext": "_seed?_ext.json"}
     runs = {p: defaultdict(list) for p in profiles}
     conf = load(d / "confirmations.json") or {}          # rocket/confirm_detections.py: replay on the golden core
     unconfirmed = 0
@@ -835,14 +835,17 @@ def section_encarsia(logs, M, md, core="rocket", P="Roc"):
     if not runs["base"]:
         return ""
     have_ext = bool(runs["ext"])
+    active = [p for p in profiles if runs[p]]           # profiles with runs (table columns, figure rows)
     mods = (load(d / "bug_modules.json") or {}).get("multiplexer", {})
     fuzzers = ["DifuzzRTL", "ProcessorFuzz", "Cascade"]
+    PRE = {"base": P, "ext": P + "Ext", "llmflash": P + "Llm"}
     for p in profiles:
-        pre = P if p == "base" else P + "Ext"
+        pre = PRE[p]
         for k in ("driver", "multiplexer"):
             sfx = "" if p == "base" else "_" + p
-            gs = [load(g) for g in sorted(d.glob(f"golden_{k}*{sfx}.json"))
-                  if (p == "ext") == g.name.endswith("_ext.json") and (k != "driver" or g.name.startswith("golden_driver_"))]
+            # exact names only: golden_driver_<md5>{sfx}.json / golden_multiplexer{sfx}.json (other profiles excluded)
+            rx = re.compile(rf"golden_{k}" + (r"_[0-9a-f]{8}" if k == "driver" else "") + re.escape(sfx) + r"\.json")
+            gs = [load(g) for g in sorted(d.glob(f"golden_{k}*.json")) if rx.fullmatch(g.name)]
             gs = [g for g in gs if g]
             if gs:
                 tag = "Mix" if k == "driver" else "Cond"
@@ -852,11 +855,12 @@ def section_encarsia(logs, M, md, core="rocket", P="Roc"):
     short = {"CSRFile": "CSR", "RVCExpander": "RVC", "Rocket": "core", "IBuf": "IBuf", "ALUUnit": "ALU", "Rob": "ROB",
              "BranchKillableQueue_4": "BrQ", "BranchKillableQueue_5": "BrQ", "BranchMaskGenerationLogic": "BrMask",
              "RoundAnyRawFNToRecFN_4": "FPU"}
-    nb = 2 if have_ext else 1
+    nb = len(active)
+    colname = {"base": "base", "llmflash": "LLM", "ext": "ext"}
     head = (f"& & \\multicolumn{{{nb}}}{{c}}{{BenchFuzz}} & \\multicolumn{{3}}{{c}}{{Published (24\\,h)}}\\\\"
             f"\\cmidrule(lr){{3-{2 + nb}}}\\cmidrule(l){{{3 + nb}-{5 + nb}}}")
     lines = [f"\\begin{{tabular}}{{@{{}}l l {'r ' * nb}c c c@{{}}}}\\toprule", head,
-             "Bug & Mod. & base" + (" & ext" if have_ext else "") + " & DF & PF & CA\\\\\\midrule"]
+             "Bug & Mod. & " + " & ".join(colname[p] for p in active) + " & DF & PF & CA\\\\\\midrule"]
     fig = []
     ours_sets = {p: {} for p in profiles}
 
@@ -873,7 +877,7 @@ def section_encarsia(logs, M, md, core="rocket", P="Roc"):
         for i, dd in enumerate(dirs, start=1):
             row, figrow = [], {"bug": f"{label} {i}", "pub": [i in pub["detected"][key][fz] for fz in fuzzers]}
             for p in profiles:
-                if p == "ext" and not have_ext:
+                if p not in active:
                     continue
                 rs = runs[p].get((kind, dd), [])
                 det, txt = cell(rs)
@@ -891,9 +895,9 @@ def section_encarsia(logs, M, md, core="rocket", P="Roc"):
             M[f"{P}{tag}{fz}"] = len(pub["detected"][key][fz])
         M[f"{P}{tag}Union"] = len(union)
         for p in profiles:
-            if p == "ext" and not have_ext:
+            if p not in active:
                 continue
-            pre = P if p == "base" else P + "Ext"
+            pre = PRE[p]
             o = ours[p]
             ours_sets[p][key] = o
             M[f"{pre}{tag}Ours"] = len(o)
@@ -921,9 +925,9 @@ def section_encarsia(logs, M, md, core="rocket", P="Roc"):
     M[P + "CondCsrNobody"] = sum(1 for i, dd in enumerate(pub["multiplexer_dirs"], 1)
                                 if mods.get(str(dd)) == "CSRFile" and i not in found_cond)
     for p in profiles:
-        if p == "ext" and not have_ext:
+        if p not in active:
             continue
-        pre = P if p == "base" else P + "Ext"
+        pre = PRE[p]
         rr = runs[p]
         M[f"{pre}Ours"] = sum(len(s) for s in ours_sets[p].values())          # (macro values are stored as strings)
         all_progs = [r["first_detection"]["n_programs"] for rs in rr.values() for r in rs if r.get("first_detection")]

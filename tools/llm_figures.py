@@ -202,8 +202,10 @@ def fig_encarsia(logs: Path, figs: Path, plt, save, core: str = "rocket") -> Non
     rows = json.loads(p.read_text())           # [{bug, base: [det, n], ext: [det, n]?, pub: [DF, PF, CA], module}]
     if rows and not isinstance(rows[0], dict):  # older format: (name, det, n, pub)
         rows = [{"bug": r[0], "base": [r[1], r[2]], "pub": r[3], "module": ""} for r in rows]
-    ours = [("base", "BenchFuzz", C["informed"])] + ([("ext", "BenchFuzz +CSR/traps/RVC", C["strong"])]
-                                                     if any("ext" in r for r in rows) else [])
+    ours = [(k, lab, col) for k, lab, col in (("base", "BenchFuzz random", C["informed"]),
+                                               ("llmflash", "BenchFuzz + LLM templates", C["llm"]),
+                                               ("ext", "BenchFuzz hand-designed", C["strong"]))
+            if k == "base" or any(k in r for r in rows)]
     pubn = ["DifuzzRTL", "ProcessorFuzz", "Cascade"]
     ny = len(ours) + len(pubn)
     fig, ax = plt.subplots(figsize=(7.1, 0.42 * ny + .55))
@@ -255,3 +257,5 @@ def all_figures(logs: Path, figs: Path, plt, save, root: Path, at_programs) -> N
     fig_llm_hybrid(logs, figs, plt, save, at_programs)
     fig_encarsia(logs, figs, plt, save, "rocket")
     fig_encarsia(logs, figs, plt, save, "boom")
+    import comparison_figures                  # head-to-head, soundness and capability figures (Sec. sota)
+    comparison_figures.all_comparison(logs, figs, plt, save, root)

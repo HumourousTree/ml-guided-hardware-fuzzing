@@ -19,7 +19,7 @@
 \newcommand{\BoomCondDifuzzRTL}{6}
 \newcommand{\BoomCondGoldenMis}{0}
 \newcommand{\BoomCondGoldenProgs}{500}
-\newcommand{\BoomCondGoldenRefs}{3}
+\newcommand{\BoomCondGoldenRefs}{1}
 \newcommand{\BoomCondMissed}{0}
 \newcommand{\BoomCondMissedList}{none}
 \newcommand{\BoomCondOnlyOurs}{0}
@@ -29,12 +29,12 @@
 \newcommand{\BoomCondProcessorFuzz}{6}
 \newcommand{\BoomCondRuns}{75}
 \newcommand{\BoomCondUnion}{6}
-\newcommand{\BoomDetConfirmed}{180}
-\newcommand{\BoomDetGoldenDiffers}{0}
+\newcommand{\BoomDetConfirmed}{275}
+\newcommand{\BoomDetGoldenDiffers}{1}
 \newcommand{\BoomDetNotReplayed}{0}
 \newcommand{\BoomDetNotReproduced}{0}
-\newcommand{\BoomDetUnconfirmed}{0}
-\newcommand{\BoomDetections}{180}
+\newcommand{\BoomDetUnconfirmed}{1}
+\newcommand{\BoomDetections}{276}
 \newcommand{\BoomExtBudget}{400}
 \newcommand{\BoomExtCondGoldenMis}{0}
 \newcommand{\BoomExtCondGoldenProgs}{1000}
@@ -67,12 +67,38 @@
 \newcommand{\BoomExtPartialBugs}{0}
 \newcommand{\BoomExtSeeds}{5}
 \newcommand{\BoomHours}{20.2}
+\newcommand{\BoomLlmBudget}{400}
+\newcommand{\BoomLlmCondGoldenMis}{0}
+\newcommand{\BoomLlmCondGoldenProgs}{1000}
+\newcommand{\BoomLlmCondGoldenRefs}{1}
+\newcommand{\BoomLlmCondMissed}{0}
+\newcommand{\BoomLlmCondMissedList}{none}
+\newcommand{\BoomLlmCondOnlyOurs}{1}
+\newcommand{\BoomLlmCondOnlyOursList}{4}
+\newcommand{\BoomLlmCondOurs}{7}
+\newcommand{\BoomLlmCondOursList}{1, 2, 4, 7, 11, 12, 15}
+\newcommand{\BoomLlmCondRuns}{75}
+\newcommand{\BoomLlmHours}{7.0}
+\newcommand{\BoomLlmMedianProgs}{1}
+\newcommand{\BoomLlmMixGoldenMis}{0}
+\newcommand{\BoomLlmMixGoldenProgs}{1000}
+\newcommand{\BoomLlmMixGoldenRefs}{14}
+\newcommand{\BoomLlmMixMissed}{1}
+\newcommand{\BoomLlmMixMissedList}{12}
+\newcommand{\BoomLlmMixOnlyOurs}{0}
+\newcommand{\BoomLlmMixOnlyOursList}{none}
+\newcommand{\BoomLlmMixOurs}{12}
+\newcommand{\BoomLlmMixOursList}{1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 14, 15}
+\newcommand{\BoomLlmMixRuns}{75}
+\newcommand{\BoomLlmOurs}{19}
+\newcommand{\BoomLlmPartialBugs}{0}
+\newcommand{\BoomLlmSeeds}{5}
 \newcommand{\BoomMedianProgs}{1}
 \newcommand{\BoomMixCascade}{10}
 \newcommand{\BoomMixDifuzzRTL}{9}
 \newcommand{\BoomMixGoldenMis}{0}
 \newcommand{\BoomMixGoldenProgs}{500}
-\newcommand{\BoomMixGoldenRefs}{42}
+\newcommand{\BoomMixGoldenRefs}{14}
 \newcommand{\BoomMixMissed}{1}
 \newcommand{\BoomMixMissedList}{12}
 \newcommand{\BoomMixOnlyOurs}{0}
@@ -386,7 +412,7 @@
 \newcommand{\RocCondDifuzzRTL}{5}
 \newcommand{\RocCondGoldenMis}{0}
 \newcommand{\RocCondGoldenProgs}{500}
-\newcommand{\RocCondGoldenRefs}{3}
+\newcommand{\RocCondGoldenRefs}{1}
 \newcommand{\RocCondMissed}{3}
 \newcommand{\RocCondMissedList}{2, 6, 10}
 \newcommand{\RocCondOnlyOurs}{0}
@@ -396,12 +422,12 @@
 \newcommand{\RocCondProcessorFuzz}{5}
 \newcommand{\RocCondRuns}{75}
 \newcommand{\RocCondUnion}{6}
-\newcommand{\RocDetConfirmed}{134}
+\newcommand{\RocDetConfirmed}{212}
 \newcommand{\RocDetGoldenDiffers}{0}
 \newcommand{\RocDetNotReplayed}{0}
 \newcommand{\RocDetNotReproduced}{1}
 \newcommand{\RocDetUnconfirmed}{1}
-\newcommand{\RocDetections}{135}
+\newcommand{\RocDetections}{213}
 \newcommand{\RocExtBudget}{400}
 \newcommand{\RocExtCondGoldenMis}{0}
 \newcommand{\RocExtCondGoldenProgs}{1000}
@@ -420,7 +446,7 @@
 \newcommand{\RocExtMedianProgs}{1}
 \newcommand{\RocExtMixGoldenMis}{0}
 \newcommand{\RocExtMixGoldenProgs}{1000}
-\newcommand{\RocExtMixGoldenRefs}{6}
+\newcommand{\RocExtMixGoldenRefs}{5}
 \newcommand{\RocExtMixLostList}{none}
 \newcommand{\RocExtMixMissed}{0}
 \newcommand{\RocExtMixMissedList}{none}
@@ -434,12 +460,38 @@
 \newcommand{\RocExtPartialBugs}{0}
 \newcommand{\RocExtSeeds}{5}
 \newcommand{\RocHours}{23.1}
+\newcommand{\RocLlmBudget}{400}
+\newcommand{\RocLlmCondGoldenMis}{0}
+\newcommand{\RocLlmCondGoldenProgs}{1000}
+\newcommand{\RocLlmCondGoldenRefs}{1}
+\newcommand{\RocLlmCondMissed}{2}
+\newcommand{\RocLlmCondMissedList}{2, 10}
+\newcommand{\RocLlmCondOnlyOurs}{0}
+\newcommand{\RocLlmCondOnlyOursList}{none}
+\newcommand{\RocLlmCondOurs}{4}
+\newcommand{\RocLlmCondOursList}{6, 7, 12, 15}
+\newcommand{\RocLlmCondRuns}{75}
+\newcommand{\RocLlmHours}{3.8}
+\newcommand{\RocLlmMedianProgs}{1}
+\newcommand{\RocLlmMixGoldenMis}{0}
+\newcommand{\RocLlmMixGoldenProgs}{1000}
+\newcommand{\RocLlmMixGoldenRefs}{5}
+\newcommand{\RocLlmMixMissed}{0}
+\newcommand{\RocLlmMixMissedList}{none}
+\newcommand{\RocLlmMixOnlyOurs}{5}
+\newcommand{\RocLlmMixOnlyOursList}{5, 7, 8, 9, 10}
+\newcommand{\RocLlmMixOurs}{12}
+\newcommand{\RocLlmMixOursList}{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 13, 15}
+\newcommand{\RocLlmMixRuns}{75}
+\newcommand{\RocLlmOurs}{16}
+\newcommand{\RocLlmPartialBugs}{1}
+\newcommand{\RocLlmSeeds}{5}
 \newcommand{\RocMedianProgs}{1}
 \newcommand{\RocMixCascade}{7}
 \newcommand{\RocMixDifuzzRTL}{5}
 \newcommand{\RocMixGoldenMis}{0}
 \newcommand{\RocMixGoldenProgs}{500}
-\newcommand{\RocMixGoldenRefs}{15}
+\newcommand{\RocMixGoldenRefs}{5}
 \newcommand{\RocMixMissed}{0}
 \newcommand{\RocMixMissedList}{none}
 \newcommand{\RocMixOnlyOurs}{0}
