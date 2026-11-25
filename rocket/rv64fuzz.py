@@ -68,7 +68,36 @@ MSTATUS_BITS = [0x2000, 0x4000, 0x6000, 0x80]   # FS and MPIE only: MPRV/MPP wou
 # FS bits are only ever set (a no-op on FS = Dirty), never cleared: with the FPU off, Spike traps FP instructions and FP-CSR
 # accesses that the bug-free Rocket executes in some cases (16 false alarms in the first ext campaign, all caught by replay;
 # results archived in logs/archive/rocket_ext_v1).
-PROFILES = ("base", "ext")
+PROFILES = ("base", "ext", "llm")
+# Profile "llm" (Step 2): the base instruction mix plus validated templates written by an LLM from the ISA census
+# (rocket/isa_census.py, rocket/llm_templates.py), on the ext harness (trap handler, x28/x29 reserved, FS never off) but
+# without any of the hand-designed ext classes.
+TEMPLATE_RE = re.compile(r"\{(x[A-Z]|f[A-Z]|imm:-?\d+:-?\d+|off:(?:1|2|4|8)|label:[A-Z])\}")
+
+
+def expand_template(tpl: dict, rng: random.Random, top: int, uid: int) -> list[str]:
+    """One instance of a template: named registers {xA}.. (writable, consistent within the instance), {fA}.., {imm:LO:HI},
+    {off:ALIGN} (offset into the 256-byte data region at x30), {label:A} (unique label). Compressed templates (rvc=True)
+    are assembled with RVC enabled, all others without (the trap handler skips 4-byte instructions)."""
+    regs = {}
+
+    def sub(m):
+        k = m.group(1)
+        if k[0] == "x" and len(k) == 2:
+            return regs.setdefault(k, f"x{rng.randint(1, top)}")
+        if k[0] == "f" and len(k) == 2:
+            return regs.setdefault(k, f"f{rng.randint(0, 31)}")
+        if k.startswith("imm:"):
+            lo, hi = map(int, k[4:].split(":"))
+            return str(rng.randint(lo, hi))
+        if k.startswith("off:"):
+            al = int(k[4:])
+            return str(rng.randrange(0, DATA_DWORDS * 8 - 8 + 1, al))
+        return f"T{uid}_{k[6:]}"
+    lines = [TEMPLATE_RE.sub(sub, l) for l in tpl["asm"]]
+    if tpl.get("rvc"):
+        return [".option push", ".option rvc"] + lines + [".option pop"]
+    return lines
 RVC_REG = lambda rng: f"x{rng.randint(8, 15)}"   # the 3-bit register field of most compressed instructions
 
 
@@ -79,17 +108,21 @@ RVC_REG = lambda rng: f"x{rng.randint(8, 15)}"   # the 3-bit register field of m
 QUIRKS = {"rocket": {}, "boom": {"subst": {"fdiv.d": "fmul.d"}}}
 
 
-def gen_program(rng: random.Random, length: int, fp: bool = True, profile: str = "base", subst=None) -> str:
+def gen_program(rng: random.Random, length: int, fp: bool = True, profile: str = "base", subst=None,
+                templates=None) -> str:
     subst = subst or {}
-    traps = profile == "ext"
+    traps = profile in ("ext", "llm")                       # the ext harness (trap handler, reserved x28/x29)
+    ext_mix = profile == "ext"                              # the hand-designed ext instruction classes
     top = 27 if traps else 29                               # traps: x28/x29 belong to the trap handler
     rd = lambda: f"x{rng.randint(1, top)}"                 # never x30 (data pointer) or x31 (dump pointer)
     rs = lambda: f"x{rng.randint(0, 31)}"
     fr = lambda: f"f{rng.randint(0, 31)}"
     body, lab = [], 0
     classes = [("alu", 30), ("imm", 20), ("mul", 12), ("mem", 18), ("br", 8)] + ([("fp", 9), ("csr", 3)] if fp else [])
-    if traps:
+    if ext_mix:
         classes += [("mcsr", 6), ("exc", 5), ("rvc", 25)]
+    if templates:
+        classes += [("tpl", 25)]
     names, weights = zip(*classes)
     i = 0
     while i < length:
@@ -161,6 +194,8 @@ def gen_program(rng: random.Random, length: int, fp: bool = True, profile: str =
                 else:
                     body.append(f"{rng.choice(['csrrwi', 'csrrsi', 'csrrci'])} {rd() if rng.random() < .7 else 'x0'}, "
                                 f"{csr}, {rng.randint(0, 31)}")
+        elif c == "tpl":
+            body += expand_template(rng.choice(templates), rng, top, lab); lab += 1
         elif c == "rvc":
             k, r = rng.random(), RVC_REG(rng)
             if k < .3:
@@ -204,15 +239,16 @@ def gen_program(rng: random.Random, length: int, fp: bool = True, profile: str =
         i += 1
     pro = ["  .section .text.init", "  .option norvc", "  .globl _start", "_start:", "  li x31, 0x6000", "  csrs mstatus, x31",
            "  la x30, data"]
-    if traps:
+    if ext_mix:
         pro += ["  .option rvc"]                           # ext: the assembler may compress everything but traps
-        pro += ["  la x28, trap", "  csrw mtvec, x28", "  li x28, 0x1800", "  csrc mstatus, x28"]  # MPP reset value differs
+    if traps:                                              # harness: trap handler, MPP reset value differs
+        pro += ["  la x28, trap", "  csrw mtvec, x28", "  li x28, 0x1800", "  csrc mstatus, x28"]
     pro += [f"  li x{r}, {rnd64(rng)}" for r in range(1, 30)]
     if traps:
         pro += ["  li x28, 0", "  li x29, 0"]
     if fp:
         pro += [f"  fmv.d.x f{r}, x{rng.randint(1, 29)}" for r in range(32)] + [f"  fsrmi x0, {rng.randint(0, 4)}"]
-    body = ([".option rvc"] + body) if traps else body
+    body = ([".option rvc"] + body) if ext_mix else body
     epi = (["  li x31, 0x6000", "  csrs mstatus, x31"] if traps else []) +           [f"  li x31, {DUMP}"] + [f"  sd x{r}, 0(x31)" for r in range(1, 31)]
     if fp:
         for r in range(32):
@@ -263,15 +299,18 @@ def run_rocket(sim: Path, elf: Path, simlen: int, timeout: int = 300) -> tuple[l
 
 
 def campaign(sim: Path, n: int, seed: int, length: int, simlen: int, fp: bool, stop_on_bug: bool, log=None,
-             profile: str = "base", core: str = "rocket") -> dict:
+             profile: str = "base", core: str = "rocket", templates=None) -> dict:
     rng = random.Random(seed)
     quirks = QUIRKS.get(core, {})
+    if profile == "llm" and templates is None:          # accepted Step 2 templates (BENCHFUZZ_TEMPLATES overrides)
+        tf = Path(os.environ.get("BENCHFUZZ_TEMPLATES", Path(__file__).resolve().parent / "templates" / "llm.json"))
+        templates = json.loads(tf.read_text())["templates"]
     res = {"seed": seed, "length": length, "fp": fp, "profile": profile, "core": core, "quirks": quirks, "programs": 0, "mismatches": 0, "nonterminating": 0,
            "spike_failures": 0, "first_detection": None, "t_start": time.time()}
     work = Path(tempfile.mkdtemp(prefix="rv64fuzz-"))
     try:
         for k in range(n):
-            asm = gen_program(rng, length, fp, profile, quirks.get("subst"))
+            asm = gen_program(rng, length, fp, profile, quirks.get("subst"), templates)
             elf = build_elf(asm, work)
             exp = run_spike(elf)
             if exp is None:                 # the reference did not finish: not a valid test (counted, never a detection)
