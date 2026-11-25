@@ -1,0 +1,1 @@
+{"seed": 777, "length": 40, "fp": true, "profile": "llm", "core": "rocket", "quirks": {}, "programs": 1000, "mismatches": 0, "nonterminating": 0, "spike_failures": 0, "first_detection": null, "t_start": 1795632838.4783623, "seconds": 230.7, "golden": "golden_driver_d0f80213"}

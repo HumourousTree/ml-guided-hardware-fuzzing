@@ -196,6 +196,12 @@
 - Cond. 14: base 0/5, ext 0/5; published DF/PF/CA [False, False, False] Rob
 - Cond. 15: base 5/5, ext 5/5; published DF/PF/CA [True, True, False] RoundAnyRawFNToRecFN_4
 
+## Step 2: LLM-guided generation on Rocket and BOOM
+- random (base): 7 & 3 & -- | 12 & 6 & --
+- LLM templates, flash-lite: 8 & 4 & M10 | 12 & 6 & --
+- LLM templates, 3-flash: 12 & 4 & M5, M7, M8, M9, M10 | 12 & 7 & C4
+- hand-designed (ext): 13 & 4 & M5, M7, M8, M9, M10, M12 | 12 & 6 & --
+
 ## Literature (quoted, not re-measured)
 - ChipFuzzer: Wang et al., When Fuzzing Meets Understanding: LLM-Driven Semantic Test Generation for RTL Verification, arXiv:2607.10340v1, 11 Jul 2026 (peer-reviewed: False); comparable: method only (plateau rule); numbers no
 - Cascade: Solt, Ceesay-Seitz, Razavi, Cascade: CPU Fuzzing via Intricate Program Generation, USENIX Security 2024 (peer-reviewed: True); comparable: P6 only: same DUT commit f00a88c, reproduced by BenchFuzz (E0 P6 probe and blind fuzzing)

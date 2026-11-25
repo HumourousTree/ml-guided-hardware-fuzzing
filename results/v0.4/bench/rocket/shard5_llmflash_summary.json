@@ -1,0 +1,15 @@
+[
+ {
+  "item": "cal:golden_multiplexer",
+  "programs": 1000,
+  "mismatches": 0,
+  "nonterminating": 0,
+  "seconds": 207
+ },
+ {
+  "item": "bug:multiplexer:71",
+  "detected": 0,
+  "seeds": 5,
+  "seconds": 250
+ }
+]

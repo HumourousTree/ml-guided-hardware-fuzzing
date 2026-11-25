@@ -115,6 +115,14 @@ Not done: anything needing an LLM (semantic/hybrid generation, pass@k) - no API 
 - The paper text moved to the Overleaf repo HumourousTree/Hardware-Fuzzing; `paper/` here holds only the generated tables,
   macros and figures (`tools/compare_literature.py --tex` checks the Overleaf copy for undefined macros).
 
+# v0.8 (2026-11-26: cloud campaigns, BOOM complete, LLM-guided generation on Rocket/BOOM)
+- Cloud campaigns on GitHub Actions (toolchain image, `rocket/cloud_shard.py`, `rocket/merge_shards.py`, workflow
+  `encarsia-campaign.yml`): results identical to the laptop for the same seeds; up to 20 parallel runners.
+- BOOM complete: 12/15 mix-ups, 6/15 conditionals, 180/180 detections confirmed; two more BOOM FP deviations filtered
+  (invalid frm not trapping, `rocket/check_frm.py`; single-precision division in template-heavy programs).
+- Step 2, LLM-guided generation (`rocket/isa_census.py`, `rocket/llm_templates.py`): with gemini-3-flash-preview templates
+  12/15 Rocket mix-ups (hand-designed: 13) and a BOOM conditional no published fuzzer finds. Paper: Sec. llmgen, Table llmgen.
+
 # v0.7 (2026-11-25: Rocket cleanup, BOOM, A4 complete, A5 started)
 - Rocket mix-ups are now replayed against their own reference (5 distinct `reference_driver.rtlil`; previously bug 767's
   for all). All 6 references calibrated (0 mismatches); base result unchanged (49/50 confirmed).

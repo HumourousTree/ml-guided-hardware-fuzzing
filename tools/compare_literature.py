@@ -943,6 +943,74 @@ def section_encarsia(logs, M, md, core="rocket", P="Roc"):
     return "\n".join(l for l in lines if l) + "\n\\bottomrule\\end{tabular}"
 
 
+def section_llmgen(logs, M, md):
+    """Step 2: LLM-written generator templates on Rocket and BOOM (profiles llm = gemini-3.5-flash-lite, llmflash =
+    gemini-3-flash-preview) against base and the hand-designed ext, per bug, replay-confirmed (macros Gen*)."""
+    pub_f = ROOT / "docs" / "encarsia_published.json"
+    if not pub_f.exists():
+        return ""
+    pubs = json.loads(pub_f.read_text())
+    profiles = [("base", "random (base)"), ("llm", "LLM templates, flash-lite"), ("llmflash", "LLM templates, 3-flash"),
+                ("ext", "hand-designed (ext)")]
+    tfiles = {"llm": ROOT / "rocket" / "templates" / "llm.json", "llmflash": ROOT / "rocket" / "templates" / "llm_flash.json"}
+    for p, f in tfiles.items():
+        t = load(f)
+        if t:
+            tag = "Lite" if p == "llm" else "Flash"
+            M[f"Gen{tag}Requests"] = t["requests"]
+            M[f"Gen{tag}Answered"] = sum(1 for r in t["rounds"] if r["proposed"])
+            M[f"Gen{tag}Accepted"] = len(t["templates"])
+            M[f"Gen{tag}Proposed"] = len(t["templates"]) + len(t["rejected"])
+            M[f"Gen{tag}Model"] = tex_escape(t["model"])
+            for g in ("A", "C"):
+                M[f"Gen{tag}Census{g}"] = f"{t['census_after']['groups'][g]['executed']}/{t['census_after']['groups'][g]['total']}"
+    lines = ["\\begin{tabular}{@{}l r r l r r l@{}}\\toprule",
+             "& \\multicolumn{3}{c}{Rocket} & \\multicolumn{3}{c}{BOOM}\\\\\\cmidrule(lr){2-4}\\cmidrule(l){5-7}",
+             "Generator & Mix & Cond & beyond published & Mix & Cond & beyond published\\\\\\midrule"]
+    rows = {p: [] for p, _ in profiles}
+    any_data = False
+    for core, P in (("rocket", "Rocket"), ("boom", "Boom")):
+        d = logs / "bench" / core
+        pub = pubs.get(core)
+        if not d.exists() or not pub:
+            continue
+        conf = load(d / "confirmations.json") or {}
+        union = {k: set().union(*(set(pub["detected"][k][fz]) for fz in ("DifuzzRTL", "ProcessorFuzz", "Cascade")))
+                 for k in ("mixups", "conditionals")}
+        for p, _ in profiles:
+            sfx = "" if p == "base" else "_" + p
+            found = {"mixups": set(), "conditionals": set()}
+            det = ok = 0
+            for f in d.glob(f"*_seed?{sfx}.json"):
+                r = json.loads(f.read_text())
+                if not r.get("first_detection"):
+                    continue
+                det += 1
+                if conf.get(f.name, {}).get("confirmed"):
+                    ok += 1
+                    key = "mixups" if r["kind"] == "driver" else "conditionals"
+                    dirs = pub["driver_dirs"] if key == "mixups" else pub["multiplexer_dirs"]
+                    found[key].add(dirs.index(r["dir"]) + 1)
+            if not det:
+                rows[p].append("-- & -- & --"); continue
+            any_data = True
+            beyond = ([f"M{x}" for x in sorted(found["mixups"] - union["mixups"])]
+                      + [f"C{x}" for x in sorted(found["conditionals"] - union["conditionals"])])
+            rows[p].append(f"{len(found['mixups'])} & {len(found['conditionals'])} & {', '.join(beyond) or '--'}")
+            tag = {"base": "Base", "llm": "Lite", "llmflash": "Flash", "ext": "Ext"}[p]
+            M[f"Gen{P}{tag}Mix"], M[f"Gen{P}{tag}Cond"] = len(found["mixups"]), len(found["conditionals"])
+            M[f"Gen{P}{tag}Beyond"] = len(beyond)
+            M[f"Gen{P}{tag}BeyondList"] = ", ".join(beyond) or "none"
+            M[f"Gen{P}{tag}Confirmed"], M[f"Gen{P}{tag}Detections"] = ok, det
+    if not any_data:
+        return ""
+    for p, label in profiles:
+        lines.append(f"{label} & " + " & ".join(rows[p]) + "\\\\")
+    md.append("## Step 2: LLM-guided generation on Rocket and BOOM\n" +
+              "\n".join(f"- {label}: " + " | ".join(rows[p]) for p, label in profiles))
+    return "\n".join(lines) + "\n\\bottomrule\\end{tabular}"
+
+
 def section_real_bug(M, md):
     v = load(ROOT / "hw_design" / "real_bugs" / "picorv32_fence_rd" / "verification.json")
     if not v:
@@ -1089,6 +1157,7 @@ def main():
     section_real_bug(M, md)
     tabs["rocket"] = section_encarsia(logs, M, md, "rocket", "Roc")
     tabs["boom"] = section_encarsia(logs, M, md, "boom", "Boom")
+    tabs["llmgen"] = section_llmgen(logs, M, md)
     from llm_figures import all_figures
     all_figures(logs, figs, plt, save, ROOT, at_programs)
     tabs["lit_testcases"], tabs["lit_encarsia"] = section_literature(json.loads(Path(a.lit).read_text()), logs, M, md, figs, plt, cov, bugagg)

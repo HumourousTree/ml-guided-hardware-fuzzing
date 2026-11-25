@@ -1,0 +1,1 @@
+{"seed": 1, "length": 40, "fp": true, "profile": "llm", "core": "rocket", "quirks": {}, "programs": 400, "mismatches": 0, "nonterminating": 0, "spike_failures": 0, "first_detection": null, "t_start": 1795632886.2931952, "seconds": 222.5, "kind": "driver", "dir": 832, "budget_programs": 400}

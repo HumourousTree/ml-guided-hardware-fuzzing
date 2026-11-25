@@ -1,0 +1,1 @@
+{"seed": 777, "length": 40, "fp": true, "profile": "llmflash", "core": "rocket", "quirks": {}, "programs": 1000, "mismatches": 0, "nonterminating": 0, "spike_failures": 0, "first_detection": null, "t_start": 1795635780.2869682, "seconds": 311.4, "golden": "golden_driver_fe95715a"}

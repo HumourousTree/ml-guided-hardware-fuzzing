@@ -204,3 +204,25 @@ decoded from the glyph positions of the tables, and the decoder reproduces the R
   Broken conditionals: **6/15**, exactly every conditional any published fuzzer finds (DifuzzRTL/ProcessorFuzz 6, Cascade 5).
 * No BOOM bug is found by us and missed by all three; ext adds nothing on BOOM (unlike Rocket). Only 6 of 15 BOOM
   conditionals are found by anyone: the rest are in the branch queues, the CSR file and the reorder buffer.
+
+## Step 2: LLM-guided generation on Rocket and BOOM (2026-11-26)
+
+`rocket/isa_census.py` measures which RV64GC instructions, exception causes and CSRs a generator executes (decoded from
+Spike's log against Spike's own tables). `rocket/llm_templates.py` gives only that gap list to an LLM, which writes
+generator templates; each is statically checked and validated on Spike and the bug-free Rocket and BOOM before use
+(profile `llm` = flash-lite templates, `llmflash` = gemini-3-flash-preview templates; campaigns on GitHub Actions).
+
+| Generator | Rocket mix / cond | beyond published | BOOM mix / cond | beyond published |
+|---|---|---|---|---|
+| random (base) | 7 / 3 | -- | 12 / 6 | -- |
+| LLM templates, gemini-3.5-flash-lite (7 requests, 10/73 accepted) | 8 / 4 | M10 | 12 / 6 | -- |
+| LLM templates, gemini-3-flash-preview (2 answered, 14/24 accepted) | 12 / 4 | M5, M7, M8, M9, M10 | 12 / **7** | **C4** |
+| hand-designed ext | 13 / 4 | M5, M7, M8, M9, M10, M12 | 12 / 6 | -- |
+
+* BOOM C4 (dir 160, `BranchKillableQueue_5`): detected on all 5 seeds (programs 50-205) as a hang of the buggy core,
+  each replay-confirmed; no published fuzzer and none of our other generators finds it.
+* Neither model produced valid atomics (A 0/22); compressed coverage 5/34 (flash-lite) vs 17/34 (3-flash).
+* BOOM's single-precision division also disagrees with Spike on operands the templates produce: 16 BOOM `llm` detections
+  rejected by replay. On BOOM, templates get FP division/sqrt replaced (`QUIRKS["boom"]["template_subst"]`); the first
+  BOOM llm run without that filter is archived in `logs/archive/boom_llm_v1_no_template_filter/`.
+* gemini-3.5-flash returned no answer: on this key it draws on gemini-3.6-flash's 20/day free quota.
