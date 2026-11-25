@@ -1,19 +1,6 @@
 {
- "driver_1094_seed0.json": {
-  "golden_matches_spike": true,
-  "bug_differs": true,
-  "kind": "nontermination",
-  "differing": [],
-  "confirmed": true
- },
  "driver_1094_seed1.json": {
-  "golden_matches_spike": true,
-  "bug_differs": true,
-  "kind": "nontermination",
-  "differing": [],
-  "confirmed": true
- },
- "driver_1094_seed2.json": {
+  "golden": "golden_driver_a057aba6",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "nontermination",
@@ -21,6 +8,7 @@
   "confirmed": true
  },
  "driver_1094_seed3.json": {
+  "golden": "golden_driver_a057aba6",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -30,7 +18,8 @@
   ],
   "confirmed": true
  },
- "driver_1094_seed4.json": {
+ "driver_1094_seed0.json": {
+  "golden": "golden_driver_a057aba6",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "nontermination",
@@ -38,6 +27,7 @@
   "confirmed": true
  },
  "driver_144_seed0.json": {
+  "golden": "golden_driver_7ecc6b9f",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -47,7 +37,16 @@
   ],
   "confirmed": true
  },
+ "driver_1094_seed2.json": {
+  "golden": "golden_driver_a057aba6",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "nontermination",
+  "differing": [],
+  "confirmed": true
+ },
  "driver_144_seed0_ext.json": {
+  "golden": "golden_driver_7ecc6b9f",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -57,6 +56,7 @@
   "confirmed": true
  },
  "driver_144_seed1.json": {
+  "golden": "golden_driver_7ecc6b9f",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -68,6 +68,7 @@
   "confirmed": true
  },
  "driver_144_seed1_ext.json": {
+  "golden": "golden_driver_7ecc6b9f",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -77,6 +78,7 @@
   "confirmed": true
  },
  "driver_144_seed2.json": {
+  "golden": "golden_driver_7ecc6b9f",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -87,12 +89,14 @@
   "confirmed": true
  },
  "driver_144_seed2_ext.json": {
+  "golden": "golden_driver_7ecc6b9f",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
   "differing": [
    "x4",
    "x9",
+   "x10",
    "x11",
    "x15",
    "x17"
@@ -100,6 +104,7 @@
   "confirmed": true
  },
  "driver_144_seed3.json": {
+  "golden": "golden_driver_7ecc6b9f",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -109,6 +114,7 @@
   "confirmed": true
  },
  "driver_144_seed3_ext.json": {
+  "golden": "golden_driver_7ecc6b9f",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -118,6 +124,7 @@
   "confirmed": true
  },
  "driver_144_seed4.json": {
+  "golden": "golden_driver_7ecc6b9f",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -127,6 +134,7 @@
   "confirmed": true
  },
  "driver_144_seed4_ext.json": {
+  "golden": "golden_driver_7ecc6b9f",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -139,6 +147,7 @@
   "confirmed": true
  },
  "driver_293_seed0.json": {
+  "golden": "golden_driver_d0f80213",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -148,20 +157,8 @@
   ],
   "confirmed": true
  },
- "driver_293_seed0_ext.json": {
-  "golden_matches_spike": true,
-  "bug_differs": true,
-  "kind": "mismatch",
-  "differing": [
-   "x8",
-   "x13",
-   "x15",
-   "x17",
-   "x27"
-  ],
-  "confirmed": true
- },
  "driver_293_seed1.json": {
+  "golden": "golden_driver_d0f80213",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -174,7 +171,20 @@
   ],
   "confirmed": true
  },
+ "driver_293_seed0_ext.json": {
+  "golden": "golden_driver_d0f80213",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "mismatch",
+  "differing": [
+   "x13",
+   "x27",
+   "x29"
+  ],
+  "confirmed": true
+ },
  "driver_293_seed1_ext.json": {
+  "golden": "golden_driver_d0f80213",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -189,6 +199,7 @@
   "confirmed": true
  },
  "driver_293_seed2.json": {
+  "golden": "golden_driver_d0f80213",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -198,6 +209,7 @@
   "confirmed": true
  },
  "driver_293_seed2_ext.json": {
+  "golden": "golden_driver_d0f80213",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -209,6 +221,7 @@
   "confirmed": true
  },
  "driver_293_seed3.json": {
+  "golden": "golden_driver_d0f80213",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -218,6 +231,7 @@
   "confirmed": true
  },
  "driver_293_seed3_ext.json": {
+  "golden": "golden_driver_d0f80213",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -228,6 +242,7 @@
   "confirmed": true
  },
  "driver_293_seed4.json": {
+  "golden": "golden_driver_d0f80213",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -239,6 +254,7 @@
   "confirmed": true
  },
  "driver_293_seed4_ext.json": {
+  "golden": "golden_driver_d0f80213",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -253,6 +269,7 @@
   "confirmed": true
  },
  "driver_347_seed0.json": {
+  "golden": "golden_driver_d0f80213",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -262,6 +279,7 @@
   "confirmed": true
  },
  "driver_347_seed0_ext.json": {
+  "golden": "golden_driver_d0f80213",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -271,6 +289,7 @@
   "confirmed": true
  },
  "driver_347_seed1.json": {
+  "golden": "golden_driver_d0f80213",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -283,16 +302,17 @@
   "confirmed": true
  },
  "driver_347_seed1_ext.json": {
+  "golden": "golden_driver_d0f80213",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
   "differing": [
-   "x5",
-   "x27"
+   "x14"
   ],
   "confirmed": true
  },
  "driver_347_seed2.json": {
+  "golden": "golden_driver_d0f80213",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -302,6 +322,7 @@
   "confirmed": true
  },
  "driver_347_seed2_ext.json": {
+  "golden": "golden_driver_d0f80213",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -311,6 +332,7 @@
   "confirmed": true
  },
  "driver_347_seed3.json": {
+  "golden": "golden_driver_d0f80213",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -322,6 +344,7 @@
   "confirmed": true
  },
  "driver_347_seed3_ext.json": {
+  "golden": "golden_driver_d0f80213",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -331,6 +354,7 @@
   "confirmed": true
  },
  "driver_347_seed4.json": {
+  "golden": "golden_driver_d0f80213",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -343,15 +367,20 @@
   "confirmed": true
  },
  "driver_347_seed4_ext.json": {
+  "golden": "golden_driver_d0f80213",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
   "differing": [
-   "x20"
+   "x2",
+   "x8",
+   "x20",
+   "f4"
   ],
   "confirmed": true
  },
  "driver_361_seed0.json": {
+  "golden": "golden_driver_d0f80213",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -365,21 +394,8 @@
   ],
   "confirmed": true
  },
- "driver_361_seed0_ext.json": {
-  "golden_matches_spike": true,
-  "bug_differs": true,
-  "kind": "mismatch",
-  "differing": [
-   "x1",
-   "x3",
-   "x4",
-   "x5",
-   "x7",
-   "x8"
-  ],
-  "confirmed": true
- },
  "driver_361_seed1.json": {
+  "golden": "golden_driver_d0f80213",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -393,7 +409,23 @@
   ],
   "confirmed": true
  },
+ "driver_361_seed0_ext.json": {
+  "golden": "golden_driver_d0f80213",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "mismatch",
+  "differing": [
+   "x1",
+   "x3",
+   "x7",
+   "x8",
+   "x10",
+   "x15"
+  ],
+  "confirmed": true
+ },
  "driver_361_seed1_ext.json": {
+  "golden": "golden_driver_d0f80213",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -408,6 +440,7 @@
   "confirmed": true
  },
  "driver_361_seed2.json": {
+  "golden": "golden_driver_d0f80213",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -422,6 +455,7 @@
   "confirmed": true
  },
  "driver_361_seed2_ext.json": {
+  "golden": "golden_driver_d0f80213",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -436,6 +470,7 @@
   "confirmed": true
  },
  "driver_361_seed3.json": {
+  "golden": "golden_driver_d0f80213",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -450,20 +485,22 @@
   "confirmed": true
  },
  "driver_361_seed3_ext.json": {
+  "golden": "golden_driver_d0f80213",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
   "differing": [
    "x1",
-   "x2",
    "x4",
    "x5",
    "x6",
-   "x7"
+   "x8",
+   "x12"
   ],
   "confirmed": true
  },
  "driver_361_seed4.json": {
+  "golden": "golden_driver_d0f80213",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -478,6 +515,7 @@
   "confirmed": true
  },
  "driver_361_seed4_ext.json": {
+  "golden": "golden_driver_d0f80213",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -491,63 +529,47 @@
   ],
   "confirmed": true
  },
- "driver_640_seed0_ext.json": {
+ "driver_1094_seed4.json": {
+  "golden": "golden_driver_a057aba6",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "nontermination",
-  "differing": [
-   "x2",
-   "x3",
-   "x4",
-   "x5",
-   "x6",
-   "x7"
-  ],
+  "differing": [],
   "confirmed": true
  },
  "driver_640_seed1_ext.json": {
+  "golden": "golden_driver_fe95715a",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "nontermination",
   "differing": [],
+  "confirmed": true
+ },
+ "driver_640_seed0_ext.json": {
+  "golden": "golden_driver_fe95715a",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "nontermination",
+  "differing": [
+   "x2",
+   "x3",
+   "x4",
+   "x5",
+   "x6",
+   "x7"
+  ],
   "confirmed": true
  },
  "driver_640_seed2_ext.json": {
+  "golden": "golden_driver_fe95715a",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "nontermination",
   "differing": [],
   "confirmed": true
  },
- "driver_640_seed3_ext.json": {
-  "golden_matches_spike": true,
-  "bug_differs": true,
-  "kind": "nontermination",
-  "differing": [
-   "x2",
-   "x3",
-   "x4",
-   "x5",
-   "x6",
-   "x7"
-  ],
-  "confirmed": true
- },
- "driver_640_seed4_ext.json": {
-  "golden_matches_spike": true,
-  "bug_differs": true,
-  "kind": "nontermination",
-  "differing": [
-   "x2",
-   "x3",
-   "x4",
-   "x5",
-   "x6",
-   "x7"
-  ],
-  "confirmed": true
- },
  "driver_673_seed0.json": {
+  "golden": "golden_driver_fe95715a",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -557,15 +579,18 @@
   "confirmed": true
  },
  "driver_673_seed0_ext.json": {
+  "golden": "golden_driver_fe95715a",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
   "differing": [
-   "x15"
+   "x4",
+   "x16"
   ],
   "confirmed": true
  },
  "driver_673_seed1.json": {
+  "golden": "golden_driver_fe95715a",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -575,6 +600,7 @@
   "confirmed": true
  },
  "driver_673_seed1_ext.json": {
+  "golden": "golden_driver_fe95715a",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -584,6 +610,7 @@
   "confirmed": true
  },
  "driver_673_seed2.json": {
+  "golden": "golden_driver_fe95715a",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -593,15 +620,17 @@
   "confirmed": true
  },
  "driver_673_seed2_ext.json": {
+  "golden": "golden_driver_fe95715a",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
   "differing": [
-   "x18"
+   "x5"
   ],
   "confirmed": true
  },
  "driver_673_seed3.json": {
+  "golden": "golden_driver_fe95715a",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -613,16 +642,18 @@
   "confirmed": true
  },
  "driver_673_seed3_ext.json": {
+  "golden": "golden_driver_fe95715a",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
   "differing": [
-   "x6",
-   "x21"
+   "x12",
+   "x18"
   ],
   "confirmed": true
  },
  "driver_673_seed4.json": {
+  "golden": "golden_driver_fe95715a",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -634,15 +665,17 @@
   "confirmed": true
  },
  "driver_673_seed4_ext.json": {
+  "golden": "golden_driver_fe95715a",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
   "differing": [
-   "x25"
+   "x21"
   ],
   "confirmed": true
  },
  "driver_767_seed0_ext.json": {
+  "golden": "golden_driver_2f09f728",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -656,6 +689,7 @@
   "confirmed": true
  },
  "driver_767_seed1_ext.json": {
+  "golden": "golden_driver_2f09f728",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -670,19 +704,22 @@
   "confirmed": true
  },
  "driver_767_seed2_ext.json": {
+  "golden": "golden_driver_2f09f728",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
   "differing": [
-   "x12",
-   "x15",
-   "x22",
-   "x23",
+   "x6",
+   "x7",
+   "x8",
+   "x14",
+   "x18",
    "x29"
   ],
   "confirmed": true
  },
  "driver_767_seed3_ext.json": {
+  "golden": "golden_driver_2f09f728",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -697,6 +734,7 @@
   "confirmed": true
  },
  "driver_767_seed4_ext.json": {
+  "golden": "golden_driver_2f09f728",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -711,6 +749,7 @@
   "confirmed": true
  },
  "driver_774_seed0_ext.json": {
+  "golden": "golden_driver_2f09f728",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -720,6 +759,7 @@
   "confirmed": true
  },
  "driver_774_seed1_ext.json": {
+  "golden": "golden_driver_2f09f728",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -729,6 +769,7 @@
   "confirmed": true
  },
  "driver_774_seed2_ext.json": {
+  "golden": "golden_driver_2f09f728",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -740,6 +781,7 @@
   "confirmed": true
  },
  "driver_774_seed3_ext.json": {
+  "golden": "golden_driver_2f09f728",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -749,6 +791,7 @@
   "confirmed": true
  },
  "driver_774_seed4_ext.json": {
+  "golden": "golden_driver_2f09f728",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -759,52 +802,118 @@
   "confirmed": true
  },
  "driver_804_seed0_ext.json": {
+  "golden": "golden_driver_2f09f728",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "mismatch",
+  "differing": [
+   "x1",
+   "x7",
+   "f0"
+  ],
+  "confirmed": true
+ },
+ "driver_640_seed3_ext.json": {
+  "golden": "golden_driver_fe95715a",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "nontermination",
+  "differing": [
+   "x2",
+   "x3",
+   "x4",
+   "x5",
+   "x6",
+   "x7"
+  ],
+  "confirmed": true
+ },
+ "driver_804_seed1_ext.json": {
+  "golden": "golden_driver_2f09f728",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "mismatch",
+  "differing": [
+   "x2"
+  ],
+  "confirmed": true
+ },
+ "driver_804_seed2_ext.json": {
+  "golden": "golden_driver_2f09f728",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
   "differing": [
    "x2",
    "f4",
-   "f15"
+   "f18"
   ],
   "confirmed": true
  },
- "driver_804_seed1_ext.json": {
-  "golden_matches_spike": true,
-  "bug_differs": true,
-  "kind": "mismatch",
-  "differing": [
-   "f6"
-  ],
-  "confirmed": true
- },
- "driver_804_seed2_ext.json": {
+ "driver_804_seed3_ext.json": {
+  "golden": "golden_driver_2f09f728",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
   "differing": [
    "x2",
-   "x6",
-   "x8",
-   "x10",
-   "f24"
+   "x4",
+   "x12",
+   "f18"
   ],
   "confirmed": true
  },
- "driver_804_seed3_ext.json": {
+ "driver_804_seed4_ext.json": {
+  "golden": "golden_driver_2f09f728",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
   "differing": [
-   "x3",
-   "x9",
-   "x16",
-   "x20",
-   "x22"
+   "f2"
   ],
   "confirmed": true
  },
+ "driver_640_seed4_ext.json": {
+  "golden": "golden_driver_fe95715a",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "nontermination",
+  "differing": [
+   "x2",
+   "x3",
+   "x4",
+   "x5",
+   "x6",
+   "x7"
+  ],
+  "confirmed": true
+ },
+ "driver_826_seed0_ext.json": {
+  "golden": "golden_driver_2f09f728",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "nontermination",
+  "differing": [],
+  "confirmed": true
+ },
+ "driver_826_seed2_ext.json": {
+  "golden": "golden_driver_2f09f728",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "nontermination",
+  "differing": [],
+  "confirmed": true
+ },
+ "driver_826_seed1_ext.json": {
+  "golden": "golden_driver_2f09f728",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "nontermination",
+  "differing": [],
+  "confirmed": true
+ },
  "driver_863_seed0.json": {
+  "golden": "golden_driver_2f09f728",
   "golden_matches_spike": true,
   "bug_differs": false,
   "kind": "mismatch",
@@ -812,6 +921,7 @@
   "confirmed": false
  },
  "driver_863_seed1.json": {
+  "golden": "golden_driver_2f09f728",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -826,6 +936,7 @@
   "confirmed": true
  },
  "driver_863_seed2.json": {
+  "golden": "golden_driver_2f09f728",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -839,6 +950,7 @@
   "confirmed": true
  },
  "driver_863_seed3.json": {
+  "golden": "golden_driver_2f09f728",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -848,6 +960,7 @@
   "confirmed": true
  },
  "driver_863_seed4.json": {
+  "golden": "golden_driver_2f09f728",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -858,6 +971,7 @@
   "confirmed": true
  },
  "multiplexer_285_seed0.json": {
+  "golden": "golden_multiplexer",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -867,6 +981,7 @@
   "confirmed": true
  },
  "multiplexer_285_seed1.json": {
+  "golden": "golden_multiplexer",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -876,6 +991,7 @@
   "confirmed": true
  },
  "multiplexer_285_seed2.json": {
+  "golden": "golden_multiplexer",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -885,6 +1001,7 @@
   "confirmed": true
  },
  "multiplexer_285_seed3.json": {
+  "golden": "golden_multiplexer",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -894,6 +1011,7 @@
   "confirmed": true
  },
  "multiplexer_285_seed4.json": {
+  "golden": "golden_multiplexer",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -902,7 +1020,24 @@
   ],
   "confirmed": true
  },
+ "driver_826_seed3_ext.json": {
+  "golden": "golden_driver_2f09f728",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "nontermination",
+  "differing": [],
+  "confirmed": true
+ },
+ "driver_826_seed4_ext.json": {
+  "golden": "golden_driver_2f09f728",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "nontermination",
+  "differing": [],
+  "confirmed": true
+ },
  "multiplexer_408_seed0.json": {
+  "golden": "golden_multiplexer",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "nontermination",
@@ -910,6 +1045,7 @@
   "confirmed": true
  },
  "multiplexer_408_seed1.json": {
+  "golden": "golden_multiplexer",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "nontermination",
@@ -917,6 +1053,7 @@
   "confirmed": true
  },
  "multiplexer_408_seed2.json": {
+  "golden": "golden_multiplexer",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "nontermination",
@@ -924,6 +1061,7 @@
   "confirmed": true
  },
  "multiplexer_408_seed3.json": {
+  "golden": "golden_multiplexer",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "nontermination",
@@ -931,6 +1069,7 @@
   "confirmed": true
  },
  "multiplexer_408_seed4.json": {
+  "golden": "golden_multiplexer",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "nontermination",
@@ -938,6 +1077,7 @@
   "confirmed": true
  },
  "multiplexer_718_seed0.json": {
+  "golden": "golden_multiplexer",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "nontermination",
@@ -945,6 +1085,7 @@
   "confirmed": true
  },
  "multiplexer_718_seed1.json": {
+  "golden": "golden_multiplexer",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "nontermination",
@@ -952,6 +1093,7 @@
   "confirmed": true
  },
  "multiplexer_718_seed2.json": {
+  "golden": "golden_multiplexer",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "nontermination",
@@ -959,6 +1101,7 @@
   "confirmed": true
  },
  "multiplexer_718_seed3.json": {
+  "golden": "golden_multiplexer",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "nontermination",
@@ -966,39 +1109,27 @@
   "confirmed": true
  },
  "multiplexer_718_seed4.json": {
+  "golden": "golden_multiplexer",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "nontermination",
   "differing": [],
   "confirmed": true
  },
- "driver_1081_seed0_ext.json": {
-  "golden_matches_spike": false,
+ "driver_1094_seed3_ext.json": {
+  "golden": "golden_driver_a057aba6",
+  "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
   "differing": [
-   "x13",
-   "x17",
-   "x20",
+   "x5",
+   "x18",
    "x29"
   ],
-  "confirmed": false
- },
- "driver_1081_seed2_ext.json": {
-  "golden_matches_spike": false,
-  "bug_differs": true,
-  "kind": "mismatch",
-  "differing": [
-   "x28",
-   "x29",
-   "f1",
-   "f8",
-   "mstatus",
-   "mepc"
-  ],
-  "confirmed": false
+  "confirmed": true
  },
  "driver_1094_seed0_ext.json": {
+  "golden": "golden_driver_a057aba6",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -1007,21 +1138,26 @@
    "x24",
    "x26",
    "x29",
-   "f7",
-   "f26"
+   "f30",
+   "mstatus"
   ],
   "confirmed": true
  },
- "driver_1094_seed1_ext.json": {
+ "driver_1094_seed4_ext.json": {
+  "golden": "golden_driver_a057aba6",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
   "differing": [
-   "x15"
+   "f3",
+   "f5",
+   "f6",
+   "f21"
   ],
   "confirmed": true
  },
  "driver_1094_seed2_ext.json": {
+  "golden": "golden_driver_a057aba6",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -1035,114 +1171,18 @@
   ],
   "confirmed": true
  },
- "driver_1094_seed3_ext.json": {
+ "driver_1094_seed1_ext.json": {
+  "golden": "golden_driver_a057aba6",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
   "differing": [
-   "x5",
-   "x18",
-   "x29"
+   "x7"
   ],
-  "confirmed": true
- },
- "driver_1094_seed4_ext.json": {
-  "golden_matches_spike": true,
-  "bug_differs": true,
-  "kind": "mismatch",
-  "differing": [
-   "f3",
-   "f5",
-   "f6",
-   "f21"
-  ],
-  "confirmed": true
- },
- "driver_804_seed4_ext.json": {
-  "golden_matches_spike": false,
-  "bug_differs": true,
-  "kind": "mismatch",
-  "differing": [
-   "x5",
-   "x8",
-   "x18",
-   "x29",
-   "f22",
-   "fcsr"
-  ],
-  "confirmed": false
- },
- "driver_826_seed0_ext.json": {
-  "golden_matches_spike": true,
-  "bug_differs": true,
-  "kind": "nontermination",
-  "differing": [],
-  "confirmed": true
- },
- "driver_826_seed1_ext.json": {
-  "golden_matches_spike": true,
-  "bug_differs": true,
-  "kind": "nontermination",
-  "differing": [],
-  "confirmed": true
- },
- "driver_826_seed2_ext.json": {
-  "golden_matches_spike": true,
-  "bug_differs": true,
-  "kind": "nontermination",
-  "differing": [],
-  "confirmed": true
- },
- "driver_826_seed3_ext.json": {
-  "golden_matches_spike": true,
-  "bug_differs": true,
-  "kind": "nontermination",
-  "differing": [],
-  "confirmed": true
- },
- "driver_826_seed4_ext.json": {
-  "golden_matches_spike": true,
-  "bug_differs": true,
-  "kind": "nontermination",
-  "differing": [],
-  "confirmed": true
- },
- "driver_832_seed0_ext.json": {
-  "golden_matches_spike": false,
-  "bug_differs": true,
-  "kind": "mismatch",
-  "differing": [
-   "x28",
-   "x29",
-   "f13",
-   "fcsr",
-   "mepc",
-   "mcause"
-  ],
-  "confirmed": false
- },
- "driver_858_seed0_ext.json": {
-  "golden_matches_spike": true,
-  "bug_differs": true,
-  "kind": "nontermination",
-  "differing": [],
-  "confirmed": true
- },
- "driver_858_seed1_ext.json": {
-  "golden_matches_spike": true,
-  "bug_differs": true,
-  "kind": "nontermination",
-  "differing": [],
-  "confirmed": true
- },
- "driver_858_seed2_ext.json": {
-  "golden_matches_spike": true,
-  "bug_differs": true,
-  "kind": "nontermination",
-  "differing": [],
   "confirmed": true
  },
  "driver_858_seed3_ext.json": {
+  "golden": "golden_driver_2f09f728",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "nontermination",
@@ -1150,6 +1190,15 @@
   "confirmed": true
  },
  "driver_858_seed4_ext.json": {
+  "golden": "golden_driver_2f09f728",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "nontermination",
+  "differing": [],
+  "confirmed": true
+ },
+ "driver_858_seed2_ext.json": {
+  "golden": "golden_driver_2f09f728",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "nontermination",
@@ -1157,6 +1206,7 @@
   "confirmed": true
  },
  "driver_863_seed0_ext.json": {
+  "golden": "golden_driver_2f09f728",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -1167,6 +1217,7 @@
   "confirmed": true
  },
  "driver_863_seed1_ext.json": {
+  "golden": "golden_driver_2f09f728",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -1175,7 +1226,16 @@
   ],
   "confirmed": true
  },
+ "driver_858_seed0_ext.json": {
+  "golden": "golden_driver_2f09f728",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "nontermination",
+  "differing": [],
+  "confirmed": true
+ },
  "driver_863_seed2_ext.json": {
+  "golden": "golden_driver_2f09f728",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -1184,7 +1244,26 @@
   ],
   "confirmed": true
  },
+ "driver_863_seed4_ext.json": {
+  "golden": "golden_driver_2f09f728",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "mismatch",
+  "differing": [
+   "x24"
+  ],
+  "confirmed": true
+ },
+ "driver_858_seed1_ext.json": {
+  "golden": "golden_driver_2f09f728",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "nontermination",
+  "differing": [],
+  "confirmed": true
+ },
  "driver_863_seed3_ext.json": {
+  "golden": "golden_driver_2f09f728",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -1193,37 +1272,8 @@
   ],
   "confirmed": true
  },
- "driver_863_seed4_ext.json": {
-  "golden_matches_spike": true,
-  "bug_differs": true,
-  "kind": "mismatch",
-  "differing": [
-   "x22"
-  ],
-  "confirmed": true
- },
- "multiplexer_14_seed0_ext.json": {
-  "golden_matches_spike": false,
-  "bug_differs": true,
-  "kind": "mismatch",
-  "differing": [
-   "x2",
-   "x4",
-   "x26",
-   "x29",
-   "f2",
-   "fcsr"
-  ],
-  "confirmed": false
- },
  "multiplexer_277_seed0_ext.json": {
-  "golden_matches_spike": true,
-  "bug_differs": true,
-  "kind": "nontermination",
-  "differing": [],
-  "confirmed": true
- },
- "multiplexer_277_seed1_ext.json": {
+  "golden": "golden_multiplexer",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "nontermination",
@@ -1231,27 +1281,23 @@
   "confirmed": true
  },
  "multiplexer_277_seed2_ext.json": {
+  "golden": "golden_multiplexer",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "nontermination",
   "differing": [],
   "confirmed": true
  },
- "multiplexer_277_seed3_ext.json": {
+ "multiplexer_277_seed1_ext.json": {
+  "golden": "golden_multiplexer",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "nontermination",
   "differing": [],
   "confirmed": true
  },
- "multiplexer_277_seed4_ext.json": {
-  "golden_matches_spike": true,
-  "bug_differs": true,
-  "kind": "nontermination",
-  "differing": [],
-  "confirmed": true
- },
- "multiplexer_285_seed0_ext.json": {
+ "multiplexer_285_seed1_ext.json": {
+  "golden": "golden_multiplexer",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -1260,7 +1306,8 @@
   ],
   "confirmed": true
  },
- "multiplexer_285_seed1_ext.json": {
+ "multiplexer_285_seed0_ext.json": {
+  "golden": "golden_multiplexer",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -1270,6 +1317,7 @@
   "confirmed": true
  },
  "multiplexer_285_seed2_ext.json": {
+  "golden": "golden_multiplexer",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -1278,7 +1326,16 @@
   ],
   "confirmed": true
  },
+ "multiplexer_277_seed4_ext.json": {
+  "golden": "golden_multiplexer",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "nontermination",
+  "differing": [],
+  "confirmed": true
+ },
  "multiplexer_285_seed3_ext.json": {
+  "golden": "golden_multiplexer",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -1288,6 +1345,7 @@
   "confirmed": true
  },
  "multiplexer_285_seed4_ext.json": {
+  "golden": "golden_multiplexer",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "mismatch",
@@ -1296,185 +1354,24 @@
   ],
   "confirmed": true
  },
- "multiplexer_28_seed3_ext.json": {
-  "golden_matches_spike": false,
-  "bug_differs": true,
-  "kind": "mismatch",
-  "differing": [
-   "x11",
-   "x18",
-   "x29",
-   "f0",
-   "f10"
-  ],
-  "confirmed": false
- },
- "multiplexer_305_seed2_ext.json": {
-  "golden_matches_spike": false,
-  "bug_differs": true,
-  "kind": "mismatch",
-  "differing": [
-   "x29",
-   "f0",
-   "f1",
-   "fcsr",
-   "mstatus",
-   "mepc"
-  ],
-  "confirmed": false
- },
- "multiplexer_46_seed2_ext.json": {
-  "golden_matches_spike": false,
-  "bug_differs": true,
-  "kind": "mismatch",
-  "differing": [
-   "x7",
-   "x14",
-   "x20",
-   "x23",
-   "x28",
-   "x29"
-  ],
-  "confirmed": false
- },
- "multiplexer_66_seed1_ext.json": {
-  "golden_matches_spike": false,
-  "bug_differs": true,
-  "kind": "mismatch",
-  "differing": [
-   "x19",
-   "x28",
-   "x29",
-   "f6",
-   "f17",
-   "mstatus"
-  ],
-  "confirmed": false
- },
- "multiplexer_66_seed3_ext.json": {
-  "golden_matches_spike": false,
-  "bug_differs": true,
-  "kind": "mismatch",
-  "differing": [
-   "x2",
-   "x28",
-   "x29",
-   "f5",
-   "fcsr",
-   "mepc"
-  ],
-  "confirmed": false
- },
- "multiplexer_71_seed0_ext.json": {
-  "golden_matches_spike": false,
-  "bug_differs": true,
-  "kind": "mismatch",
-  "differing": [
-   "x4",
-   "x28",
-   "x29",
-   "f1",
-   "f7",
-   "f13"
-  ],
-  "confirmed": false
- },
- "multiplexer_394_seed3_ext.json": {
-  "golden_matches_spike": false,
-  "bug_differs": true,
-  "kind": "mismatch",
-  "differing": [
-   "x29",
-   "f27"
-  ],
-  "confirmed": false
- },
- "multiplexer_397_seed0_ext.json": {
-  "golden_matches_spike": false,
-  "bug_differs": true,
-  "kind": "mismatch",
-  "differing": [
-   "x25",
-   "x29",
-   "fcsr"
-  ],
-  "confirmed": false
- },
- "multiplexer_397_seed4_ext.json": {
-  "golden_matches_spike": false,
-  "bug_differs": true,
-  "kind": "mismatch",
-  "differing": [
-   "x1",
-   "x8",
-   "x29",
-   "fcsr",
-   "mepc"
-  ],
-  "confirmed": false
- },
- "multiplexer_408_seed0_ext.json": {
+ "multiplexer_277_seed3_ext.json": {
+  "golden": "golden_multiplexer",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "nontermination",
   "differing": [],
   "confirmed": true
- },
- "multiplexer_408_seed1_ext.json": {
-  "golden_matches_spike": true,
-  "bug_differs": true,
-  "kind": "nontermination",
-  "differing": [],
-  "confirmed": true
- },
- "multiplexer_588_seed1_ext.json": {
-  "golden_matches_spike": false,
-  "bug_differs": true,
-  "kind": "mismatch",
-  "differing": [
-   "x22",
-   "x28",
-   "x29",
-   "fcsr",
-   "mepc",
-   "mcause"
-  ],
-  "confirmed": false
- },
- "multiplexer_633_seed4_ext.json": {
-  "golden_matches_spike": false,
-  "bug_differs": true,
-  "kind": "mismatch",
-  "differing": [
-   "x28",
-   "x29",
-   "f30",
-   "mepc"
-  ],
-  "confirmed": false
  },
  "multiplexer_408_seed2_ext.json": {
+  "golden": "golden_multiplexer",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "nontermination",
   "differing": [],
   "confirmed": true
  },
- "multiplexer_408_seed3_ext.json": {
-  "golden_matches_spike": true,
-  "bug_differs": true,
-  "kind": "nontermination",
-  "differing": [],
-  "confirmed": true
- },
- "multiplexer_718_seed1_ext.json": {
-  "golden_matches_spike": true,
-  "bug_differs": true,
-  "kind": "nontermination",
-  "differing": [],
-  "confirmed": true
- },
- "multiplexer_718_seed0_ext.json": {
+ "multiplexer_408_seed0_ext.json": {
+  "golden": "golden_multiplexer",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "nontermination",
@@ -1482,6 +1379,23 @@
   "confirmed": true
  },
  "multiplexer_408_seed4_ext.json": {
+  "golden": "golden_multiplexer",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "nontermination",
+  "differing": [],
+  "confirmed": true
+ },
+ "multiplexer_408_seed3_ext.json": {
+  "golden": "golden_multiplexer",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "nontermination",
+  "differing": [],
+  "confirmed": true
+ },
+ "multiplexer_408_seed1_ext.json": {
+  "golden": "golden_multiplexer",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "nontermination",
@@ -1489,6 +1403,23 @@
   "confirmed": true
  },
  "multiplexer_718_seed2_ext.json": {
+  "golden": "golden_multiplexer",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "nontermination",
+  "differing": [],
+  "confirmed": true
+ },
+ "multiplexer_718_seed1_ext.json": {
+  "golden": "golden_multiplexer",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "nontermination",
+  "differing": [],
+  "confirmed": true
+ },
+ "multiplexer_718_seed0_ext.json": {
+  "golden": "golden_multiplexer",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "nontermination",
@@ -1496,6 +1427,7 @@
   "confirmed": true
  },
  "multiplexer_718_seed3_ext.json": {
+  "golden": "golden_multiplexer",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "nontermination",
@@ -1503,6 +1435,7 @@
   "confirmed": true
  },
  "multiplexer_718_seed4_ext.json": {
+  "golden": "golden_multiplexer",
   "golden_matches_spike": true,
   "bug_differs": true,
   "kind": "nontermination",

@@ -95,9 +95,14 @@ calibrated separately (`golden_<kind>_ext.json`): 500 programs per reference, 0 
 Calibration is a sample. After the campaigns, the first detecting program of every run is replayed on the bug-free Rocket and
 on the buggy one; a detection counts only if the bug-free Rocket matches Spike and the buggy one does not.
 
+Each mix-up is replayed against *its own* reference: Encarsia derives every signal mix-up from its own copy of the design
+(`reference_driver.rtlil` differs between bug directories; Rocket has 5 distinct ones). All 5 and the multiplexer reference
+are built and calibrated (500 base / 1,000 ext programs each, 0 mismatches); `run_encarsia.golden_name` picks the one for a bug.
+
 | | detections | confirmed | bug-free Rocket also differs from Spike | did not reproduce |
 |---|---|---|---|---|
-| base + ext | 150 | 133 | 16 (all ext) | 1 (base, mix-up 13 seed 0) |
+| base + ext v1 (2026-11-05, one shared driver reference) | 150 | 133 | 16 (all ext v1) | 1 (base, mix-up 13 seed 0) |
+| base + ext v2 (2026-11-25, per-bug references) | 135 | 134 | 0 | 1 (the same) |
 
 All 16 reference disagreements come from ext programs that switch the FPU off (mstatus.FS = Off): Spike then traps FP
 instructions and FP-CSR accesses that the bug-free Rocket executes in some cases. 500 calibration programs did not reveal
@@ -117,15 +122,17 @@ Rocket bug. **ext v2** therefore only ever sets FS bits (never clears them); the
 Replay-confirmed detecting seeds out of 5 (median programs to the detection). Published: Encarsia Tables 8-10, 24 h.
 Mod. = module of the injected broken conditional (`rocket/locate_bugs.py`).
 
-| Bug | base (2,000 progs/seed) | ext (400 progs/seed) | DifuzzRTL | ProcessorFuzz | Cascade |
+Table for ext v2 (v1 found the same bug sets; v1 differed only in mix-up 6 (median 11) and mix-up 9 (4/5, median 46)).
+
+| Bug | base (2,000 progs/seed) | ext v2 (400 progs/seed) | DifuzzRTL | ProcessorFuzz | Cascade |
 |---|---|---|---|---|---|
 | Mix-up 1 | 5/5 (1) | 5/5 (1) | | | x |
 | Mix-up 2-4 | 5/5 (1) | 5/5 (1) | x | x | x |
 | Mix-up 5 | 0/5 | 5/5 (1) | | | |
-| Mix-up 6 | 5/5 (2) | 5/5 (11) | | | x |
+| Mix-up 6 | 5/5 (2) | 5/5 (7) | | | x |
 | Mix-up 7 | 0/5 | 5/5 (2) | | | |
 | Mix-up 8 | 0/5 | 5/5 (3) | | | |
-| Mix-up 9 | 0/5 | 4/5 (46) | | | |
+| Mix-up 9 | 0/5 | 5/5 (62) | | | |
 | Mix-up 10 | 0/5 | 5/5 (1) | | | |
 | Mix-up 11 | 0/5 | 0/5 | | | |
 | Mix-up 12 | 0/5 | 5/5 (1) | | | |
@@ -134,7 +141,7 @@ Mod. = module of the injected broken conditional (`rocket/locate_bugs.py`).
 | Mix-up 15 | 5/5 (1) | 5/5 (1) | x | x | x |
 | Cond. 1-5 (CSR) | 0/5 | 0/5 | | | Cond. 2 |
 | Cond. 6 (CSR) | 0/5 | 5/5 (1) | x | x | x |
-| Cond. 7 (CSR) | 5/5 (1) | 5/5 (2) | x | x | |
+| Cond. 7 (CSR) | 5/5 (1) | 5/5 (1) | x | x | |
 | Cond. 8-11 (CSR) | 0/5 | 0/5 | Cond. 10 | Cond. 10 | |
 | Cond. 12 (IBuf) | 5/5 (1) | 5/5 (1) | x | x | x |
 | Cond. 13 (RVC), 14 (core) | 0/5 | 0/5 | | | |

@@ -1,9 +1,9 @@
 \begin{tabular}{@{}l c c c c c c@{}}\toprule
-& \multicolumn{3}{c}{gemini-3.5-flash-lite (informed)} & Blind & Template & --\\\cmidrule(lr){2-4}
+& \multicolumn{3}{c}{gemini-3.5-flash-lite (informed)} & Blind & Template & gemini-3.6-flash\\\cmidrule(lr){2-4}
 Bug & pass@1 & pass@1 cert. & pass@5 cert. & pass@1 cert. & certified & pass@1 cert.\\\midrule
-\texttt{alu\_operator\_xor\_or} & 1.00 & 1.00 & 1.00 & 1.00 & \checkmark & --\\
+\texttt{alu\_operator\_xor\_or} & 1.00 & 1.00 & 1.00 & 1.00 & \checkmark & 1.00\\
 \texttt{and\_to\_or\_alu} & 1.00 & 1.00 & 1.00 & 1.00 & \checkmark & --\\
-\texttt{approx\_multiplier} & 1.00 & 1.00 & 1.00 & 1.00 & $\times$ & --\\
+\texttt{approx\_multiplier} & 1.00 & 1.00 & 1.00 & 1.00 & $\times$ & 1.00\\
 \texttt{beq\_inverted} & 0.40 & 0.40 & 1.00 & 1.00 & \checkmark & --\\
 \texttt{branch\_inversion\_blt} & 0.00 & 0.00 & 0.00 & 0.00 & $\times$ & --\\
 \texttt{fast\_mul\_rs2\_signed\_widened} & 1.00 & 1.00 & 1.00 & 0.00 & \checkmark & --\\

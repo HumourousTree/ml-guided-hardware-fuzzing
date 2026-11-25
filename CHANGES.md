@@ -115,6 +115,16 @@ Not done: anything needing an LLM (semantic/hybrid generation, pass@k) - no API 
 - The paper text moved to the Overleaf repo HumourousTree/Hardware-Fuzzing; `paper/` here holds only the generated tables,
   macros and figures (`tools/compare_literature.py --tex` checks the Overleaf copy for undefined macros).
 
+# v0.7 (2026-11-25: Rocket cleanup, BOOM, A4 complete, A5 started)
+- Rocket mix-ups are now replayed against their own reference (5 distinct `reference_driver.rtlil`; previously bug 767's
+  for all). All 6 references calibrated (0 mismatches); base result unchanged (49/50 confirmed).
+- ext v2: FS bits are only set. Cause of the 16 v1 false alarms found (`rocket/check_fs_states.py`): Rocket stores FS with
+  two states, so clearing the bits one at a time never reaches Off. ext v2: same bugs (13/15 mix-ups, 4/15 conditionals),
+  85/85 detections confirmed. v1 archived in `logs/archive/rocket_ext_v1/`.
+- BOOM: `run_encarsia.py --core boom`, `build_dut.sh` CORE=boom, published BOOM results added to `encarsia_published.json`.
+- A4: all 3 seeds (mean 64.24% vs 63.87% mutation; above on 3/3 seeds, < 1 point; 0 target hits).
+- A5: gemini-3.6-flash (3.7/3.8-flash still 503/504, 3.1-pro no quota, 2.5-pro retired); ~20 requests/day.
+
 # v0.6 (Rocket head-to-head on Encarsia's bugs)
 - `rocket/`: BenchFuzz on Encarsia's 30 Rocket bugs (Cascade's tiny SoC, Spike, end-state oracle), compared per bug with the
   published DifuzzRTL / ProcessorFuzz / Cascade results. Details, problems and results: `docs/ROCKET_ENCARSIA.md`.

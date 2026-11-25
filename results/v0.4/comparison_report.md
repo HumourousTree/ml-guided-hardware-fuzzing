@@ -111,6 +111,10 @@
 - LlmBlindPlainPassOneCert: 0.33
 - LlmPlainBugs: 9
 - LlmUnsolvedList: branch\_inversion\_blt, stale\_latched\_branch
+- LlmStrongModel: gemini-3.6-flash
+- LlmStrongBugs: 2
+- LlmStrongPassOneCert: 1.00
+- LlmMainSameBugsPassOneCert: 0.67
 - LlmRepairRequests: 87
 - LlmRepairRequestsOk: 87
 - LlmBlindRepairRequests: 70
@@ -122,13 +126,13 @@
 
 ## LLM campaign (gemini-3.5-flash-lite): 200 iterations, match 99.9%, 5 accepted repairs, expansion 10/41 valid
 
-## LLM generator targets by cause: Compressed ISA (COMPRESSED_ISA=0): 5, Counter CSRs (outside RV32IM scope): 1, ld_rs2 state (unused, ENABLE_REGS_DUALPORT=1): 1, ALU options (BARREL_SHIFTER, TWO_CYCLE_*): 1
+## LLM generator targets by cause: Compressed ISA (COMPRESSED_ISA=0): 6, Counter CSRs (outside RV32IM scope): 1, ld_rs2 state (unused, ENABLE_REGS_DUALPORT=1): 1, ALU options (BARREL_SHIFTER, TWO_CYCLE_*): 1
 
-## LLM generator after the plateau (2 seeds): {'llm_calls': 200, 'targets': 29, 'target_hit': 0, 'syntax_fixes': 59, 'semantic_fixes': 114, 'gave_up': 29, 'illegal': 11, 'no_llm': 259, 'target_segments': {'1629-1635': 6, '922-924': 4, '508-510': 3, '1768-1770': 3, '454-456': 4, '985-987': 4, '1280-1282': 2, '903-905': 3}} | mean final 64.24% at 400 programs | seeds above mutation / mutation-then-random: {'mutation': 2, 'hybrid-rand': 2}
+## LLM generator after the plateau (3 seeds): {'llm_calls': 300, 'targets': 43, 'target_hit': 0, 'syntax_fixes': 94, 'semantic_fixes': 167, 'gave_up': 43, 'illegal': 13, 'no_llm': 395, 'target_segments': {'1629-1635': 9, '922-924': 4, '508-510': 4, '1768-1770': 5, '454-456': 5, '985-987': 5, '1280-1282': 3, '903-905': 5, '438-440': 3}} | mean final 64.24% at 400 programs | seeds above mutation / mutation-then-random: {'mutation': 3, 'hybrid-rand': 3}
 
 ## Real bug (FENCE rd): CONFIRMED: bug present on upstream, removed by the fix without regressions
 
-## Rocket / Encarsia (step 3)
+## rocket / Encarsia
 - Mix-up 1: base 5/5, ext 5/5; published DF/PF/CA [False, False, True] 
 - Mix-up 2: base 5/5, ext 5/5; published DF/PF/CA [True, True, True] 
 - Mix-up 3: base 5/5, ext 5/5; published DF/PF/CA [True, True, True] 
@@ -137,7 +141,7 @@
 - Mix-up 6: base 5/5, ext 5/5; published DF/PF/CA [False, False, True] 
 - Mix-up 7: base 0/5, ext 5/5; published DF/PF/CA [False, False, False] 
 - Mix-up 8: base 0/5, ext 5/5; published DF/PF/CA [False, False, False] 
-- Mix-up 9: base 0/5, ext 4/5; published DF/PF/CA [False, False, False] 
+- Mix-up 9: base 0/5, ext 5/5; published DF/PF/CA [False, False, False] 
 - Mix-up 10: base 0/5, ext 5/5; published DF/PF/CA [False, False, False] 
 - Mix-up 11: base 0/5, ext 0/5; published DF/PF/CA [False, False, False] 
 - Mix-up 12: base 0/5, ext 5/5; published DF/PF/CA [False, False, False] 

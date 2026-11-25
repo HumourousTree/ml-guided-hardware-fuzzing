@@ -1,1 +1,1 @@
-{"seed": 3, "length": 40, "fp": true, "profile": "ext", "programs": 400, "mismatches": 0, "nonterminating": 0, "spike_failures": 0, "first_detection": null, "t_start": 1793866810.113276, "seconds": 182.6, "kind": "multiplexer", "dir": 295, "budget_programs": 400}
+{"seed": 3, "length": 40, "fp": true, "profile": "ext", "programs": 400, "mismatches": 0, "nonterminating": 0, "spike_failures": 0, "first_detection": null, "t_start": 1795604922.934546, "seconds": 206.4, "kind": "multiplexer", "dir": 295, "budget_programs": 400}

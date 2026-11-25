@@ -1,14 +1,16 @@
 {
- "day": "2026-11-05",
+ "day": "2026-11-25",
  "used": {
-  "148806db:gemini-3.5-flash-lite": 185,
-  "148806db:gemini-3.8-flash": 3
+  "148806db:gemini-3.8-flash": 1,
+  "148806db:gemini-3.6-flash": 18
  },
- "exhausted": [],
+ "exhausted": [
+  "148806db:gemini-3.6-flash"
+ ],
  "last_call": {
-  "148806db:gemini-3.8-flash": 1793868645.4326835,
-  "148806db:gemini-3.5-flash-lite": 1793869633.797928,
-  "148806db:gemini-3.6-flash": 1793799734.1591895,
+  "148806db:gemini-3.8-flash": 1795601603.817433,
+  "148806db:gemini-3.5-flash-lite": 1793872319.4135213,
+  "148806db:gemini-3.6-flash": 1795602449.8554726,
   "148806db:gemini-3.1-pro-preview": 1793832186.3533564
  }
 }
