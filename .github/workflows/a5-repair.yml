@@ -70,6 +70,7 @@ jobs:
       - name: Run A5 until done or out of quota
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_TIMEOUT_MS: "300000"        # gemini-3.6-flash thinks for longer than the 60 s default on repair prompts
         run: |
           if [ -z "$GEMINI_API_KEY" ]; then echo "secret GEMINI_API_KEY is not set"; exit 1; fi
           venv/bin/python -m harness.repair_eval --model "$MODEL" --mode informed --samples 5 --feedback-attempts 3 \
