@@ -1,27 +1,280 @@
 {
-  "source": "Bolcskei, Solt, Ceesay-Seitz, Razavi. Encarsia: Evaluating CPU Fuzzers via Automatic Bug Injection. USENIX Security 2025, Tables 8-10 (text extracted from https://comsec-files.ethz.ch/papers/encarsia_sec25.pdf, 2026-11-05)",
+  "source": "Bolcskei, Solt, Ceesay-Seitz, Razavi. Encarsia: Evaluating CPU Fuzzers via Automatic Bug Injection. USENIX Security 2025, Tables 8-10 (text extracted from https://comsec-files.ethz.ch/papers/encarsia_sec25.pdf, 2026-11-05; BOOM columns decoded from the glyph positions on 2026-11-25, same tables)",
   "protocol": "24 h of fuzzing per bug on a single core (Sec. 8.1); a bug counts as detected after the fuzzer's own false-positive filtering",
   "id_mapping": "paper bug k (1-15) = k-th EnCorpus bug directory in ascending numeric order (Encarsia Readme), separately for driver (signal mix-ups) and multiplexer (broken conditionals)",
   "rocket": {
-    "driver_dirs": [144, 293, 347, 361, 640, 673, 767, 774, 804, 826, 832, 858, 863, 1081, 1094],
-    "multiplexer_dirs": [14, 28, 46, 66, 71, 277, 285, 295, 305, 394, 397, 408, 588, 633, 718],
+    "driver_dirs": [
+      144,
+      293,
+      347,
+      361,
+      640,
+      673,
+      767,
+      774,
+      804,
+      826,
+      832,
+      858,
+      863,
+      1081,
+      1094
+    ],
+    "multiplexer_dirs": [
+      14,
+      28,
+      46,
+      66,
+      71,
+      277,
+      285,
+      295,
+      305,
+      394,
+      397,
+      408,
+      588,
+      633,
+      718
+    ],
     "detected": {
       "mixups": {
-        "DifuzzRTL_nocov":     [2, 3, 4, 13, 15],
-        "ProcessorFuzz_nocov": [2, 3, 4, 13, 15],
-        "DifuzzRTL":           [2, 3, 4, 13, 15],
-        "ProcessorFuzz":       [2, 3, 4, 13, 15],
-        "Cascade":             [1, 2, 3, 4, 6, 13, 15]
+        "DifuzzRTL_nocov": [
+          2,
+          3,
+          4,
+          13,
+          15
+        ],
+        "ProcessorFuzz_nocov": [
+          2,
+          3,
+          4,
+          13,
+          15
+        ],
+        "DifuzzRTL": [
+          2,
+          3,
+          4,
+          13,
+          15
+        ],
+        "ProcessorFuzz": [
+          2,
+          3,
+          4,
+          13,
+          15
+        ],
+        "Cascade": [
+          1,
+          2,
+          3,
+          4,
+          6,
+          13,
+          15
+        ]
       },
       "conditionals": {
-        "DifuzzRTL_nocov":     [6, 7, 10, 12, 15],
-        "ProcessorFuzz_nocov": [6, 7, 10, 12, 15],
-        "DifuzzRTL":           [6, 7, 10, 12, 15],
-        "ProcessorFuzz":       [6, 7, 10, 12, 15],
-        "Cascade":             [2, 6, 12, 15]
+        "DifuzzRTL_nocov": [
+          6,
+          7,
+          10,
+          12,
+          15
+        ],
+        "ProcessorFuzz_nocov": [
+          6,
+          7,
+          10,
+          12,
+          15
+        ],
+        "DifuzzRTL": [
+          6,
+          7,
+          10,
+          12,
+          15
+        ],
+        "ProcessorFuzz": [
+          6,
+          7,
+          10,
+          12,
+          15
+        ],
+        "Cascade": [
+          2,
+          6,
+          12,
+          15
+        ]
       }
     },
-    "totals_check": {"mixups": {"DifuzzRTL": 5, "ProcessorFuzz": 5, "Cascade": 7},
-                     "conditionals": {"DifuzzRTL": 5, "ProcessorFuzz": 5, "Cascade": 4}}
+    "totals_check": {
+      "mixups": {
+        "DifuzzRTL": 5,
+        "ProcessorFuzz": 5,
+        "Cascade": 7
+      },
+      "conditionals": {
+        "DifuzzRTL": 5,
+        "ProcessorFuzz": 5,
+        "Cascade": 4
+      }
+    }
+  },
+  "boom": {
+    "driver_dirs": [
+      27,
+      56,
+      137,
+      148,
+      228,
+      589,
+      604,
+      657,
+      741,
+      787,
+      954,
+      990,
+      1028,
+      1073,
+      1236
+    ],
+    "multiplexer_dirs": [
+      3,
+      6,
+      137,
+      160,
+      168,
+      176,
+      187,
+      195,
+      200,
+      513,
+      517,
+      530,
+      708,
+      727,
+      975
+    ],
+    "detected": {
+      "mixups": {
+        "DifuzzRTL_nocov": [
+          1,
+          2,
+          4,
+          5,
+          8,
+          10,
+          11,
+          12,
+          15
+        ],
+        "ProcessorFuzz_nocov": [
+          1,
+          2,
+          4,
+          5,
+          8,
+          10,
+          11,
+          12,
+          15
+        ],
+        "DifuzzRTL": [
+          1,
+          2,
+          4,
+          5,
+          8,
+          10,
+          11,
+          12,
+          15
+        ],
+        "ProcessorFuzz": [
+          1,
+          2,
+          4,
+          5,
+          8,
+          10,
+          11,
+          12,
+          15
+        ],
+        "Cascade": [
+          1,
+          2,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          14,
+          15
+        ]
+      },
+      "conditionals": {
+        "DifuzzRTL_nocov": [
+          1,
+          2,
+          7,
+          11,
+          12,
+          15
+        ],
+        "ProcessorFuzz_nocov": [
+          1,
+          2,
+          7,
+          11,
+          12,
+          15
+        ],
+        "DifuzzRTL": [
+          1,
+          2,
+          7,
+          11,
+          12,
+          15
+        ],
+        "ProcessorFuzz": [
+          1,
+          2,
+          7,
+          11,
+          12,
+          15
+        ],
+        "Cascade": [
+          1,
+          2,
+          7,
+          11,
+          12
+        ]
+      }
+    },
+    "totals_check": {
+      "mixups": {
+        "DifuzzRTL": 9,
+        "ProcessorFuzz": 9,
+        "Cascade": 10
+      },
+      "conditionals": {
+        "DifuzzRTL": 6,
+        "ProcessorFuzz": 6,
+        "Cascade": 5
+      },
+      "note": "matches the printed totals of Tables 8/9 (9 9 6 6) and the text 'BOOM (Cascade: 15/30)'"
+    }
   }
 }

@@ -10,8 +10,8 @@ Each program
   * epilogue: store x1..x30, f0..f31 (fmv.x.d), fcsr and the 32 data dwords to MMIO 0x60000010 (Cascade's register-dump
     port), request stop (MMIO 0x60000000, Rocket testbench) and write tohost (Spike exits).
 x31 is reserved as the dump pointer and is never a destination.
-Profile "ext" (--profile ext) adds machine-mode CSR traffic (mstatus FS/MPIE bits, mepc, mcause, mtval, mie),
-exceptions (ecall, ebreak, illegal instructions, misaligned loads/stores, FP with an invalid frm or with the FPU off) and
+Profile "ext" (--profile ext) adds machine-mode CSR traffic (mstatus MPIE bit, mepc, mcause, mtval, mie),
+exceptions (ecall, ebreak, illegal instructions, misaligned loads/stores, FP with an invalid frm; the FPU is never off) and
 compressed (RVC) instructions (assembled with the C extension, plus explicit c.* ALU ops and compressed branches);
 a trap handler folds mcause, mepc and mtval into x29 (x28 is its temporary; both are never body destinations) and
 resumes after the faulting instruction, and the epilogue also dumps mstatus, mepc, mcause and mtval.  Oracle: the sequence of dumped values must be identical
@@ -64,7 +64,10 @@ TRAP_CSRS = ["mepc", "mcause", "mtval", "mie"]
 TRAP_CSRS_RW = ["mie"]          # mepc/mcause/mtval are read only in the body: their legal (WARL) values are implementation-
                                 # specific (Rocket keeps ~40 address bits of mepc, Spike all 64), so writes would be false alarms
 MSTATUS_BITS = [0x2000, 0x4000, 0x6000, 0x80]   # FS and MPIE only: MPRV/MPP would leave M-mode, and MIE would let Spike's
-                                                 # always-pending timer interrupt fire (the tiny SoC has no timer)
+                                                 # always-pending timer interrupt fire (the tiny SoC has no timer).
+# FS bits are only ever set (a no-op on FS = Dirty), never cleared: with the FPU off, Spike traps FP instructions and FP-CSR
+# accesses that the bug-free Rocket executes in some cases (16 false alarms in the first ext campaign, all caught by replay;
+# results archived in logs/archive/rocket_ext_v1).
 PROFILES = ("base", "ext")
 RVC_REG = lambda rng: f"x{rng.randint(8, 15)}"   # the 3-bit register field of most compressed instructions
 
@@ -133,8 +136,9 @@ def gen_program(rng: random.Random, length: int, fp: bool = True, profile: str =
         elif c == "mcsr":
             k = rng.random()
             if k < .3:
-                body.append(f"{rng.choice(['csrs', 'csrc'])} mstatus, {rng.choice(['x28'])}")
-                body.insert(len(body) - 1, f"li x28, {rng.choice(MSTATUS_BITS)}")
+                bits = rng.choice(MSTATUS_BITS)
+                op = "csrs" if bits & 0x6000 else rng.choice(["csrs", "csrc"])   # FS is only ever set, never cleared
+                body += [f"li x28, {bits}", f"{op} mstatus, x28"]
                 i += 1
             elif k < .4:   # FS/SD masked: the spec lets FS become Dirty conservatively (Rocket does, Spike does not)
                 r = rd(); body += [f"csrr {r}, mstatus", "li x28, 0x7FFFFFFFFFFF9FFF", f"and {r}, {r}, x28"]
@@ -185,7 +189,7 @@ def gen_program(rng: random.Random, length: int, fp: bool = True, profile: str =
                 off = rng.randrange(0, DATA_DWORDS * 8 - 8, sz) + rng.randint(1, sz - 1)          # misaligned
                 body.append(f"{op} {rd() if op[0] == 'l' else rs()}, {off}(x30)")
             else:
-                body.append(f"{rng.choice(F3)} {fr()}, {fr()}, {fr()}, dyn")      # traps if frm or FS is invalid
+                body.append(f"{rng.choice(F3)} {fr()}, {fr()}, {fr()}, dyn")      # traps if frm is invalid
             body.append(".option pop")
         i += 1
     pro = ["  .section .text.init", "  .option norvc", "  .globl _start", "_start:", "  li x31, 0x6000", "  csrs mstatus, x31",

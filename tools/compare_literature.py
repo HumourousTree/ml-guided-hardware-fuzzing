@@ -800,18 +800,20 @@ def section_llm_hybrid(logs, M, md):
               f" | seeds above mutation / mutation-then-random: {wins}")
 
 
-def section_rocket(logs, M, md):
-    """Step 3: BenchFuzz (RV64 generator, Spike end-state oracle) on Encarsia's 30 Rocket bugs vs the published
+def section_encarsia(logs, M, md, core="rocket", P="Roc"):
+    """Steps 3/5: BenchFuzz (RV64 generator, Spike end-state oracle) on Encarsia's 30 Rocket or BOOM bugs vs the published
     DifuzzRTL / ProcessorFuzz / Cascade detections (docs/encarsia_published.json). Two generator profiles: "base"
-    (macros Roc*) and "ext" = base + machine-mode CSRs, exceptions and compressed instructions (macros RocExt*)."""
-    d = logs / "bench" / "rocket"
+    (macros <P>*, P = Roc / Boom) and "ext" = base + machine-mode CSRs, exceptions and compressed instructions (<P>Ext*)."""
+    d = logs / "bench" / core
     pub_f = ROOT / "docs" / "encarsia_published.json"
     if not d.exists() or not pub_f.exists():
         return ""
-    pub = json.loads(pub_f.read_text())["rocket"]
+    pub = json.loads(pub_f.read_text()).get(core)
+    if not pub:
+        return ""
     profiles = {"base": "_seed?.json", "ext": "_seed?_ext.json"}
     runs = {p: defaultdict(list) for p in profiles}
-    conf = load(d / "confirmations.json") or {}          # rocket/confirm_detections.py: replay on the golden Rocket
+    conf = load(d / "confirmations.json") or {}          # rocket/confirm_detections.py: replay on the golden core
     unconfirmed = 0
     for p, pat in profiles.items():
         for f in sorted(d.glob("*" + pat)):
@@ -821,14 +823,14 @@ def section_rocket(logs, M, md):
             runs[p][(r["kind"], r["dir"])].append(r)
     det_files = [f.name for p, pat in profiles.items() for f in d.glob("*" + pat)
                  if json.loads(f.read_text()).get("first_detection")]
-    M["RocDetections"] = len(det_files)
-    M["RocDetConfirmed"] = sum(1 for n in det_files if conf.get(n, {}).get("confirmed"))
-    M["RocDetUnconfirmed"] = unconfirmed
-    M["RocDetNotReplayed"] = sum(1 for n in det_files if n not in conf)
-    M["RocDetGoldenDiffers"] = sum(1 for n in det_files if n in conf and not conf[n]["golden_matches_spike"])
-    M["RocDetNotReproduced"] = sum(1 for n in det_files if n in conf and conf[n]["golden_matches_spike"]
+    M[P + "Detections"] = len(det_files)
+    M[P + "DetConfirmed"] = sum(1 for n in det_files if conf.get(n, {}).get("confirmed"))
+    M[P + "DetUnconfirmed"] = unconfirmed
+    M[P + "DetNotReplayed"] = sum(1 for n in det_files if n not in conf)
+    M[P + "DetGoldenDiffers"] = sum(1 for n in det_files if n in conf and not conf[n]["golden_matches_spike"])
+    M[P + "DetNotReproduced"] = sum(1 for n in det_files if n in conf and conf[n]["golden_matches_spike"]
                                    and not conf[n]["bug_differs"])
-    M["RocExtGoldenDiffers"] = sum(1 for n in det_files if n.endswith("_ext.json") and n in conf
+    M[P + "ExtGoldenDiffers"] = sum(1 for n in det_files if n.endswith("_ext.json") and n in conf
                                    and not conf[n]["golden_matches_spike"])
     if not runs["base"]:
         return ""
@@ -836,13 +838,20 @@ def section_rocket(logs, M, md):
     mods = (load(d / "bug_modules.json") or {}).get("multiplexer", {})
     fuzzers = ["DifuzzRTL", "ProcessorFuzz", "Cascade"]
     for p in profiles:
-        pre = "Roc" if p == "base" else "RocExt"
+        pre = P if p == "base" else P + "Ext"
         for k in ("driver", "multiplexer"):
-            g = load(d / f"golden_{k}{'' if p == 'base' else '_' + p}.json")
-            if g:
+            sfx = "" if p == "base" else "_" + p
+            gs = [load(g) for g in sorted(d.glob(f"golden_{k}*{sfx}.json"))
+                  if (p == "ext") == g.name.endswith("_ext.json") and (k != "driver" or g.name.startswith("golden_driver_"))]
+            gs = [g for g in gs if g]
+            if gs:
                 tag = "Mix" if k == "driver" else "Cond"
-                M[f"{pre}{tag}GoldenProgs"], M[f"{pre}{tag}GoldenMis"] = g["programs"], g["mismatches"] + g["nonterminating"]
-    short = {"CSRFile": "CSR", "RVCExpander": "RVC", "Rocket": "core", "IBuf": "IBuf"}
+                M[f"{pre}{tag}GoldenRefs"] = len(gs)
+                M[f"{pre}{tag}GoldenProgs"] = min(g["programs"] for g in gs)
+                M[f"{pre}{tag}GoldenMis"] = sum(g["mismatches"] + g["nonterminating"] for g in gs)
+    short = {"CSRFile": "CSR", "RVCExpander": "RVC", "Rocket": "core", "IBuf": "IBuf", "ALUUnit": "ALU", "Rob": "ROB",
+             "BranchKillableQueue_4": "BrQ", "BranchKillableQueue_5": "BrQ", "BranchMaskGenerationLogic": "BrMask",
+             "RoundAnyRawFNToRecFN_4": "FPU"}
     nb = 2 if have_ext else 1
     head = (f"& & \\multicolumn{{{nb}}}{{c}}{{BenchFuzz}} & \\multicolumn{{3}}{{c}}{{Published (24\\,h)}}\\\\"
             f"\\cmidrule(lr){{3-{2 + nb}}}\\cmidrule(l){{{3 + nb}-{5 + nb}}}")
@@ -879,12 +888,12 @@ def section_rocket(logs, M, md):
         tag = "Mix" if kind == "driver" else "Cond"
         union = set().union(*(set(pub["detected"][key][fz]) for fz in fuzzers))
         for fz in fuzzers:
-            M[f"Roc{tag}{fz}"] = len(pub["detected"][key][fz])
-        M[f"Roc{tag}Union"] = len(union)
+            M[f"{P}{tag}{fz}"] = len(pub["detected"][key][fz])
+        M[f"{P}{tag}Union"] = len(union)
         for p in profiles:
             if p == "ext" and not have_ext:
                 continue
-            pre = "Roc" if p == "base" else "RocExt"
+            pre = P if p == "base" else P + "Ext"
             o = ours[p]
             ours_sets[p][key] = o
             M[f"{pre}{tag}Ours"] = len(o)
@@ -896,25 +905,25 @@ def section_rocket(logs, M, md):
             M[f"{pre}{tag}OursList"] = ", ".join(str(x) for x in sorted(o)) or "none"
         if have_ext:
             both = ours["base"] | ours["ext"]
-            M[f"RocAny{tag}Ours"] = len(both)
-            M[f"RocAny{tag}OnlyOursList"] = ", ".join(str(x) for x in sorted(both - union)) or "none"
-            M[f"RocAny{tag}OnlyOurs"] = len(both - union)
-            M[f"RocAny{tag}OursList"] = ", ".join(str(x) for x in sorted(both)) or "none"
-            M[f"RocAll{tag}"] = len(both | union)                   # found by anyone (us or a published fuzzer)
-            M[f"RocAny{tag}MissedList"] = ", ".join(str(x) for x in sorted(union - both)) or "none"
-            M[f"RocExt{tag}NewList"] = ", ".join(str(x) for x in sorted(ours["ext"] - ours["base"])) or "none"
-            M[f"RocExt{tag}LostList"] = ", ".join(str(x) for x in sorted(ours["base"] - ours["ext"])) or "none"
+            M[f"{P}Any{tag}Ours"] = len(both)
+            M[f"{P}Any{tag}OnlyOursList"] = ", ".join(str(x) for x in sorted(both - union)) or "none"
+            M[f"{P}Any{tag}OnlyOurs"] = len(both - union)
+            M[f"{P}Any{tag}OursList"] = ", ".join(str(x) for x in sorted(both)) or "none"
+            M[f"{P}All{tag}"] = len(both | union)                   # found by anyone (us or a published fuzzer)
+            M[f"{P}Any{tag}MissedList"] = ", ".join(str(x) for x in sorted(union - both)) or "none"
+            M[f"{P}Ext{tag}NewList"] = ", ".join(str(x) for x in sorted(ours["ext"] - ours["base"])) or "none"
+            M[f"{P}Ext{tag}LostList"] = ", ".join(str(x) for x in sorted(ours["base"] - ours["ext"])) or "none"
         if kind == "driver":
             lines.append("\\midrule")
-    M["RocCondCsrFile"] = sum(1 for dd in pub["multiplexer_dirs"] if mods.get(str(dd)) == "CSRFile")
+    M[P + "CondCsrFile"] = sum(1 for dd in pub["multiplexer_dirs"] if mods.get(str(dd)) == "CSRFile")
     found_cond = set().union(*(set(pub["detected"]["conditionals"][fz]) for fz in fuzzers),
                              *(s.get("conditionals", set()) for s in ours_sets.values()))
-    M["RocCondCsrNobody"] = sum(1 for i, dd in enumerate(pub["multiplexer_dirs"], 1)
+    M[P + "CondCsrNobody"] = sum(1 for i, dd in enumerate(pub["multiplexer_dirs"], 1)
                                 if mods.get(str(dd)) == "CSRFile" and i not in found_cond)
     for p in profiles:
         if p == "ext" and not have_ext:
             continue
-        pre = "Roc" if p == "base" else "RocExt"
+        pre = P if p == "base" else P + "Ext"
         rr = runs[p]
         M[f"{pre}Ours"] = sum(len(s) for s in ours_sets[p].values())          # (macro values are stored as strings)
         all_progs = [r["first_detection"]["n_programs"] for rs in rr.values() for r in rs if r.get("first_detection")]
@@ -926,11 +935,11 @@ def section_rocket(logs, M, md):
         part = sum(1 for rs in rr.values() if 0 < sum(bool(r.get("first_detection")) for r in rs) < len(rs))
         M[f"{pre}PartialBugs"] = part
     if have_ext:
-        M["RocAnyOurs"] = int(M.items["RocAnyMixOurs"]) + int(M.items["RocAnyCondOurs"])
-    md.append("## Rocket / Encarsia (step 3)\n" + "\n".join(
+        M[P + "AnyOurs"] = int(M.items[P + "AnyMixOurs"]) + int(M.items[P + "AnyCondOurs"])
+    md.append(f"## {core} / Encarsia\n" + "\n".join(
         f"- {r['bug']}: base {r['base'][0]}/{r['base'][1]}" + (f", ext {r['ext'][0]}/{r['ext'][1]}" if 'ext' in r else "")
         + f"; published DF/PF/CA {r['pub']} {r['module']}" for r in fig))
-    (logs / "bench" / "rocket" / "_figdata.json").write_text(json.dumps(fig))
+    (logs / "bench" / core / "_figdata.json").write_text(json.dumps(fig))
     return "\n".join(l for l in lines if l) + "\n\\bottomrule\\end{tabular}"
 
 
@@ -1078,7 +1087,8 @@ def main():
     section_llm_campaign(logs, M, md)
     section_llm_hybrid(logs, M, md)
     section_real_bug(M, md)
-    tabs["rocket"] = section_rocket(logs, M, md)
+    tabs["rocket"] = section_encarsia(logs, M, md, "rocket", "Roc")
+    tabs["boom"] = section_encarsia(logs, M, md, "boom", "Boom")
     from llm_figures import all_figures
     all_figures(logs, figs, plt, save, ROOT, at_programs)
     tabs["lit_testcases"], tabs["lit_encarsia"] = section_literature(json.loads(Path(a.lit).read_text()), logs, M, md, figs, plt, cov, bugagg)

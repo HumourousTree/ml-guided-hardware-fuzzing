@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Which Rocket module holds each EnCorpus bug (for the analysis table; not used by the fuzzer).
+"""Which module holds each EnCorpus bug of Rocket or BOOM (for the analysis table; not used by the fuzzer).
 
-  python3 rocket/locate_bugs.py      -> logs/bench/rocket/bug_modules.json  {"driver": {dir: module}, "multiplexer": {...}}
+  python3 rocket/locate_bugs.py [rocket|boom]  -> logs/bench/<core>/bug_modules.json  {"driver": {dir: module}, ...}
 
 Signal mix-ups (driver): the module whose text differs from the version most other bug netlists have.
 Broken conditionals (multiplexer): every multiplexer of the design is an $amt cell in every host netlist; the injected bug
@@ -10,10 +10,12 @@ is the cell whose truth table differs from the one most other bug netlists have 
 import collections
 import json
 import re
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-CORPUS = Path.home() / "ext" / "encarsia" / "out" / "rocket"
+CORE = sys.argv[1] if len(sys.argv) > 1 else "rocket"
+CORPUS = Path.home() / "ext" / "encarsia" / "out" / CORE
 
 
 def modules(txt: str) -> dict[str, str]:
@@ -46,7 +48,8 @@ def main():
             if common != body:
                 diff.add(key[0].lstrip("\\"))
         res["multiplexer"][d] = ", ".join(sorted(diff)) or "?"
-    out = ROOT / "logs" / "bench" / "rocket" / "bug_modules.json"
+    out = ROOT / "logs" / "bench" / CORE / "bug_modules.json"
+    out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(res, indent=1))
     print(json.dumps(res))
 

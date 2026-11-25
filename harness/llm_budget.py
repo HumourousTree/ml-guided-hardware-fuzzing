@@ -34,7 +34,7 @@ QUOTA_MARKERS = ("429", "RESOURCE_EXHAUSTED", "quota")
 #   gemini-3.5-flash-lite 15 RPM / 500 RPD -> 4.5 s interval, 400/day (20% headroom)
 #   gemini-3.1-pro        0 (no free-tier quota on this key); its entry only matters on a paid key
 #   gemini-3.8-flash      not yet observed (503/504 outage); same caps as flash-lite until a 429 says otherwise
-MODEL_LIMITS = {"gemini-3.8-flash": (400, 5.0), "gemini-3.5-flash-lite": (400, 4.5), "gemini-3.1-pro-preview": (40, 35.0)}
+MODEL_LIMITS = {"gemini-3.6-flash": (20, 12.0), "gemini-3.8-flash": (400, 5.0), "gemini-3.5-flash-lite": (400, 4.5), "gemini-3.1-pro-preview": (40, 35.0)}
 MAX_MINUTE_WAIT_S = 120.0
 
 

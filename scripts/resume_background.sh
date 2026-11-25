@@ -8,8 +8,8 @@
 cd "$(dirname "$0")/.." || exit 9
 mode=${1:-start}
 if [ "$mode" = status ]; then
-  pgrep -af "run_encarsia.py|scripts/run_llm_extra.sh" | grep -v pgrep | cut -c1-120
-  echo "rocket: $(ls logs/bench/rocket/*_seed?.json 2>/dev/null | wc -l)/150 runs, ext profile: $(ls logs/bench/rocket/*_seed?_ext.json 2>/dev/null | wc -l)/150"; tail -1 logs/llm_extra.log; exit 0
+  pgrep -af "run_encarsia.py|scripts/run_llm_extra.sh|confirm_detections" | grep -v pgrep | cut -c1-120
+  echo "rocket: $(ls logs/bench/rocket/*_seed?.json 2>/dev/null | wc -l)/150 runs, ext profile: $(ls logs/bench/rocket/*_seed?_ext.json 2>/dev/null | wc -l)/150; boom: $(ls logs/bench/boom/*_seed?.json 2>/dev/null | wc -l)/150, ext $(ls logs/bench/boom/*_seed?_ext.json 2>/dev/null | wc -l)/150"; tail -1 logs/llm_extra.log; exit 0
 fi
 if ! pgrep -f "run_encarsia.py --seeds" >/dev/null && ! grep -q '^exit 0' logs/rocket_encarsia.log 2>/dev/null; then
   echo "[$(date '+%F %T')] resume_background: (re)starting the Rocket campaign" >> logs/rocket_encarsia.log
@@ -18,7 +18,12 @@ if ! pgrep -f "run_encarsia.py --seeds" >/dev/null && ! grep -q '^exit 0' logs/r
 fi
 if ! pgrep -f "run_encarsia.py --profile ext" >/dev/null && ! grep -q '^exit 0' logs/rocket_encarsia_ext.log 2>/dev/null; then
   echo "[$(date '+%F %T')] resume_background: (re)starting the Rocket ext-profile campaign" >> logs/rocket_encarsia_ext.log
-  ( python3 rocket/run_encarsia.py --profile ext --seeds 5 --programs 400 --jobs 6 --build-jobs 2       >> logs/rocket_encarsia_ext.log 2>&1; echo "exit $?" >> logs/rocket_encarsia_ext.log ) < /dev/null &
+  ( python3 rocket/run_encarsia.py --profile ext --seeds 5 --programs 400 --jobs 5 --build-jobs 2 --calibrate 1000       >> logs/rocket_encarsia_ext.log 2>&1; echo "exit $?" >> logs/rocket_encarsia_ext.log ) < /dev/null &
+fi
+if ! pgrep -f "run_encarsia.py --core boom" >/dev/null && ! grep -q '^exit 0' logs/boom_encarsia.log 2>/dev/null; then
+  echo "[$(date '+%F %T')] resume_background: (re)starting the BOOM campaign (base, then ext)" >> logs/boom_encarsia.log
+  ( python3 rocket/run_encarsia.py --core boom --seeds 5 --programs 2000 --jobs 4 --build-jobs 2 --calibrate 500       >> logs/boom_encarsia.log 2>&1 &&
+    python3 rocket/run_encarsia.py --core boom --profile ext --seeds 5 --programs 400 --jobs 4 --calibrate 1000       >> logs/boom_encarsia.log 2>&1; echo "exit $?" >> logs/boom_encarsia.log ) < /dev/null &
 fi
 if ! pgrep -f "scripts/run_llm_extra.sh" >/dev/null && ! grep -q "EXTRA DONE" logs/llm_extra.log 2>/dev/null; then
   echo "[$(date '+%F %T')] resume_background: (re)starting the LLM runner" >> logs/llm_extra.log

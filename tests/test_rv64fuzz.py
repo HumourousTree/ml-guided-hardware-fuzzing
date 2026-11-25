@@ -60,6 +60,8 @@ class TestRv64Fuzz(unittest.TestCase):
             asm = rv64fuzz.gen_program(random.Random(s), 60, True, "ext")
             for v in re.findall(r"li x28, (\d+)\n\s*csr[sc] mstatus", asm):
                 self.assertEqual(int(v) & ~(0x6000 | 0x80), 0, v)      # FS and MPIE only
+            for v in re.findall(r"li x28, (\d+)\n\s*csrc mstatus", asm):
+                self.assertEqual(int(v) & 0x6000, 0, v)                # the FPU is never switched off
             self.assertNotRegex(asm, r"csr\w* \S+, mtvec, |csrw mtvec, x(?!28)")
 
     def test_ext_masks_fs_in_mstatus_reads(self):

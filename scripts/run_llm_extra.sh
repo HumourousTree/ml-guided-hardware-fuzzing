@@ -2,15 +2,16 @@
 # Track A, second round (inside WSL, project root). Resumable: rerun to continue.  Progress: logs/llm_extra.log
 #   A4b  target-line generator after the plateau on two more seeds (gemini-3.5-flash-lite, <=100 requests per seed)
 #   A5   stronger model: the full A1 protocol (14 bugs, 5 independent samples + feedback loop, certified) on
-#        gemini-3.8-flash.  gemini-3.1-pro has no free-tier quota on this key, and 3.8-flash has been returning 503/504,
-#        so it is probed every PROBE_EVERY_S until STRONG_WAIT_S has passed.
+#        gemini-3.6-flash.  gemini-3.1-pro has no free-tier quota on this key, and 3.7/3.8-flash returned 503/504 from
+#        2026-11-05 to 2026-11-25 (3.8-flash also with a 300 s deadline); 3.6-flash is the strongest model that answers.
+#        It is probed every PROBE_EVERY_S until STRONG_WAIT_S has passed; a daily-quota stop resumes the next day.
 set -uo pipefail
 cd "$(dirname "$0")/.." || exit 9
 source venv/bin/activate
 LOG=logs/llm_extra.log; mkdir -p logs/experiments
 log() { echo "[$(date '+%F %T')] $*" | tee -a "$LOG"; }
-LITE=${LITE:-gemini-3.5-flash-lite}; STRONG=${STRONG:-gemini-3.8-flash}
-STRONG_WAIT_S=${STRONG_WAIT_S:-172800}; PROBE_EVERY_S=${PROBE_EVERY_S:-1200}
+LITE=${LITE:-gemini-3.5-flash-lite}; STRONG=${STRONG:-gemini-3.6-flash}
+STRONG_WAIT_S=${STRONG_WAIT_S:-1209600}; PROBE_EVERY_S=${PROBE_EVERY_S:-1200}   # 14 days: gemini-3.6-flash allows ~20 requests/day (free tier)
 
 probe() {
   python3 - "$1" <<'PY'

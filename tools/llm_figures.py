@@ -193,10 +193,10 @@ def fig_llm_hybrid(logs: Path, figs: Path, plt, save, at_programs) -> None:
     save(fig, figs, "fig_llm_hybrid"); plt.close(fig)
 
 
-def fig_encarsia_rocket(logs: Path, figs: Path, plt, save) -> None:
-    """Step 3: detection matrix on Encarsia's 30 Rocket bugs. BenchFuzz rows (base and ext generator profile; fill =
+def fig_encarsia(logs: Path, figs: Path, plt, save, core: str = "rocket") -> None:
+    """Steps 3/5: detection matrix on Encarsia's 30 Rocket or BOOM bugs. BenchFuzz rows (base and ext generator profile; fill =
     fraction of seeds that detected the bug) vs the published 24 h results; a bracket marks bugs in Rocket's CSRFile."""
-    p = logs / "bench" / "rocket" / "_figdata.json"
+    p = logs / "bench" / core / "_figdata.json"
     if not p.exists():
         return
     rows = json.loads(p.read_text())           # [{bug, base: [det, n], ext: [det, n]?, pub: [DF, PF, CA], module}]
@@ -239,7 +239,7 @@ def fig_encarsia_rocket(logs: Path, figs: Path, plt, save) -> None:
         ax.spines[s].set_visible(False)
     ax.tick_params(length=0)
     fig.tight_layout(pad=.3)
-    save(fig, figs, "fig_encarsia_rocket"); plt.close(fig)
+    save(fig, figs, f"fig_encarsia_{core}"); plt.close(fig)
 
 
 def all_figures(logs: Path, figs: Path, plt, save, root: Path, at_programs) -> None:
@@ -253,4 +253,5 @@ def all_figures(logs: Path, figs: Path, plt, save, root: Path, at_programs) -> N
     fig_llm_campaign(logs, figs, plt, save)
     fig_oracle(logs, figs, plt, save)
     fig_llm_hybrid(logs, figs, plt, save, at_programs)
-    fig_encarsia_rocket(logs, figs, plt, save)
+    fig_encarsia(logs, figs, plt, save, "rocket")
+    fig_encarsia(logs, figs, plt, save, "boom")
