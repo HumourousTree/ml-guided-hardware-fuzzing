@@ -68,7 +68,9 @@ MSTATUS_BITS = [0x2000, 0x4000, 0x6000, 0x80]   # FS and MPIE only: MPRV/MPP wou
 # FS bits are only ever set (a no-op on FS = Dirty), never cleared: with the FPU off, Spike traps FP instructions and FP-CSR
 # accesses that the bug-free Rocket executes in some cases (16 false alarms in the first ext campaign, all caught by replay;
 # results archived in logs/archive/rocket_ext_v1).
-PROFILES = ("base", "ext", "llm")
+PROFILES = ("base", "ext", "llm", "llmflash")
+# template file per LLM profile (llm: gemini-3.5-flash-lite, llmflash: gemini-3.5-flash; same architecture, stronger model)
+TEMPLATE_FILES = {"llm": "llm.json", "llmflash": "llm_flash.json"}
 # Profile "llm" (Step 2): the base instruction mix plus validated templates written by an LLM from the ISA census
 # (rocket/isa_census.py, rocket/llm_templates.py), on the ext harness (trap handler, x28/x29 reserved, FS never off) but
 # without any of the hand-designed ext classes.
@@ -114,7 +116,7 @@ QUIRKS = {"rocket": {}, "boom": {"subst": {"fdiv.d": "fmul.d"}, "keep_frm_valid"
 def gen_program(rng: random.Random, length: int, fp: bool = True, profile: str = "base", subst=None,
                 templates=None, keep_frm_valid: bool = False) -> str:
     subst = subst or {}
-    traps = profile in ("ext", "llm")                       # the ext harness (trap handler, reserved x28/x29)
+    traps = profile in ("ext", "llm", "llmflash")                       # the ext harness (trap handler, reserved x28/x29)
     ext_mix = profile == "ext"                              # the hand-designed ext instruction classes
     top = 27 if traps else 29                               # traps: x28/x29 belong to the trap handler
     rd = lambda: f"x{rng.randint(1, top)}"                 # never x30 (data pointer) or x31 (dump pointer)
@@ -306,8 +308,8 @@ def campaign(sim: Path, n: int, seed: int, length: int, simlen: int, fp: bool, s
              profile: str = "base", core: str = "rocket", templates=None) -> dict:
     rng = random.Random(seed)
     quirks = QUIRKS.get(core, {})
-    if profile == "llm" and templates is None:          # accepted Step 2 templates (BENCHFUZZ_TEMPLATES overrides)
-        tf = Path(os.environ.get("BENCHFUZZ_TEMPLATES", Path(__file__).resolve().parent / "templates" / "llm.json"))
+    if profile in TEMPLATE_FILES and templates is None:          # accepted Step 2 templates (BENCHFUZZ_TEMPLATES overrides)
+        tf = Path(os.environ.get("BENCHFUZZ_TEMPLATES", Path(__file__).resolve().parent / "templates" / TEMPLATE_FILES[profile]))
         templates = json.loads(tf.read_text())["templates"]
     res = {"seed": seed, "length": length, "fp": fp, "profile": profile, "core": core, "quirks": quirks, "programs": 0, "mismatches": 0, "nonterminating": 0,
            "spike_failures": 0, "first_detection": None, "t_start": time.time()}

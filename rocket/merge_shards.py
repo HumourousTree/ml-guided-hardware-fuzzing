@@ -22,7 +22,7 @@ import run_encarsia as re_  # noqa: E402
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--core", choices=re_.CORES, required=True)
-    ap.add_argument("--profile", choices=["base", "ext", "llm"], default="base")
+    ap.add_argument("--profile", choices=["base", "ext", "llm", "llmflash"], default="base")
     ap.add_argument("dirs", nargs="+")
     a = ap.parse_args()
     out = re_.paths(a.core)[2]
