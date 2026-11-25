@@ -103,7 +103,8 @@ def validate(t: dict, n: int) -> str | None:
         for k in range(n):
             try:
                 elf = rv64fuzz.build_elf(rv64fuzz.gen_program(rng, 40, True, "llm", subst, [t],
-                                                              rv64fuzz.QUIRKS[core].get("keep_frm_valid", False)), w)
+                                                              rv64fuzz.QUIRKS[core].get("keep_frm_valid", False),
+                                                              rv64fuzz.QUIRKS[core].get("template_subst")), w)
             except Exception as e:      # give the LLM the assembler's own message (first error, file positions removed)
                 err = getattr(e, "stderr", b"") or b""
                 msg = next((re.sub(r"^.*?Error: ", "", l) for l in err.decode(errors="replace").splitlines()

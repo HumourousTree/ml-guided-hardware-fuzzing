@@ -77,7 +77,7 @@ TEMPLATE_FILES = {"llm": "llm.json", "llmflash": "llm_flash.json"}
 TEMPLATE_RE = re.compile(r"\{(x[A-Z]|f[A-Z]|imm:-?\d+:-?\d+|off:(?:1|2|4|8)|label:[A-Z])\}")
 
 
-def expand_template(tpl: dict, rng: random.Random, top: int, uid: int) -> list[str]:
+def expand_template(tpl: dict, rng: random.Random, top: int, uid: int, tsubst=None) -> list[str]:
     """One instance of a template: named registers {xA}.. (writable, consistent within the instance), {fA}.., {imm:LO:HI},
     {off:ALIGN} (offset into the 256-byte data region at x30), {label:A} (unique label). Compressed templates (rvc=True)
     are assembled with RVC enabled, all others without (the trap handler skips 4-byte instructions)."""
@@ -97,6 +97,18 @@ def expand_template(tpl: dict, rng: random.Random, top: int, uid: int) -> list[s
             return str(rng.randrange(0, DATA_DWORDS * 8 - 8 + 1, al))
         return f"T{uid}_{k[6:]}"
     lines = [TEMPLATE_RE.sub(sub, l) for l in tpl["asm"]]
+    if tsubst:                                       # core quirks (e.g. no FP division/sqrt on BOOM)
+        out = []
+        for l in lines:
+            op, _, rest = l.strip().partition(" ")
+            if op in tsubst:
+                ops = [o.strip() for o in rest.split(",")]
+                if op.startswith("fsqrt"):          # fsqrt rd, rs[, rm] -> fsgnj rd, rs, rs
+                    l = f"{tsubst[op]} {ops[0]}, {ops[1]}, {ops[1]}"
+                else:
+                    l = f"{tsubst[op]} {rest}"
+            out.append(l)
+        lines = out
     if tpl.get("rvc"):
         return [".option push", ".option rvc"] + lines + [".option pop"]
     return lines
@@ -110,11 +122,17 @@ RVC_REG = lambda rng: f"x{rng.randint(8, 15)}"   # the 3-bit register field of m
 # BOOM also executes FP instructions with a dynamic rounding mode while frm holds an invalid value (5-7), where the ISA
 # and Spike (and Rocket) raise an illegal-instruction exception (rocket/check_frm.py, 2026-11-26; 4 of 1,000 ext
 # calibration programs on every BOOM reference). On BOOM, frm is therefore always restored to a valid mode.
-QUIRKS = {"rocket": {}, "boom": {"subst": {"fdiv.d": "fmul.d"}, "keep_frm_valid": True}}
+# In LLM templates BOOM's single-precision division also disagreed with Spike (14 BOOM llm detections rejected by replay,
+# 2026-11-26; never in the 1,500 base/ext calibration programs): on BOOM, templates get FP division and square root
+# replaced (like Cascade, which excludes FP division and square root on BOOM). The generator's own mix is unchanged so
+# that the reported base/ext programs stay reproducible.
+QUIRKS = {"rocket": {}, "boom": {"subst": {"fdiv.d": "fmul.d"}, "keep_frm_valid": True,
+                                 "template_subst": {"fdiv.s": "fmul.s", "fdiv.d": "fmul.d", "fsqrt.s": "fsgnj.s",
+                                                    "fsqrt.d": "fsgnj.d"}}}
 
 
 def gen_program(rng: random.Random, length: int, fp: bool = True, profile: str = "base", subst=None,
-                templates=None, keep_frm_valid: bool = False) -> str:
+                templates=None, keep_frm_valid: bool = False, template_subst=None) -> str:
     subst = subst or {}
     traps = profile in ("ext", "llm", "llmflash")                       # the ext harness (trap handler, reserved x28/x29)
     ext_mix = profile == "ext"                              # the hand-designed ext instruction classes
@@ -201,7 +219,7 @@ def gen_program(rng: random.Random, length: int, fp: bool = True, profile: str =
                     body.append(f"{rng.choice(['csrrwi', 'csrrsi', 'csrrci'])} {rd() if rng.random() < .7 else 'x0'}, "
                                 f"{csr}, {rng.randint(0, 31)}")
         elif c == "tpl":
-            body += expand_template(rng.choice(templates), rng, top, lab); lab += 1
+            body += expand_template(rng.choice(templates), rng, top, lab, template_subst); lab += 1
         elif c == "rvc":
             k, r = rng.random(), RVC_REG(rng)
             if k < .3:
@@ -316,7 +334,8 @@ def campaign(sim: Path, n: int, seed: int, length: int, simlen: int, fp: bool, s
     work = Path(tempfile.mkdtemp(prefix="rv64fuzz-"))
     try:
         for k in range(n):
-            asm = gen_program(rng, length, fp, profile, quirks.get("subst"), templates, quirks.get("keep_frm_valid", False))
+            asm = gen_program(rng, length, fp, profile, quirks.get("subst"), templates, quirks.get("keep_frm_valid", False),
+                              quirks.get("template_subst"))
             elf = build_elf(asm, work)
             exp = run_spike(elf)
             if exp is None:                 # the reference did not finish: not a valid test (counted, never a detection)
