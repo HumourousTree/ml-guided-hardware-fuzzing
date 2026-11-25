@@ -174,3 +174,21 @@ skipped on a rerun (only runs in progress at the interruption start over). After
 restart, `bash scripts/resume_background.sh` restarts whatever is unfinished (Rocket campaign and the LLM runner, see
 `docs/EXPERIMENTS.md`), and `bash scripts/resume_background.sh status` shows what is running. From Windows, detached:
 `Start-Process wsl -WindowStyle Hidden -ArgumentList '-d Ubuntu -- bash "<repo in /mnt/c>/scripts/resume_background.sh"'`.
+
+## Step 5: BOOM (in progress, 2026-11-25)
+
+Same pipeline with `--core boom` (Cascade's BOOM tiny SoC from `cascade-chipyard/cascade-boom`; EnCorpus
+`EnCorpus_boom.tar.gz`). Published BOOM results (Encarsia Tables 8-10) are in `docs/encarsia_published.json`; they were
+decoded from the glyph positions of the tables, and the decoder reproduces the Rocket columns and the printed totals.
+
+* 45 simulators: 30 bugs, 14 distinct driver references (BOOM mix-ups 137 and 148 share one), the multiplexer reference.
+  141 s and 3.6 GB per build.
+* Calibration found a known BOOM issue: double-precision division (`fdiv.d`) disagrees with Spike in every rounding mode
+  (last-bit errors; overflow giving the largest finite number instead of infinity) on 10-14 of 500 programs, on every
+  reference. Cascade also filters FP division on BOOM (Encarsia Sec. 8.4). On BOOM only, `fdiv.d` is therefore replaced
+  by `fmul.d` (`rv64fuzz.QUIRKS`); `fdiv.s` is kept, and Rocket programs are byte-identical. With the filter all 15
+  references give 0 mismatches on 500 programs. Consequence: bugs that need a double division (e.g. BOOM mix-up 3, an FP
+  division whose result is zero) are harder or impossible for us to reach, exactly as for Cascade.
+* Bug locations of the broken conditionals (`rocket/locate_bugs.py boom`): ALU (2), branch queues / mask logic (5),
+  CSR file (2), reorder buffer (5), FP rounding (1).
+* Campaign: base 5 seeds x 2,000 programs, then ext 5 x 400 (`scripts/resume_background.sh` restarts it).
