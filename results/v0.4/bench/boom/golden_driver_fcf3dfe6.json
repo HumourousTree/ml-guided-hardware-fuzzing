@@ -1,0 +1,1 @@
+{"seed": 777, "length": 40, "fp": true, "profile": "base", "core": "boom", "quirks": {"subst": {"fdiv.d": "fmul.d"}}, "programs": 500, "mismatches": 0, "nonterminating": 0, "spike_failures": 0, "first_detection": null, "t_start": 1795609594.0168118, "seconds": 327.7, "golden": "golden_driver_fcf3dfe6"}

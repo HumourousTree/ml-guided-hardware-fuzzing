@@ -164,6 +164,38 @@
 - Cond. 14: base 0/5, ext 0/5; published DF/PF/CA [False, False, False] Rocket
 - Cond. 15: base 5/5, ext 5/5; published DF/PF/CA [True, True, True] Rocket
 
+## boom / Encarsia
+- Mix-up 1: base 5/5, ext 5/5; published DF/PF/CA [True, True, True] 
+- Mix-up 2: base 5/5, ext 5/5; published DF/PF/CA [True, True, True] 
+- Mix-up 3: base 0/5, ext 0/5; published DF/PF/CA [False, False, False] 
+- Mix-up 4: base 5/5, ext 5/5; published DF/PF/CA [True, True, False] 
+- Mix-up 5: base 5/5, ext 5/5; published DF/PF/CA [True, True, False] 
+- Mix-up 6: base 5/5, ext 5/5; published DF/PF/CA [False, False, True] 
+- Mix-up 7: base 5/5, ext 5/5; published DF/PF/CA [False, False, True] 
+- Mix-up 8: base 5/5, ext 5/5; published DF/PF/CA [True, True, True] 
+- Mix-up 9: base 5/5, ext 5/5; published DF/PF/CA [False, False, True] 
+- Mix-up 10: base 5/5, ext 5/5; published DF/PF/CA [True, True, True] 
+- Mix-up 11: base 5/5, ext 5/5; published DF/PF/CA [True, True, True] 
+- Mix-up 12: base 0/5, ext 0/5; published DF/PF/CA [True, True, False] 
+- Mix-up 13: base 0/5, ext 0/5; published DF/PF/CA [False, False, False] 
+- Mix-up 14: base 5/5, ext 5/5; published DF/PF/CA [False, False, True] 
+- Mix-up 15: base 5/5, ext 5/5; published DF/PF/CA [True, True, True] 
+- Cond. 1: base 5/5, ext 5/5; published DF/PF/CA [True, True, True] ALUUnit
+- Cond. 2: base 5/5, ext 5/5; published DF/PF/CA [True, True, True] ALUUnit
+- Cond. 3: base 0/5, ext 0/5; published DF/PF/CA [False, False, False] BranchKillableQueue_4
+- Cond. 4: base 0/5, ext 0/5; published DF/PF/CA [False, False, False] BranchKillableQueue_5
+- Cond. 5: base 0/5, ext 0/5; published DF/PF/CA [False, False, False] BranchKillableQueue_5
+- Cond. 6: base 0/5, ext 0/5; published DF/PF/CA [False, False, False] BranchKillableQueue_5
+- Cond. 7: base 5/5, ext 5/5; published DF/PF/CA [True, True, True] BranchMaskGenerationLogic
+- Cond. 8: base 0/5, ext 0/5; published DF/PF/CA [False, False, False] CSRFile
+- Cond. 9: base 0/5, ext 0/5; published DF/PF/CA [False, False, False] CSRFile
+- Cond. 10: base 0/5, ext 0/5; published DF/PF/CA [False, False, False] Rob
+- Cond. 11: base 5/5, ext 5/5; published DF/PF/CA [True, True, True] Rob
+- Cond. 12: base 5/5, ext 5/5; published DF/PF/CA [True, True, True] Rob
+- Cond. 13: base 0/5, ext 0/5; published DF/PF/CA [False, False, False] Rob
+- Cond. 14: base 0/5, ext 0/5; published DF/PF/CA [False, False, False] Rob
+- Cond. 15: base 5/5, ext 5/5; published DF/PF/CA [True, True, False] RoundAnyRawFNToRecFN_4
+
 ## Literature (quoted, not re-measured)
 - ChipFuzzer: Wang et al., When Fuzzing Meets Understanding: LLM-Driven Semantic Test Generation for RTL Verification, arXiv:2607.10340v1, 11 Jul 2026 (peer-reviewed: False); comparable: method only (plateau rule); numbers no
 - Cascade: Solt, Ceesay-Seitz, Razavi, Cascade: CPU Fuzzing via Intricate Program Generation, USENIX Security 2024 (peer-reviewed: True); comparable: P6 only: same DUT commit f00a88c, reproduced by BenchFuzz (E0 P6 probe and blind fuzzing)

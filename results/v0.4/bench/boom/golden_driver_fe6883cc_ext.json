@@ -1,0 +1,1 @@
+{"seed": 777, "length": 40, "fp": true, "profile": "ext", "core": "boom", "quirks": {"subst": {"fdiv.d": "fmul.d"}, "keep_frm_valid": true}, "programs": 1000, "mismatches": 0, "nonterminating": 0, "spike_failures": 0, "first_detection": null, "t_start": 1795632289.9397686, "seconds": 630.3, "golden": "golden_driver_fe6883cc"}

@@ -1,0 +1,1 @@
+{"seed": 0, "length": 40, "fp": true, "profile": "base", "core": "boom", "quirks": {"subst": {"fdiv.d": "fmul.d"}}, "programs": 2000, "mismatches": 0, "nonterminating": 0, "spike_failures": 0, "first_detection": null, "t_start": 1795623692.9387615, "seconds": 1137.6, "kind": "multiplexer", "dir": 513, "budget_programs": 2000}

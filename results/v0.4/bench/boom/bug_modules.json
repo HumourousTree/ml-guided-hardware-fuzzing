@@ -1,0 +1,36 @@
+{
+ "driver": {
+  "27": "ALUExeUnit_1, Arbiter_16, BranchKillableQueue_3, BranchKillableQueue_4, BranchKillableQueue_5, CompareRecFN, DivSqrtRecF64, DivSqrtRecF64ToRaw_mulAddZ31, DivSqrtRecF64_mulAddZ31, DivUnit, FDivSqrtUnit, FMADecoder, FPToFP, FPToInt, FPU, FPUExeUnit, FPUFMAPipe, FPUFMAPipe_1, FPUUnit, IntToFP, IntToFPUnit, IssueSlot, Mul54, MulAddRecFNPipe, MulAddRecFNPipe_1, MulAddRecFNToRaw_postMul, MulAddRecFNToRaw_postMul_1, MulAddRecFNToRaw_preMul, MulAddRecFNToRaw_preMul_1, MulDiv, RecFNToIN, RecFNToIN_1, RecFNToRecFN, RecFNToRecFN_1, RoundAnyRawFNToRecFN_2, RoundAnyRawFNToRecFN_3, RoundAnyRawFNToRecFN_4, RoundAnyRawFNToRecFN_5, RoundAnyRawFNToRecFN_7, RoundRawFNToRecFN, RoundRawFNToRecFN_1, RoundRawFNToRecFN_2, UOPCodeFDivDecoder",
+  "56": "ALUExeUnit_1, Arbiter_16, BranchKillableQueue_3, BranchKillableQueue_4, BranchKillableQueue_5, CompareRecFN, DivSqrtRecF64, DivSqrtRecF64ToRaw_mulAddZ31, DivSqrtRecF64_mulAddZ31, DivUnit, FDivSqrtUnit, FMADecoder, FPToFP, FPToInt, FPU, FPUFMAPipe, FPUFMAPipe_1, FPUUnit, IntToFP, IntToFPUnit, Mul54, MulAddRecFNPipe, MulAddRecFNPipe_1, MulAddRecFNToRaw_postMul, MulAddRecFNToRaw_postMul_1, MulAddRecFNToRaw_preMul, MulAddRecFNToRaw_preMul_1, MulDiv, RecFNToIN, RecFNToIN_1, RecFNToRecFN, RecFNToRecFN_1, RoundAnyRawFNToRecFN_2, RoundAnyRawFNToRecFN_3, RoundAnyRawFNToRecFN_4, RoundAnyRawFNToRecFN_5, RoundAnyRawFNToRecFN_7, RoundRawFNToRecFN, RoundRawFNToRecFN_1, RoundRawFNToRecFN_2, UOPCodeFDivDecoder",
+  "137": "ALUExeUnit_1, BranchKillableQueue_3, CompareRecFN, DivSqrtRecF64ToRaw_mulAddZ31, DivSqrtRecF64_mulAddZ31, DivUnit, FMADecoder, FPToFP, FPToInt, FPU, FPUFMAPipe, FPUFMAPipe_1, FPUUnit, IntToFP, IntToFPUnit, MulAddRecFNPipe, MulAddRecFNPipe_1, MulAddRecFNToRaw_postMul, MulAddRecFNToRaw_postMul_1, MulAddRecFNToRaw_preMul, MulAddRecFNToRaw_preMul_1, MulDiv, RecFNToIN, RecFNToIN_1, RecFNToRecFN, RecFNToRecFN_1, RoundAnyRawFNToRecFN_2, RoundAnyRawFNToRecFN_3, RoundAnyRawFNToRecFN_4, RoundAnyRawFNToRecFN_5, RoundAnyRawFNToRecFN_7, RoundRawFNToRecFN, RoundRawFNToRecFN_1, RoundRawFNToRecFN_2, UOPCodeFDivDecoder",
+  "148": "ALUExeUnit_1, BranchKillableQueue_3, CompareRecFN, DivSqrtRecF64ToRaw_mulAddZ31, DivSqrtRecF64_mulAddZ31, DivUnit, FMADecoder, FPToFP, FPToInt, FPU, FPUFMAPipe, FPUFMAPipe_1, FPUUnit, IntToFP, IntToFPUnit, MulAddRecFNPipe, MulAddRecFNPipe_1, MulAddRecFNToRaw_postMul, MulAddRecFNToRaw_postMul_1, MulAddRecFNToRaw_preMul, MulAddRecFNToRaw_preMul_1, MulDiv, RecFNToIN, RecFNToIN_1, RecFNToRecFN, RecFNToRecFN_1, RoundAnyRawFNToRecFN_2, RoundAnyRawFNToRecFN_3, RoundAnyRawFNToRecFN_4, RoundAnyRawFNToRecFN_5, RoundAnyRawFNToRecFN_7, RoundRawFNToRecFN, RoundRawFNToRecFN_1, RoundRawFNToRecFN_2, UOPCodeFDivDecoder",
+  "228": "ALUExeUnit_1, BranchKillableQueue_3, CompareRecFN, DivUnit, FMADecoder, FPToFP, FPToInt, FPU, FPUFMAPipe, FPUFMAPipe_1, FPUUnit, IntToFP, IntToFPUnit, MulAddRecFNPipe, MulAddRecFNPipe_1, MulAddRecFNToRaw_postMul, MulAddRecFNToRaw_postMul_1, MulAddRecFNToRaw_preMul, MulAddRecFNToRaw_preMul_1, MulDiv, RecFNToIN, RecFNToIN_1, RecFNToRecFN, RoundAnyRawFNToRecFN_2, RoundAnyRawFNToRecFN_3, RoundAnyRawFNToRecFN_4, RoundRawFNToRecFN, RoundRawFNToRecFN_1, UOPCodeFDivDecoder",
+  "589": "BranchKillableQueue_3, DivUnit, IntToFP, IntToFPUnit, MulDiv",
+  "604": "BranchKillableQueue_3, IntToFP, IntToFPUnit, MulDiv",
+  "657": "BranchKillableQueue_3, IntToFP, IntToFPUnit",
+  "741": "BranchKillableQueue_3, INToRecFN, INToRecFN_1, IntToFP, IntToFPUnit, PipelinedMulUnit, RoundAnyRawFNToRecFN, RoundAnyRawFNToRecFN_1, UOPCodeFPUDecoder",
+  "787": "ALU, ALUUnit, BranchKillableQueue_3, INToRecFN, INToRecFN_1, IntToFP, IntToFPUnit, PipelinedMulUnit, PipelinedMultiplier, RoundAnyRawFNToRecFN, RoundAnyRawFNToRecFN_1, UOPCodeFPUDecoder",
+  "954": "ALU, ALUExeUnit, ALUUnit, Arbiter_19, BoomCore, BranchKillableQueue_3, CSRFile, INToRecFN, INToRecFN_1, IntToFP, IntToFPUnit, MemAddrCalcUnit, PipelinedMulUnit, PipelinedMultiplier, RegisterReadDecode_2, RegisterRead_1, Rob, RoundAnyRawFNToRecFN, RoundAnyRawFNToRecFN_1, UOPCodeFPUDecoder, rob_debug_inst_mem, rob_debug_inst_mem_ext, split_rob_debug_inst_mem_ext",
+  "990": "ALU, ALUExeUnit, ALUUnit, Arbiter_18, Arbiter_19, BoomCore, BranchKillableQueue_3, CSRFile, INToRecFN, INToRecFN_1, IntToFP, IntToFPUnit, MemAddrCalcUnit, PipelinedMulUnit, PipelinedMultiplier, RegisterReadDecode_1, RegisterReadDecode_2, RegisterRead_1, Rob, RoundAnyRawFNToRecFN, RoundAnyRawFNToRecFN_1, UOPCodeFPUDecoder, rob_debug_inst_mem, rob_debug_inst_mem_ext, split_rob_debug_inst_mem_ext",
+  "1028": "ALU, ALUExeUnit, ALUUnit, Arbiter_18, Arbiter_19, BasicDispatcher, BoomCore, BranchKillableQueue_3, CSRFile, INToRecFN, INToRecFN_1, IntToFP, IntToFPUnit, IssueUnitCollapsing_2, MemAddrCalcUnit, PipelinedMulUnit, PipelinedMultiplier, RegisterFileSynthesizable_1, RegisterReadDecode_1, RegisterReadDecode_2, RegisterRead_1, Rob, RoundAnyRawFNToRecFN, RoundAnyRawFNToRecFN_1, UOPCodeFPUDecoder, rob_debug_inst_mem, rob_debug_inst_mem_ext, split_rob_debug_inst_mem_ext",
+  "1073": "ALU, ALUExeUnit, ALUUnit, Arbiter_18, Arbiter_19, BasicDispatcher, BoomCore, BranchKillableQueue_3, CSRFile, INToRecFN, INToRecFN_1, IntToFP, IntToFPUnit, IssueSlot_8, IssueUnitCollapsing_1, IssueUnitCollapsing_2, MemAddrCalcUnit, PipelinedMulUnit, PipelinedMultiplier, RegisterFileSynthesizable_1, RegisterReadDecode_1, RegisterReadDecode_2, RegisterRead_1, RenameStage_1, Rob, RoundAnyRawFNToRecFN, RoundAnyRawFNToRecFN_1, UOPCodeFPUDecoder, rob_debug_inst_mem, rob_debug_inst_mem_ext, split_rob_debug_inst_mem_ext",
+  "1236": "ALU, ALUExeUnit, ALUUnit, Arbiter_18, Arbiter_19, BasicDispatcher, BoomCore, BranchKillableQueue_3, BranchMaskGenerationLogic, CSRFile, DecodeUnit, FpPipeline, INToRecFN, INToRecFN_1, IntToFP, IntToFPUnit, IssueSlot_8, IssueUnitCollapsing_1, IssueUnitCollapsing_2, MemAddrCalcUnit, PipelinedMulUnit, PipelinedMultiplier, RegisterFileSynthesizable_1, RegisterRead, RegisterReadDecode_1, RegisterReadDecode_2, RegisterRead_1, RenameBusyTable, RenameBusyTable_1, RenameFreeList, RenameFreeList_1, RenameMapTable, RenameMapTable_1, RenameStage, RenameStage_1, Rob, RoundAnyRawFNToRecFN, RoundAnyRawFNToRecFN_1, UOPCodeFPUDecoder, rob_debug_inst_mem, rob_debug_inst_mem_ext, split_rob_debug_inst_mem_ext"
+ },
+ "multiplexer": {
+  "3": "ALUUnit",
+  "6": "ALUUnit",
+  "137": "BranchKillableQueue_4",
+  "160": "BranchKillableQueue_5",
+  "168": "BranchKillableQueue_5",
+  "176": "BranchKillableQueue_5",
+  "187": "BranchMaskGenerationLogic",
+  "195": "CSRFile",
+  "200": "CSRFile",
+  "513": "Rob",
+  "517": "Rob",
+  "530": "Rob",
+  "708": "Rob",
+  "727": "Rob",
+  "975": "RoundAnyRawFNToRecFN_4"
+ }
+}
