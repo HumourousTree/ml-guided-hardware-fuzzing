@@ -69,7 +69,7 @@ MSTATUS_BITS = [0x2000, 0x4000, 0x6000, 0x80]   # FS and MPIE only: MPRV/MPP wou
 # accesses that the bug-free Rocket executes in some cases (16 false alarms in the first ext campaign, all caught by replay;
 # results archived in logs/archive/rocket_ext_v1).
 PROFILES = ("base", "ext", "llm", "llmflash")
-# template file per LLM profile (llm: gemini-3.5-flash-lite, llmflash: gemini-3.5-flash; same architecture, stronger model)
+# template file per LLM profile (llm: gemini-3.5-flash-lite, llmflash: gemini-3-flash-preview; same architecture, stronger model)
 TEMPLATE_FILES = {"llm": "llm.json", "llmflash": "llm_flash.json"}
 # Profile "llm" (Step 2): the base instruction mix plus validated templates written by an LLM from the ISA census
 # (rocket/isa_census.py, rocket/llm_templates.py), on the ext harness (trap handler, x28/x29 reserved, FS never off) but
