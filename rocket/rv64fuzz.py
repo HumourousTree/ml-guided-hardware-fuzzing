@@ -72,12 +72,15 @@ PROFILES = ("base", "ext")
 RVC_REG = lambda rng: f"x{rng.randint(8, 15)}"   # the 3-bit register field of most compressed instructions
 
 
-# Known, unfixed bugs of the bug-free cores, filtered like Cascade does (Encarsia Sec. 8.4): BOOM's FP division rounds
-# directed rounding modes one ulp differently from Spike (calibration, 2026-11-25), so on BOOM fdiv only uses rne.
-QUIRKS = {"rocket": {}, "boom": {"fdiv_rm": ["rne"]}}
+# Known, unfixed bugs of the bug-free cores, filtered like Cascade does (Encarsia Sec. 8.4). BOOM's double-precision
+# division disagrees with Spike in every rounding mode (last-bit errors, overflow to the largest finite number instead of
+# infinity; 10 of 500 calibration programs on every BOOM reference, 2026-11-25; fdiv.s never disagreed), so on BOOM
+# fdiv.d is replaced by fmul.d. The random draws are unchanged, so Rocket programs are byte-identical.
+QUIRKS = {"rocket": {}, "boom": {"subst": {"fdiv.d": "fmul.d"}}}
 
 
-def gen_program(rng: random.Random, length: int, fp: bool = True, profile: str = "base", fdiv_rm=None) -> str:
+def gen_program(rng: random.Random, length: int, fp: bool = True, profile: str = "base", subst=None) -> str:
+    subst = subst or {}
     traps = profile == "ext"
     top = 27 if traps else 29                               # traps: x28/x29 belong to the trap handler
     rd = lambda: f"x{rng.randint(1, top)}"                 # never x30 (data pointer) or x31 (dump pointer)
@@ -115,10 +118,8 @@ def gen_program(rng: random.Random, length: int, fp: bool = True, profile: str =
         elif c == "fp":
             k = rng.random()
             if k < .35:
-                op = rng.choice(F3)
-                regs = f"{fr()}, {fr()}, {fr()}"             # (same random-draw order as before: op, registers, rm)
-                rm = rng.choice(fdiv_rm if fdiv_rm and op.startswith("fdiv") else RM)
-                body.append(f"{op} {regs}, {rm}")
+                op = subst.get(*[rng.choice(F3)] * 2)
+                body.append(f"{op} {fr()}, {fr()}, {fr()}, {rng.choice(RM)}")
             elif k < .5:
                 body.append(f"{rng.choice(F2)} {fr()}, {fr()}, {fr()}")
             elif k < .62:
@@ -197,9 +198,7 @@ def gen_program(rng: random.Random, length: int, fp: bool = True, profile: str =
                 off = rng.randrange(0, DATA_DWORDS * 8 - 8, sz) + rng.randint(1, sz - 1)          # misaligned
                 body.append(f"{op} {rd() if op[0] == 'l' else rs()}, {off}(x30)")
             else:
-                op = rng.choice(F3)
-                if fdiv_rm and op.startswith("fdiv"):          # (frm may be a directed mode: avoid fdiv with dyn)
-                    op = op.replace("fdiv", "fmul")
+                op = subst.get(*[rng.choice(F3)] * 2)
                 body.append(f"{op} {fr()}, {fr()}, {fr()}, dyn")      # traps if frm is invalid
             body.append(".option pop")
         i += 1
@@ -272,7 +271,7 @@ def campaign(sim: Path, n: int, seed: int, length: int, simlen: int, fp: bool, s
     work = Path(tempfile.mkdtemp(prefix="rv64fuzz-"))
     try:
         for k in range(n):
-            asm = gen_program(rng, length, fp, profile, quirks.get("fdiv_rm"))
+            asm = gen_program(rng, length, fp, profile, quirks.get("subst"))
             elf = build_elf(asm, work)
             exp = run_spike(elf)
             if exp is None:                 # the reference did not finish: not a valid test (counted, never a detection)
