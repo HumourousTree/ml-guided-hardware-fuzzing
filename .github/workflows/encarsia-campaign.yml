@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       core: {description: "rocket or boom", required: true, default: rocket, type: choice, options: [rocket, boom]}
-      profile: {description: "generator profile", required: true, default: base, type: choice, options: [base, ext]}
+      profile: {description: "generator profile", required: true, default: base, type: choice, options: [base, ext, llm]}
       seeds: {description: "seeds per bug", required: true, default: "5"}
       programs: {description: "programs per seed (stop at first detection)", required: true, default: "2000"}
       calibrate: {description: "calibration programs per reference", required: true, default: "500"}
