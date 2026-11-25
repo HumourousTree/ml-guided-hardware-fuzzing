@@ -1,0 +1,91 @@
+# A5: guarded LLM repair with a stronger model (pass@k under formal certification), run daily after the free-tier
+# quota resets (~00:00 US Pacific). Resumable: the state lives on branch `a5-results` (results JSON, accepted patches,
+# request log with key hash only) and every run continues where the last one stopped, then commits the new state there.
+# Needs the repository secret GEMINI_API_KEY (ideally from a separate Google Cloud project, so its quota is its own).
+# The key is passed only as an environment variable and never printed; logs record a short hash of it.
+name: A5 repair (daily)
+
+on:
+  schedule:
+    - cron: "20 8 * * *"          # 08:20 UTC = after the quota reset in both PST and PDT
+  workflow_dispatch:
+    inputs:
+      model: {description: "model", required: true, default: "gemini-3.6-flash"}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: a5-repair
+  cancel-in-progress: false
+
+jobs:
+  image:
+    runs-on: ubuntu-latest
+    permissions: {contents: read, packages: write}
+    outputs:
+      image: ${{ steps.tag.outputs.image }}
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: v0.4-evaluation}
+      - id: tag
+        run: |
+          owner="${GITHUB_REPOSITORY_OWNER,,}"
+          echo "image=ghcr.io/${owner}/encarsia-env:${{ hashFiles('docker/encarsia/Dockerfile') }}" >> "$GITHUB_OUTPUT"
+      - name: Build the toolchain image if this version does not exist yet
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          if docker manifest inspect "${{ steps.tag.outputs.image }}" >/dev/null 2>&1; then exit 0; fi
+          docker build --label "org.opencontainers.image.source=https://github.com/${GITHUB_REPOSITORY}" \
+                       -t "${{ steps.tag.outputs.image }}" docker/encarsia
+          docker push "${{ steps.tag.outputs.image }}"
+
+  repair:
+    needs: image
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    permissions: {contents: write, packages: read}
+    container:
+      image: ${{ needs.image.outputs.image }}
+      credentials: {username: "${{ github.actor }}", password: "${{ secrets.GITHUB_TOKEN }}"}
+    env:
+      MODEL: ${{ inputs.model || 'gemini-3.6-flash' }}
+    steps:
+      - uses: actions/checkout@v4
+        with: {ref: v0.4-evaluation, fetch-depth: 0}
+      - name: Restore A5 state from branch a5-results
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          mkdir -p logs/experiments /tmp/a5state
+          if git ls-remote --exit-code origin a5-results >/dev/null 2>&1; then
+            git fetch -q origin a5-results
+            git archive FETCH_HEAD | tar -x -C /tmp/a5state
+            cp -r /tmp/a5state/state/. logs/
+          fi
+          ls logs/experiments || true
+      - name: Python environment
+        run: |
+          apt-get update -qq && apt-get install -y -qq python3-venv python3-pip >/dev/null
+          python3 -m venv venv && venv/bin/pip install -q google-genai
+      - name: Run A5 until done or out of quota
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          if [ -z "$GEMINI_API_KEY" ]; then echo "secret GEMINI_API_KEY is not set"; exit 1; fi
+          venv/bin/python -m harness.repair_eval --model "$MODEL" --mode informed --samples 5 --feedback-attempts 3 \
+            2>&1 | tee a5_run.log || true
+          venv/bin/python -m harness.llm_budget 2>&1 | tail -5 || true
+      - name: Save state to branch a5-results
+        if: always()
+        run: |
+          rm -rf /tmp/out && mkdir -p /tmp/out/state/experiments/llm_repair_candidates
+          cp logs/experiments/llm_repair_informed_${MODEL}.json /tmp/out/state/experiments/ 2>/dev/null || true
+          cp logs/experiments/llm_repair_candidates/*__${MODEL}__* /tmp/out/state/experiments/llm_repair_candidates/ 2>/dev/null || true
+          cp logs/llm_calls.jsonl logs/llm_budget.json /tmp/out/state/ 2>/dev/null || true
+          cp a5_run.log /tmp/out/last_run.log 2>/dev/null || true
+          cd /tmp/out
+          git init -q && git config user.name "github-actions[bot]" && git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote add origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git"
+          if git fetch -q origin a5-results 2>/dev/null; then git reset -q --soft origin/a5-results; fi
+          git add -A && git commit -qm "A5 state after run ${{ github.run_id }}" || { echo "nothing new"; exit 0; }
+          git push -q origin HEAD:a5-results
