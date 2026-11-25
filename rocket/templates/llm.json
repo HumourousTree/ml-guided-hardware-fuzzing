@@ -1,0 +1,1584 @@
+{
+ "model": "gemini-3.5-flash-lite",
+ "requests": 7,
+ "rounds": [
+  {
+   "round": 1,
+   "proposed": 12,
+   "accepted": 3,
+   "census": {
+    "A": 0,
+    "C": 0,
+    "D": 28,
+    "F": 27,
+    "I": 48,
+    "M": 13,
+    "priv": 9
+   },
+   "exception_causes": [
+    "trap_breakpoint",
+    "trap_machine_ecall",
+    "trap_illegal_instruction"
+   ]
+  },
+  {
+   "round": 2,
+   "proposed": 12,
+   "accepted": 2,
+   "census": {
+    "A": 0,
+    "C": 0,
+    "D": 32,
+    "F": 30,
+    "I": 48,
+    "M": 13,
+    "priv": 9
+   },
+   "exception_causes": [
+    "trap_breakpoint",
+    "trap_machine_ecall"
+   ]
+  },
+  {
+   "round": 3,
+   "proposed": 12,
+   "accepted": 0,
+   "census": {
+    "A": 0,
+    "C": 0,
+    "D": 32,
+    "F": 30,
+    "I": 48,
+    "M": 13,
+    "priv": 9
+   },
+   "exception_causes": [
+    "trap_breakpoint",
+    "trap_machine_ecall"
+   ]
+  },
+  {
+   "round": 4,
+   "proposed": 5,
+   "accepted": 2,
+   "census": {
+    "A": 0,
+    "C": 0,
+    "D": 30,
+    "F": 30,
+    "I": 50,
+    "M": 13,
+    "priv": 9
+   },
+   "exception_causes": [
+    "trap_breakpoint",
+    "trap_machine_ecall",
+    "trap_illegal_instruction"
+   ]
+  },
+  {
+   "round": 5,
+   "proposed": 12,
+   "accepted": 3,
+   "census": {
+    "A": 0,
+    "C": 5,
+    "D": 32,
+    "F": 30,
+    "I": 50,
+    "M": 13,
+    "priv": 9
+   },
+   "exception_causes": [
+    "trap_breakpoint",
+    "trap_machine_ecall",
+    "trap_illegal_instruction"
+   ]
+  },
+  {
+   "round": 6,
+   "proposed": 12,
+   "accepted": 0,
+   "census": {
+    "A": 0,
+    "C": 5,
+    "D": 32,
+    "F": 30,
+    "I": 50,
+    "M": 13,
+    "priv": 9
+   },
+   "exception_causes": [
+    "trap_breakpoint",
+    "trap_machine_ecall",
+    "trap_illegal_instruction"
+   ]
+  },
+  {
+   "round": 7,
+   "proposed": 8,
+   "accepted": 0,
+   "census": {
+    "A": 0,
+    "C": 5,
+    "D": 32,
+    "F": 30,
+    "I": 50,
+    "M": 13,
+    "priv": 9
+   },
+   "exception_causes": [
+    "trap_breakpoint",
+    "trap_machine_ecall",
+    "trap_illegal_instruction"
+   ]
+  }
+ ],
+ "census_before": {
+  "profile": "base",
+  "programs": 100,
+  "seed": 4242,
+  "core": "rocket",
+  "groups": {
+   "A": {
+    "executed": 0,
+    "total": 22,
+    "never": [
+     "amoadd.d",
+     "amoadd.w",
+     "amoand.d",
+     "amoand.w",
+     "amomax.d",
+     "amomax.w",
+     "amomaxu.d",
+     "amomaxu.w",
+     "amomin.d",
+     "amomin.w",
+     "amominu.d",
+     "amominu.w",
+     "amoor.d",
+     "amoor.w",
+     "amoswap.d",
+     "amoswap.w",
+     "amoxor.d",
+     "amoxor.w",
+     "lr.d",
+     "lr.w",
+     "sc.d",
+     "sc.w"
+    ]
+   },
+   "C": {
+    "executed": 0,
+    "total": 34,
+    "never": [
+     "c.add",
+     "c.addi",
+     "c.addi4spn",
+     "c.addw",
+     "c.and",
+     "c.andi",
+     "c.beqz",
+     "c.bnez",
+     "c.ebreak",
+     "c.fld",
+     "c.fldsp",
+     "c.fsd",
+     "c.fsdsp",
+     "c.j",
+     "c.jalr",
+     "c.jr",
+     "c.ld",
+     "c.ldsp",
+     "c.li",
+     "c.lui",
+     "c.lw",
+     "c.lwsp",
+     "c.mv",
+     "c.or",
+     "c.sd",
+     "c.sdsp",
+     "c.slli",
+     "c.srai",
+     "c.srli",
+     "c.sub",
+     "c.subw",
+     "c.sw",
+     "c.swsp",
+     "c.xor"
+    ]
+   },
+   "D": {
+    "executed": 23,
+    "total": 32,
+    "never": [
+     "fcvt.d.s",
+     "fcvt.s.d",
+     "fld",
+     "fmadd.d",
+     "fmsub.d",
+     "fnmadd.d",
+     "fnmsub.d",
+     "fsd",
+     "fsqrt.d"
+    ]
+   },
+   "F": {
+    "executed": 23,
+    "total": 30,
+    "never": [
+     "flw",
+     "fmadd.s",
+     "fmsub.s",
+     "fnmadd.s",
+     "fnmsub.s",
+     "fsqrt.s",
+     "fsw"
+    ]
+   },
+   "I": {
+    "executed": 48,
+    "total": 51,
+    "never": [
+     "fence",
+     "fence.i",
+     "jalr"
+    ]
+   },
+   "M": {
+    "executed": 13,
+    "total": 13,
+    "never": []
+   },
+   "priv": {
+    "executed": 6,
+    "total": 9,
+    "never": [
+     "ebreak",
+     "ecall",
+     "mret"
+    ]
+   }
+  },
+  "exception_causes": {},
+  "csrs_accessed": {
+   "frm": 179,
+   "mscratch": 136,
+   "fcsr": 129,
+   "mstatus": 100,
+   "fflags": 25
+  },
+  "instruction_counts": {
+   "sd": 9859,
+   "addi": 6511,
+   "slli": 6337,
+   "ld": 3252,
+   "fmv_d_x": 3213,
+   "fmv_x_d": 3204,
+   "addiw": 2701,
+   "lui": 2585,
+   "csrrs": 318,
+   "auipc": 234,
+   "csrrwi": 156,
+   "srlw": 115,
+   "jal": 100,
+   "addw": 98,
+   "sra": 95,
+   "slt": 95,
+   "xor": 95,
+   "sraw": 92,
+   "sll": 92,
+   "sub": 91,
+   "and": 90,
+   "or": 90,
+   "sllw": 84,
+   "sltu": 81,
+   "add": 81,
+   "srl": 80,
+   "subw": 78,
+   "ori": 73,
+   "slti": 67,
+   "sb": 67,
+   "lwu": 64,
+   "andi": 64,
+   "lh": 57,
+   "beq": 56,
+   "sh": 55,
+   "blt": 53,
+   "sw": 53,
+   "xori": 52,
+   "lbu": 52,
+   "bge": 52,
+   "lb": 51,
+   "lhu": 51,
+   "bgeu": 50,
+   "lw": 50,
+   "sltiu": 48,
+   "slliw": 46,
+   "remu": 42,
+   "sraiw": 39,
+   "bltu": 39,
+   "bne": 37,
+   "mulhsu": 34,
+   "srai": 34,
+   "divuw": 33,
+   "mulhu": 33,
+   "divu": 33,
+   "mulh": 32,
+   "csrrci": 31,
+   "srliw": 30,
+   "divw": 30,
+   "div": 30,
+   "remw": 29,
+   "rem": 28,
+   "remuw": 28,
+   "srli": 27,
+   "mulw": 27,
+   "mul": 25,
+   "csrrc": 24,
+   "csrrsi": 20,
+   "csrrw": 20,
+   "fadd_d": 14,
+   "fmul_d": 14,
+   "fadd_s": 14,
+   "fdiv_s": 13,
+   "fmul_s": 11,
+   "fsub_d": 11,
+   "fle_d": 10,
+   "fsub_s": 10,
+   "fdiv_d": 10,
+   "fcvt_l_s": 9,
+   "fsgnjx_s": 8,
+   "flt_s": 8,
+   "fcvt_s_l": 8,
+   "fmax_s": 7,
+   "feq_d": 7,
+   "fcvt_w_d": 7,
+   "fle_s": 7,
+   "fmv_w_x": 7,
+   "feq_s": 7,
+   "fmin_s": 6,
+   "fmv_x_w": 6,
+   "fcvt_d_w": 5,
+   "flt_d": 5,
+   "fmax_d": 5,
+   "fcvt_s_wu": 5,
+   "fclass_s": 5,
+   "fcvt_d_l": 5,
+   "fcvt_lu_s": 5,
+   "fsgnj_d": 4,
+   "fclass_d": 4,
+   "fsgnjn_s": 4,
+   "fsgnjx_d": 4,
+   "fcvt_lu_d": 4,
+   "fcvt_s_lu": 4,
+   "fcvt_w_s": 4,
+   "fcvt_wu_d": 4,
+   "fsgnjn_d": 3,
+   "fmin_d": 3,
+   "fcvt_s_w": 3,
+   "fcvt_d_lu": 3,
+   "fcvt_d_wu": 3,
+   "fcvt_l_d": 2,
+   "fsgnj_s": 2,
+   "fcvt_wu_s": 1
+  }
+ },
+ "census_after": {
+  "profile": "llm",
+  "programs": 100,
+  "seed": 4242,
+  "core": "rocket",
+  "groups": {
+   "A": {
+    "executed": 0,
+    "total": 22,
+    "never": [
+     "amoadd.d",
+     "amoadd.w",
+     "amoand.d",
+     "amoand.w",
+     "amomax.d",
+     "amomax.w",
+     "amomaxu.d",
+     "amomaxu.w",
+     "amomin.d",
+     "amomin.w",
+     "amominu.d",
+     "amominu.w",
+     "amoor.d",
+     "amoor.w",
+     "amoswap.d",
+     "amoswap.w",
+     "amoxor.d",
+     "amoxor.w",
+     "lr.d",
+     "lr.w",
+     "sc.d",
+     "sc.w"
+    ]
+   },
+   "C": {
+    "executed": 5,
+    "total": 34,
+    "never": [
+     "c.add",
+     "c.addi4spn",
+     "c.addw",
+     "c.and",
+     "c.andi",
+     "c.beqz",
+     "c.bnez",
+     "c.ebreak",
+     "c.fld",
+     "c.fldsp",
+     "c.fsd",
+     "c.fsdsp",
+     "c.j",
+     "c.jr",
+     "c.ld",
+     "c.ldsp",
+     "c.lui",
+     "c.lw",
+     "c.lwsp",
+     "c.or",
+     "c.sd",
+     "c.sdsp",
+     "c.srai",
+     "c.srli",
+     "c.sub",
+     "c.subw",
+     "c.sw",
+     "c.swsp",
+     "c.xor"
+    ]
+   },
+   "D": {
+    "executed": 32,
+    "total": 32,
+    "never": []
+   },
+   "F": {
+    "executed": 30,
+    "total": 30,
+    "never": []
+   },
+   "I": {
+    "executed": 50,
+    "total": 51,
+    "never": [
+     "fence.i"
+    ]
+   },
+   "M": {
+    "executed": 13,
+    "total": 13,
+    "never": []
+   },
+   "priv": {
+    "executed": 9,
+    "total": 9,
+    "never": []
+   }
+  },
+  "exception_causes": {
+   "trap_breakpoint": 73,
+   "trap_machine_ecall": 73,
+   "trap_illegal_instruction": 9
+  },
+  "csrs_accessed": {
+   "mepc": 565,
+   "mcause": 410,
+   "mstatus": 400,
+   "mtval": 328,
+   "frm": 170,
+   "fcsr": 123,
+   "mscratch": 118,
+   "mtvec": 100,
+   "mie": 100,
+   "fflags": 20
+  },
+  "instruction_counts": {
+   "sd": 10409,
+   "addi": 7574,
+   "slli": 6582,
+   "ld": 3299,
+   "fmv_d_x": 3207,
+   "fmv_x_d": 3204,
+   "lui": 2931,
+   "addiw": 2864,
+   "csrrs": 1610,
+   "flw": 516,
+   "auipc": 456,
+   "fld": 423,
+   "csrrw": 420,
+   "xor": 304,
+   "add": 231,
+   "sltiu": 192,
+   "bne": 190,
+   "fcvt_d_wu": 157,
+   "mret": 155,
+   "csrrwi": 137,
+   "fence": 124,
+   "csrrc": 111,
+   "jal": 100,
+   "sub": 97,
+   "fsgnj_s": 91,
+   "fnmadd_s": 90,
+   "fnmsub_s": 90,
+   "sraw": 86,
+   "or": 82,
+   "fmadd_s": 82,
+   "fsqrt_s": 82,
+   "fsw": 82,
+   "flt_d": 81,
+   "fmadd_d": 76,
+   "fsqrt_d": 76,
+   "fcvt_s_d": 76,
+   "fcvt_d_s": 76,
+   "fmsub_s": 76,
+   "srl": 75,
+   "addw": 75,
+   "sll": 74,
+   "ebreak": 73,
+   "ecall": 73,
+   "slt": 72,
+   "sltu": 71,
+   "sra": 71,
+   "and": 70,
+   "sllw": 68,
+   "srlw": 67,
+   "c_jalr": 67,
+   "subw": 66,
+   "c_li": 65,
+   "c_addi": 65,
+   "c_slli": 65,
+   "c_mv": 65,
+   "fmsub_d": 65,
+   "fnmadd_d": 65,
+   "fnmsub_d": 65,
+   "fsd": 65,
+   "jalr": 61,
+   "lw": 53,
+   "lb": 53,
+   "slti": 52,
+   "sb": 51,
+   "ori": 51,
+   "lhu": 49,
+   "blt": 48,
+   "sw": 47,
+   "sh": 46,
+   "csrrci": 44,
+   "srliw": 40,
+   "andi": 40,
+   "sraiw": 39,
+   "beq": 39,
+   "lwu": 39,
+   "lbu": 38,
+   "div": 38,
+   "lh": 37,
+   "mul": 35,
+   "bgeu": 35,
+   "mulhu": 34,
+   "slliw": 31,
+   "divu": 31,
+   "xori": 30,
+   "bltu": 29,
+   "remw": 28,
+   "divw": 28,
+   "mulh": 28,
+   "rem": 28,
+   "divuw": 28,
+   "bge": 27,
+   "srli": 26,
+   "mulw": 25,
+   "srai": 24,
+   "mulhsu": 23,
+   "remuw": 23,
+   "remu": 20,
+   "fsub_s": 18,
+   "fdiv_s": 17,
+   "fsub_d": 14,
+   "fmul_d": 12,
+   "csrrsi": 12,
+   "fle_d": 10,
+   "fmul_s": 10,
+   "fadd_d": 10,
+   "fmv_w_x": 8,
+   "fadd_s": 8,
+   "fcvt_l_d": 7,
+   "fclass_d": 7,
+   "fcvt_d_l": 7,
+   "fmin_d": 6,
+   "fcvt_s_wu": 6,
+   "feq_s": 6,
+   "fdiv_d": 6,
+   "fcvt_s_w": 5,
+   "fle_s": 5,
+   "fclass_s": 5,
+   "fmax_d": 5,
+   "fcvt_s_l": 4,
+   "fcvt_lu_s": 4,
+   "fcvt_d_w": 3,
+   "fsgnjx_s": 3,
+   "fmin_s": 3,
+   "flt_s": 3,
+   "feq_d": 3,
+   "fcvt_w_s": 3,
+   "fcvt_lu_d": 3,
+   "fsgnj_d": 3,
+   "fcvt_w_d": 3,
+   "fsgnjn_d": 2,
+   "fcvt_s_lu": 2,
+   "fmv_x_w": 2,
+   "fcvt_d_lu": 2,
+   "fcvt_wu_s": 2,
+   "fmax_s": 1,
+   "fsgnjn_s": 1,
+   "fcvt_wu_d": 1,
+   "fsgnjx_d": 1,
+   "fcvt_l_s": 1
+  }
+ },
+ "templates": [
+  {
+   "name": "r1_5_fp_fused_sqrt_convert",
+   "targets": [
+    "fmadd.d",
+    "fmsub.s",
+    "fsqrt.d",
+    "fcvt.d.s",
+    "fcvt.s.d"
+   ],
+   "rvc": false,
+   "asm": [
+    "fld {fA}, {off:8}(x30)",
+    "fld {fB}, {off:8}(x30)",
+    "fld {fC}, {off:8}(x30)",
+    "fmadd.d {fD}, {fA}, {fB}, {fC}",
+    "fsqrt.d {fE}, {fD}",
+    "fcvt.s.d {fS}, {fE}",
+    "fcvt.d.s {fF}, {fS}",
+    "fmsub.s {fG}, {fS}, {fS}, {fS}"
+   ]
+  },
+  {
+   "name": "r1_6_fp_single_precision_memory",
+   "targets": [
+    "flw",
+    "fsw",
+    "fmadd.s",
+    "fsqrt.s"
+   ],
+   "rvc": false,
+   "asm": [
+    "flw {fA}, {off:4}(x30)",
+    "flw {fB}, {off:4}(x30)",
+    "flw {fC}, {off:4}(x30)",
+    "fmadd.s {fD}, {fA}, {fB}, {fC}",
+    "fsqrt.s {fE}, {fD}",
+    "fsw {fE}, {off:4}(x30)"
+   ]
+  },
+  {
+   "name": "r1_8_exception_ecall_ebreak",
+   "targets": [
+    "ecall",
+    "ebreak",
+    "c.ebreak"
+   ],
+   "rvc": false,
+   "asm": [
+    "li {xA}, 5",
+    "ebreak",
+    "addi {xA}, {xA}, 1",
+    "ecall",
+    "addi {xA}, {xA}, 1"
+   ]
+  },
+  {
+   "name": "r2_7_r2_7_fp_fused_neg_ops",
+   "targets": [
+    "fmsub.d",
+    "fnmadd.d",
+    "fnmsub.d",
+    "fsd"
+   ],
+   "rvc": false,
+   "asm": [
+    "fld {fA}, {off:8}(x30)",
+    "fld {fB}, {off:8}(x30)",
+    "fld {fC}, {off:8}(x30)",
+    "fmsub.d {fD}, {fA}, {fB}, {fC}",
+    "fnmadd.d {fE}, {fA}, {fB}, {fC}",
+    "fnmsub.d {fF}, {fA}, {fB}, {fC}",
+    "fsd {fD}, {off:8}(x30)"
+   ]
+  },
+  {
+   "name": "r2_8_r2_8_fp_single_fused_neg",
+   "targets": [
+    "fnmadd.s",
+    "fnmsub.s",
+    "fsgnj.s"
+   ],
+   "rvc": false,
+   "asm": [
+    "flw {fA}, {off:4}(x30)",
+    "flw {fB}, {off:4}(x30)",
+    "flw {fC}, {off:4}(x30)",
+    "fsgnj.s {fD}, {fA}, {fB}",
+    "fnmadd.s {fE}, {fA}, {fB}, {fC}",
+    "fnmsub.s {fF}, {fA}, {fB}, {fC}"
+   ]
+  },
+  {
+   "name": "r4_3_r4_3_jalr_forward",
+   "targets": [
+    "jalr"
+   ],
+   "rvc": false,
+   "asm": [
+    "la {xA}, {label:A}",
+    "jalr x0, {xA}, 0",
+    "addi {xB}, {xB}, 1",
+    "{label:A}:",
+    "addi {xC}, {xC}, 2"
+   ]
+  },
+  {
+   "name": "r4_4_r4_4_fence_ops",
+   "targets": [
+    "fence"
+   ],
+   "rvc": false,
+   "asm": [
+    "li {xA}, 10",
+    "sd {xA}, {off:8}(x30)",
+    "fence iorw, iorw",
+    "ld {xB}, {off:8}(x30)",
+    "fence rw, rw"
+   ]
+  },
+  {
+   "name": "r5_4_ext_fcvt_flt_d_wu",
+   "targets": [
+    "fcvt.d.wu",
+    "flt.d"
+   ],
+   "rvc": false,
+   "asm": [
+    "li {xA}, 12345",
+    "fcvt.d.wu {fA}, {xA}",
+    "fcvt.d.wu {fB}, {xA}",
+    "flt.d {xB}, {fA}, {fB}"
+   ]
+  },
+  {
+   "name": "r5_5_ext_compressed_arith_imm",
+   "targets": [
+    "c.li",
+    "c.addi",
+    "c.slli",
+    "c.mv"
+   ],
+   "rvc": true,
+   "asm": [
+    "c.li {xA}, 5",
+    "c.addi {xA}, 10",
+    "c.slli {xA}, 1",
+    "c.mv {xB}, {xA}"
+   ]
+  },
+  {
+   "name": "r5_11_ext_compressed_misc_jumps",
+   "targets": [
+    "c.jalr",
+    "c.jr"
+   ],
+   "rvc": true,
+   "asm": [
+    "la {xA}, {label:A}",
+    "c.jalr {xA}",
+    "c.jr {xA}",
+    "{label:A}:"
+   ]
+  }
+ ],
+ "rejected": [
+  {
+   "name": "r1_3_compressed_branches_jumps",
+   "reason": "malformed (needs 1-10 asm lines)",
+   "asm": [
+    "c.li {xA}, 0",
+    "c.beqz {xA}, {label:A}",
+    "c.li {xB}, 1",
+    "c.bnez {xB}, {label:B}",
+    "{label:A}:",
+    "c.j {label:C}",
+    "{label:B}:",
+    "c.li {xC}, 2",
+    "{label:C}:",
+    "la {xA}, {label:D}",
+    "c.jr {xA}",
+    "{label:D}:",
+    "nop"
+   ]
+  },
+  {
+   "name": "r1_0_amo_lr_sc_primitives",
+   "reason": "does not assemble: found '(', expected: ')'",
+   "asm": [
+    "li {xA}, 42",
+    "sd {xA}, {off:8}(x30)",
+    "lr.d {xB}, ({off:8}(x30))",
+    "sc.d {xC}, {xA}, ({off:8}(x30))",
+    "amoadd.d {xD}, {xA}, ({off:8}(x30))",
+    "amoswap.w {xE}, {xA}, ({off:8}(x30))"
+   ]
+  },
+  {
+   "name": "r1_1_amo_logical_maxmin",
+   "reason": "does not assemble: found '(', expected: ')'",
+   "asm": [
+    "li {xA}, -1",
+    "li {xB}, 0x55",
+    "sd {xA}, {off:8}(x30)",
+    "amoand.d {xC}, {xB}, ({off:8}(x30))",
+    "amoor.w {xD}, {xB}, ({off:8}(x30))",
+    "amoxor.d {xE}, {xB}, ({off:8}(x30))",
+    "amomax.w {xF}, {xB}, ({off:8}(x30))",
+    "amominu.d {xG}, {xB}, ({off:8}(x30))"
+   ]
+  },
+  {
+   "name": "r1_2_compressed_arith_load_store",
+   "reason": "does not assemble: unrecognized opcode `c.li x4,15', extension `c' or `zca' required",
+   "asm": [
+    "c.li {xA}, 15",
+    "c.addi {xA}, 5",
+    "c.mv {xB}, {xA}",
+    "c.sd {xB}, {off:8}(x30)",
+    "c.ld {xC}, {off:8}(x30)"
+   ]
+  },
+  {
+   "name": "r1_4_compressed_fp_sp_stack",
+   "reason": "does not assemble: unrecognized opcode `c.fsd f7,16(x30)', extension `d' and `c', or `zcd' required",
+   "asm": [
+    "fld {fA}, {off:8}(x30)",
+    "c.fsd {fA}, {off:8}(x30)",
+    "c.fld {fB}, {off:8}(x30)",
+    "c.sw {xA}, {off:4}(x30)",
+    "c.lw {xB}, {off:4}(x30)"
+   ]
+  },
+  {
+   "name": "r1_7_base_jalr_fence_hazards",
+   "reason": "does not assemble: unrecognized opcode `fence.i', extension `zifencei' required",
+   "asm": [
+    "fence iorw, iorw",
+    "fence.i",
+    "la {xA}, {label:A}",
+    "jalr {xB}, {xA}, 0",
+    "{label:A}:",
+    "addi {xC}, {xB}, {imm:0:15}"
+   ]
+  },
+  {
+   "name": "r1_9_priv_mret_exception_flow",
+   "reason": "the bug-free rocket hangs",
+   "asm": [
+    "csrr {xA}, mstatus",
+    "csrr {xB}, mepc",
+    "csrw mscratch, {xA}",
+    "mret",
+    "nop"
+   ]
+  },
+  {
+   "name": "r1_10_atomic_extended_ops",
+   "reason": "does not assemble: found '(', expected: ')'",
+   "asm": [
+    "li {xA}, 100",
+    "sd {xA}, {off:8}(x30)",
+    "li {xB}, 200",
+    "amomaxu.d {xC}, {xB}, ({off:8}(x30))",
+    "amomin.d {xD}, {xB}, ({off:8}(x30))",
+    "amomaxu.w {xE}, {xB}, ({off:8}(x30))",
+    "amomin.w {xF}, {xB}, ({off:8}(x30))"
+   ]
+  },
+  {
+   "name": "r1_11_compressed_logic_shift",
+   "reason": "does not assemble: unrecognized opcode `c.li x4,12', extension `c' or `zca' required",
+   "asm": [
+    "c.li {xA}, 12",
+    "c.li {xB}, 5",
+    "c.andi {xA}, 7",
+    "c.and {xA}, {xB}",
+    "c.or {xA}, {xB}",
+    "c.xor {xA}, {xB}",
+    "c.sub {xA}, {xB}",
+    "c.slli {xA}, 1",
+    "c.srli {xA}, 1",
+    "c.srai {xA}, 1"
+   ]
+  },
+  {
+   "name": "r2_0_r2_0_amo_arithmetic_primitives",
+   "reason": "does not assemble: found '(', expected: ')'",
+   "asm": [
+    "li {xA}, 15",
+    "sw {xA}, {off:4}(x30)",
+    "lr.w {xB}, ({off:4}(x30))",
+    "amoadd.w {xC}, {xA}, ({off:4}(x30))",
+    "amoswap.d {xD}, {xA}, ({off:8}(x30))",
+    "sc.w {xE}, {xA}, ({off:4}(x30))"
+   ]
+  },
+  {
+   "name": "r2_1_r2_1_amo_logical_ext",
+   "reason": "does not assemble: found '(', expected: ')'",
+   "asm": [
+    "li {xA}, -1",
+    "li {xB}, 0x55",
+    "sd {xA}, {off:8}(x30)",
+    "sw {xB}, {off:4}(x30)",
+    "amoand.w {xC}, {xB}, ({off:4}(x30))",
+    "amoor.d {xD}, {xA}, ({off:8}(x30))",
+    "amoxor.w {xE}, {xB}, ({off:4}(x30))",
+    "amomin.w {xF}, {xB}, ({off:4}(x30))"
+   ]
+  },
+  {
+   "name": "r2_2_r2_2_amo_maxmin_unsigned",
+   "reason": "does not assemble: found '(', expected: ')'",
+   "asm": [
+    "li {xA}, 100",
+    "li {xB}, -1",
+    "sd {xA}, {off:8}(x30)",
+    "sw {xB}, {off:4}(x30)",
+    "amomaxu.w {xC}, {xA}, ({off:4}(x30))",
+    "amominu.d {xD}, {xA}, ({off:8}(x30))",
+    "amomax.d {xE}, {xA}, ({off:8}(x30))",
+    "amominu.w {xF}, {xB}, ({off:4}(x30))"
+   ]
+  },
+  {
+   "name": "r2_3_r2_3_compressed_integer_alu",
+   "reason": "does not assemble: unrecognized opcode `c.li x4,1', extension `c' or `zca' required",
+   "asm": [
+    "c.li {xA}, {imm:1:31}",
+    "c.lui {xB}, {imm:1:31}",
+    "c.addi {xA}, {imm:1:7}",
+    "c.mv {xC}, {xA}",
+    "c.add {xC}, {xB}"
+   ]
+  },
+  {
+   "name": "r2_4_r2_4_compressed_load_store_stack",
+   "reason": "does not assemble: unrecognized opcode `c.sd x4,0(x30)', extension `c' or `zca' required",
+   "asm": [
+    "addi {xA}, x30, {off:8}",
+    "c.sd {xA}, 0(x30)",
+    "c.ld {xB}, 0(x30)",
+    "c.sw {xB}, 8(x30)",
+    "c.lw {xC}, 8(x30)"
+   ]
+  },
+  {
+   "name": "r2_5_r2_5_compressed_control_flow",
+   "reason": "does not assemble: unrecognized opcode `c.addi4spn x4,x30,4', extension `c' or `zca' required",
+   "asm": [
+    "c.addi4spn {xA}, x30, {imm:4:100}",
+    "c.beqz {xA}, {label:A}",
+    "c.j {label:B}",
+    "{label:A}:",
+    "c.bnez {xA}, {label:B}",
+    "{label:B}:"
+   ]
+  },
+  {
+   "name": "r2_6_r2_6_compressed_fp_stack_access",
+   "reason": "does not assemble: unrecognized opcode `c.fsd f7,0(x30)', extension `d' and `c', or `zcd' required",
+   "asm": [
+    "fld {fA}, {off:8}(x30)",
+    "c.fsd {fA}, 0(x30)",
+    "c.fld {fB}, 0(x30)",
+    "c.fsdsp {fA}, 16(x30)",
+    "c.fldsp {fC}, 16(x30)"
+   ]
+  },
+  {
+   "name": "r2_9_r2_9_base_jalr_fence_ops",
+   "reason": "does not assemble: unrecognized opcode `fence.i', extension `zifencei' required",
+   "asm": [
+    "fence iorw, iorw",
+    "fence.i",
+    "la {xA}, {label:A}",
+    "jalr {xB}, {xA}, 0",
+    "{label:A}:",
+    "nop"
+   ]
+  },
+  {
+   "name": "r2_10_r2_10_compressed_arith_logical",
+   "reason": "does not assemble: unrecognized opcode `c.and x4,x1', extension `c' or `zca' required",
+   "asm": [
+    "li {xA}, 12",
+    "li {xB}, 5",
+    "c.and {xA}, {xB}",
+    "c.or {xB}, {xA}",
+    "c.xor {xA}, {xB}",
+    "c.sub {xB}, {xA}",
+    "c.slli {xA}, {imm:1:5}"
+   ]
+  },
+  {
+   "name": "r2_11_r2_11_compressed_shifts_w_sub",
+   "reason": "does not assemble: unrecognized opcode `c.srli x4,5', extension `c' or `zca' required",
+   "asm": [
+    "li {xA}, 100",
+    "li {xB}, 20",
+    "c.srli {xA}, {imm:1:5}",
+    "c.srai {xB}, {imm:1:5}",
+    "c.addw {xA}, {xB}",
+    "c.subw {xB}, {xA}"
+   ]
+  },
+  {
+   "name": "r3_4_r3_4_base_sync_jalr",
+   "reason": "label A must be defined once, after its use (forward branches only)",
+   "asm": [
+    "fence",
+    "fence.i",
+    "addi {xA}, x30, {off:4}",
+    "jalr {xB}, {xA}, 0",
+    "{label:A}:"
+   ]
+  },
+  {
+   "name": "r3_8_r3_8_compressed_arith_logic",
+   "reason": "malformed (needs 1-10 asm lines)",
+   "asm": [
+    "li {xA}, {imm:1:15}",
+    "li {xB}, {imm:1:15}",
+    "c.mv {xC}, {xA}",
+    "c.add {xC}, {xB}",
+    "c.addw {xC}, {xB}",
+    "c.and {xC}, {xB}",
+    "c.andi {xC}, {imm:1:15}",
+    "c.or {xC}, {xB}",
+    "c.xor {xC}, {xB}",
+    "c.sub {xC}, {xB}",
+    "c.subw {xC}, {xB}"
+   ]
+  },
+  {
+   "name": "r3_0_r3_0_amo_arithmetic_all",
+   "reason": "does not assemble: found '(', expected: ')'",
+   "asm": [
+    "li {xA}, {imm:1:15}",
+    "sd {xA}, {off:8}(x30)",
+    "amoadd.w {xB}, {xA}, ({off:8}(x30))",
+    "amoadd.d {xC}, {xA}, ({off:8}(x30))",
+    "amoswap.w {xD}, {xA}, ({off:8}(x30))",
+    "amoswap.d {xE}, {xA}, ({off:8}(x30))"
+   ]
+  },
+  {
+   "name": "r3_1_r3_1_amo_logical_all",
+   "reason": "does not assemble: found '(', expected: ')'",
+   "asm": [
+    "li {xA}, {imm:15:255}",
+    "sd {xA}, {off:8}(x30)",
+    "amoand.w {xB}, {xA}, ({off:8}(x30))",
+    "amoand.d {xC}, {xA}, ({off:8}(x30))",
+    "amoor.w {xD}, {xA}, ({off:8}(x30))",
+    "amoor.d {xE}, {xA}, ({off:8}(x30))",
+    "amoxor.w {xF}, {xA}, ({off:8}(x30))",
+    "amoxor.d {xG}, {xA}, ({off:8}(x30))"
+   ]
+  },
+  {
+   "name": "r3_2_r3_2_amo_minmax_all",
+   "reason": "does not assemble: found '(', expected: ')'",
+   "asm": [
+    "li {xA}, {imm:1:50}",
+    "sd {xA}, {off:8}(x30)",
+    "amomax.w {xB}, {xA}, ({off:8}(x30))",
+    "amomax.d {xC}, {xA}, ({off:8}(x30))",
+    "amomaxu.w {xD}, {xA}, ({off:8}(x30))",
+    "amomaxu.d {xE}, {xA}, ({off:8}(x30))",
+    "amomin.w {xF}, {xA}, ({off:8}(x30))",
+    "amomin.d {xG}, {xA}, ({off:8}(x30))",
+    "amominu.w {xH}, {xA}, ({off:8}(x30))",
+    "amominu.d {xI}, {xA}, ({off:8}(x30))"
+   ]
+  },
+  {
+   "name": "r3_3_r3_3_lr_sc_sequence",
+   "reason": "does not assemble: found '(', expected: ')'",
+   "asm": [
+    "li {xA}, {imm:10:100}",
+    "sd {xA}, {off:8}(x30)",
+    "lr.w {xB}, ({off:8}(x30))",
+    "sc.w {xC}, {xA}, ({off:8}(x30))",
+    "lr.d {xD}, ({off:8}(x30))",
+    "sc.d {xE}, {xA}, ({off:8}(x30))"
+   ]
+  },
+  {
+   "name": "r3_5_r3_5_compressed_loads_stores",
+   "reason": "does not assemble: unrecognized opcode `c.sd x4,16(x30)', extension `c' or `zca' required",
+   "asm": [
+    "li {xA}, {imm:1:63}",
+    "c.sd {xA}, {off:8}(x30)",
+    "c.ld {xB}, {off:8}(x30)",
+    "c.sw {xA}, {off:4}(x30)",
+    "c.lw {xC}, {off:4}(x30)"
+   ]
+  },
+  {
+   "name": "r3_6_r3_6_compressed_fp_stack",
+   "reason": "does not assemble: unrecognized opcode `c.fsd f7,16(x30)', extension `d' and `c', or `zcd' required",
+   "asm": [
+    "fld {fA}, {off:8}(x30)",
+    "c.fsd {fA}, {off:8}(x30)",
+    "c.fld {fB}, {off:8}(x30)",
+    "c.fsdsp {fA}, {off:8}(x30)",
+    "c.fldsp {fC}, {off:8}(x30)"
+   ]
+  },
+  {
+   "name": "r3_7_r3_7_compressed_alu_imm",
+   "reason": "does not assemble: unrecognized opcode `c.li x4,1', extension `c' or `zca' required",
+   "asm": [
+    "c.li {xA}, {imm:1:31}",
+    "c.lui {xB}, {imm:1:31}",
+    "c.addi {xA}, {imm:1:15}",
+    "c.addi4spn {xC}, x30, {imm:4:32}",
+    "c.slli {xA}, {imm:1:5}"
+   ]
+  },
+  {
+   "name": "r3_9_r3_9_compressed_shifts",
+   "reason": "does not assemble: unrecognized opcode `c.srli x4,1', extension `c' or `zca' required",
+   "asm": [
+    "li {xA}, {imm:16:255}",
+    "c.srli {xA}, {imm:1:4}",
+    "c.srai {xA}, {imm:1:4}"
+   ]
+  },
+  {
+   "name": "r3_10_r3_10_compressed_control_flow",
+   "reason": "does not assemble: unrecognized opcode `c.beqz x4,T0_A', extension `c' or `zca' required",
+   "asm": [
+    "li {xA}, 0",
+    "c.beqz {xA}, {label:A}",
+    "c.bnez {xA}, {label:A}",
+    "c.j {label:A}",
+    "{label:A}:",
+    "nop"
+   ]
+  },
+  {
+   "name": "r3_11_r3_11_compressed_ebreak",
+   "reason": "Spike does not terminate (loop?)",
+   "asm": [
+    "c.ebreak"
+   ]
+  },
+  {
+   "name": "r4_0_r4_0_amo_d_ops",
+   "reason": "malformed (needs 1-10 asm lines)",
+   "asm": [
+    "li {xA}, 15",
+    "sd {xA}, {off:8}(x30)",
+    "li {xB}, 5",
+    "amoadd.d {xC}, {xB}, ({off:8}(x30))",
+    "amoand.d {xC}, {xB}, ({off:8}(x30))",
+    "amomax.d {xC}, {xB}, ({off:8}(x30))",
+    "amomaxu.d {xC}, {xB}, ({off:8}(x30))",
+    "amomin.d {xC}, {xB}, ({off:8}(x30))",
+    "amominu.d {xC}, {xB}, ({off:8}(x30))",
+    "amoor.d {xC}, {xB}, ({off:8}(x30))",
+    "amoswap.d {xC}, {xB}, ({off:8}(x30))",
+    "amoxor.d {xC}, {xB}, ({off:8}(x30))"
+   ]
+  },
+  {
+   "name": "r4_1_r4_1_amo_w_ops",
+   "reason": "malformed (needs 1-10 asm lines)",
+   "asm": [
+    "li {xA}, 15",
+    "sw {xA}, {off:4}(x30)",
+    "li {xB}, 5",
+    "amoadd.w {xC}, {xB}, ({off:4}(x30))",
+    "amoand.w {xC}, {xB}, ({off:4}(x30))",
+    "amomax.w {xC}, {xB}, ({off:4}(x30))",
+    "amomaxu.w {xC}, {xB}, ({off:4}(x30))",
+    "amomin.w {xC}, {xB}, ({off:4}(x30))",
+    "amominu.w {xC}, {xB}, ({off:4}(x30))",
+    "amoor.w {xC}, {xB}, ({off:4}(x30))",
+    "amoswap.w {xC}, {xB}, ({off:4}(x30))",
+    "amoxor.w {xC}, {xB}, ({off:4}(x30))"
+   ]
+  },
+  {
+   "name": "r4_2_r4_2_lr_sc_d_w",
+   "reason": "does not assemble: found '(', expected: ')'",
+   "asm": [
+    "li {xA}, 42",
+    "sd {xA}, {off:8}(x30)",
+    "sw {xA}, {off:4}(x30)",
+    "lr.d {xB}, ({off:8}(x30))",
+    "sc.d {xC}, {xA}, ({off:8}(x30))",
+    "lr.w {xB}, ({off:4}(x30))",
+    "sc.w {xC}, {xA}, ({off:4}(x30))"
+   ],
+   "rvc": false
+  },
+  {
+   "name": "r5_0_ext_amo_lr_sc_d_w",
+   "reason": "unknown placeholder {x30}",
+   "asm": [
+    "li {xA}, 42",
+    "sd {xA}, 0({x30})",
+    "lr.d {xB}, 0({x30})",
+    "amoadd.w {xC}, {xA}, 0({x30})",
+    "amoadd.d {xD}, {xA}, 0({x30})",
+    "amoswap.d {xE}, {xA}, 0({x30})",
+    "li {xA}, 100",
+    "sc.d {xF}, {xA}, 0({x30})"
+   ]
+  },
+  {
+   "name": "r5_1_ext_amo_logical_minmax",
+   "reason": "unknown placeholder {x30}",
+   "asm": [
+    "li {xA}, 0x0F0F",
+    "sd {xA}, 8({x30})",
+    "li {xB}, 0x3333",
+    "amoand.d {xC}, {xB}, 8({x30})",
+    "amoor.w {xD}, {xB}, 8({x30})",
+    "amomax.d {xE}, {xB}, 8({x30})",
+    "amomin.w {xF}, {xB}, 8({x30})"
+   ]
+  },
+  {
+   "name": "r5_2_ext_amo_u_ops",
+   "reason": "unknown placeholder {x30}",
+   "asm": [
+    "li {xA}, 50",
+    "sw {xA}, 16({x30})",
+    "lr.w {xB}, 16({x30})",
+    "amomaxu.d {xC}, {xA}, 16({x30})",
+    "amominu.w {xD}, {xA}, 16({x30})",
+    "amoxor.d {xE}, {xA}, 16({x30})",
+    "sc.w {xF}, {xA}, 16({x30})"
+   ]
+  },
+  {
+   "name": "r5_3_ext_fence_i_sync",
+   "reason": "unknown placeholder {x30}",
+   "asm": [
+    "addi {xA}, {x30}, 24",
+    "addi {xB}, x0, 1",
+    "sd {xB}, 0({xA})",
+    "fence.i"
+   ]
+  },
+  {
+   "name": "r5_6_ext_compressed_loads_stores_d",
+   "reason": "unknown placeholder {x30}",
+   "asm": [
+    "c.sd {xA}, 0({x30})",
+    "c.ld {xB}, 0({x30})",
+    "c.sdsp {xA}, 8(x2)",
+    "c.ldsp {xB}, 8(x2)"
+   ]
+  },
+  {
+   "name": "r5_8_ext_compressed_fp_stack_loads",
+   "reason": "unknown placeholder {x30}",
+   "asm": [
+    "c.fsd {fA}, 0({x30})",
+    "c.fld {fB}, 0({x30})",
+    "c.fsdsp {fA}, 16(x2)",
+    "c.fldsp {fB}, 16(x2)"
+   ]
+  },
+  {
+   "name": "r5_10_ext_compressed_word_ops",
+   "reason": "unknown placeholder {x30}",
+   "asm": [
+    "c.sw {xA}, 0({x30})",
+    "c.lw {xB}, 0({x30})",
+    "c.addw {xA}, {xB}",
+    "c.subw {xA}, {xB}",
+    "c.swsp {xA}, 24(x2)",
+    "c.lwsp {xB}, 24(x2)"
+   ]
+  },
+  {
+   "name": "r5_7_ext_compressed_control_jumps",
+   "reason": "does not assemble: illegal operands `c.addi4spn x4,x2,8'",
+   "asm": [
+    "c.addi4spn {xA}, x2, 8",
+    "c.beqz {xA}, {label:A}",
+    "c.j {label:A}",
+    "c.bnez {xA}, {label:A}",
+    "{label:A}:"
+   ],
+   "rvc": true
+  },
+  {
+   "name": "r5_9_ext_compressed_alu_logic_shifts",
+   "reason": "does not assemble: illegal operands `c.sub x4,x1'",
+   "asm": [
+    "c.add {xA}, {xB}",
+    "c.sub {xA}, {xB}",
+    "c.and {xA}, {xB}",
+    "c.or {xA}, {xB}",
+    "c.xor {xA}, {xB}",
+    "c.srli {xA}, 2",
+    "c.srai {xA}, 2"
+   ],
+   "rvc": true
+  },
+  {
+   "name": "r6_0_r6_0_amo_d_ops",
+   "reason": "the bug-free rocket disagrees with Spike (implementation-defined or a known core difference)",
+   "asm": [
+    "addi x3, x30, {off:8}",
+    "sd x0, 0(x3)",
+    "li {xA}, 5",
+    "amoadd.d {xB}, {xA}, 0(x3)",
+    "amoswap.d {xC}, {xA}, 0(x3)"
+   ],
+   "rvc": false
+  },
+  {
+   "name": "r6_1_r6_1_amo_w_ops",
+   "reason": "the bug-free rocket disagrees with Spike (implementation-defined or a known core difference)",
+   "asm": [
+    "addi x3, x30, {off:8}",
+    "sw x0, 0(x3)",
+    "li {xA}, 10",
+    "amoadd.w {xB}, {xA}, 0(x3)",
+    "amomax.w {xC}, {xA}, 0(x3)"
+   ],
+   "rvc": false
+  },
+  {
+   "name": "r6_2_r6_2_lr_sc_d_w",
+   "reason": "the bug-free rocket disagrees with Spike (implementation-defined or a known core difference)",
+   "asm": [
+    "addi x3, x30, {off:8}",
+    "lr.d {xA}, (x3)",
+    "sc.d {xB}, {xA}, (x3)",
+    "lr.w {xC}, (x3)",
+    "sc.w {xD}, {xC}, (x3)"
+   ],
+   "rvc": false
+  },
+  {
+   "name": "r6_3_r6_3_fence_i",
+   "reason": "does not assemble: unrecognized opcode `fence.i', extension `zifencei' required",
+   "asm": [
+    "addi x3, x30, {off:8}",
+    "li {xA}, 123",
+    "sd {xA}, 0(x3)",
+    "fence.i"
+   ],
+   "rvc": false
+  },
+  {
+   "name": "r6_4_r6_4_compressed_arith_imm",
+   "reason": "does not assemble: illegal operands `c.andi x4,10'",
+   "asm": [
+    "c.li {xA}, {imm:1:31}",
+    "c.lui {xB}, {imm:1:31}",
+    "c.andi {xA}, {imm:1:15}"
+   ],
+   "rvc": true
+  },
+  {
+   "name": "r6_5_r6_5_compressed_alu_reg",
+   "reason": "does not assemble: illegal operands `c.sub x4,x1'",
+   "asm": [
+    "c.li {xA}, 5",
+    "c.li {xB}, 3",
+    "c.add {xA}, {xB}",
+    "c.sub {xA}, {xB}",
+    "c.and {xA}, {xB}",
+    "c.or {xA}, {xB}",
+    "c.xor {xA}, {xB}"
+   ],
+   "rvc": true
+  },
+  {
+   "name": "r6_6_r6_6_compressed_shifts",
+   "reason": "does not assemble: illegal operands `c.li x4,32'",
+   "asm": [
+    "c.li {xA}, 32",
+    "c.srli {xA}, {imm:1:7}",
+    "c.srai {xA}, {imm:1:7}"
+   ],
+   "rvc": true
+  },
+  {
+   "name": "r6_7_r6_7_compressed_loads_stores_d",
+   "reason": "does not assemble: illegal operands `c.li x1,99'",
+   "asm": [
+    "addi x3, x30, {off:8}",
+    "c.li {xA}, 99",
+    "c.sd {xA}, 0(x3)",
+    "c.ld {xB}, 0(x3)",
+    "c.sdsp {xA}, 8(x2)",
+    "c.ldsp {xC}, 8(x2)"
+   ],
+   "rvc": true
+  },
+  {
+   "name": "r6_8_r6_8_compressed_loads_stores_w",
+   "reason": "does not assemble: illegal operands `c.li x1,55'",
+   "asm": [
+    "addi x3, x30, {off:4}",
+    "c.li {xA}, 55",
+    "c.sw {xA}, 0(x3)",
+    "c.lw {xB}, 0(x3)",
+    "c.swsp {xA}, 16(x2)",
+    "c.lwsp {xC}, 16(x2)"
+   ],
+   "rvc": true
+  },
+  {
+   "name": "r6_9_r6_9_compressed_fp_mem",
+   "reason": "does not assemble: illegal operands `c.fsd f0,0(x3)'",
+   "asm": [
+    "addi x3, x30, {off:8}",
+    "fld {fA}, 0(x3)",
+    "c.fsd {fA}, 0(x3)",
+    "c.fld {fB}, 0(x3)",
+    "c.fsdsp {fA}, 24(x2)",
+    "c.fldsp {fB}, 24(x2)"
+   ],
+   "rvc": true
+  },
+  {
+   "name": "r6_10_r6_10_compressed_jumps_branches",
+   "reason": "does not assemble: illegal operands `c.beqz x4,T0_A'",
+   "asm": [
+    "c.li {xA}, 0",
+    "c.beqz {xA}, {label:A}",
+    "c.j {label:B}",
+    "{label:A}:",
+    "c.bnez {xA}, {label:B}",
+    "{label:B}:",
+    "c.li {xB}, 1"
+   ],
+   "rvc": true
+  },
+  {
+   "name": "r6_11_r6_11_compressed_ebreak",
+   "reason": "does not assemble: unrecognized opcode `c.ebreak', extension `c' or `zca' required",
+   "asm": [
+    "c.ebreak",
+    "addi {xA}, x0, 1"
+   ],
+   "rvc": false
+  },
+  {
+   "name": "r7_0_ext_fence_i",
+   "reason": "does not assemble: unrecognized opcode `fence.i', extension `zifencei' required",
+   "asm": [
+    "addi {xA}, x30, {off:8}",
+    "sw x0, 0({xA})",
+    "fence.i"
+   ],
+   "rvc": false
+  },
+  {
+   "name": "r7_1_ext_c_addi4spn",
+   "reason": "does not assemble: illegal operands `c.addi4spn x4,sp,8'",
+   "asm": [
+    "c.addi4spn {xA}, sp, 8"
+   ],
+   "rvc": true
+  },
+  {
+   "name": "r7_2_ext_c_load_store_w",
+   "reason": "does not assemble: illegal operands `c.sw x4,0(sp)'",
+   "asm": [
+    "c.sw {xA}, 0(sp)",
+    "c.lw {xA}, 0(sp)",
+    "c.swsp {xA}, 0(sp)",
+    "c.lwsp {xA}, 0(sp)"
+   ],
+   "rvc": true
+  },
+  {
+   "name": "r7_3_ext_c_load_store_d",
+   "reason": "does not assemble: illegal operands `c.sd x4,0(sp)'",
+   "asm": [
+    "c.sd {xA}, 0(sp)",
+    "c.ld {xA}, 0(sp)",
+    "c.sdsp {xA}, 0(sp)",
+    "c.ldsp {xA}, 0(sp)"
+   ],
+   "rvc": true
+  },
+  {
+   "name": "r7_4_ext_c_fp_mem",
+   "reason": "does not assemble: illegal operands `c.fsd f7,0(sp)'",
+   "asm": [
+    "c.fsd {fA}, 0(sp)",
+    "c.fld {fA}, 0(sp)",
+    "c.fsdsp {fA}, 0(sp)",
+    "c.fldsp {fA}, 0(sp)"
+   ],
+   "rvc": true
+  },
+  {
+   "name": "r7_5_ext_c_branch_jump",
+   "reason": "does not assemble: illegal operands `c.beqz x4,T0_A'",
+   "asm": [
+    "c.beqz {xA}, {label:A}",
+    "c.bnez {xA}, {label:A}",
+    "c.j {label:A}",
+    "c.jr {xA}",
+    "{label:A}:"
+   ],
+   "rvc": true
+  },
+  {
+   "name": "r7_6_ext_c_alu_arith_w",
+   "reason": "does not assemble: illegal operands `c.addw x4,x3'",
+   "asm": [
+    "c.lui {xA}, 1",
+    "c.add {xA}, {xB}",
+    "c.addw {xA}, {xB}",
+    "c.sub {xA}, {xB}",
+    "c.subw {xA}, {xB}"
+   ],
+   "rvc": true
+  },
+  {
+   "name": "r7_7_ext_c_logic_shifts",
+   "reason": "does not assemble: illegal operands `c.andi x4,5'",
+   "asm": [
+    "li {xA}, 15",
+    "c.andi {xA}, 5",
+    "c.srli {xA}, 1",
+    "c.srai {xA}, 1",
+    "c.and {xA}, {xB}",
+    "c.or {xA}, {xB}",
+    "c.xor {xA}, {xB}"
+   ],
+   "rvc": true
+  }
+ ]
+}
