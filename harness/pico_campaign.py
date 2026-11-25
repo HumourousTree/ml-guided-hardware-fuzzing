@@ -182,7 +182,9 @@ def _get_gemini_client():
     cache_key = hashlib.sha256(api_key.encode()).hexdigest()
     client = _GEMINI_CLIENT.get(cache_key)
     if client is None:
-        http_options = _genai_types.HttpOptions(timeout=60000) if _genai_types else {"timeout": 60000}
+        # request deadline in ms; thinking models (e.g. gemini-3.6-flash) need more than 60 s for repair prompts
+        timeout_ms = int(os.environ.get("GEMINI_TIMEOUT_MS", "60000"))
+        http_options = _genai_types.HttpOptions(timeout=timeout_ms) if _genai_types else {"timeout": timeout_ms}
         client = _genai_module.Client(api_key=api_key, http_options=http_options)
         _GEMINI_CLIENT.clear(); _GEMINI_CHATS.clear(); _GEMINI_TURNS.clear()
         _GEMINI_CLIENT[cache_key] = client
