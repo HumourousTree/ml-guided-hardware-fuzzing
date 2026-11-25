@@ -113,7 +113,7 @@ def fuzz(core: str, kind: str, d: int, seed: int, programs: int, profile: str = 
         return json.loads(f.read_text())
     sim = runs / f"{kind}_{d}" / "Vtop_tiny_soc"
     r = rv64fuzz.campaign(sim, programs, 1000 * seed + d + (0 if profile == "base" else 500000), 40, 400000, True,
-                          stop_on_bug=True, profile=profile)
+                          stop_on_bug=True, profile=profile, core=core)
     r.update(core=core, kind=kind, dir=d, seed=seed, budget_programs=programs)
     f.write_text(json.dumps(r))
     return r
@@ -123,7 +123,7 @@ def calibrate(core: str, name: str, n: int, profile: str) -> dict:
     _, runs, out = paths(core)
     g = out / f"{name}{suffix(profile)}.json"
     if not g.exists():
-        r = rv64fuzz.campaign(runs / name / "Vtop_tiny_soc", n, 777, 40, 400000, True, False, profile=profile)
+        r = rv64fuzz.campaign(runs / name / "Vtop_tiny_soc", n, 777, 40, 400000, True, False, profile=profile, core=core)
         r.update(core=core, golden=name)
         g.write_text(json.dumps(r))
     return json.loads(g.read_text())
