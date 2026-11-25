@@ -1,0 +1,103 @@
+# Encarsia campaign (Rocket or BOOM) sharded over parallel GitHub-hosted runners.
+# Manual trigger only (Actions tab -> "Encarsia campaign" -> Run workflow, or: gh workflow run encarsia-campaign.yml -f core=boom ...).
+# No secrets are used: no LLM calls run here. Results: the "merged-<core>-<profile>" artifact (logs/bench/<core>/ files);
+# download with `gh run download <run-id> -n merged-<core>-<profile>` and feed into tools/compare_literature.py.
+name: Encarsia campaign
+
+on:
+  workflow_dispatch:
+    inputs:
+      core: {description: "rocket or boom", required: true, default: rocket, type: choice, options: [rocket, boom]}
+      profile: {description: "generator profile", required: true, default: base, type: choice, options: [base, ext]}
+      seeds: {description: "seeds per bug", required: true, default: "5"}
+      programs: {description: "programs per seed (stop at first detection)", required: true, default: "2000"}
+      calibrate: {description: "calibration programs per reference", required: true, default: "500"}
+      shards: {description: "parallel runners (1-20)", required: true, default: "20"}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: encarsia-${{ inputs.core }}-${{ inputs.profile }}
+  cancel-in-progress: false
+
+jobs:
+  image:
+    runs-on: ubuntu-latest
+    permissions: {contents: read, packages: write}
+    outputs:
+      image: ${{ steps.tag.outputs.image }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: tag
+        run: |
+          owner="${GITHUB_REPOSITORY_OWNER,,}"
+          echo "image=ghcr.io/${owner}/encarsia-env:${{ hashFiles('docker/encarsia/Dockerfile') }}" >> "$GITHUB_OUTPUT"
+      - name: Build and push the toolchain image (skipped if this Dockerfile version already exists)
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          if docker manifest inspect "${{ steps.tag.outputs.image }}" >/dev/null 2>&1; then echo "image exists"; exit 0; fi
+          docker build --label "org.opencontainers.image.source=https://github.com/${GITHUB_REPOSITORY}" \
+                       -t "${{ steps.tag.outputs.image }}" docker/encarsia
+          docker push "${{ steps.tag.outputs.image }}"
+
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      shards: ${{ steps.p.outputs.shards }}
+      n: ${{ steps.p.outputs.n }}
+    steps:
+      - id: p
+        run: |
+          n=$(( ${{ inputs.shards }} < 1 ? 1 : (${{ inputs.shards }} > 20 ? 20 : ${{ inputs.shards }}) ))
+          echo "n=$n" >> "$GITHUB_OUTPUT"
+          echo "shards=$(python3 -c "import json; print(json.dumps(list(range($n))))")" >> "$GITHUB_OUTPUT"
+
+  shard:
+    needs: [image, plan]
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    permissions: {contents: read, packages: read}
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: ${{ fromJSON(needs.plan.outputs.shards) }}
+    container:
+      image: ${{ needs.image.outputs.image }}
+      credentials: {username: "${{ github.actor }}", password: "${{ secrets.GITHUB_TOKEN }}"}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run shard
+        run: |
+          [ -e "$HOME/ext" ] || ln -s /root/ext "$HOME/ext"     # container jobs set HOME=/github/home
+          python3 rocket/cloud_shard.py --core ${{ inputs.core }} --profile ${{ inputs.profile }} \
+            --shard ${{ matrix.shard }} --of ${{ needs.plan.outputs.n }} --seeds ${{ inputs.seeds }} \
+            --programs ${{ inputs.programs }} --calibrate ${{ inputs.calibrate }} --jobs 4
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: shard-${{ inputs.core }}-${{ inputs.profile }}-${{ matrix.shard }}
+          path: logs/bench/${{ inputs.core }}/
+          if-no-files-found: warn
+
+  merge:
+    needs: [image, shard]
+    if: always()
+    runs-on: ubuntu-latest
+    permissions: {contents: read, packages: read}
+    container:
+      image: ${{ needs.image.outputs.image }}
+      credentials: {username: "${{ github.actor }}", password: "${{ secrets.GITHUB_TOKEN }}"}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: {pattern: "shard-${{ inputs.core }}-${{ inputs.profile }}-*", path: shards}
+      - name: Merge and validate
+        run: |
+          [ -e "$HOME/ext" ] || ln -s /root/ext "$HOME/ext"
+          python3 rocket/merge_shards.py --core ${{ inputs.core }} --profile ${{ inputs.profile }} shards/*
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: merged-${{ inputs.core }}-${{ inputs.profile }}
+          path: logs/bench/${{ inputs.core }}/
