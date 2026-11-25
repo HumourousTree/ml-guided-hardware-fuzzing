@@ -101,8 +101,16 @@ on the buggy one; a detection counts only if the bug-free Rocket matches Spike a
 
 All 16 reference disagreements come from ext programs that switch the FPU off (mstatus.FS = Off): Spike then traps FP
 instructions and FP-CSR accesses that the bug-free Rocket executes in some cases. 500 calibration programs did not reveal
-this. Whether it is a Rocket deviation was not investigated. These runs count as not detected (they stopped at the false
-alarm, so the true bug was not searched for further in that seed). A future ext revision should avoid FS = Off.
+this. These runs count as not detected (they stopped at the false alarm, so the true bug was not searched for further in
+that seed).
+
+**Cause (2026-11-25, `rocket/check_fs_states.py`)**: Rocket stores mstatus.FS with two states: any non-zero write becomes
+Dirty (3). The ext v1 programs cleared the FS bits one at a time (`csrc` of 0x2000 or 0x4000). Architecturally that goes
+3 -> 2 -> 0 (Off) and Spike traps the next FP instruction; on Rocket each write of 2 or 1 reads back as 3, so FS never
+reaches Off and the FPU stays enabled. Clearing both bits at once gives Off and a trap on both. The privileged spec lets an
+implementation track FP dirtiness imprecisely (reporting Dirty conservatively), so this is an implementation choice, not a
+Rocket bug. **ext v2** therefore only ever sets FS bits (never clears them); the v1 results are archived in
+`logs/archive/rocket_ext_v1/`.
 
 ## Results (2026-11-05)
 
