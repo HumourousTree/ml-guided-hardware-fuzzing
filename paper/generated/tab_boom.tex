@@ -1,1 +1,35 @@
-\emph{(no data)}
+\begin{tabular}{@{}l l r r c c c@{}}\toprule
+& & \multicolumn{2}{c}{BenchFuzz} & \multicolumn{3}{c}{Published (24\,h)}\\\cmidrule(lr){3-4}\cmidrule(l){5-7}
+Bug & Mod. & base & ext & DF & PF & CA\\\midrule
+Mix-up 1 &  & 5/5\,(1) & 5/5\,(1) & \checkmark & \checkmark & \checkmark\\
+Mix-up 2 &  & 5/5\,(1) & 5/5\,(1) & \checkmark & \checkmark & \checkmark\\
+Mix-up 3 &  & 0/5 & 0/5 & $\times$ & $\times$ & $\times$\\
+Mix-up 4 &  & 5/5\,(5) & 5/5\,(7) & \checkmark & \checkmark & $\times$\\
+Mix-up 5 &  & 5/5\,(5) & 5/5\,(4) & \checkmark & \checkmark & $\times$\\
+Mix-up 6 &  & 5/5\,(1) & 5/5\,(1) & $\times$ & $\times$ & \checkmark\\
+Mix-up 7 &  & 5/5\,(1) & 5/5\,(1) & $\times$ & $\times$ & \checkmark\\
+Mix-up 8 &  & 5/5\,(1) & 5/5\,(1) & \checkmark & \checkmark & \checkmark\\
+Mix-up 9 &  & 5/5\,(1) & 5/5\,(2) & $\times$ & $\times$ & \checkmark\\
+Mix-up 10 &  & 5/5\,(1) & 5/5\,(1) & \checkmark & \checkmark & \checkmark\\
+Mix-up 11 &  & 5/5\,(1) & 5/5\,(1) & \checkmark & \checkmark & \checkmark\\
+Mix-up 12 &  & 0/5 & 0/5 & \checkmark & \checkmark & $\times$\\
+Mix-up 13 &  & 0/5 & 0/5 & $\times$ & $\times$ & $\times$\\
+Mix-up 14 &  & 5/5\,(1) & 5/5\,(2) & $\times$ & $\times$ & \checkmark\\
+Mix-up 15 &  & 5/5\,(2) & 5/5\,(1) & \checkmark & \checkmark & \checkmark\\
+\midrule
+Cond. 1 & ALU & 5/5\,(1) & 5/5\,(7) & \checkmark & \checkmark & \checkmark\\
+Cond. 2 & ALU & 5/5\,(3) & 5/5\,(5) & \checkmark & \checkmark & \checkmark\\
+Cond. 3 & BrQ & 0/5 & 0/5 & $\times$ & $\times$ & $\times$\\
+Cond. 4 & BrQ & 0/5 & 0/5 & $\times$ & $\times$ & $\times$\\
+Cond. 5 & BrQ & 0/5 & 0/5 & $\times$ & $\times$ & $\times$\\
+Cond. 6 & BrQ & 0/5 & 0/5 & $\times$ & $\times$ & $\times$\\
+Cond. 7 & BrMask & 5/5\,(10) & 5/5\,(10) & \checkmark & \checkmark & \checkmark\\
+Cond. 8 & CSR & 0/5 & 0/5 & $\times$ & $\times$ & $\times$\\
+Cond. 9 & CSR & 0/5 & 0/5 & $\times$ & $\times$ & $\times$\\
+Cond. 10 & ROB & 0/5 & 0/5 & $\times$ & $\times$ & $\times$\\
+Cond. 11 & ROB & 5/5\,(1) & 5/5\,(1) & \checkmark & \checkmark & \checkmark\\
+Cond. 12 & ROB & 5/5\,(1) & 5/5\,(1) & \checkmark & \checkmark & \checkmark\\
+Cond. 13 & ROB & 0/5 & 0/5 & $\times$ & $\times$ & $\times$\\
+Cond. 14 & ROB & 0/5 & 0/5 & $\times$ & $\times$ & $\times$\\
+Cond. 15 & FPU & 5/5\,(5) & 5/5\,(11) & \checkmark & \checkmark & $\times$\\
+\bottomrule\end{tabular}

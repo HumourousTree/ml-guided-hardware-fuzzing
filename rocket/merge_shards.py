@@ -33,7 +33,7 @@ def main():
     copied, clashes = 0, []
     for d in map(Path, a.dirs):
         for f in sorted(d.rglob("*.json")):
-            if f.name.startswith("confirmations_shard"):
+            if f.name.startswith("confirmations"):     # per-shard files, or a merged run's confirmations.json
                 conf.update(json.loads(f.read_text()))
                 continue
             dst = out / f.name

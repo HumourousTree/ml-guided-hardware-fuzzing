@@ -192,3 +192,15 @@ decoded from the glyph positions of the tables, and the decoder reproduces the R
 * Bug locations of the broken conditionals (`rocket/locate_bugs.py boom`): ALU (2), branch queues / mask logic (5),
   CSR file (2), reorder buffer (5), FP rounding (1).
 * Campaign: base 5 seeds x 2,000 programs, then ext 5 x 400 (`scripts/resume_background.sh` restarts it).
+
+### BOOM results (2026-11-26)
+
+* A second known-core difference found by calibration: with an invalid `frm` (5-7), BOOM executes FP instructions with a
+  dynamic rounding mode where the ISA, Spike and Rocket raise an illegal-instruction exception (`rocket/check_frm.py`;
+  4 of 1,000 ext calibration programs on every BOOM reference). On BOOM the generator never leaves `frm` invalid.
+* All 15 references calibrated (500 base / 1,000 ext programs, 0 mismatches); 180 of 180 detections replay-confirmed.
+  BOOM base ran on the laptop, BOOM ext on GitHub Actions (run 45677937135, 20 shards).
+* Signal mix-ups: **12/15** (DifuzzRTL/ProcessorFuzz 9, Cascade 10); missed only mix-up 12 (found by DifuzzRTL/ProcessorFuzz).
+  Broken conditionals: **6/15**, exactly every conditional any published fuzzer finds (DifuzzRTL/ProcessorFuzz 6, Cascade 5).
+* No BOOM bug is found by us and missed by all three; ext adds nothing on BOOM (unlike Rocket). Only 6 of 15 BOOM
+  conditionals are found by anyone: the rest are in the branch queues, the CSR file and the reorder buffer.
