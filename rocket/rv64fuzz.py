@@ -105,11 +105,14 @@ RVC_REG = lambda rng: f"x{rng.randint(8, 15)}"   # the 3-bit register field of m
 # division disagrees with Spike in every rounding mode (last-bit errors, overflow to the largest finite number instead of
 # infinity; 10 of 500 calibration programs on every BOOM reference, 2026-11-25; fdiv.s never disagreed), so on BOOM
 # fdiv.d is replaced by fmul.d. The random draws are unchanged, so Rocket programs are byte-identical.
-QUIRKS = {"rocket": {}, "boom": {"subst": {"fdiv.d": "fmul.d"}}}
+# BOOM also executes FP instructions with a dynamic rounding mode while frm holds an invalid value (5-7), where the ISA
+# and Spike (and Rocket) raise an illegal-instruction exception (rocket/check_frm.py, 2026-11-26; 4 of 1,000 ext
+# calibration programs on every BOOM reference). On BOOM, frm is therefore always restored to a valid mode.
+QUIRKS = {"rocket": {}, "boom": {"subst": {"fdiv.d": "fmul.d"}, "keep_frm_valid": True}}
 
 
 def gen_program(rng: random.Random, length: int, fp: bool = True, profile: str = "base", subst=None,
-                templates=None) -> str:
+                templates=None, keep_frm_valid: bool = False) -> str:
     subst = subst or {}
     traps = profile in ("ext", "llm")                       # the ext harness (trap handler, reserved x28/x29)
     ext_mix = profile == "ext"                              # the hand-designed ext instruction classes
@@ -173,7 +176,8 @@ def gen_program(rng: random.Random, length: int, fp: bool = True, profile: str =
             else:
                 body.append(f"{rng.choice(['csrrwi', 'csrrsi', 'csrrci'])} {rd() if rng.random() < .7 else 'x0'}, {csr}, "
                             f"{rng.randint(0, 31)}")
-            if csr in ("fcsr", "frm") and not (traps and rng.random() < .2):   # traps: sometimes leave frm invalid
+            if csr in ("fcsr", "frm") and not (traps and rng.random() < .2 and not keep_frm_valid):  # traps: sometimes
+                                                                             # leave frm invalid (never on BOOM)
                 body.append(f"fsrmi x0, {rng.randint(0, 4)}" if rng.random() < .5 else "csrrci x0, frm, 4")
         elif c == "mcsr":
             k = rng.random()
@@ -310,7 +314,7 @@ def campaign(sim: Path, n: int, seed: int, length: int, simlen: int, fp: bool, s
     work = Path(tempfile.mkdtemp(prefix="rv64fuzz-"))
     try:
         for k in range(n):
-            asm = gen_program(rng, length, fp, profile, quirks.get("subst"), templates)
+            asm = gen_program(rng, length, fp, profile, quirks.get("subst"), templates, quirks.get("keep_frm_valid", False))
             elf = build_elf(asm, work)
             exp = run_spike(elf)
             if exp is None:                 # the reference did not finish: not a valid test (counted, never a detection)

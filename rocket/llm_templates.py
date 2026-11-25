@@ -102,9 +102,13 @@ def validate(t: dict, n: int) -> str | None:
         subst = rv64fuzz.QUIRKS[core].get("subst")
         for k in range(n):
             try:
-                elf = rv64fuzz.build_elf(rv64fuzz.gen_program(rng, 40, True, "llm", subst, [t]), w)
-            except Exception:
-                return "does not assemble"
+                elf = rv64fuzz.build_elf(rv64fuzz.gen_program(rng, 40, True, "llm", subst, [t],
+                                                              rv64fuzz.QUIRKS[core].get("keep_frm_valid", False)), w)
+            except Exception as e:      # give the LLM the assembler's own message (first error, file positions removed)
+                err = getattr(e, "stderr", b"") or b""
+                msg = next((re.sub(r"^.*?Error: ", "", l) for l in err.decode(errors="replace").splitlines()
+                            if "Error:" in l), "")
+                return "does not assemble" + (f": {msg[:160]}" if msg else "")
             try:
                 exp = rv64fuzz.run_spike(elf)
             except Exception:
@@ -143,12 +147,22 @@ def main():
     ap.add_argument("--validate", type=int, default=20)
     ap.add_argument("--jobs", type=int, default=4)
     ap.add_argument("--out", default=str(ROOT / "rocket" / "templates" / "llm.json"))
+    ap.add_argument("--resume", action="store_true", help="continue from --out (more rounds, same history)")
     a = ap.parse_args()
     out = Path(a.out); out.parent.mkdir(parents=True, exist_ok=True)
     accepted, rejected, rounds, requests = [], [], [], 0
-    before = isa_census.census("base", a.census_programs, 4242)
-    cur = before
-    for r in range(1, a.rounds + 1):
+    if a.resume and out.exists():          # continue a previous run: keep its templates, rejections and census
+        prev = json.loads(out.read_text())
+        accepted, rejected, rounds, requests = prev["templates"], prev["rejected"], prev["rounds"], prev["requests"]
+        before, cur = prev["census_before"], prev["census_after"]
+        for x in rejected:                 # earlier runs recorded no assembler message: recover it (assembling only)
+            if x["reason"] == "does not assemble" and x.get("asm"):
+                x["reason"] = validate({"name": x["name"], "asm": x["asm"], "rvc": x.get("rvc", False)}, 1) or x["reason"]
+    else:
+        before = isa_census.census("base", a.census_programs, 4242)
+        cur = before
+    first = len(rounds) + 1
+    for r in range(first, first + a.rounds):
         rej_txt = ("\nPreviously rejected templates (do not repeat these mistakes):\n" +
                    "\n".join(f"- {x['name']}: {x['reason']}" for x in rejected[-15:]) + "\n") if rejected else ""
         prompt = PROMPT.format(programs=a.census_programs, census=census_text(cur), k=a.per_round, rejected=rej_txt)
@@ -163,7 +177,7 @@ def main():
             verdicts = list(ex.map(validate, fresh, [a.validate] * len(fresh)))
         for t, why in zip(fresh, verdicts):
             if why:
-                rejected.append({"name": t["name"], "reason": why, "asm": t["asm"]})
+                rejected.append({"name": t["name"], "reason": why, "asm": t["asm"], "rvc": t.get("rvc", False)})
             else:
                 accepted.append(t)
         if accepted:     # census of base + all accepted templates so far
