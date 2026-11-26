@@ -1,7 +1,7 @@
 """Minimal RV32IM assembler: text -> machine words, with line-numbered errors for LLM syntax correction.
 
 Supports labels, ABI register names, R/I/S/B/U/J formats, loads/stores `imm(rs)`, RV32M, and the pseudo-ops
-nop li mv not neg seqz snez j jr ret beqz bnez bgt ble bgtu bleu.  Comments: `#` and `//`.
+nop li mv not neg seqz snez j jr ret beqz bnez bgt ble bgtu bleu, and amoswap.w (dual-hart system).  Comments: `#` and `//`.
 """
 import re
 
@@ -122,6 +122,10 @@ def assemble(source: str) -> list[int]:
         elif mn == "ret": need(0); words.append(_enc_i(0, 1, 0, 0, 0x67))
         elif mn in ("lui", "auipc"):
             need(2); words.append((_imm(ops[1], ln, raw, 0, 0xFFFFF) << 12) | (R(0) << 7) | (0x37 if mn == "lui" else 0x17))
+        elif mn == "amoswap.w":                               # amoswap.w rd, rs2, (rs1); aq/rl = 0 (dual-hart system)
+            need(3); i, r = _mem(ops[2], ln, raw)
+            if i: raise AsmError(ln, raw, "amoswap.w takes (rs1) without an offset")
+            words.append((0x01 << 27) | (R(1) << 20) | (r << 15) | (2 << 12) | (R(0) << 7) | 0x2F)
         elif mn == "nop": need(0); words.append(0x13)
         elif mn == "fence": words.append(0x0FF0000F)          # fence iorw, iorw (predecessor/successor sets ignored)
         elif mn == "li": need(2); words += _li(R(0), _imm(ops[1], ln, raw))

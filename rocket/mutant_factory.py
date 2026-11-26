@@ -85,19 +85,30 @@ def main():
         (held if d in pub_dirs or h in pub_hashes else keep).append({"dir": d, "sha256": h,
                                                                      "same_dir_as_published": d in pub_dirs,
                                                                      "same_netlist_as_published": h in pub_hashes})
+    # Encarsia keeps only candidates that a commercial formal tool proves observable; we cannot, so we (1) keep one
+    # candidate per distinct netlist here and (2) let labelling decide: a mutant no pool program kills is reported as
+    # "unkilled (possibly equivalent)", never as a bug.
+    seen, uniq = set(), []
+    for m in keep:
+        if m["sha256"] not in seen:
+            seen.add(m["sha256"]); uniq.append(m)
+    dups = len(keep) - len(uniq)
+    keep = uniq
     rng = random.Random(a.seed)
     sample = rng.sample(keep, min(a.sample, len(keep)))       # random order: the first dev_frac become the dev split
     n_dev = int(round(len(sample) * a.dev_frac))
     for i, m in enumerate(sample):
         m["split"] = "dev" if i < n_dev else "train"
     manifest = {"core": a.core, "kind": a.kind, "injector": "encarsia-yosys 24b50664c2",
-                "num_bugs_requested": a.num_bugs, "candidates": len(cands), "inject_seconds": round(secs, 1),
+                "num_bugs_requested": a.num_bugs, "candidates": len(cands), "duplicate_netlists_dropped": dups,
+                "distinct_candidates": len(keep), "inject_seconds": round(secs, 1),
                 "held_out": held, "held_out_published_matched": sum(1 for m in held if m["same_netlist_as_published"]),
                 "seed": a.seed, "mutants": sorted(sample, key=lambda m: m["dir"])}
     mf = Path(a.out) / f"{a.core}_{a.kind}_manifest.json"
     mf.write_text(json.dumps(manifest, indent=1))
     print(f"{a.core} {a.kind}: {len(cands)} candidates in {secs:.0f} s; held out {len(held)} "
-          f"({manifest['held_out_published_matched']} byte-identical to a published bug); sampled {len(sample)} "
+          f"({manifest['held_out_published_matched']} byte-identical to a published bug); {dups} duplicate netlists "
+          f"dropped; sampled {len(sample)} "
           f"({sum(1 for m in sample if m['split'] == 'dev')} dev) -> {mf}")
 
 

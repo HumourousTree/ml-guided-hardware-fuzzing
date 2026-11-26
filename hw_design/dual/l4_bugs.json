@@ -1,0 +1,85 @@
+{
+ "about": "Tier L4 (concurrency) bugs for the dual-hart system, docs/DUAL_HART.md. Each is one text substitution in arbiter_rr.v or amo_pcpi.v; the cores are untouched. 'liveness' bugs break no ordering rule and can only show up as a hang (bounded-time check).",
+ "bugs": [
+  {
+   "name": "starve_pointer",
+   "file": "arbiter_rr.v",
+   "class": "liveness",
+   "find": "\t\t\t\tlast           <= cur;\n",
+   "replace": "\t\t\t\tlast           <= last;\n",
+   "description": "Round-robin pointer never advances: fixed priority hart 0 > hart 1 > AMO 0 > AMO 1."
+  },
+  {
+   "name": "amo_not_atomic",
+   "file": "amo_pcpi.v",
+   "class": "atomicity",
+   "find": "\t\t\t\tbus_lock  <= 1;",
+   "replace": "\t\t\t\tbus_lock  <= 0;",
+   "description": "AMO unit does not lock the bus between its read and its write."
+  },
+  {
+   "name": "lost_write_contention",
+   "file": "arbiter_rr.v",
+   "class": "contention",
+   "find": "\t\t\t\tmem_wstrb <= req_wstrb[pick*4 +: 4];",
+   "replace": "\t\t\t\tmem_wstrb <= (req_valid[1:0] == 2'b11) ? 4'b0000 : req_wstrb[pick*4 +: 4];",
+   "description": "A write granted while both harts are requesting goes out with no byte strobes (lost)."
+  },
+  {
+   "name": "log_id_amo",
+   "file": "arbiter_rr.v",
+   "class": "log path",
+   "find": "\t\t\t\tlog_id         <= cur;\n",
+   "replace": "\t\t\t\tlog_id         <= req_lock[cur] ? cur ^ 2'b01 : cur;\n",
+   "description": "The grant log attributes an AMO read to the other hart's AMO unit (oracle-visible only)."
+  },
+  {
+   "name": "ready_misroute",
+   "file": "arbiter_rr.v",
+   "class": "handshake",
+   "find": "\t\t\t\treq_ready[cur] <= 1;\n",
+   "replace": "\t\t\t\treq_ready[(cur[1] && req_valid[cur ^ 2'b01]) ? cur ^ 2'b01 : cur] <= 1;\n",
+   "description": "When both AMO units are requesting, the completion handshake goes to the wrong one."
+  },
+  {
+   "name": "stale_rdata",
+   "file": "arbiter_rr.v",
+   "class": "contention",
+   "find": "\t\t\t\treq_rdata      <= mem_rdata;\n",
+   "replace": "\t\t\t\treq_rdata      <= (cur == last) ? req_rdata : mem_rdata;\n",
+   "description": "A requester granted twice in a row (no contention in between) receives the previous read data."
+  },
+  {
+   "name": "lock_stuck",
+   "file": "arbiter_rr.v",
+   "class": "liveness",
+   "find": "\t\t\t\tlocked         <= req_lock[cur];\n",
+   "replace": "\t\t\t\tlocked         <= req_lock[cur] | locked;\n",
+   "description": "The bus lock is never released after the first AMO: every other requester is locked out."
+  },
+  {
+   "name": "amo_race_window",
+   "file": "arbiter_rr.v",
+   "class": "atomicity (narrow)",
+   "find": "\t\t\t\tlocked         <= req_lock[cur];\n",
+   "replace": "\t\t\t\tlocked         <= req_lock[cur] & ~(cur[1] & req_valid[cur ^ 2'b01]);\n",
+   "description": "The AMO lock is dropped only when the other hart's AMO unit is waiting at that moment (a true AMO race)."
+  },
+  {
+   "name": "lost_write_same_word",
+   "file": "arbiter_rr.v",
+   "class": "contention (narrow)",
+   "find": "\t\t\t\tmem_wstrb <= req_wstrb[pick*4 +: 4];",
+   "replace": "\t\t\t\tmem_wstrb <= (!pick[1] && req_valid[pick ^ 2'b01] && req_addr[(pick ^ 2'b01)*32 +: 32] == req_addr[pick*32 +: 32]) ? 4'b0000 : req_wstrb[pick*4 +: 4];",
+   "description": "A hart's write is lost when the other hart is requesting the same word address at the same time."
+  },
+  {
+   "name": "stale_rdata_amo",
+   "file": "arbiter_rr.v",
+   "class": "contention (narrow)",
+   "find": "\t\t\t\treq_rdata      <= mem_rdata;\n",
+   "replace": "\t\t\t\treq_rdata      <= (cur[1] && req_valid[cur ^ 2'b01]) ? req_rdata : mem_rdata;\n",
+   "description": "An AMO read returns the previous transaction's data when the other AMO unit is waiting."
+  }
+ ]
+}

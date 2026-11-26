@@ -1,3 +1,4 @@
+`timescale 1 ns / 1 ps
 // Round-robin arbiter for the dual-hart PicoRV32 system (docs/DUAL_HART.md).
 // N requesters with PicoRV32's native memory interface share one downstream port. A grant lasts one transaction
 // (until mem_ready); a requester that asserts lock keeps the grant for its next transaction too, so an AMO's read and
@@ -16,6 +17,10 @@ module arbiter_rr #(
 	input      [N*32-1:0] req_addr,
 	input      [N*32-1:0] req_wdata,
 	input      [N*4-1:0]  req_wstrb,
+	// replay: while force_valid, the next DATA transaction (load, store, AMO) may only be granted to force_id;
+	// instruction fetches stay free (their order has no architectural effect). The testbench steps through a recorded log.
+	input                 force_valid,
+	input      [IDW-1:0]  force_id,
 	output reg [N-1:0]    req_ready,
 	output reg [31:0]     req_rdata,          // latched read data; only the requester with req_ready samples it
 	// downstream memory
@@ -29,6 +34,7 @@ module arbiter_rr #(
 	// grant log: one pulse per completed transaction
 	output reg            log_valid,
 	output reg [IDW-1:0]  log_id,
+	output reg            log_instr,
 	output reg [31:0]     log_addr,
 	output reg [3:0]      log_wstrb,
 	output reg [31:0]     log_data            // write data, or read data for loads
@@ -43,7 +49,9 @@ module arbiter_rr #(
 	reg  [IDW-1:0] pick;
 	reg            pick_valid;
 	integer k;
+	/* verilator lint_off UNUSEDSIGNAL */   // only idx[IDW-1:0] is used
 	integer idx;
+	/* verilator lint_on UNUSEDSIGNAL */
 
 	// next requester after `last` (or the locked owner), combinational
 	always @* begin
@@ -56,7 +64,8 @@ module arbiter_rr #(
 		end else begin
 			for (k = N; k >= 1; k = k - 1) begin        // ends on the nearest requester after `last`
 				idx = ({{(32-IDW){1'b0}}, last} + k) % N;
-				if (req_valid[idx[IDW-1:0]]) begin
+				// replay: fetches are always eligible, a data access only if it is the recorded next one
+				if (req_valid[idx[IDW-1:0]] && (!force_valid || req_instr[idx[IDW-1:0]] || idx[IDW-1:0] == force_id)) begin
 					pick = idx[IDW-1:0];
 					pick_valid = 1;
 				end
@@ -89,6 +98,7 @@ module arbiter_rr #(
 				locked         <= req_lock[cur];
 				log_valid      <= 1;
 				log_id         <= cur;
+				log_instr      <= mem_instr;
 				log_addr       <= mem_addr;
 				log_wstrb      <= mem_wstrb;
 				log_data       <= (mem_wstrb != 0) ? mem_wdata : mem_rdata;
