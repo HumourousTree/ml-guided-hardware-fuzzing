@@ -45,6 +45,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && make install PREFIX=/opt/encarsia-yosys >/dev/null && cd / && rm -rf /tmp/eyosys \
     && /opt/encarsia-yosys/bin/yosys -V
 
+# A second build of the same fork with clang, as in Encarsia's own environment (Yosys 0.37 fork, clang 10): with GCC 15
+# the conditional-injection pass ("inject") segfaults deterministically after ~20 candidates on Rocket, while the
+# driver pass is fine. The factory uses this build for the multiplexer kind and the GCC build for the driver kind.
+RUN apt-get update && apt-get install -y --no-install-recommends clang && rm -rf /var/lib/apt/lists/*     && git clone https://github.com/encarsia-artifacts/encarsia-yosys.git /tmp/eyosys && cd /tmp/eyosys     && git checkout ${ENCARSIA_YOSYS_COMMIT} && (git submodule update --init --recursive 2>/dev/null || true)     && make config-clang >/dev/null     && echo "CXXFLAGS += -include cstdint" >> Makefile.conf     && make -j"$(nproc)" PREFIX=/opt/encarsia-yosys-clang >/dev/null     && make install PREFIX=/opt/encarsia-yosys-clang >/dev/null && cd / && rm -rf /tmp/eyosys     && /opt/encarsia-yosys-clang/bin/yosys -V
+
 # Quick self-test of the tools (fails the build if anything is missing)
 RUN verilator --version && yosys -V && spike --help >/dev/null 2>&1; which spike riscv64-unknown-elf-as dtc
 WORKDIR /work

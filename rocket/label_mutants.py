@@ -94,6 +94,7 @@ def cmd_pool(a):
 
 def cmd_label(a):
     man = json.loads(Path(a.manifest).read_text())
+    a.yosys = a.yosys or mutant_factory.INJECTOR[a.kind]
     pool = json.loads(Path(a.pool).read_text())
     assert man["core"] == pool["core"] == a.core and man["kind"] == a.kind
     mine = [m for i, m in enumerate(man["mutants"]) if i % a.of == a.shard]
@@ -137,7 +138,7 @@ def main():
     l.add_argument("--shard", type=int, default=0); l.add_argument("--of", type=int, default=1)
     l.add_argument("--jobs", type=int, default=4)
     l.add_argument("--mutants", default=str(Path.home() / "ext" / "mutants"))
-    l.add_argument("--yosys", default="/opt/encarsia-yosys/bin/yosys")
+    l.add_argument("--yosys", default=None, help="default: the injector build the factory used for this kind")
     a = ap.parse_args()
     cmd_pool(a) if a.cmd == "pool" else cmd_label(a)
 
