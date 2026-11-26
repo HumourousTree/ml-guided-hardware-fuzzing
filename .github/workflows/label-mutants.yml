@@ -1,0 +1,116 @@
+# Track 1, step 2: kill matrix of training mutants x program pool (rocket/label_mutants.py), sharded over up to 20
+# runners. Needs the manifest committed at data/mutants/<core>_<kind>_manifest.json (from the mutant-factory workflow).
+# Output artifact "labels-<core>-<kind>": labels.jsonl (one row per mutant x program), pool.json, summary.json.
+# Manual trigger only; no secrets.
+name: Label mutants
+
+on:
+  workflow_dispatch:
+    inputs:
+      core: {description: "rocket or boom", required: true, default: rocket, type: choice, options: [rocket, boom]}
+      kind: {description: "driver or multiplexer", required: true, default: driver, type: choice, options: [driver, multiplexer]}
+      profiles: {description: "program pool, profile:count,...", required: true, default: "base:120,ext:120,llmflash:120"}
+      shards: {description: "parallel runners (1-20)", required: true, default: "20"}
+
+permissions:
+  contents: read
+
+jobs:
+  image:
+    runs-on: ubuntu-latest
+    permissions: {contents: read, packages: write}
+    outputs:
+      image: ${{ steps.tag.outputs.image }}
+      shards: ${{ steps.tag.outputs.shards }}
+      n: ${{ steps.tag.outputs.n }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: tag
+        run: |
+          owner="${GITHUB_REPOSITORY_OWNER,,}"
+          echo "image=ghcr.io/${owner}/encarsia-env:${{ hashFiles('docker/encarsia/Dockerfile') }}" >> "$GITHUB_OUTPUT"
+          n=$(( ${{ inputs.shards }} < 1 ? 1 : (${{ inputs.shards }} > 20 ? 20 : ${{ inputs.shards }}) ))
+          echo "n=$n" >> "$GITHUB_OUTPUT"
+          echo "shards=$(python3 -c "import json; print(json.dumps(list(range($n))))")" >> "$GITHUB_OUTPUT"
+      - name: Build the toolchain image if this version does not exist yet
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          if docker manifest inspect "${{ steps.tag.outputs.image }}" >/dev/null 2>&1; then exit 0; fi
+          docker build --label "org.opencontainers.image.source=https://github.com/${GITHUB_REPOSITORY}" \
+                       -t "${{ steps.tag.outputs.image }}" docker/encarsia
+          docker push "${{ steps.tag.outputs.image }}"
+
+  pool:
+    needs: image
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions: {contents: read, packages: read}
+    container:
+      image: ${{ needs.image.outputs.image }}
+      credentials: {username: "${{ github.actor }}", password: "${{ secrets.GITHUB_TOKEN }}"}
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          [ -e "$HOME/ext" ] || ln -s /root/ext "$HOME/ext"
+          python3 rocket/label_mutants.py pool --core ${{ inputs.core }} --profiles "${{ inputs.profiles }}" --out pool.json
+      - uses: actions/upload-artifact@v4
+        with: {name: "pool-${{ inputs.core }}-${{ inputs.kind }}", path: pool.json}
+
+  shard:
+    needs: [image, pool]
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    permissions: {contents: read, packages: read}
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: ${{ fromJSON(needs.image.outputs.shards) }}
+    container:
+      image: ${{ needs.image.outputs.image }}
+      credentials: {username: "${{ github.actor }}", password: "${{ secrets.GITHUB_TOKEN }}"}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: {name: "pool-${{ inputs.core }}-${{ inputs.kind }}"}
+      - run: |
+          [ -e "$HOME/ext" ] || ln -s /root/ext "$HOME/ext"
+          python3 rocket/label_mutants.py label --core ${{ inputs.core }} --kind ${{ inputs.kind }} \
+            --manifest data/mutants/${{ inputs.core }}_${{ inputs.kind }}_manifest.json --pool pool.json \
+            --shard ${{ matrix.shard }} --of ${{ needs.image.outputs.n }} --jobs 4 --out labels_${{ matrix.shard }}.jsonl
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: "labels-${{ inputs.core }}-${{ inputs.kind }}-${{ matrix.shard }}", path: "labels_*.jsonl"}
+
+  merge:
+    needs: shard
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with: {pattern: "labels-${{ inputs.core }}-${{ inputs.kind }}-*", path: parts, merge-multiple: true}
+      - uses: actions/download-artifact@v4
+        with: {name: "pool-${{ inputs.core }}-${{ inputs.kind }}"}
+      - name: Merge and summarise
+        run: |
+          cat parts/*.jsonl > labels.jsonl
+          python3 - <<'PY'
+          import json, collections
+          rows = [json.loads(l) for l in open("labels.jsonl")]
+          lab = [r for r in rows if "killed" in r]
+          per = collections.defaultdict(list)
+          for r in lab: per[r["mutant"]].append(r["killed"])
+          prof = collections.defaultdict(lambda: [0, 0])
+          for r in lab: prof[r["profile"]][0] += r["killed"]; prof[r["profile"]][1] += 1
+          s = {"mutants_labelled": len(per), "build_errors": sum(1 for r in rows if "error" in r),
+               "mutants_killed_by_any": sum(1 for v in per.values() if any(v)),
+               "mutants_killed_by_none": sum(1 for v in per.values() if not any(v)),
+               "rows": len(lab), "kill_rate_by_profile": {p: round(k / n, 4) for p, (k, n) in prof.items()}}
+          json.dump(s, open("summary.json", "w"), indent=1); print(json.dumps(s, indent=1))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: labels-${{ inputs.core }}-${{ inputs.kind }}
+          path: |
+            labels.jsonl
+            pool.json
+            summary.json
