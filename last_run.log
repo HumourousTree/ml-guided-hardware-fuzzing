@@ -1,3 +1,10 @@
 [pico_campaign] Localised to branch [(1228, 1288), (1490, 1550)]
-[pico_campaign] Gemini request failed: [{'model': 'gemini-3.6-flash', 'ok': False, 'error': "ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}"}, {'model': 'gemini-3.6-flash', 'ok': False, 'error': "ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}"}, {'model': 'gemini-3.6-flash', 'ok': False, 'error': "ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}"}, {'model': 'gemini-3.6-flash', 'ok': False, 'error': "ServerError: 504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"}, {'model': 'gemini-3.6-flash', 'ok': False, 'error': "ServerError: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}"}]
+[pico_campaign] Localised to branch [(1228, 1288), (1490, 1550)]
+branch_inversion_blt                     gate pass@1=0.8 pass@5=1.0 | certified pass@1=0.8 pass@5=1.0 | exact=0.8 | feedback=True
+[pico_campaign] Localised to alu [(1228, 1288), (1305, 1363)]
+[pico_campaign] Localised to alu [(1228, 1288), (1305, 1363)]
+[pico_campaign] Localised to alu [(1228, 1288), (1305, 1363)]
+[pico_campaign] Localised to alu [(1228, 1288), (1305, 1363)]
+[pico_campaign] Localised to alu [(1228, 1288), (1305, 1363)]
+[pico_campaign] Gemini request failed: [{'model': 'gemini-3.6-flash', 'ok': False, 'error': 'budget: gemini-3.6-flash used 20/20 requests today (2026-11-26 Pacific)'}]
 [repair_eval] gemini-3.6-flash gave no answer (exhausted); stopping so the run can be resumed
