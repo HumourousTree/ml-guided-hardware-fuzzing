@@ -29,14 +29,34 @@ def run(cmd, log):
     return rc
 
 
+def code_tree() -> str:
+    """Rebuild the code tree from the attached dataset (flat names, rocket/genmodel/kaggle/bundle.py); fall back to
+    cloning when the dataset is missing and the session has internet. Returns the source commit."""
+    import glob
+    hits = glob.glob("/kaggle/input/**/rocket__rv64fuzz.py", recursive=True)
+    if hits:
+        src = os.path.dirname(hits[0])
+        os.makedirs("/tmp/code", exist_ok=True)
+        for f in os.listdir(src):
+            if "__" in f:
+                dst = os.path.join("/tmp/code", *f.split("__"))
+                os.makedirs(os.path.dirname(dst), exist_ok=True)
+                with open(os.path.join(src, f), "rb") as a, open(dst, "wb") as b:
+                    b.write(a.read())
+        os.chdir("/tmp/code")
+        return open(os.path.join(src, "COMMIT")).read().strip()
+    subprocess.run(["git", "clone", "--depth", "1", "-b", BRANCH, REPO, "/tmp/code"], check=True)
+    os.chdir("/tmp/code")
+    return subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True).stdout.strip()
+
+
 def main():
-    os.chdir(W)
-    if not os.path.isdir("repo"):
-        subprocess.run(["git", "clone", "--depth", "1", "-b", BRANCH, REPO, "repo"], check=True)
-    os.chdir("repo")
-    commit = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True).stdout.strip()
+    commit = code_tree()
     py = sys.executable
-    summary = {"commit": commit, "n_sequences": N_SEQ, "stages": {}}
+    import torch
+    gpu = [torch.cuda.get_device_name(i) for i in range(torch.cuda.device_count())]
+    print("torch", torch.__version__, "gpus", gpu, flush=True)
+    summary = {"commit": commit, "n_sequences": N_SEQ, "torch": torch.__version__, "gpus": gpu, "stages": {}}
     log = f"{W}/console.txt"
     if run([py, "-m", "rocket.genmodel.data", "pretrain", "--n", str(N_SEQ), "--out", "/tmp/pre.npz"], log):
         raise SystemExit("data build failed")
