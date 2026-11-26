@@ -69,6 +69,7 @@ def main():
     ap.add_argument("--profile", default="base"); ap.add_argument("--kill", action="store_true")
     ap.add_argument("--n", type=int, default=64); ap.add_argument("--temperature", type=float, default=1.0)
     ap.add_argument("--top-k", type=int, default=0); ap.add_argument("--seed", type=int, default=1)
+    ap.add_argument("--batch", type=int, default=64)
     ap.add_argument("--assemble", action="store_true"); ap.add_argument("--out", type=Path, required=True)
     a = ap.parse_args()
     torch.manual_seed(a.seed)
@@ -76,7 +77,13 @@ def main():
     tk = tokenizer()
     model = GPT.load(a.ckpt, dev).eval()
     prefix = [tk.id["<bos>"], tk.id[f"ctl:core:{a.core}"], tk.id[f"ctl:prof:{a.profile}"]] + ([tk.id["ctl:kill"]] if a.kill else [])
-    outs = model.generate(prefix, model.c.ctx - len(prefix), tk.id["<eos>"], a.temperature, a.top_k, a.n, dev)
+    # fp16 autocast on the GPU (several times faster on a T4; logits are cast back to fp32 before sampling), in
+    # batches so memory stays bounded for long contexts
+    outs = []
+    with torch.autocast("cuda", dtype=torch.float16, enabled=dev == "cuda"):
+        for k in range(0, a.n, a.batch):
+            outs += model.generate(prefix, model.c.ctx - len(prefix), tk.id["<eos>"], a.temperature, a.top_k,
+                                   min(a.batch, a.n - k), dev)
     q = rv64fuzz.QUIRKS[a.core]
     rows, w = [], Path(tempfile.mkdtemp(prefix="gmsample-"))
     for i, ids in enumerate(outs):
