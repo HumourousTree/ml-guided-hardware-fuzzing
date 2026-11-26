@@ -115,6 +115,25 @@ Not done: anything needing an LLM (semantic/hybrid generation, pass@k) - no API 
 - The paper text moved to the Overleaf repo HumourousTree/Hardware-Fuzzing; `paper/` here holds only the generated tables,
   macros and figures (`tools/compare_literature.py --tex` checks the Overleaf copy for undefined macros).
 
+# v0.9 (2026-11-26: Track 1 data/model pipeline, Track 2 dual-hart system)
+- Track 1, mutant factory (`rocket/mutant_factory.py`, workflow `mutant-factory.yml`): Encarsia's own injection passes
+  (encarsia-yosys built into the toolchain image) generate training mutants; published bugs are held out; one mutant per
+  distinct netlist (Encarsia proves observability with a commercial formal tool, we cannot: a mutant no program kills
+  is reported as "unkilled, possibly equivalent"). Rocket driver: 828 candidates, 761 distinct, 400 sampled; BOOM
+  driver: 906 / 891 / 400. The conditional pass segfaults when built with GCC 15, so the image adds a clang build.
+- Track 1, labelling (`rocket/label_mutants.py`, workflow `label-mutants.yml`): kill matrix mutant x program over a
+  gated pool (only programs on which Spike and the bug-free reference agree and stop).
+- Track 1, generator (`rocket/isa_tokenizer.py`, `rocket/genmodel/`): ISA-field tokenizer (601 tokens, lossless:
+  300/300 programs re-assemble byte-identical); GPT decoder (presets tiny / small ~11M / base ~85M); pretraining on
+  bodies from the existing generators, kill-weighted SFT and DPO on (killer, non-killer) pairs; sampler with a harness
+  check calibrated on 5,400 generator bodies. `rv64fuzz.gen_program(body=..., return_body=...)` wraps a learned body
+  in the real harness (programs without these arguments are byte-identical to before). First pretraining run on Kaggle.
+- Track 2, dual-hart PicoRV32 (`hw_design/dual/`, `harness/dual_cosim.py`, `dual_gen.py`, `dual_campaign.py`,
+  `docs/DUAL_HART.md`): two unmodified cores, `amoswap.w` over PCPI, round-robin arbiter with a grant log and
+  data-order replay, grant-log-ordered two-hart reference. 2,000 random runs, 0 mismatches; 8 of 10 L4 bugs detected
+  (one liveness bug, one unreachable mutant); narrow races reproduce under new timings 7/16 without replay vs 16/16 with.
+- `rv64fuzz.py --core` (the factory smoke test had run BOOM mutants with Rocket quirks).
+
 # v0.8 (2026-11-26: cloud campaigns, BOOM complete, LLM-guided generation on Rocket/BOOM)
 - Cloud campaigns on GitHub Actions (toolchain image, `rocket/cloud_shard.py`, `rocket/merge_shards.py`, workflow
   `encarsia-campaign.yml`): results identical to the laptop for the same seeds; up to 20 parallel runners.
