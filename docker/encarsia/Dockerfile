@@ -30,6 +30,19 @@ RUN mkdir -p $EXT && cd $EXT \
     && mkdir -p $EXT/cascade-meta-common && cp -r design-processing/common/dv design-processing/common/src $EXT/cascade-meta-common/ \
     && echo "encarsia-artifacts/encarsia-cascade 2e90bec" > $EXT/cascade-meta-common/COMMIT && rm -rf /tmp/ec
 
+# Encarsia's Yosys fork (bug injection passes inject / inject_driver / inject_map), pinned, installed under
+# /opt/encarsia-yosys so that the stock Yosys 0.52 used by every other flow stays the default `yosys`.
+ARG ENCARSIA_YOSYS_COMMIT=24b50664c2
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      bison flex libreadline-dev gawk tcl-dev libffi-dev pkg-config zlib1g-dev \
+    && rm -rf /var/lib/apt/lists/* \
+    && git clone https://github.com/encarsia-artifacts/encarsia-yosys.git /tmp/eyosys && cd /tmp/eyosys \
+    && git checkout ${ENCARSIA_YOSYS_COMMIT} && git submodule update --init --recursive 2>/dev/null || true \
+    && cd /tmp/eyosys && make config-gcc >/dev/null \
+    && make -j"$(nproc)" PREFIX=/opt/encarsia-yosys >/dev/null \
+    && make install PREFIX=/opt/encarsia-yosys >/dev/null && cd / && rm -rf /tmp/eyosys \
+    && /opt/encarsia-yosys/bin/yosys -V
+
 # Quick self-test of the tools (fails the build if anything is missing)
 RUN verilator --version && yosys -V && spike --help >/dev/null 2>&1; which spike riscv64-unknown-elf-as dtc
 WORKDIR /work

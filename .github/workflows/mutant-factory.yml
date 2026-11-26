@@ -1,0 +1,70 @@
+# Track 1, step 1: inject Encarsia-style training mutants (rocket/mutant_factory.py), apply the held-out rule against
+# the 60 benchmark bugs, sample a reproducible training set, and smoke-test one sampled mutant end to end
+# (build with rocket/build_dut.sh, run a few programs). Uploads the manifest (not the netlists: they are regenerated
+# deterministically where needed). Manual trigger only; no secrets.
+name: Mutant factory
+
+on:
+  workflow_dispatch:
+    inputs:
+      core: {description: "rocket or boom", required: true, default: rocket, type: choice, options: [rocket, boom]}
+      kind: {description: "driver (signal mix-ups) or multiplexer (broken conditionals)", required: true, default: driver, type: choice, options: [driver, multiplexer]}
+      num_bugs: {description: "candidates to inject (driver pass)", required: true, default: "1000"}
+      sample: {description: "training + dev mutants to keep", required: true, default: "400"}
+
+permissions:
+  contents: read
+
+jobs:
+  image:
+    runs-on: ubuntu-latest
+    permissions: {contents: read, packages: write}
+    outputs:
+      image: ${{ steps.tag.outputs.image }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: tag
+        run: |
+          owner="${GITHUB_REPOSITORY_OWNER,,}"
+          echo "image=ghcr.io/${owner}/encarsia-env:${{ hashFiles('docker/encarsia/Dockerfile') }}" >> "$GITHUB_OUTPUT"
+      - name: Build the toolchain image if this version does not exist yet
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          if docker manifest inspect "${{ steps.tag.outputs.image }}" >/dev/null 2>&1; then exit 0; fi
+          docker build --label "org.opencontainers.image.source=https://github.com/${GITHUB_REPOSITORY}" \
+                       -t "${{ steps.tag.outputs.image }}" docker/encarsia
+          docker push "${{ steps.tag.outputs.image }}"
+
+  factory:
+    needs: image
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    permissions: {contents: read, packages: read}
+    container:
+      image: ${{ needs.image.outputs.image }}
+      credentials: {username: "${{ github.actor }}", password: "${{ secrets.GITHUB_TOKEN }}"}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inject, hold out, sample
+        run: |
+          [ -e "$HOME/ext" ] || ln -s /root/ext "$HOME/ext"
+          python3 rocket/mutant_factory.py --core ${{ inputs.core }} --kind ${{ inputs.kind }} \
+            --num-bugs ${{ inputs.num_bugs }} --sample ${{ inputs.sample }} --out "$HOME/ext/mutants"
+          cp "$HOME/ext/mutants/${{ inputs.core }}_${{ inputs.kind }}_manifest.json" .
+          du -sh "$HOME/ext/mutants/${{ inputs.core }}/${{ inputs.kind }}" || true
+      - name: Smoke test one sampled mutant end to end
+        run: |
+          M="$HOME/ext/mutants/${{ inputs.core }}/${{ inputs.kind }}"
+          d=$(python3 -c "import json; print(json.load(open('${{ inputs.core }}_${{ inputs.kind }}_manifest.json'))['mutants'][0]['dir'])")
+          if [ "${{ inputs.kind }}" = driver ]; then src="$M/$d/host_driver.rtlil"; else
+            python3 rocket/lower_amt.py "$M/$d/host_amt.rtlil" /tmp/mut_lowered.rtlil; src=/tmp/mut_lowered.rtlil; fi
+          CORE=${{ inputs.core }} bash rocket/build_dut.sh "$src" /tmp/mut_sim
+          python3 rocket/rv64fuzz.py --sim /tmp/mut_sim/Vtop_tiny_soc --programs 20 --seed 1 --profile base | tail -2 \
+            | tee smoke.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mutants-${{ inputs.core }}-${{ inputs.kind }}
+          path: |
+            *_manifest.json
+            smoke.txt
