@@ -1,12 +1,10 @@
 {
- "day": "2026-11-25",
+ "day": "2026-11-26",
  "used": {
-  "2523ba93:gemini-3.6-flash": 3
+  "2523ba93:gemini-3.6-flash": 5
  },
- "exhausted": [
-  "2523ba93:gemini-3.6-flash"
- ],
+ "exhausted": [],
  "last_call": {
-  "2523ba93:gemini-3.6-flash": 1795644535.4314463
+  "2523ba93:gemini-3.6-flash": 1795685744.3888054
  }
 }
