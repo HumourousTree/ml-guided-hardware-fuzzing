@@ -32,6 +32,7 @@ RUN mkdir -p $EXT && cd $EXT \
 
 # Encarsia's Yosys fork (bug injection passes inject / inject_driver / inject_map), pinned, installed under
 # /opt/encarsia-yosys so that the stock Yosys 0.52 used by every other flow stays the default `yosys`.
+# Its bundled json11 predates GCC's stricter headers, hence "-include cstdint" (source unchanged).
 ARG ENCARSIA_YOSYS_COMMIT=24b50664c2
 RUN apt-get update && apt-get install -y --no-install-recommends \
       bison flex libreadline-dev gawk tcl-dev libffi-dev pkg-config zlib1g-dev \
@@ -39,6 +40,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && git clone https://github.com/encarsia-artifacts/encarsia-yosys.git /tmp/eyosys && cd /tmp/eyosys \
     && git checkout ${ENCARSIA_YOSYS_COMMIT} && git submodule update --init --recursive 2>/dev/null || true \
     && cd /tmp/eyosys && make config-gcc >/dev/null \
+    && echo "CXXFLAGS += -include cstdint" >> Makefile.conf \
     && make -j"$(nproc)" PREFIX=/opt/encarsia-yosys >/dev/null \
     && make install PREFIX=/opt/encarsia-yosys >/dev/null && cd / && rm -rf /tmp/eyosys \
     && /opt/encarsia-yosys/bin/yosys -V
