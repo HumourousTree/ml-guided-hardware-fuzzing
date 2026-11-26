@@ -59,7 +59,7 @@ jobs:
           if [ "${{ inputs.kind }}" = driver ]; then src="$M/$d/host_driver.rtlil"; else
             python3 rocket/lower_amt.py "$M/$d/host_amt.rtlil" /tmp/mut_lowered.rtlil; src=/tmp/mut_lowered.rtlil; fi
           CORE=${{ inputs.core }} bash rocket/build_dut.sh "$src" /tmp/mut_sim
-          python3 rocket/rv64fuzz.py --sim /tmp/mut_sim/Vtop_tiny_soc --programs 20 --seed 1 --profile base | tail -2 \
+          python3 rocket/rv64fuzz.py --sim /tmp/mut_sim/Vtop_tiny_soc --core ${{ inputs.core }} --programs 20 --seed 1 --profile base | tail -2 \
             | tee smoke.txt
       - uses: actions/upload-artifact@v4
         if: always()

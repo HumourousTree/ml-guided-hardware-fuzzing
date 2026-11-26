@@ -378,10 +378,11 @@ def main():
     ap.add_argument("--no-fp", action="store_true")
     ap.add_argument("--stop-on-bug", action="store_true")
     ap.add_argument("--profile", choices=PROFILES, default="base")
+    ap.add_argument("--core", choices=list(QUIRKS), default="rocket", help="selects the core's generator quirks")
     ap.add_argument("--out")
     a = ap.parse_args()
     r = campaign(Path(a.sim), a.programs, a.seed, a.length, a.simlen, not a.no_fp, a.stop_on_bug, log=sys.stdout,
-                 profile=a.profile)
+                 profile=a.profile, core=a.core)
     r["sim"] = a.sim
     if a.out:
         Path(a.out).parent.mkdir(parents=True, exist_ok=True); Path(a.out).write_text(json.dumps(r, indent=1))
