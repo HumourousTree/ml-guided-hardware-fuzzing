@@ -17,7 +17,7 @@ contention, arbitration, atomicity and handshake bugs are in scope.
 
 ## RTL (`hw_design/dual/`)
 
-* `dual_top.v`: two `picorv32` instances (unchanged RTL, `ENABLE_PCPI=1`), each with its own program region
+* `dual_top.v`: two `picorv32` instances (the pristine upstream RTL, `hw_design/upstream_picorv32.v`, unchanged; `ENABLE_PCPI=1`), each with its own program region
   (`PROGADDR_RESET` 0x0000 / 0x4000) and a shared data region (0x8000-0x8FFF), plus one AMO unit per hart.
 * `arbiter_rr.v`: round-robin arbiter over four requesters (hart 0/1 native bus, AMO unit 0/1) with a **lock** input
   so an AMO's read and write are one indivisible pair; a grant-log port (`log_valid`, `log_id`, `log_instr`,

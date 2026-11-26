@@ -27,7 +27,7 @@ from sw_reference.golden_rv32i import RV32IReference, u32
 
 ROOT = Path(__file__).resolve().parents[1]
 RTL = [ROOT / "hw_design/dual/dual_top.v", ROOT / "hw_design/dual/arbiter_rr.v", ROOT / "hw_design/dual/amo_pcpi.v"]
-CORE = ROOT / "hw_design/picorv32.v"
+CORE = ROOT / "hw_design/upstream_picorv32.v"         # pristine upstream core (picorv32.v is the campaign mirror)
 TB = ROOT / "hw_design/dual/dual_tb.cpp"
 PROG_BASE = (0x0000, 0x4000)
 SHARED = (0x8000, 0x10000)
