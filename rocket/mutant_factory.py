@@ -29,8 +29,8 @@ ROOT = Path(__file__).resolve().parents[1]
 CORPUS = Path.home() / "ext" / "encarsia" / "out"
 HOST_MODULE = {"rocket": "Rocket", "boom": "BoomCore"}
 HOST_FILE = {"driver": "host_driver.rtlil", "multiplexer": "host_amt.rtlil"}
-# injector builds (docker/encarsia/Dockerfile): GCC for the driver pass, clang for the conditional pass
-INJECTOR = {"driver": "/opt/encarsia-yosys/bin/yosys", "multiplexer": "/opt/encarsia-yosys-clang/bin/yosys"}
+# injector (docker/encarsia/Dockerfile): encarsia-yosys with one fix in inject_amt.cc (erase(end()) undefined behaviour)
+INJECTOR = {"driver": "/opt/encarsia-yosys/bin/yosys", "multiplexer": "/opt/encarsia-yosys/bin/yosys"}
 
 
 def inject(yosys: str, core: str, kind: str, num_bugs: int, outdir: Path) -> float:
@@ -106,7 +106,7 @@ def main():
     n_dev = int(round(len(sample) * a.dev_frac))
     for i, m in enumerate(sample):
         m["split"] = "dev" if i < n_dev else "train"
-    manifest = {"core": a.core, "kind": a.kind, "injector": f"encarsia-yosys 24b50664c2 ({'clang' if 'clang' in a.yosys else 'gcc'} build)",
+    manifest = {"core": a.core, "kind": a.kind, "injector": "encarsia-yosys 24b50664c2" + (" (inject_amt erase(end()) fix)" if a.kind == "multiplexer" else ""),
                 "num_bugs_requested": a.num_bugs, "candidates": len(cands), "duplicate_netlists_dropped": dups,
                 "distinct_candidates": len(keep), "inject_seconds": round(secs, 1),
                 "held_out": held, "held_out_published_matched": sum(1 for m in held if m["same_netlist_as_published"]),

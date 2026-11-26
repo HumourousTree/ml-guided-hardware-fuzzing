@@ -120,7 +120,8 @@ Not done: anything needing an LLM (semantic/hybrid generation, pass@k) - no API 
   (encarsia-yosys built into the toolchain image) generate training mutants; published bugs are held out; one mutant per
   distinct netlist (Encarsia proves observability with a commercial formal tool, we cannot: a mutant no program kills
   is reported as "unkilled, possibly equivalent"). Rocket driver: 828 candidates, 761 distinct, 400 sampled; BOOM
-  driver: 906 / 891 / 400. The conditional pass segfaults when built with GCC 15, so the image adds a clang build.
+  driver: 906 / 891 / 400. Encarsia's conditional pass has undefined behaviour (`erase(end())` in `inject_amt.cc` when
+  `rand() % (n + 1) == n`) and crashes with current compilers; the image patches that one line (same random stream).
 - Track 1, labelling (`rocket/label_mutants.py`, workflow `label-mutants.yml`): kill matrix mutant x program over a
   gated pool (only programs on which Spike and the bug-free reference agree and stop).
 - Track 1, generator (`rocket/isa_tokenizer.py`, `rocket/genmodel/`): ISA-field tokenizer (601 tokens, lossless:

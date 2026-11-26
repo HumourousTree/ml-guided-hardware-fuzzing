@@ -9,7 +9,7 @@ replaces the API model with a small local one whose training signal is "this pro
 
 | Step | Code | Where | Status |
 |---|---|---|---|
-| 1. Mutants | `rocket/mutant_factory.py` | GitHub Actions (`mutant-factory.yml`) | Rocket/BOOM driver done; conditional pass needs the clang build |
+| 1. Mutants | `rocket/mutant_factory.py` | GitHub Actions (`mutant-factory.yml`) | Rocket/BOOM driver done; conditional pass after the `inject_amt.cc` fix |
 | 2. Pool | `rocket/label_mutants.py pool` | GitHub Actions | 120 base + 120 ext + 120 LLM-template programs per core, gated |
 | 3. Labels | `rocket/label_mutants.py label` | GitHub Actions (20 shards) | Rocket driver running |
 | 4. Tokenizer | `rocket/isa_tokenizer.py` | anywhere | done, lossless |

@@ -32,23 +32,26 @@ RUN mkdir -p $EXT && cd $EXT \
 
 # Encarsia's Yosys fork (bug injection passes inject / inject_driver / inject_map), pinned, installed under
 # /opt/encarsia-yosys so that the stock Yosys 0.52 used by every other flow stays the default `yosys`.
-# Its bundled json11 predates GCC's stricter headers, hence "-include cstdint" (source unchanged).
+# Its bundled json11 predates GCC's stricter headers, hence "-include cstdint".
+# One source patch: inject_amt.cc removes a random case from each multiplexer tree with
+#   erase(begin() + rand() % (size + 1))
+# which is erase(end()) -- undefined behaviour -- when rand() % (size + 1) == size; with GCC 15 or a current clang the
+# conditional pass crashes after 20-30 candidates. The patch makes the same rand() calls (same random stream) and
+# skips the removal in that case, so the candidate is the unmodified tree (an equivalent mutant, dropped later).
+# inject_driver.cc is untouched, so driver mutants are unchanged.
 ARG ENCARSIA_YOSYS_COMMIT=24b50664c2
 RUN apt-get update && apt-get install -y --no-install-recommends \
       bison flex libreadline-dev gawk tcl-dev libffi-dev pkg-config zlib1g-dev \
     && rm -rf /var/lib/apt/lists/* \
     && git clone https://github.com/encarsia-artifacts/encarsia-yosys.git /tmp/eyosys && cd /tmp/eyosys \
-    && git checkout ${ENCARSIA_YOSYS_COMMIT} && git submodule update --init --recursive 2>/dev/null || true \
-    && cd /tmp/eyosys && make config-gcc >/dev/null \
+    && git checkout ${ENCARSIA_YOSYS_COMMIT} && (git submodule update --init --recursive 2>/dev/null || true) \
+    && sed -i 's|buggy_selections.erase(buggy_selections.begin()+(rand()%(selections.size() + 1)));|{ size_t r = rand() % (selections.size() + 1); if (r < buggy_selections.size()) buggy_selections.erase(buggy_selections.begin() + r); }|' passes/inject/inject_amt.cc \
+    && grep -q "if (r < buggy_selections.size())" passes/inject/inject_amt.cc \
+    && make config-gcc >/dev/null \
     && echo "CXXFLAGS += -include cstdint" >> Makefile.conf \
     && make -j"$(nproc)" PREFIX=/opt/encarsia-yosys >/dev/null \
     && make install PREFIX=/opt/encarsia-yosys >/dev/null && cd / && rm -rf /tmp/eyosys \
     && /opt/encarsia-yosys/bin/yosys -V
-
-# A second build of the same fork with clang, as in Encarsia's own environment (Yosys 0.37 fork, clang 10): with GCC 15
-# the conditional-injection pass ("inject") segfaults deterministically after ~20 candidates on Rocket, while the
-# driver pass is fine. The factory uses this build for the multiplexer kind and the GCC build for the driver kind.
-RUN apt-get update && apt-get install -y --no-install-recommends clang && rm -rf /var/lib/apt/lists/*     && git clone https://github.com/encarsia-artifacts/encarsia-yosys.git /tmp/eyosys && cd /tmp/eyosys     && git checkout ${ENCARSIA_YOSYS_COMMIT} && (git submodule update --init --recursive 2>/dev/null || true)     && make config-clang >/dev/null     && echo "CXXFLAGS += -include cstdint" >> Makefile.conf     && make -j"$(nproc)" PREFIX=/opt/encarsia-yosys-clang >/dev/null     && make install PREFIX=/opt/encarsia-yosys-clang >/dev/null && cd / && rm -rf /tmp/eyosys     && /opt/encarsia-yosys-clang/bin/yosys -V
 
 # Quick self-test of the tools (fails the build if anything is missing)
 RUN verilator --version && yosys -V && spike --help >/dev/null 2>&1; which spike riscv64-unknown-elf-as dtc
