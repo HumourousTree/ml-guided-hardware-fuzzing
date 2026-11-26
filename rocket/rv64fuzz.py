@@ -132,7 +132,11 @@ QUIRKS = {"rocket": {}, "boom": {"subst": {"fdiv.d": "fmul.d"}, "keep_frm_valid"
 
 
 def gen_program(rng: random.Random, length: int, fp: bool = True, profile: str = "base", subst=None,
-                templates=None, keep_frm_valid: bool = False, template_subst=None) -> str:
+                templates=None, keep_frm_valid: bool = False, template_subst=None, body=None, return_body=False):
+    """One test program. `body` (assembly lines) replaces the random body, e.g. a learned generator's output, inside
+    the same harness; `return_body` also returns the body lines (training data). Without either, the program and the
+    random stream are exactly as before."""
+    body_given = body
     subst = subst or {}
     traps = profile in ("ext", "llm", "llmflash")                       # the ext harness (trap handler, reserved x28/x29)
     ext_mix = profile == "ext"                              # the hand-designed ext instruction classes
@@ -148,7 +152,7 @@ def gen_program(rng: random.Random, length: int, fp: bool = True, profile: str =
         classes += [("tpl", 25)]
     names, weights = zip(*classes)
     i = 0
-    while i < length:
+    while body_given is None and i < length:
         c = rng.choices(names, weights)[0]
         if c == "alu":
             body.append(f"{rng.choice(R_OPS)} {rd()}, {rs()}, {rs()}")
@@ -261,6 +265,9 @@ def gen_program(rng: random.Random, length: int, fp: bool = True, profile: str =
                 body.append(f"{op} {fr()}, {fr()}, {fr()}, dyn")      # traps if frm is invalid
             body.append(".option pop")
         i += 1
+    if body_given is not None:
+        body = [l.strip() for l in body_given if l.strip()]
+    raw_body = list(body)
     pro = ["  .section .text.init", "  .option norvc", "  .globl _start", "_start:", "  li x31, 0x6000", "  csrs mstatus, x31",
            "  la x30, data"]
     if ext_mix:
@@ -295,7 +302,8 @@ def gen_program(rng: random.Random, length: int, fp: bool = True, profile: str =
     data = ["  .section .data", "  .align 3", "data:"] + [f"  .dword {rng.getrandbits(64)}" for _ in range(DATA_DWORDS)]
     toh = ["  .section .tohost, \"aw\"", "  .align 6", "  .globl tohost", "tohost: .dword 0", "  .globl fromhost",
            "fromhost: .dword 0"]
-    return "\n".join(pro + ["  " + b if not b.endswith(":") else b for b in body] + epi + data + toh) + "\n"
+    asm = "\n".join(pro + ["  " + b if not b.endswith(":") else b for b in body] + epi + data + toh) + "\n"
+    return (asm, raw_body) if return_body else asm
 
 
 def build_elf(asm: str, work: Path) -> Path:
