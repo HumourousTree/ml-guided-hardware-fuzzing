@@ -31,6 +31,7 @@ CORE = ROOT / "hw_design/upstream_picorv32.v"         # pristine upstream core (
 TB = ROOT / "hw_design/dual/dual_tb.cpp"
 PROG_BASE = (0x0000, 0x4000)
 SHARED = (0x8000, 0x10000)
+PROGRESS = 2000                      # cycles: a hart that retired this recently at a timeout was still progressing
 FIELDS = ("pc_rdata", "pc_wdata", "insn", "rd_addr", "rd_wdata", "mem_addr", "mem_rmask", "mem_wmask")
 
 
@@ -84,7 +85,8 @@ def run(binary: Path, words0: list[int], words1: list[int], workdir: Path, max_c
         elif "g" in rec: grants.append(rec)
         elif "halt" in rec: halts[rec["halt"]] = rec["cycle"]
         elif "end" in rec: end = rec
-    return {"trace": trace, "grants": grants, "halts": halts, "end": end.get("end"), "cycles": end.get("cycles")}
+    return {"trace": trace, "grants": grants, "halts": halts, "end": end.get("end"), "cycles": end.get("cycles"),
+            "replay_skips": end.get("replay_skips", 0), "replay_abandoned": end.get("replay_abandoned", -1)}
 
 
 class _Hart:
@@ -147,9 +149,10 @@ def _sext(v: int, bits: int) -> int:
     return v - (1 << bits) if v >> (bits - 1) else v
 
 
-def reference(words0: list[int], words1: list[int], grants: list[dict], limits=None) -> dict:
+def reference(words0: list[int], words1: list[int], grants: list[dict], limits=None, truncated: bool = False) -> dict:
     """Replay both harts over one memory in grant order. Returns expected traces and any log violations.
-    `limits` caps the retirements modelled per hart (the comparison needs at most one more than the DUT retired)."""
+    `limits` caps the retirements modelled per hart (the comparison needs at most one more than the DUT retired);
+    `truncated`: the run hit the cycle limit, so an AMO read may be the last logged transaction (its write is cut off)."""
     mem: dict = {}
     harts = [_Hart(0, words0, mem), _Hart(1, words1, mem)]
     for h, lim in enumerate(limits or (None, None)):
@@ -177,6 +180,8 @@ def reference(words0: list[int], words1: list[int], grants: list[dict], limits=N
             if nxt is not None and nxt["g"] == want_id and (nxt["a"] & ~3) == addr and not nxt["w"]:
                 violations.append({"kind": "amo_write_lost", "at": where, "error": "AMO write went out without byte strobes"})
                 break
+            if nxt is None and truncated:
+                break                                # cut off by the cycle limit between the AMO's read and write
             if nxt is None or nxt["g"] != want_id or not nxt["w"] or (nxt["a"] & ~3) != addr:
                 violations.append({"kind": "amo_not_atomic", "at": where,
                                    "error": f"AMO read not immediately followed by its write (next: {nxt})"})
@@ -199,14 +204,19 @@ def reference(words0: list[int], words1: list[int], grants: list[dict], limits=N
 
 def check(words0: list[int], words1: list[int], result: dict, max_report: int = 4) -> dict:
     """Verdict for one run: per-hart lockstep comparison against the grant-ordered reference."""
-    ref = reference(words0, words1, result["grants"], limits=[len(t) + 64 for t in result["trace"]])
+    timeout = result["end"] == "timeout"
+    ref = reference(words0, words1, result["grants"], limits=[len(t) + 64 for t in result["trace"]], truncated=timeout)
     mismatches = list(ref["violations"])
     for h in (0, 1):
         exp, act = ref["expected"][h], list(result["trace"][h])
         end_pc = PROG_BASE[h] + 4 * len((words0, words1)[h])
         if act and act[-1].get("trap") and act[-1]["pc_rdata"] == end_pc:
             act.pop()                                # termination: the zero word after the program traps
-        if ref["runaway"][h] and result["end"] == "timeout":
+        # at a timeout, a hart that retired within the last PROGRESS cycles was still making progress: it is a
+        # non-terminating program cut off by the limit, not a starved hart (starvation = no progress)
+        alive = timeout and bool(act) and result["cycles"] - act[-1]["cycle"] < PROGRESS
+        stuck_kind = "program_nonterminating" if alive else ("starved" if timeout else None)
+        if ref["runaway"][h] and timeout:
             # the model was still running when it reached the cap: the program itself does not terminate (e.g. a
             # loop whose counter a minimisation step removed). Compare what the DUT retired; if that agrees, the run
             # is reported as a non-terminating program, never as starvation.
@@ -219,8 +229,7 @@ def check(words0: list[int], words1: list[int], result: dict, max_report: int = 
             if i >= len(exp):
                 mismatches.append({"kind": "extra_retire", "hart": h, "order": i, "actual": act[i]}); break
             if i >= len(act):
-                kind = "starved" if result["end"] == "timeout" else "missing_retire"
-                mismatches.append({"kind": kind, "hart": h, "order": i, "expected": exp[i]}); break
+                mismatches.append({"kind": stuck_kind or "missing_retire", "hart": h, "order": i, "expected": exp[i]}); break
             e, a = exp[i], act[i]
             diff = {f: (e[f], a[f]) for f in FIELDS
                     if (e[f] & ~3 if f == "mem_addr" else e[f]) != (a[f] & ~3 if f == "mem_addr" else a[f])}
@@ -229,7 +238,7 @@ def check(words0: list[int], words1: list[int], result: dict, max_report: int = 
             if diff:
                 mismatches.append({"kind": "field_mismatch", "hart": h, "order": i, "pc": e["pc_rdata"], "diff": diff}); break
         if ref["pending"][h] is not None and not any(m.get("hart") == h for m in mismatches):
-            mismatches.append({"kind": "starved" if result["end"] == "timeout" else "missing_access", "hart": h,
-                               "pending": ref["pending"][h]})
+            mismatches.append({"kind": stuck_kind or "missing_access", "hart": h, "pending": ref["pending"][h]})
     return {"ok": not mismatches, "mismatches": mismatches[:max_report], "retired": [len(t) for t in result["trace"]],
-            "grants": len(result["grants"]), "end": result["end"], "cycles": result["cycles"]}
+            "grants": len(result["grants"]), "end": result["end"], "cycles": result["cycles"],
+            "replay_skips": result.get("replay_skips", 0)}

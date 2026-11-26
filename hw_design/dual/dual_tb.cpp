@@ -9,7 +9,9 @@
 //   prog0 is loaded at 0x0000, prog1 at 0x4000; memory is 64 KiB. mem_delay > 0 inserts 0..mem_delay random wait
 //   cycles per transaction (seeded), which changes the interleaving. With a replay file (one requester id per line: the
 //   "g" fields of an earlier run's data grants, i.e. those with "i":0) the arbiter grants data accesses in exactly that
-//   order; fetches stay free. Entries of a hart that has halted are skipped (used while a program is being minimised).
+//   order; fetches stay free. Entries of a hart that has halted are skipped; if no data grant happens for 3000 cycles
+//   the schedule no longer fits the program (it was recorded on a longer one, during minimisation) and the rest of it
+//   is dropped ("replay_abandoned": cycle).
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
@@ -61,6 +63,8 @@ int main(int argc, char** argv) {
 		while (rf >> id) replay.push_back(id);
 	}
 	size_t rp = 0;
+	long last_grant = 0, skips = 0, abandoned = -1;   // replay: if no DATA grant happens for STALL cycles, the
+	const long STALL = 3000;                          // schedule names a requester that never asks: it is dropped
 
 	Vdual_top* top = new Vdual_top;
 	top->clk = 0; top->resetn = 0; top->mem_ready = 0; top->mem_rdata = 0; top->force_valid = 0; top->force_id = 0;
@@ -72,6 +76,10 @@ int main(int argc, char** argv) {
 	for (; cycle < max_cycles; cycle++) {
 		top->resetn = cycle >= 10;
 		while (rp < replay.size() && halted[replay[rp] & 1]) rp++;
+		if (rp < replay.size() && cycle - last_grant > STALL) {   // the schedule no longer fits the program: drop the
+			skips = (long)(replay.size() - rp);                    // rest and arbitrate freely (still deterministic)
+			rp = replay.size(); abandoned = cycle;
+		}
 		top->force_valid = rp < replay.size();
 		top->force_id = rp < replay.size() ? replay[rp] : 0;
 		top->clk = 0;
@@ -94,7 +102,10 @@ int main(int argc, char** argv) {
 		if (top->log_valid) {
 			std::printf("{\"g\":%u,\"i\":%u,\"a\":%u,\"w\":%u,\"d\":%u,\"cycle\":%ld}\n", top->log_id, top->log_instr,
 			            top->log_addr, top->log_wstrb, top->log_data, cycle);
-			if (!top->log_instr && rp < replay.size()) rp++;
+			if (!top->log_instr) {
+				if (rp < replay.size()) rp++;
+				last_grant = cycle;           // data grants only: a hart looping on fetches must not hide a stall
+			}
 		}
 		for (int h = 0; h < 2; h++) {
 			if (top->rvfi_valid >> h & 1)
@@ -111,7 +122,7 @@ int main(int argc, char** argv) {
 		}
 		if (halted[0] && halted[1]) { how = "halted"; cycle++; break; }
 	}
-	std::printf("{\"end\":\"%s\",\"cycles\":%ld}\n", how, cycle);
+	std::printf("{\"end\":\"%s\",\"cycles\":%ld,\"replay_skips\":%ld,\"replay_abandoned\":%ld}\n", how, cycle, skips, abandoned);
 	top->final();
 	delete top;
 	return 0;

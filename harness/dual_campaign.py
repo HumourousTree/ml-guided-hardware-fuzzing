@@ -156,7 +156,12 @@ def minimise(args) -> dict:
                     return False
                 rr = dc.run(b, *ws, args.work, args.max_cycles, d, seed, replay=sched if forced else None, tag="m")
                 vv = dc.check(*ws, rr)
-                return (not vv["ok"]) and vv["mismatches"][0]["kind"] == kind
+                if vv["ok"] or vv["mismatches"][0]["kind"] != kind:
+                    return False
+                # a bug witness must pass on the bug-free system under the same timing (and schedule): otherwise the
+                # shrunk program itself is broken (e.g. a loop that no longer terminates) and ddmin would chase that
+                return dc.check(*ws, dc.run(clean, *ws, args.work, args.max_cycles, d, seed,
+                                            replay=sched if forced else None, tag="mc"))["ok"]
             return fails
 
         res = {"kind": kind, "units": len(units)}
@@ -168,10 +173,11 @@ def minimise(args) -> dict:
             rep = sum(not dc.check(*ws, dc.run(b, *ws, args.work, args.max_cycles, DELAYS[(j + 1) % len(DELAYS)], 7000 + j,
                                                replay=sched if mode == "forced" else None, tag="m"))["ok"]
                       for j in range(args.replays))
-            clean_ok = dc.check(*ws, dc.run(clean, *ws, args.work, args.max_cycles, d, seed,
-                                            replay=sched if mode == "forced" else None, tag="m"))["ok"]
+            rc = dc.run(clean, *ws, args.work, args.max_cycles, d, seed, replay=sched if mode == "forced" else None, tag="m")
+            vc = dc.check(*ws, rc)
             res[mode] = {"units_left": len(m), "tests": tests, "seconds": round(time.time() - t0, 1),
-                         "reproduces": f"{rep}/{args.replays}", "clean_system_passes": clean_ok,
+                         "reproduces": f"{rep}/{args.replays}", "clean_system_passes": vc["ok"],
+                         "clean_kinds": [x["kind"] for x in vc["mismatches"]], "replay_skips": rc.get("replay_skips", 0),
                          "instructions": [len(w) for w in ws], "src": src}
         out[name] = res
         print(name, kind, res["units"], "->", "free", res["free"]["units_left"], res["free"]["reproduces"],
