@@ -1,0 +1,105 @@
+# Track 1, evaluation: gate the learned generator's samples (committed under data/genmodel/<run>/samples_*.json) on the
+# bug-free core, then label the survivors against the DEV mutants (never trained on) of both kinds. The generator
+# pools' dev rows in data/labels/ are the baseline. Artifact "genmodel-eval-<run>": pool.json (with gate statistics),
+# labels.jsonl, summary.txt. Manual trigger only; no secrets.
+name: Genmodel evaluation
+
+on:
+  workflow_dispatch:
+    inputs:
+      run: {description: "folder under data/genmodel/ with samples_*.json", required: true}
+      core: {description: "core", required: true, default: rocket, type: choice, options: [rocket, boom]}
+
+permissions:
+  contents: read
+
+jobs:
+  image:
+    runs-on: ubuntu-latest
+    permissions: {contents: read, packages: write}
+    outputs:
+      image: ${{ steps.tag.outputs.image }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: tag
+        run: |
+          owner="${GITHUB_REPOSITORY_OWNER,,}"
+          echo "image=ghcr.io/${owner}/encarsia-env:${{ hashFiles('docker/encarsia/Dockerfile') }}" >> "$GITHUB_OUTPUT"
+      - name: Build the toolchain image if this version does not exist yet
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          if docker manifest inspect "${{ steps.tag.outputs.image }}" >/dev/null 2>&1; then exit 0; fi
+          docker build --label "org.opencontainers.image.source=https://github.com/${GITHUB_REPOSITORY}" \
+                       -t "${{ steps.tag.outputs.image }}" docker/encarsia
+          docker push "${{ steps.tag.outputs.image }}"
+
+  pool:
+    needs: image
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    permissions: {contents: read, packages: read}
+    container:
+      image: ${{ needs.image.outputs.image }}
+      credentials: {username: "${{ github.actor }}", password: "${{ secrets.GITHUB_TOKEN }}"}
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          [ -e "$HOME/ext" ] || ln -s /root/ext "$HOME/ext"
+          python3 rocket/label_mutants.py pool --core ${{ inputs.core }} \
+            --from-samples data/genmodel/${{ inputs.run }}/samples_*.json --out pool.json | tee gate.txt
+      - uses: actions/upload-artifact@v4
+        with: {name: "gm-pool-${{ inputs.run }}", path: "pool.json\ngate.txt"}
+
+  shard:
+    needs: [image, pool]
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    permissions: {contents: read, packages: read}
+    strategy:
+      fail-fast: false
+      matrix:
+        kind: [driver, multiplexer]
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    container:
+      image: ${{ needs.image.outputs.image }}
+      credentials: {username: "${{ github.actor }}", password: "${{ secrets.GITHUB_TOKEN }}"}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: {name: "gm-pool-${{ inputs.run }}"}
+      - run: |
+          [ -e "$HOME/ext" ] || ln -s /root/ext "$HOME/ext"
+          python3 rocket/label_mutants.py label --core ${{ inputs.core }} --kind ${{ matrix.kind }} --split dev \
+            --manifest data/mutants/${{ inputs.core }}_${{ matrix.kind }}_manifest.json --pool pool.json \
+            --shard ${{ matrix.shard }} --of 10 --jobs 4 --out gm_${{ matrix.kind }}_${{ matrix.shard }}.jsonl
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: "gm-labels-${{ inputs.run }}-${{ matrix.kind }}-${{ matrix.shard }}", path: "gm_*.jsonl"}
+
+  merge:
+    needs: shard
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: {pattern: "gm-labels-${{ inputs.run }}-*", path: parts, merge-multiple: true}
+      - uses: actions/download-artifact@v4
+        with: {name: "gm-pool-${{ inputs.run }}"}
+      - name: Merge and compare with the generator pools on the same dev mutants
+        run: |
+          cat parts/*.jsonl > labels.jsonl
+          { cat gate.txt; echo
+            for k in driver multiplexer; do
+              grep "\"kind\": \"$k\"" labels.jsonl > model_$k.jsonl || true
+              zcat data/labels/${{ inputs.core }}_${k}_labels.jsonl.gz | grep '"split": "dev"' > base_$k.jsonl || true
+              echo "== $k: learned generator (dev mutants)"; python3 tools/label_summary.py model_$k.jsonl
+              echo "== $k: generator pools (same dev mutants)"; python3 tools/label_summary.py base_$k.jsonl
+            done; } 2>&1 | tee summary.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: genmodel-eval-${{ inputs.run }}
+          path: |
+            labels.jsonl
+            pool.json
+            summary.txt
