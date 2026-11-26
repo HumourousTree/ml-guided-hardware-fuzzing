@@ -1,0 +1,73 @@
+[
+ {
+  "core": "rocket",
+  "kind": "multiplexer",
+  "file": "C:\\Users\\subod\\AppData\\Local\\Temp\\claude\\b62daf4fbfbc44f8\\9c4dc705-70e1-4dd1-bc02-9d8e91daeb33\\scratchpad\\labels_rocket_mux\\labels.jsonl",
+  "rows": 142200,
+  "build_errors": 0,
+  "detections_by_how": {
+   "mismatch": 6048,
+   "hang": 8773
+  },
+  "all": {
+   "mutants": 395,
+   "killed_by_any": 112,
+   "unkilled_possibly_equivalent": 283,
+   "coverage_by_profile": {
+    "base": 63,
+    "ext": 107,
+    "llmflash": 99
+   },
+   "only_this_profile": {
+    "base": 2,
+    "ext": 11,
+    "llmflash": 3
+   },
+   "program_kill_rate": {
+    "base": 0.0773,
+    "ext": 0.1226,
+    "llmflash": 0.1128
+   }
+  },
+  "train": {
+   "mutants": 336,
+   "killed_by_any": 97,
+   "unkilled_possibly_equivalent": 239,
+   "coverage_by_profile": {
+    "base": 52,
+    "ext": 92,
+    "llmflash": 84
+   },
+   "only_this_profile": {
+    "base": 2,
+    "ext": 11,
+    "llmflash": 3
+   },
+   "program_kill_rate": {
+    "base": 0.072,
+    "ext": 0.1179,
+    "llmflash": 0.1095
+   }
+  },
+  "dev": {
+   "mutants": 59,
+   "killed_by_any": 15,
+   "unkilled_possibly_equivalent": 44,
+   "coverage_by_profile": {
+    "base": 11,
+    "ext": 15,
+    "llmflash": 15
+   },
+   "only_this_profile": {
+    "base": 0,
+    "ext": 0,
+    "llmflash": 0
+   },
+   "program_kill_rate": {
+    "base": 0.1076,
+    "ext": 0.1492,
+    "llmflash": 0.1315
+   }
+  }
+ }
+]

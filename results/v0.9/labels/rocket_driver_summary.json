@@ -1,0 +1,73 @@
+[
+ {
+  "core": "rocket",
+  "kind": "driver",
+  "file": "C:\\Users\\subod\\AppData\\Local\\Temp\\claude\\b62daf4fbfbc44f8\\9c4dc705-70e1-4dd1-bc02-9d8e91daeb33\\scratchpad\\labels_rocket_driver\\labels.jsonl",
+  "rows": 144000,
+  "build_errors": 0,
+  "detections_by_how": {
+   "mismatch": 21680,
+   "hang": 16692
+  },
+  "all": {
+   "mutants": 400,
+   "killed_by_any": 183,
+   "unkilled_possibly_equivalent": 217,
+   "coverage_by_profile": {
+    "base": 130,
+    "ext": 166,
+    "llmflash": 174
+   },
+   "only_this_profile": {
+    "base": 7,
+    "ext": 1,
+    "llmflash": 10
+   },
+   "program_kill_rate": {
+    "base": 0.2161,
+    "ext": 0.3,
+    "llmflash": 0.2834
+   }
+  },
+  "train": {
+   "mutants": 340,
+   "killed_by_any": 154,
+   "unkilled_possibly_equivalent": 186,
+   "coverage_by_profile": {
+    "base": 112,
+    "ext": 140,
+    "llmflash": 146
+   },
+   "only_this_profile": {
+    "base": 6,
+    "ext": 1,
+    "llmflash": 8
+   },
+   "program_kill_rate": {
+    "base": 0.2152,
+    "ext": 0.2917,
+    "llmflash": 0.2783
+   }
+  },
+  "dev": {
+   "mutants": 60,
+   "killed_by_any": 29,
+   "unkilled_possibly_equivalent": 31,
+   "coverage_by_profile": {
+    "base": 18,
+    "ext": 26,
+    "llmflash": 28
+   },
+   "only_this_profile": {
+    "base": 1,
+    "ext": 0,
+    "llmflash": 2
+   },
+   "program_kill_rate": {
+    "base": 0.2214,
+    "ext": 0.3468,
+    "llmflash": 0.3119
+   }
+  }
+ }
+]
