@@ -39,6 +39,17 @@ def batches(data: dict, bs: int, ctx: int, pad: int, rng: np.random.Generator, w
         yield torch.from_numpy(x), torch.from_numpy(m)
 
 
+def packed(data: dict, bs: int, ctx: int, rng: np.random.Generator):
+    """Pretraining batches: random ctx-token windows of the concatenated corpus (each sequence starts with <bos> and
+    ends with <eos>, so boundaries stay visible). No padding."""
+    flat = data["tokens"]
+    hi = len(flat) - ctx - 1
+    while True:
+        starts = rng.integers(0, hi, bs)
+        x = np.stack([flat[s:s + ctx] for s in starts]).astype(np.int64)
+        yield torch.from_numpy(x), torch.ones((bs, ctx), dtype=torch.float32)
+
+
 def lm_loss(model, x, m):
     logits = model(x[:, :-1])
     return (F.cross_entropy(logits.float().transpose(1, 2), x[:, 1:], reduction="none") * m[:, 1:]).sum() / m[:, 1:].sum()
@@ -91,8 +102,10 @@ def main():
         val = {"tokens": d["tokens"][:offs[nval]], "lengths": d["lengths"][:nval]}
         tr = {"tokens": d["tokens"][offs[nval]:], "lengths": d["lengths"][nval:]}
         w = d["weights"][nval:] if a.stage == "sft" and "weights" in d else None
-        it = batches(tr, a.bs, ctx, pad, rng, w)
-        vit = batches(val, a.bs, ctx, pad, np.random.default_rng(0))
+        # pretrain: packed windows (validation too, so the losses are comparable); sft: whole weighted sequences
+        it = packed(tr, a.bs, ctx, rng) if a.stage == "pretrain" else batches(tr, a.bs, ctx, pad, rng, w)
+        vit = (packed(val, a.bs, ctx, np.random.default_rng(0)) if a.stage == "pretrain"
+               else batches(val, a.bs, ctx, pad, np.random.default_rng(0)))
         vbatches = [next(vit) for _ in range(8)]
         for step in range(a.steps):
             for g in opt.param_groups:
