@@ -96,8 +96,13 @@ class _Hart:
             self.m._store_raw(self.base + 4 * i, 4, w)
         self.done = False
         self.out: list[dict] = []
+        self.limit = None                            # max retirements to model (a hart that loops without memory
+        self.runaway = False                         # accesses would otherwise be stepped forever)
 
     def running(self) -> bool:
+        if self.limit is not None and len(self.out) >= self.limit:
+            self.runaway = True
+            return False
         return not self.done and self.base <= self.m.pc < self.end
 
     def next_access(self):
@@ -142,10 +147,13 @@ def _sext(v: int, bits: int) -> int:
     return v - (1 << bits) if v >> (bits - 1) else v
 
 
-def reference(words0: list[int], words1: list[int], grants: list[dict]) -> dict:
-    """Replay both harts over one memory in grant order. Returns expected traces and any log violations."""
+def reference(words0: list[int], words1: list[int], grants: list[dict], limits=None) -> dict:
+    """Replay both harts over one memory in grant order. Returns expected traces and any log violations.
+    `limits` caps the retirements modelled per hart (the comparison needs at most one more than the DUT retired)."""
     mem: dict = {}
     harts = [_Hart(0, words0, mem), _Hart(1, words1, mem)]
+    for h, lim in enumerate(limits or (None, None)):
+        harts[h].limit = lim
     violations = []
     data = [g for g in grants if not g["i"]]
     k = 0
@@ -185,18 +193,28 @@ def reference(words0: list[int], words1: list[int], grants: list[dict]) -> dict:
         acc = hart.next_access()
         hart.pending = acc
     return {"expected": [harts[0].out, harts[1].out], "pending": [harts[0].pending, harts[1].pending],
+            "runaway": [harts[0].runaway, harts[1].runaway],
             "violations": violations, "final_mem": {a: v for a, v in mem.items() if SHARED[0] <= a < SHARED[1]}}
 
 
 def check(words0: list[int], words1: list[int], result: dict, max_report: int = 4) -> dict:
     """Verdict for one run: per-hart lockstep comparison against the grant-ordered reference."""
-    ref = reference(words0, words1, result["grants"])
+    ref = reference(words0, words1, result["grants"], limits=[len(t) + 64 for t in result["trace"]])
     mismatches = list(ref["violations"])
     for h in (0, 1):
         exp, act = ref["expected"][h], list(result["trace"][h])
         end_pc = PROG_BASE[h] + 4 * len((words0, words1)[h])
         if act and act[-1].get("trap") and act[-1]["pc_rdata"] == end_pc:
             act.pop()                                # termination: the zero word after the program traps
+        if ref["runaway"][h] and result["end"] == "timeout":
+            # the model was still running when it reached the cap: the program itself does not terminate (e.g. a
+            # loop whose counter a minimisation step removed). Compare what the DUT retired; if that agrees, the run
+            # is reported as a non-terminating program, never as starvation.
+            exp = exp[:len(act)]
+            if all(not ({f for f in FIELDS if (e[f] & ~3 if f == "mem_addr" else e[f]) != (a[f] & ~3 if f == "mem_addr" else a[f])}
+                        or a.get("trap")) for e, a in zip(exp, act)):
+                mismatches.append({"kind": "program_nonterminating", "hart": h, "retired": len(act)})
+                continue
         for i in range(max(len(exp), len(act))):
             if i >= len(exp):
                 mismatches.append({"kind": "extra_retire", "hart": h, "order": i, "actual": act[i]}); break
