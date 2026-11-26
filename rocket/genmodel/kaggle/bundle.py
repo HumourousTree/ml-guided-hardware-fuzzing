@@ -13,7 +13,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[3]
 FILES = ["rocket/rv64fuzz.py", "rocket/isa_tokenizer.py", *sorted(str(p.relative_to(ROOT)).replace("\\", "/")
          for p in (ROOT / "rocket/genmodel").glob("*.py")), *sorted(str(p.relative_to(ROOT)).replace("\\", "/")
-         for p in (ROOT / "rocket/templates").glob("*.json"))]
+         for p in (ROOT / "rocket/templates").glob("*.json")), *sorted(str(p.relative_to(ROOT)).replace("\\", "/")
+         for p in (ROOT / "data/labels").glob("*.gz"))]
 
 
 def main(out: Path) -> None:

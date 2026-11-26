@@ -1,0 +1,13 @@
+{
+  "id": "subodhdalvi/benchfuzz-genmodel-finetune",
+  "title": "benchfuzz-genmodel-finetune",
+  "code_file": "finetune_job.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": false,
+  "dataset_sources": ["subodhdalvi/benchfuzz-code"],
+  "competition_sources": [],
+  "kernel_sources": ["subodhdalvi/benchfuzz-genmodel-pretrain"]
+}

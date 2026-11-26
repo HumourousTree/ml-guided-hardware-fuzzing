@@ -14,6 +14,7 @@ label: for its share of the manifest's mutants (item i -> shard i mod N), regene
        pool program and writes one JSONL row per (mutant, program): killed, how (mismatch / hang), first differing dump.
 """
 import argparse
+import collections
 import json
 import random
 import subprocess
@@ -66,30 +67,64 @@ def _run_one(args):
     return False, None, None
 
 
+def _gate(ref: Path, asm: str):
+    """The pool gate: returns (Spike's dump, None) if Spike and the bug-free reference agree and both stop, else
+    (None, reason)."""
+    with tempfile.TemporaryDirectory() as w:
+        try:
+            elf = rv64fuzz.build_elf(asm, Path(w))
+        except Exception:
+            return None, "assembly"
+        try:
+            exp = rv64fuzz.run_spike(elf)
+        except Exception:
+            exp = None
+        if not exp:
+            return None, "spike"
+        got, stopped = rv64fuzz.run_rocket(ref, elf, SIMLEN)
+    if not stopped:
+        return None, "reference_hang"
+    if got != exp:
+        return None, "reference_disagrees"
+    return exp, None
+
+
 def cmd_pool(a):
+    """Generated pool (--profiles) or a pool of learned-generator samples (--from-samples, rocket/genmodel/sample.py
+    outputs; the file stem becomes the profile, e.g. samples_base_dpo_rocket_ext). Both pass the same gate."""
     work = Path(tempfile.mkdtemp(prefix="pool-"))
     ref = _build(mutant_factory.CORPUS / a.core / "multiplexer" / "reference.rtlil", work / "ref", a.core, True)
-    progs, dropped = [], 0
-    for spec in a.profiles.split(","):
-        prof, n = spec.split(":")
-        rng = random.Random(f"{a.seed}-{a.core}-{prof}")
-        for i in range(int(n)):
-            asm = _gen(a.core, prof, rng)
-            with tempfile.TemporaryDirectory() as w:
-                elf = rv64fuzz.build_elf(asm, Path(w))
-                try:
-                    exp = rv64fuzz.run_spike(elf)
-                except Exception:
-                    exp = None
-                got, stopped = rv64fuzz.run_rocket(ref, elf, SIMLEN) if exp else ([], False)
-            if not exp or not stopped or got != exp:
-                dropped += 1
-                continue
-            progs.append({"id": f"{prof}-{i}", "profile": prof, "asm": asm, "expected": exp})
+    progs, dropped, gate = [], 0, {}
+    if a.from_samples:
+        for f in a.from_samples:
+            src = Path(f).stem
+            st = gate.setdefault(src, collections.Counter())
+            for smp in json.loads(Path(f).read_text())["samples"]:
+                st["samples"] += 1
+                if not smp.get("asm"):
+                    st["static_or_decode"] += 1; continue
+                exp, why = _gate(ref, smp["asm"])
+                if why:
+                    st[why] += 1; dropped += 1; continue
+                st["kept"] += 1
+                progs.append({"id": f"{src}-{smp['i']}", "profile": src, "asm": smp["asm"], "expected": exp})
+    else:
+        for spec in a.profiles.split(","):
+            prof, n = spec.split(":")
+            rng = random.Random(f"{a.seed}-{a.core}-{prof}")
+            for i in range(int(n)):
+                asm = _gen(a.core, prof, rng)
+                exp, why = _gate(ref, asm)
+                if why:
+                    dropped += 1; continue
+                progs.append({"id": f"{prof}-{i}", "profile": prof, "asm": asm, "expected": exp})
     Path(a.out).write_text(json.dumps({"core": a.core, "seed": a.seed, "profiles": a.profiles, "simlen": SIMLEN,
-                                       "dropped_reference_disagreement": dropped, "programs": progs}))
-    print(f"pool {a.core}: {len(progs)} programs kept, {dropped} dropped (Spike failure, or the bug-free core "
-          f"disagrees with Spike / does not stop)")
+                                       "dropped_reference_disagreement": dropped,
+                                       "gate": {k: dict(v) for k, v in gate.items()}, "programs": progs}))
+    print(f"pool {a.core}: {len(progs)} programs kept, {dropped} dropped (assembly or Spike failure, or the bug-free "
+          f"core disagrees with Spike / does not stop)")
+    for k, v in gate.items():
+        print(f"  {k}: {dict(v)}")
 
 
 def cmd_label(a):
@@ -97,7 +132,8 @@ def cmd_label(a):
     a.yosys = a.yosys or mutant_factory.INJECTOR[a.kind]
     pool = json.loads(Path(a.pool).read_text())
     assert man["core"] == pool["core"] == a.core and man["kind"] == a.kind
-    mine = [m for i, m in enumerate(man["mutants"]) if i % a.of == a.shard]
+    sel = [m for m in man["mutants"] if a.split == "all" or m["split"] == a.split]
+    mine = [m for i, m in enumerate(sel) if i % a.of == a.shard]
     mdir = Path(a.mutants) / a.core / a.kind
     if not any(mdir.glob("*/" + mutant_factory.HOST_FILE[a.kind])):
         mutant_factory.inject(a.yosys, a.core, a.kind, man["num_bugs_requested"], mdir)
@@ -132,11 +168,13 @@ def main():
     sub = ap.add_subparsers(dest="cmd", required=True)
     p = sub.add_parser("pool"); p.add_argument("--core", required=True); p.add_argument("--seed", type=int, default=7)
     p.add_argument("--profiles", default="base:120,ext:120,llmflash:120"); p.add_argument("--out", required=True)
+    p.add_argument("--from-samples", nargs="*", help="sample files from rocket/genmodel/sample.py instead of --profiles")
     l = sub.add_parser("label")
     for k in ("--core", "--kind", "--manifest", "--pool", "--out"):
         l.add_argument(k, required=True)
     l.add_argument("--shard", type=int, default=0); l.add_argument("--of", type=int, default=1)
     l.add_argument("--jobs", type=int, default=4)
+    l.add_argument("--split", choices=["all", "train", "dev"], default="all", help="label only these mutants")
     l.add_argument("--mutants", default=str(Path.home() / "ext" / "mutants"))
     l.add_argument("--yosys", default=None, help="default: the injector build the factory used for this kind")
     a = ap.parse_args()

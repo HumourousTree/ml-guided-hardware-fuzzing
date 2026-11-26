@@ -94,36 +94,50 @@ def pool_bodies(pool: dict) -> dict[str, list[str]]:
     return {p["id"]: p.get("body") or body_from_asm(p["asm"]) for p in pool["programs"]}
 
 
-def build_sft_pairs(labels: Path, pool: Path, ctx: int, seed: int) -> tuple[dict, list, dict]:
+def read_text(path: Path) -> str:
+    import gzip
+    return gzip.open(path, "rt").read() if str(path).endswith(".gz") else Path(path).read_text()
+
+
+def build_sft_pairs(labels: list[Path], pool: Path, ctx: int, seed: int) -> tuple[dict, list, dict]:
+    """SFT sequences (pool programs that kill >= 1 TRAIN mutant, weighted by how many) and DPO pairs (for each train
+    mutant: up to 4 of its killers, each against a random program that does not kill it). Mutants are keyed by
+    (kind, dir) so driver and conditional mutants never collide; dev mutants are not read."""
     tk = tokenizer()
-    pool_d = json.loads(Path(pool).read_text())
+    pool_d = json.loads(read_text(pool))
     bodies = pool_bodies(pool_d)
     prof = {p["id"]: p["profile"] for p in pool_d["programs"]}
     kills, killers = collections.Counter(), collections.defaultdict(set)
-    progs_all = set()
-    for line in Path(labels).read_text().splitlines():
-        r = json.loads(line)
-        if "killed" not in r or r["split"] != "train":
-            continue
-        progs_all.add(r["program"])
-        if r["killed"]:
-            kills[r["program"]] += 1; killers[r["mutant"]].add(r["program"])
+    progs_all, seen = set(), collections.Counter()
+    for lp in labels:
+        for line in read_text(lp).splitlines():
+            r = json.loads(line)
+            if "killed" not in r or r["split"] != "train":
+                continue
+            assert r["core"] == pool_d["core"], "labels and pool are for different cores"
+            seen[r["kind"]] += 1
+            progs_all.add(r["program"])
+            if r["killed"]:
+                kills[r["program"]] += 1; killers[(r["kind"], r["mutant"])].add(r["program"])
     core = pool_d["core"]
     sft, w = [], []
-    for pid, k in kills.items():
+    for pid, k in sorted(kills.items()):
         sft.append(encode(tk, core, prof[pid], bodies[pid], kill=True)); w.append(k)
     rng = random.Random(seed)
     pairs = []
-    for m, ks in killers.items():
+    for m, ks in sorted(killers.items()):
         losers = sorted(progs_all - ks)
         if not losers:
             continue
         for win in rng.sample(sorted(ks), min(4, len(ks))):
             lose = rng.choice(losers)
             pairs.append((encode(tk, core, prof[win], bodies[win], True)[:ctx], encode(tk, core, prof[lose], bodies[lose], True)[:ctx]))
+    rng.shuffle(pairs)
     arr = pack(sft, ctx)
     arr["weights"] = np.array(w, dtype=np.float32)
-    return arr, pairs, {"sft_programs": len(sft), "pairs": len(pairs), "mutants_with_killers": len(killers)}
+    return arr, pairs, {"core": core, "label_rows_by_kind": dict(seen), "sft_programs": len(sft), "pairs": len(pairs),
+                        "train_mutants_with_killers": len(killers),
+                        "sft_programs_by_profile": dict(collections.Counter(prof[p] for p in kills))}
 
 
 def main():
@@ -131,7 +145,7 @@ def main():
     sub = ap.add_subparsers(dest="cmd", required=True)
     p = sub.add_parser("pretrain"); p.add_argument("--n", type=int, default=200_000); p.add_argument("--seed", type=int, default=1)
     p.add_argument("--ctx", type=int, default=1024); p.add_argument("--out", type=Path, required=True)
-    s = sub.add_parser("sft"); s.add_argument("--labels", type=Path, required=True); s.add_argument("--pool", type=Path, required=True)
+    s = sub.add_parser("sft"); s.add_argument("--labels", type=Path, nargs="+", required=True); s.add_argument("--pool", type=Path, required=True)
     s.add_argument("--ctx", type=int, default=1024); s.add_argument("--seed", type=int, default=1); s.add_argument("--out", type=Path, required=True)
     a = ap.parse_args()
     a.out.parent.mkdir(parents=True, exist_ok=True)
