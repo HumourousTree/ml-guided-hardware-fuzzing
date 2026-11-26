@@ -47,9 +47,11 @@ def inject(yosys: str, core: str, kind: str, num_bugs: int, outdir: Path) -> flo
         "proc -norom",
         pass_cmd, ""]))
     t0 = time.time()
-    r = subprocess.run([yosys, "-q", "-s", str(script)], capture_output=True, text=True)
+    r = subprocess.run([yosys, "-q", "-l", str(outdir / "inject.log"), "-s", str(script)], capture_output=True, text=True)
     if r.returncode:
-        raise RuntimeError(f"injection failed: {r.stderr[-1500:]}")
+        log = (outdir / "inject.log").read_text(errors="replace") if (outdir / "inject.log").exists() else ""
+        raise RuntimeError(f"injection failed (exit {r.returncode}): {r.stderr[-1500:]} {r.stdout[-1500:]} "
+                           f"log tail: {log[-2500:]}")
     return time.time() - t0
 
 
