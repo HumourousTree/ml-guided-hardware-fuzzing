@@ -47,7 +47,9 @@ def inject(yosys: str, core: str, kind: str, num_bugs: int, outdir: Path) -> flo
         "proc -norom",
         pass_cmd, ""]))
     t0 = time.time()
-    r = subprocess.run([yosys, "-q", "-l", str(outdir / "inject.log"), "-s", str(script)], capture_output=True, text=True)
+    # unlimited stack: the conditional pass recurses over the whole core and overflows the default 8 MiB
+    r = subprocess.run(["bash", "-c", 'ulimit -s unlimited; exec "$0" -q -l "$1" -s "$2"', yosys,
+                        str(outdir / "inject.log"), str(script)], capture_output=True, text=True)
     if r.returncode:
         log = (outdir / "inject.log").read_text(errors="replace") if (outdir / "inject.log").exists() else ""
         raise RuntimeError(f"injection failed (exit {r.returncode}): {r.stderr[-1500:]} {r.stdout[-1500:]} "
