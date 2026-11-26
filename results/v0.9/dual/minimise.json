@@ -1,0 +1,308 @@
+{
+ "bugs": {
+  "amo_not_atomic": {
+   "kind": "amo_not_atomic",
+   "units": 289,
+   "free": {
+    "units_left": 3,
+    "tests": 99,
+    "seconds": 0.5,
+    "reproduces": "16/16",
+    "clean_system_passes": true,
+    "clean_kinds": [],
+    "replay_skips": 0,
+    "instructions": [
+     6,
+     5
+    ],
+    "src": [
+     "li s0, 0x8000\nli s1, 0x8040\nli t2, 1\namoswap.w t0, t2, (s1)",
+     "li s0, 0x8000\nli s1, 0x8040\nlb a3, 20(s0)"
+    ]
+   },
+   "forced": {
+    "units_left": 2,
+    "tests": 102,
+    "seconds": 0.6,
+    "reproduces": "16/16",
+    "clean_system_passes": true,
+    "clean_kinds": [],
+    "replay_skips": 139,
+    "instructions": [
+     5,
+     5
+    ],
+    "src": [
+     "li s0, 0x8000\nli s1, 0x8040\namoswap.w t0, t2, (s1)",
+     "li s0, 0x8000\nli s1, 0x8040\nsw zero, 0(s1)"
+    ]
+   }
+  },
+  "lost_write_contention": {
+   "kind": "amo_write_lost",
+   "units": 289,
+   "free": {
+    "units_left": 1,
+    "tests": 80,
+    "seconds": 0.5,
+    "reproduces": "16/16",
+    "clean_system_passes": true,
+    "clean_kinds": [],
+    "replay_skips": 0,
+    "instructions": [
+     5,
+     4
+    ],
+    "src": [
+     "li s0, 0x8000\nli s1, 0x8040\namoswap.w t0, t2, (s1)",
+     "li s0, 0x8000\nli s1, 0x8040"
+    ]
+   },
+   "forced": {
+    "units_left": 5,
+    "tests": 118,
+    "seconds": 0.5,
+    "reproduces": "16/16",
+    "clean_system_passes": true,
+    "clean_kinds": [],
+    "replay_skips": 139,
+    "instructions": [
+     7,
+     6
+    ],
+    "src": [
+     "li s0, 0x8000\nli s1, 0x8040\namoswap.w t0, t2, (s1)\naddi t4, s0, 0\namoswap.w a0, a7, (t4)",
+     "li s0, 0x8000\nli s1, 0x8040\nsw a2, 48(s0)\nlw a6, 48(s0)"
+    ]
+   }
+  },
+  "log_id_amo": {
+   "kind": "grant_mismatch",
+   "units": 289,
+   "free": {
+    "units_left": 2,
+    "tests": 43,
+    "seconds": 0.2,
+    "reproduces": "16/16",
+    "clean_system_passes": true,
+    "clean_kinds": [],
+    "replay_skips": 0,
+    "instructions": [
+     5,
+     5
+    ],
+    "src": [
+     "li s0, 0x8000\nli s1, 0x8040\namoswap.w a7, a5, (t4)",
+     "li s0, 0x8000\nli s1, 0x8040\nlw a6, 48(s0)"
+    ]
+   },
+   "forced": {
+    "units_left": 8,
+    "tests": 126,
+    "seconds": 0.7,
+    "reproduces": "16/16",
+    "clean_system_passes": true,
+    "clean_kinds": [],
+    "replay_skips": 133,
+    "instructions": [
+     11,
+     5
+    ],
+    "src": [
+     "li s0, 0x8000\nli s1, 0x8040\nsw a3, 12(s0)\nsw a2, 48(s0)\nlw a6, 48(s0)\nsw a0, 48(s0)\nlw a7, 48(s0)\nlw a1, 48(s0)\nlw a2, 48(s0)",
+     "li s0, 0x8000\nli s1, 0x8040\namoswap.w t0, t2, (s1)"
+    ]
+   }
+  },
+  "ready_misroute": {
+   "kind": "amo_write_lost",
+   "units": 187,
+   "free": {
+    "units_left": 13,
+    "tests": 300,
+    "seconds": 2.1,
+    "reproduces": "16/16",
+    "clean_system_passes": true,
+    "clean_kinds": [],
+    "replay_skips": 0,
+    "instructions": [
+     10,
+     12
+    ],
+    "src": [
+     "li s0, 0x8000\nli s1, 0x8040\nlw a6, 60(s0)\nlh a6, 48(s0)\nsw a1, 44(s0)\nli t3, 64\nli t2, 1\namoswap.w t0, t2, (s1)",
+     "li s0, 0x8000\nli s1, 0x8040\nli a6, -1100545428\nli a7, -1836839263\naddi t4, s0, 8\nli t3, 64\nli t2, 1\nacq_1:\namoswap.w t0, t2, (s1)"
+    ]
+   },
+   "forced": {
+    "units_left": 2,
+    "tests": 175,
+    "seconds": 2.9,
+    "reproduces": "16/16",
+    "clean_system_passes": true,
+    "clean_kinds": [],
+    "replay_skips": 147,
+    "instructions": [
+     5,
+     5
+    ],
+    "src": [
+     "li s0, 0x8000\nli s1, 0x8040\namoswap.w t0, t2, (s1)",
+     "li s0, 0x8000\nli s1, 0x8040\namoswap.w t0, t2, (s1)"
+    ]
+   }
+  },
+  "stale_rdata": {
+   "kind": "grant_mismatch",
+   "units": 289,
+   "free": {
+    "units_left": 8,
+    "tests": 67,
+    "seconds": 8.0,
+    "reproduces": "16/16",
+    "clean_system_passes": true,
+    "clean_kinds": [],
+    "replay_skips": 0,
+    "instructions": [
+     9,
+     7
+    ],
+    "src": [
+     "li s0, 0x8000\nli s1, 0x8040\nlhu a3, 40(s0)\nlb a0, 32(s0)\nsb a0, 35(s0)\nlh a7, 0(s0)\nsw a1, 40(s0)",
+     "li s0, 0x8000\nli s1, 0x8040\nmulh a2, a5, a1\naddi a3, a6, -1556\nmulh a2, a3, a7"
+    ]
+   },
+   "forced": {
+    "units_left": 9,
+    "tests": 69,
+    "seconds": 5.8,
+    "reproduces": "16/16",
+    "clean_system_passes": true,
+    "clean_kinds": [],
+    "replay_skips": 0,
+    "instructions": [
+     9,
+     7
+    ],
+    "src": [
+     "li s0, 0x8000\nli s1, 0x8040\nbeqz t0, got_2\ngot_2:\nlw t1, 4(s1)\naddi t1, t1, 1\nsw t1, 4(s1)\nsw zero, 0(s1)",
+     "li s0, 0x8000\nli s1, 0x8040\nor a2, a6, a4\nsrl a3, a0, a6\nsub a7, a5, a1"
+    ]
+   }
+  },
+  "lock_stuck": {
+   "kind": "starved",
+   "units": 289,
+   "free": {
+    "units_left": 2,
+    "tests": 25,
+    "seconds": 0.7,
+    "reproduces": "16/16",
+    "clean_system_passes": true,
+    "clean_kinds": [],
+    "replay_skips": 0,
+    "instructions": [
+     4,
+     6
+    ],
+    "src": [
+     "li s0, 0x8000\nli s1, 0x8040",
+     "li s0, 0x8000\nli s1, 0x8040\namoswap.w t0, t2, (s1)\nsw zero, 0(s1)"
+    ]
+   },
+   "forced": {
+    "units_left": 2,
+    "tests": 25,
+    "seconds": 0.8,
+    "reproduces": "16/16",
+    "clean_system_passes": true,
+    "clean_kinds": [],
+    "replay_skips": 0,
+    "instructions": [
+     4,
+     6
+    ],
+    "src": [
+     "li s0, 0x8000\nli s1, 0x8040",
+     "li s0, 0x8000\nli s1, 0x8040\namoswap.w t0, t2, (s1)\nsw zero, 0(s1)"
+    ]
+   }
+  },
+  "amo_race_window": {
+   "kind": "amo_not_atomic",
+   "units": 187,
+   "free": {
+    "units_left": 13,
+    "tests": 300,
+    "seconds": 2.0,
+    "reproduces": "16/16",
+    "clean_system_passes": true,
+    "clean_kinds": [],
+    "replay_skips": 0,
+    "instructions": [
+     10,
+     12
+    ],
+    "src": [
+     "li s0, 0x8000\nli s1, 0x8040\nlw a6, 60(s0)\nlh a6, 48(s0)\nsw a1, 44(s0)\nli t3, 64\nli t2, 1\namoswap.w t0, t2, (s1)",
+     "li s0, 0x8000\nli s1, 0x8040\nli a6, -1100545428\nli a7, -1836839263\naddi t4, s0, 8\nli t3, 64\nli t2, 1\nacq_1:\namoswap.w t0, t2, (s1)"
+    ]
+   },
+   "forced": {
+    "units_left": 5,
+    "tests": 235,
+    "seconds": 1.8,
+    "reproduces": "16/16",
+    "clean_system_passes": true,
+    "clean_kinds": [],
+    "replay_skips": 148,
+    "instructions": [
+     5,
+     8
+    ],
+    "src": [
+     "li s0, 0x8000\nli s1, 0x8040\namoswap.w t0, t2, (s1)",
+     "li s0, 0x8000\nli s1, 0x8040\naddi t4, s0, 8\namoswap.w a1, a0, (t4)\namoswap.w t0, t2, (s1)\namoswap.w t0, t2, (s1)"
+    ]
+   }
+  },
+  "stale_rdata_amo": {
+   "kind": "grant_mismatch",
+   "units": 187,
+   "free": {
+    "units_left": 19,
+    "tests": 300,
+    "seconds": 2.1,
+    "reproduces": "16/16",
+    "clean_system_passes": true,
+    "clean_kinds": [],
+    "replay_skips": 0,
+    "instructions": [
+     14,
+     13
+    ],
+    "src": [
+     "li s0, 0x8000\nli s1, 0x8040\nlw a6, 60(s0)\nlh a6, 48(s0)\nsw a1, 44(s0)\nli t3, 64\nli t2, 1\namoswap.w t0, t2, (s1)\nbeqz t0, got_2\nj skip_3\ngot_2:\nsw zero, 0(s1)\nskip_3:\nlhu a7, 44(s0)",
+     "li s0, 0x8000\nli s1, 0x8040\nli a6, -1100545428\nli a7, -1836839263\naddi t4, s0, 8\nli t3, 64\nli t2, 1\namoswap.w t0, t2, (s1)\nsw zero, 0(s1)"
+    ]
+   },
+   "forced": {
+    "units_left": 13,
+    "tests": 292,
+    "seconds": 1.9,
+    "reproduces": "16/16",
+    "clean_system_passes": true,
+    "clean_kinds": [],
+    "replay_skips": 390,
+    "instructions": [
+     10,
+     9
+    ],
+    "src": [
+     "li s0, 0x8000\nli s1, 0x8040\nsw a1, 44(s0)\namoswap.w t0, t2, (s1)\nbeqz t0, got_2\nj skip_3\ngot_2:\nsw zero, 0(s1)\nskip_3:\nlhu a7, 44(s0)",
+     "li s0, 0x8000\nli s1, 0x8040\naddi t4, s0, 8\namoswap.w a1, a0, (t4)\namoswap.w t0, t2, (s1)\nsw zero, 0(s1)\namoswap.w t0, t2, (s1)"
+    ]
+   }
+  }
+ }
+}

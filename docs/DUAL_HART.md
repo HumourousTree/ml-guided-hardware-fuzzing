@@ -65,20 +65,44 @@ handshake (`mem_ready`) routed to the wrong hart.
 
 Built and running: RTL (lint-clean with `-Wall`), testbench, reference, generator (`harness/dual_gen.py`: private
 work, shared loads/stores, AMOs, spinlock critical sections, flag handshakes, same-word bursts; every loop bounded),
-campaigns (`python -m harness.dual_campaign soundness | bugs | minimise`, results in `logs/dual/`).
+campaigns (`python -m harness.dual_campaign soundness | bugs | minimise`, workflow `dual-hart.yml`). Results:
+`results/v0.9/dual/` (GitHub Actions run 45791198894, identical to the local runs).
 
-* Soundness: 500 random pairs x 4 memory timings = 2,000 runs, **0 mismatches**; in 492 of the 500 pairs the order
-  of data accesses changes with the memory timing, so the oracle is exercised on many interleavings.
-* Replay: forcing a recorded data order reproduces the run exactly (same order, same traces) under a different
+* **Soundness:** 500 random pairs x 4 memory timings = 2,000 runs, **0 mismatches**. In 492 of the 500 pairs the
+  order of data accesses changes with the memory timing, so the oracle sees many interleavings.
+* **Replay:** forcing a recorded data order reproduces a run exactly (same order, same traces) under a different
   memory timing.
-* L4 bugs (`hw_design/dual/l4_bugs.json`, ten single-line changes to the arbiter or AMO unit): eight detected within
-  the first one to three pairs. Not detected: `starve_pointer` (fixed priority is a legal schedule and every loop is
-  bounded, so it is a pure liveness/performance bug), and `lost_write_same_word`, which is **unreachable** in this
-  composition: it needs both harts to have a data request pending at a grant, but a hart's next request after any
-  transaction is a fetch, and the only other requesters are the AMO units of stalled harts (directed test: 0
-  triggers). This is the dual-hart analogue of an equivalent mutant.
-* Replay value: for the narrow-window races (`amo_race_window`, `stale_rdata_amo`) a failing pair re-run under a new
-  memory timing reproduced in 7/16 runs without replay and 16/16 with the recorded data order (with the burst block
-  added to the generator, contention is higher and the free rate rises to 14/16).
+* **L4 bugs** (`hw_design/dual/l4_bugs.json`, ten one-line changes to the arbiter or AMO unit): **8/10 detected**,
+  each within the first two pairs. Not detected: `starve_pointer` (fixed priority is a legal schedule and every loop
+  is bounded: a pure liveness/performance bug) and `lost_write_same_word`, which is **unreachable** here: it needs
+  both harts to have a data request pending at a grant, but after any transaction a hart's next request is a fetch,
+  and the only other requesters are the AMO units of stalled harts (directed test: 0 triggers). It is the
+  dual-hart analogue of an equivalent mutant.
+* **Reproduction under a new timing:** a detected failure re-run under 16 other memory timings reproduces 16/16 with
+  the recorded data order; without it, 14/16 for the narrow races (`amo_race_window`, `stale_rdata_amo`; 7/16 before
+  the generator's same-word burst block raised contention) and 15/16 for `ready_misroute`.
+* **Minimisation** (ddmin over the source lines of both harts, 300 tests per bug and mode; a candidate counts only
+  if it fails on the buggy system with the original kind *and* passes on the bug-free one):
+
+  | bug | lines | free: left / tests | forced data order: left / tests |
+  |---|---|---|---|
+  | amo_not_atomic | 289 | 3 / 99 | 2 / 102 |
+  | lost_write_contention | 289 | 1 / 80 | 5 / 118 |
+  | log_id_amo | 289 | 2 / 43 | 8 / 126 |
+  | stale_rdata | 289 | 8 / 67 | 9 / 69 |
+  | lock_stuck | 289 | 2 / 25 | 2 / 25 |
+  | ready_misroute | 187 | 13 / 300 (budget) | **2 / 175** |
+  | amo_race_window | 187 | 13 / 300 (budget) | **5 / 235** |
+  | stale_rdata_amo | 187 | 19 / 300 (budget) | **13 / 292** |
+
+  Every minimised witness passes on the bug-free system and reproduces under 16/16 other timings. Reading: the
+  simulator is deterministic for a fixed timing, so plain ddmin already works for bugs that fire whenever the code
+  runs; for the narrow races it stalls at the budget, because removing lines shifts the timing out of the race
+  window, while the forced data order keeps the window open and reaches 2-5 lines in fewer tests. The recorded order
+  is followed until it no longer fits the shrunk program (no data grant for 3,000 cycles), then arbitration is free.
+* **Oracle corrections found by the clean-system check** (first cloud minimisation): a log cut off by the cycle limit
+  between an AMO's read and write was reported as non-atomic, and a hart still making progress at the limit as
+  starved; both are now "program does not terminate" (shrinking had removed loop counters). The reference also caps
+  how far it models a hart, which had exhausted the runner's memory on such loops.
 
 Limits: one shared bus and no caches, so no weak-memory behaviour; two harts; only `amoswap.w` (no LR/SC).

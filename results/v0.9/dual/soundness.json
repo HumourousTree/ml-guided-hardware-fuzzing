@@ -1,0 +1,10 @@
+{
+ "pairs": 500,
+ "runs": 2000,
+ "mismatching_runs": 0,
+ "first_failures": [],
+ "pairs_whose_data_order_depends_on_timing": 492,
+ "mean_retired_per_run": 337.7,
+ "mean_grants_per_run": 510.7,
+ "seconds": 15.2
+}

@@ -1,0 +1,182 @@
+{
+ "bugs": {
+  "starve_pointer": {
+   "class": "liveness",
+   "description": "Round-robin pointer never advances: fixed priority hart 0 > hart 1 > AMO 0 > AMO 1.",
+   "pairs_tried": 500,
+   "detected": false
+  },
+  "amo_not_atomic": {
+   "class": "atomicity",
+   "description": "AMO unit does not lock the bus between its read and its write.",
+   "pairs_tried": 1,
+   "detected": true,
+   "runs_to_detect": 1,
+   "delay": 0,
+   "kind": "amo_not_atomic",
+   "first": {
+    "kind": "amo_not_atomic",
+    "at": "grant 6 (id 3, addr 0x8040, cycle 218)",
+    "error": "AMO read not immediately followed by its write (next: {'g': 0, 'i': 0, 'a': 32808, 'w': 15, 'd': 48424546, 'cycle': 221})"
+   },
+   "seconds": 0.01,
+   "replay": {
+    "timings": 16,
+    "reproduced_free": 16,
+    "reproduced_forced": 16
+   }
+  },
+  "lost_write_contention": {
+   "class": "contention",
+   "description": "A write granted while both harts are requesting goes out with no byte strobes (lost).",
+   "pairs_tried": 1,
+   "detected": true,
+   "runs_to_detect": 1,
+   "delay": 0,
+   "kind": "amo_write_lost",
+   "first": {
+    "kind": "amo_write_lost",
+    "at": "grant 24 (id 2, addr 0x8038, cycle 394)",
+    "error": "AMO write went out without byte strobes"
+   },
+   "seconds": 0.01,
+   "replay": {
+    "timings": 16,
+    "reproduced_free": 16,
+    "reproduced_forced": 16
+   }
+  },
+  "log_id_amo": {
+   "class": "log path",
+   "description": "The grant log attributes an AMO read to the other hart's AMO unit (oracle-visible only).",
+   "pairs_tried": 1,
+   "detected": true,
+   "runs_to_detect": 1,
+   "delay": 0,
+   "kind": "grant_mismatch",
+   "first": {
+    "kind": "grant_mismatch",
+    "at": "grant 6 (id 2, addr 0x8040, cycle 218)",
+    "error": "hart 0 next access is store 0x8028 by requester 0"
+   },
+   "seconds": 0.01,
+   "replay": {
+    "timings": 16,
+    "reproduced_free": 16,
+    "reproduced_forced": 16
+   }
+  },
+  "ready_misroute": {
+   "class": "handshake",
+   "description": "When both AMO units are requesting, the completion handshake goes to the wrong one.",
+   "pairs_tried": 2,
+   "detected": true,
+   "runs_to_detect": 2,
+   "delay": 1,
+   "kind": "amo_write_lost",
+   "first": {
+    "kind": "amo_write_lost",
+    "at": "grant 20 (id 2, addr 0x8040, cycle 374)",
+    "error": "AMO write went out without byte strobes"
+   },
+   "seconds": 0.02,
+   "replay": {
+    "timings": 16,
+    "reproduced_free": 15,
+    "reproduced_forced": 16
+   }
+  },
+  "stale_rdata": {
+   "class": "contention",
+   "description": "A requester granted twice in a row (no contention in between) receives the previous read data.",
+   "pairs_tried": 1,
+   "detected": true,
+   "runs_to_detect": 1,
+   "delay": 0,
+   "kind": "grant_mismatch",
+   "first": {
+    "kind": "grant_mismatch",
+    "at": "grant 21 (id 0, addr 0x8030, cycle 339)",
+    "error": "hart 0 next access is amo 0x8038 by requester 2"
+   },
+   "seconds": 0.12,
+   "replay": {
+    "timings": 16,
+    "reproduced_free": 16,
+    "reproduced_forced": 16
+   }
+  },
+  "lock_stuck": {
+   "class": "liveness",
+   "description": "The bus lock is never released after the first AMO: every other requester is locked out.",
+   "pairs_tried": 1,
+   "detected": true,
+   "runs_to_detect": 1,
+   "delay": 0,
+   "kind": "starved",
+   "first": {
+    "kind": "starved",
+    "hart": 0,
+    "pending": [
+     "store",
+     32808,
+     15
+    ]
+   },
+   "seconds": 0.04,
+   "replay": {
+    "timings": 16,
+    "reproduced_free": 16,
+    "reproduced_forced": 16
+   }
+  },
+  "amo_race_window": {
+   "class": "atomicity (narrow)",
+   "description": "The AMO lock is dropped only when the other hart's AMO unit is waiting at that moment (a true AMO race).",
+   "pairs_tried": 2,
+   "detected": true,
+   "runs_to_detect": 2,
+   "delay": 1,
+   "kind": "amo_not_atomic",
+   "first": {
+    "kind": "amo_not_atomic",
+    "at": "grant 20 (id 2, addr 0x8040, cycle 374)",
+    "error": "AMO read not immediately followed by its write (next: {'g': 3, 'i': 0, 'a': 32832, 'w': 0, 'd': 0, 'cycle': 378})"
+   },
+   "seconds": 0.02,
+   "replay": {
+    "timings": 16,
+    "reproduced_free": 14,
+    "reproduced_forced": 16
+   }
+  },
+  "lost_write_same_word": {
+   "class": "contention (narrow)",
+   "description": "A hart's write is lost when the other hart is requesting the same word address at the same time.",
+   "pairs_tried": 500,
+   "detected": false
+  },
+  "stale_rdata_amo": {
+   "class": "contention (narrow)",
+   "description": "An AMO read returns the previous transaction's data when the other AMO unit is waiting.",
+   "pairs_tried": 2,
+   "detected": true,
+   "runs_to_detect": 2,
+   "delay": 1,
+   "kind": "grant_mismatch",
+   "first": {
+    "kind": "grant_mismatch",
+    "at": "grant 24 (id 2, addr 0x8040, cycle 425)",
+    "error": "hart 0 next access is load 0x8044 by requester 0"
+   },
+   "seconds": 0.02,
+   "replay": {
+    "timings": 16,
+    "reproduced_free": 14,
+    "reproduced_forced": 16
+   }
+  }
+ },
+ "detected": 8,
+ "total": 10
+}
