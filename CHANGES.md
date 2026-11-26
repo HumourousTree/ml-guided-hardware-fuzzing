@@ -132,7 +132,9 @@ Not done: anything needing an LLM (semantic/hybrid generation, pass@k) - no API 
 - Track 2, dual-hart PicoRV32 (`hw_design/dual/`, `harness/dual_cosim.py`, `dual_gen.py`, `dual_campaign.py`,
   `docs/DUAL_HART.md`): two unmodified cores, `amoswap.w` over PCPI, round-robin arbiter with a grant log and
   data-order replay, grant-log-ordered two-hart reference. 2,000 random runs, 0 mismatches; 8 of 10 L4 bugs detected
-  (one liveness bug, one unreachable mutant); narrow races reproduce under new timings 7/16 without replay vs 16/16 with.
+  (one liveness bug, one unreachable mutant). With the recorded data order a failure reproduces under 16/16 new
+  timings (14/16 without for the narrow races), and ddmin shrinks the narrow races to 2-5 lines where free ddmin
+  stalls at 13-19 lines at its budget; for the other bugs plain ddmin is as good. Results: `results/v0.9/dual/`.
 - `rv64fuzz.py --core` (the factory smoke test had run BOOM mutants with Rocket quirks).
 
 # v0.8 (2026-11-26: cloud campaigns, BOOM complete, LLM-guided generation on Rocket/BOOM)
