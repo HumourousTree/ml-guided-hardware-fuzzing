@@ -82,8 +82,10 @@ def main():
     a = ap.parse_args()
     torch.manual_seed(a.seed)
     dev = "cuda" if torch.cuda.is_available() else "cpu"
-    amp = torch.autocast(dev, dtype=torch.bfloat16 if dev == "cuda" and torch.cuda.is_bf16_supported() else torch.float16,
-                         enabled=dev == "cuda")
+    # native bf16 only from Ampere on: torch.cuda.is_bf16_supported() also counts emulation, which on a T4 is slow and
+    # sends attention to the memory-hungry math kernel; T4s get fp16 with a loss scaler instead
+    bf16 = dev == "cuda" and torch.cuda.get_device_capability()[0] >= 8
+    amp = torch.autocast(dev, dtype=torch.bfloat16 if bf16 else torch.float16, enabled=dev == "cuda")
     tk = tokenizer()
     pad = tk.id["<pad>"]
     model = GPT.load(a.init, dev) if a.init else GPT(Config.preset(a.preset, len(tk))).to(dev)
@@ -91,7 +93,7 @@ def main():
     ctx = model.c.ctx
     print(json.dumps({"stage": a.stage, "params": model.params(), "device": dev, "gpus": torch.cuda.device_count()}), flush=True)
     opt = torch.optim.AdamW(model.parameters(), lr=a.lr, betas=(0.9, 0.95), weight_decay=0.1)
-    scaler = torch.amp.GradScaler(enabled=dev == "cuda" and not torch.cuda.is_bf16_supported())
+    scaler = torch.amp.GradScaler(enabled=dev == "cuda" and not bf16)
     rng = np.random.default_rng(a.seed)
     log, t0 = [], time.time()
 
