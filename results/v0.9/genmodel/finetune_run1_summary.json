@@ -1,0 +1,274 @@
+{
+ "commit": "234963a",
+ "gpus": [
+  "Tesla T4",
+  "Tesla T4"
+ ],
+ "models": {
+  "base": {
+   "error": "no pretrained checkpoint"
+  },
+  "small": {
+   "pretrained": "/kaggle/input/notebooks/subodhdalvi/benchfuzz-genmodel-pretrain/small_pre.pt",
+   "sft_rc": 0,
+   "dpo_rc": 0,
+   "samples": {
+    "pre/rocket/base": {
+     "n": 256,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 43.359375,
+     "grammar": true,
+     "gen_seconds": 19.0
+    },
+    "pre/rocket/ext": {
+     "n": 256,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 50.3671875,
+     "grammar": true,
+     "gen_seconds": 19.6
+    },
+    "pre/rocket/llmflash": {
+     "n": 256,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 73.91796875,
+     "grammar": true,
+     "gen_seconds": 48.9
+    },
+    "pre/boom/base": {
+     "n": 256,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 43.04296875,
+     "grammar": true,
+     "gen_seconds": 18.7
+    },
+    "pre/boom/ext": {
+     "n": 256,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 50.54296875,
+     "grammar": true,
+     "gen_seconds": 20.1
+    },
+    "pre/boom/llmflash": {
+     "n": 256,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 74.98046875,
+     "grammar": true,
+     "gen_seconds": 49.1
+    },
+    "sft/rocket/base": {
+     "n": 256,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 34.21484375,
+     "grammar": true,
+     "gen_seconds": 12.9
+    },
+    "sft/rocket/ext": {
+     "n": 256,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 43.81640625,
+     "grammar": true,
+     "gen_seconds": 14.8
+    },
+    "sft/rocket/llmflash": {
+     "n": 256,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 70.84375,
+     "grammar": true,
+     "gen_seconds": 47.9
+    },
+    "sft/boom/base": {
+     "n": 256,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 34.140625,
+     "grammar": true,
+     "gen_seconds": 13.1
+    },
+    "sft/boom/ext": {
+     "n": 256,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 43.67578125,
+     "grammar": true,
+     "gen_seconds": 14.7
+    },
+    "sft/boom/llmflash": {
+     "n": 256,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 70.8359375,
+     "grammar": true,
+     "gen_seconds": 47.6
+    },
+    "dpo/rocket/base": {
+     "n": 256,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 45.81640625,
+     "grammar": true,
+     "gen_seconds": 24.6
+    },
+    "dpo/rocket/ext": {
+     "n": 256,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 47.8828125,
+     "grammar": true,
+     "gen_seconds": 17.0
+    },
+    "dpo/rocket/llmflash": {
+     "n": 256,
+     "decoded": 0.99609375,
+     "static_ok": 0.99609375,
+     "mean_lines": 75.4140625,
+     "grammar": true,
+     "gen_seconds": 47.7
+    },
+    "dpo/boom/base": {
+     "n": 256,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 45.6796875,
+     "grammar": true,
+     "gen_seconds": 24.4
+    },
+    "dpo/boom/ext": {
+     "n": 256,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 48.27734375,
+     "grammar": true,
+     "gen_seconds": 16.2
+    },
+    "dpo/boom/llmflash": {
+     "n": 256,
+     "decoded": 0.99609375,
+     "static_ok": 0.99609375,
+     "mean_lines": 75.3671875,
+     "grammar": true,
+     "gen_seconds": 47.7
+    },
+    "dponogram/rocket/base": {
+     "n": 128,
+     "decoded": 0.9921875,
+     "static_ok": 0.984375,
+     "mean_lines": 45.1796875,
+     "grammar": false,
+     "gen_seconds": 4.1
+    },
+    "dponogram/rocket/ext": {
+     "n": 128,
+     "decoded": 1.0,
+     "static_ok": 0.9921875,
+     "mean_lines": 48.734375,
+     "grammar": false,
+     "gen_seconds": 5.0
+    },
+    "dponogram/rocket/llmflash": {
+     "n": 128,
+     "decoded": 1.0,
+     "static_ok": 0.9921875,
+     "mean_lines": 71.296875,
+     "grammar": false,
+     "gen_seconds": 7.7
+    },
+    "dponogram/boom/base": {
+     "n": 128,
+     "decoded": 0.9921875,
+     "static_ok": 0.984375,
+     "mean_lines": 45.21875,
+     "grammar": false,
+     "gen_seconds": 4.1
+    },
+    "dponogram/boom/ext": {
+     "n": 128,
+     "decoded": 1.0,
+     "static_ok": 0.9921875,
+     "mean_lines": 48.8125,
+     "grammar": false,
+     "gen_seconds": 4.9
+    },
+    "dponogram/boom/llmflash": {
+     "n": 128,
+     "decoded": 1.0,
+     "static_ok": 0.9921875,
+     "mean_lines": 71.2890625,
+     "grammar": false,
+     "gen_seconds": 7.8
+    }
+   },
+   "small_sft.log.json": [
+    {
+     "step": 100,
+     "train_loss": 1.881,
+     "val_loss": 2.1456,
+     "seconds": 18
+    },
+    {
+     "step": 125,
+     "train_loss": 1.7828,
+     "val_loss": 2.1438,
+     "seconds": 22
+    },
+    {
+     "step": 149,
+     "train_loss": 1.6934,
+     "val_loss": 2.1429,
+     "seconds": 25
+    }
+   ],
+   "small_dpo.log.json": [
+    {
+     "step": 150,
+     "dpo_loss": 0.7101,
+     "pref_acc": 0.5,
+     "seconds": 32
+    },
+    {
+     "step": 175,
+     "dpo_loss": 0.6352,
+     "pref_acc": 0.75,
+     "seconds": 37
+    },
+    {
+     "step": 199,
+     "dpo_loss": 0.6098,
+     "pref_acc": 0.625,
+     "seconds": 43
+    }
+   ]
+  }
+ },
+ "data": {
+  "cores": [
+   "boom",
+   "rocket"
+  ],
+  "label_rows": {
+   "rocket/driver": 122400,
+   "rocket/multiplexer": 120960,
+   "boom/driver": 122400,
+   "boom/multiplexer": 122400
+  },
+  "sft_programs": 720,
+  "pairs": 1481,
+  "train_mutants_with_killers": 477,
+  "sft_programs_by_core_profile": {
+   "rocket/base": 120,
+   "rocket/ext": 120,
+   "rocket/llmflash": 120,
+   "boom/llmflash": 120,
+   "boom/base": 120,
+   "boom/ext": 120
+  }
+ }
+}
