@@ -81,13 +81,16 @@ def main():
                                 "--steps", str(d_steps), "--bs", "8", "--lr", str(d_lr), "--beta", "0.1",
                                 "--eval-every", "25", "--out", dpo], log)
         st["samples"] = {}
-        for tag, ck, kill in (("pre", pre[0], False), ("sft", sft, True), ("dpo", dpo, True)):
+        # grammar-constrained samples from every stage; plus unconstrained DPO samples to measure the grammar
+        for tag, ck, kill, extra in (("pre", pre[0], False, []), ("sft", sft, True, []), ("dpo", dpo, True, []),
+                                     ("dponogram", dpo, True, ["--no-grammar"])):
             if not os.path.exists(ck):
                 continue
             for core, prof in [(c, p) for c in ("rocket", "boom") for p in ("base", "ext", "llmflash")]:
                 out = f"{W}/samples_{preset}_{tag}_{core}_{prof}.json"
                 run([py, "-m", "rocket.genmodel.sample", "--ckpt", ck, "--core", core, "--profile", prof,
-                     "--n", str(N_SAMPLES), "--seed", "7"] + (["--kill"] if kill else []) + ["--out", out], log)
+                     "--n", str(N_SAMPLES if not extra else N_SAMPLES // 2), "--seed", "7"]
+                    + (["--kill"] if kill else []) + extra + ["--out", out], log)
                 if os.path.exists(out):
                     st["samples"][f"{tag}/{core}/{prof}"] = json.load(open(out))["summary"]
         for ck in (sft, dpo):
