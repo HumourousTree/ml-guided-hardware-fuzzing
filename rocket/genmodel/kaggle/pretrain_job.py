@@ -41,7 +41,14 @@ def code_tree() -> str:
             if "__" in f:
                 dst = os.path.join("/tmp/code", *f.split("__"))
                 os.makedirs(os.path.dirname(dst), exist_ok=True)
-                with open(os.path.join(src, f), "rb") as a, open(dst, "wb") as b:
+                path = os.path.join(src, f)
+                if os.path.isdir(path):              # Kaggle unpacks uploaded .gz files into a directory: re-pack
+                    import gzip
+                    inner = [os.path.join(path, x) for x in os.listdir(path)]
+                    with open(inner[0], "rb") as a, gzip.open(dst + ".gz", "wb") as b:
+                        b.write(a.read())
+                    continue
+                with open(path, "rb") as a, open(dst, "wb") as b:
                     b.write(a.read())
         os.chdir("/tmp/code")
         return open(os.path.join(src, "COMMIT")).read().strip()
