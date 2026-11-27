@@ -1,0 +1,2 @@
+GitHub Actions run 46040910415 (encarsia-campaign.yml, core=boom, profile=base, quirks=gate, 5 seeds), artifact merged-boom-base-gate.
+Filter-mode comparison: results/v0.4/bench/boom.

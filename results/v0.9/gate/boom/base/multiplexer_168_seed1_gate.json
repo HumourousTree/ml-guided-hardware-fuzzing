@@ -1,0 +1,1 @@
+{"seed": 1, "length": 40, "fp": true, "profile": "base", "core": "boom", "quirks": {}, "quirk_mode": "gate", "programs": 2000, "mismatches": 0, "nonterminating": 0, "spike_failures": 0, "first_detection": null, "t_start": 1795800454.8164468, "reference_disagreements": 58, "seconds": 1514.7, "kind": "multiplexer", "dir": 168, "budget_programs": 2000}

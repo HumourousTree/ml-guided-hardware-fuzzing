@@ -1,0 +1,1 @@
+{"seed": 3, "length": 40, "fp": true, "profile": "base", "core": "boom", "quirks": {}, "quirk_mode": "gate", "programs": 2000, "mismatches": 0, "nonterminating": 0, "spike_failures": 0, "first_detection": null, "t_start": 1795802075.3656993, "reference_disagreements": 51, "seconds": 1642.4, "kind": "driver", "dir": 990, "budget_programs": 2000}
