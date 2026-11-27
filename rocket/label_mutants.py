@@ -128,20 +128,29 @@ def cmd_pool(a):
 
 
 def cmd_label(a):
-    man = json.loads(Path(a.manifest).read_text())
+    import gzip
+    pool = json.loads(gzip.open(a.pool, "rt").read() if a.pool.endswith(".gz") else Path(a.pool).read_text())
+    if a.limit_programs:
+        pool["programs"] = pool["programs"][:a.limit_programs]
+    if a.published:   # the published Encarsia bugs (held out from training), straight from EnCorpus
+        pub = json.loads((ROOT / "docs" / "encarsia_published.json").read_text())[a.core]
+        dirs = pub["driver_dirs"] if a.kind == "driver" else pub["multiplexer_dirs"]
+        man = {"core": a.core, "kind": a.kind, "mutants": [{"dir": d, "split": "published"} for d in dirs]}
+        a.mutants = str(mutant_factory.CORPUS.parent)
+    else:
+        man = json.loads(Path(a.manifest).read_text())
     a.yosys = a.yosys or mutant_factory.INJECTOR[a.kind]
-    pool = json.loads(Path(a.pool).read_text())
     assert man["core"] == pool["core"] == a.core and man["kind"] == a.kind
     sel = [m for m in man["mutants"] if a.split == "all" or m["split"] == a.split]
     mine = [m for i, m in enumerate(sel) if i % a.of == a.shard]
-    mdir = Path(a.mutants) / a.core / a.kind
-    if not any(mdir.glob("*/" + mutant_factory.HOST_FILE[a.kind])):
+    mdir = (mutant_factory.CORPUS if a.published else Path(a.mutants)) / a.core / a.kind
+    if not a.published and not any(mdir.glob("*/" + mutant_factory.HOST_FILE[a.kind])):
         mutant_factory.inject(a.yosys, a.core, a.kind, man["num_bugs_requested"], mdir)
     out = open(a.out, "w")
     work = Path(tempfile.mkdtemp(prefix="label-"))
     for m in mine:
         host = mdir / str(m["dir"]) / mutant_factory.HOST_FILE[a.kind]
-        if mutant_factory.sha(host) != m["sha256"]:
+        if not a.published and mutant_factory.sha(host) != m["sha256"]:
             raise SystemExit(f"mutant {m['dir']}: regenerated netlist differs from the manifest (injection not deterministic)")
         try:
             sim = _build(host, work / f"m{m['dir']}", a.core, a.kind == "multiplexer")
@@ -170,8 +179,11 @@ def main():
     p.add_argument("--profiles", default="base:120,ext:120,llmflash:120"); p.add_argument("--out", required=True)
     p.add_argument("--from-samples", nargs="*", help="sample files from rocket/genmodel/sample.py instead of --profiles")
     l = sub.add_parser("label")
-    for k in ("--core", "--kind", "--manifest", "--pool", "--out"):
+    for k in ("--core", "--kind", "--pool", "--out"):
         l.add_argument(k, required=True)
+    l.add_argument("--manifest", help="training/dev mutants (from the factory); not needed with --published")
+    l.add_argument("--published", action="store_true", help="label the published Encarsia bugs instead")
+    l.add_argument("--limit-programs", type=int, default=0, help="first N pool programs only (tests)")
     l.add_argument("--shard", type=int, default=0); l.add_argument("--of", type=int, default=1)
     l.add_argument("--jobs", type=int, default=4)
     l.add_argument("--split", choices=["all", "train", "dev"], default="all", help="label only these mutants")
