@@ -173,8 +173,9 @@ class ISATokenizer:
             if toks[i] == "(":
                 reg, i = atom(i + 1); i += 1                     # skip ")"
                 ops.append(f"({reg})"); continue
+            numeric = toks[i] in ("#+", "#-")
             a, i = atom(i)
-            if i < len(toks) and toks[i] == "(":                 # imm(reg)
+            if numeric and i < len(toks) and toks[i] == "(":     # imm(reg); a register is never merged
                 reg, i = atom(i + 1); i += 1
                 a = f"{a}({reg})"
             ops.append(a)

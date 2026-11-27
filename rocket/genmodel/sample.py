@@ -17,11 +17,13 @@ import random
 import re
 import sys
 import tempfile
+import time
 from pathlib import Path
 
 import torch
 
 from rocket.genmodel.data import ROOT, tokenizer
+from rocket.genmodel import grammar
 from rocket.genmodel.model import GPT
 
 sys.path.insert(0, str(ROOT / "rocket"))
@@ -63,6 +65,24 @@ def static_check(body: list[str], profile: str) -> str | None:
     return None
 
 
+LABEL_REF = re.compile(r"\b(L\d+|T\d+_A)\b")
+
+
+def close_body(body: list[str]) -> list[str]:
+    """A body cut off by the context limit can leave forward references or `.option push` open: define the missing
+    labels at the end (the branch then jumps to the end of the body) and pop what was pushed."""
+    defined = {m.group(1) for l in body for m in [re.match(r"(\w+):", l)] if m}      # also `T1_A: .dword ...`
+    refs = []
+    for l in body:
+        if not l.endswith(":"):                     # branch targets and `la` template labels
+            refs += [x for x in LABEL_REF.findall(l) if x not in defined and x not in refs]
+    depth = 0
+    for l in body:
+        depth += l == ".option push"
+        depth -= l == ".option pop" and depth > 0
+    return body + [".option pop"] * depth + [f"{x}:" for x in refs]
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--ckpt", type=Path, required=True); ap.add_argument("--core", default="rocket")
@@ -70,6 +90,7 @@ def main():
     ap.add_argument("--n", type=int, default=64); ap.add_argument("--temperature", type=float, default=1.0)
     ap.add_argument("--top-k", type=int, default=0); ap.add_argument("--seed", type=int, default=1)
     ap.add_argument("--batch", type=int, default=64)
+    ap.add_argument("--no-grammar", action="store_true", help="unconstrained sampling (default: grammar-constrained)")
     ap.add_argument("--assemble", action="store_true"); ap.add_argument("--out", type=Path, required=True)
     a = ap.parse_args()
     torch.manual_seed(a.seed)
@@ -79,11 +100,16 @@ def main():
     prefix = [tk.id["<bos>"], tk.id[f"ctl:core:{a.core}"], tk.id[f"ctl:prof:{a.profile}"]] + ([tk.id["ctl:kill"]] if a.kill else [])
     # fp16 autocast on the GPU (several times faster on a T4; logits are cast back to fp32 before sampling), in
     # batches so memory stays bounded for long contexts
-    outs = []
+    # grammar-constrained decoding (rocket/genmodel/grammar.py): every sampled body is well-formed by construction
+    gram = None if a.no_grammar else grammar.load()
+    outs, t0 = [], time.time()
     with torch.autocast("cuda", dtype=torch.float16, enabled=dev == "cuda"):
         for k in range(0, a.n, a.batch):
+            m = min(a.batch, a.n - k)
+            cons = None if gram is None else [grammar.Constraint(gram, tk, a.profile) for _ in range(m)]
             outs += model.generate(prefix, model.c.ctx - len(prefix), tk.id["<eos>"], a.temperature, a.top_k,
-                                   min(a.batch, a.n - k), dev)
+                                   m, dev, constraints=cons)
+    gen_seconds = time.time() - t0
     q = rv64fuzz.QUIRKS[a.core]
     rows, w = [], Path(tempfile.mkdtemp(prefix="gmsample-"))
     for i, ids in enumerate(outs):
@@ -93,6 +119,7 @@ def main():
             r["decoded"] = bool(body)
         except Exception as e:                                   # noqa: BLE001 - any decode failure is a sample failure
             r["error"] = f"decode: {e}"; rows.append(r); continue
+        body = close_body(body)
         r["body"] = body
         r["static"] = static_check(body, a.profile)
         if r["static"] is None:
@@ -109,7 +136,8 @@ def main():
     n = len(rows)
     summary = {"n": n, "decoded": sum(r["decoded"] for r in rows) / n,
                "static_ok": sum(r["static"] is None and r["decoded"] for r in rows) / n,
-               "mean_lines": sum(len(r.get("body", [])) for r in rows) / n}
+               "mean_lines": sum(len(r.get("body", [])) for r in rows) / n, "grammar": gram is not None,
+               "gen_seconds": round(gen_seconds, 1)}
     if a.assemble:
         summary["assembled"] = sum(bool(r["assembled"]) for r in rows) / n
     a.out.write_text(json.dumps({"summary": summary, "samples": rows}, indent=1))
