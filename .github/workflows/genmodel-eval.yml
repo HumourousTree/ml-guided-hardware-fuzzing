@@ -9,6 +9,7 @@ on:
     inputs:
       run: {description: "folder under data/genmodel/ with samples_*.json", required: true}
       core: {description: "core", required: true, default: rocket, type: choice, options: [rocket, boom]}
+      per_file: {description: "gate-passing samples kept per file (120 = a generator profile's pool size)", required: false, default: "120"}
 
 permissions:
   contents: read
@@ -46,7 +47,8 @@ jobs:
       - run: |
           [ -e "$HOME/ext" ] || ln -s /root/ext "$HOME/ext"
           python3 rocket/label_mutants.py pool --core ${{ inputs.core }} \
-            --from-samples data/genmodel/${{ inputs.run }}/samples_*.json --out pool.json | tee gate.txt
+            --from-samples data/genmodel/${{ inputs.run }}/samples_*.json --per-file ${{ inputs.per_file }} \
+            --out pool.json | tee gate.txt
       - uses: actions/upload-artifact@v4
         with: {name: "gm-pool-${{ inputs.run }}", path: "pool.json\ngate.txt"}
 
@@ -129,7 +131,11 @@ jobs:
               cat pub/pub_generators_${k}_*.jsonl > pub_generators_$k.jsonl 2>/dev/null || true
               echo "== $k: learned generator (published Encarsia bugs, held out)"; python3 tools/label_summary.py pub_model_$k.jsonl
               echo "== $k: generator pools (published Encarsia bugs)"; python3 tools/label_summary.py pub_generators_$k.jsonl
-            done; cat pub_*.jsonl > published_labels.jsonl; } 2>&1 | tee summary.txt
+            done; cat pub_*.jsonl > published_labels.jsonl
+            echo "== per model stage (union over profiles) vs the generator pools"
+            python3 tools/genmodel_compare.py --model labels.jsonl pub_model_driver.jsonl pub_model_multiplexer.jsonl \
+              --baseline base_driver.jsonl base_multiplexer.jsonl pub_generators_driver.jsonl pub_generators_multiplexer.jsonl \
+              --json compare.json; } 2>&1 | tee summary.txt
       - uses: actions/upload-artifact@v4
         with:
           name: genmodel-eval-${{ inputs.run }}
@@ -137,4 +143,5 @@ jobs:
             labels.jsonl
             published_labels.jsonl
             pool.json
+            compare.json
             summary.txt

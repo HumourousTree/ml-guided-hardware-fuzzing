@@ -100,6 +100,8 @@ def cmd_pool(a):
             src = Path(f).stem
             st = gate.setdefault(src, collections.Counter())
             for smp in json.loads(Path(f).read_text())["samples"]:
+                if a.per_file and st["kept"] >= a.per_file:     # same pool size as a generator profile
+                    break
                 st["samples"] += 1
                 if not smp.get("asm"):
                     st["static_or_decode"] += 1; continue
@@ -178,6 +180,8 @@ def main():
     p = sub.add_parser("pool"); p.add_argument("--core", required=True); p.add_argument("--seed", type=int, default=7)
     p.add_argument("--profiles", default="base:120,ext:120,llmflash:120"); p.add_argument("--out", required=True)
     p.add_argument("--from-samples", nargs="*", help="sample files from rocket/genmodel/sample.py instead of --profiles")
+    p.add_argument("--per-file", type=int, default=0,
+                   help="with --from-samples: keep the first N gate-passing samples of each file (0 = all)")
     l = sub.add_parser("label")
     for k in ("--core", "--kind", "--pool", "--out"):
         l.add_argument(k, required=True)
