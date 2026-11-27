@@ -82,10 +82,12 @@ independent generator pool of the same size.
 | DPO without grammar (small / base) | 43 / 44 | -0.1 [-2, +2] / +0.3 [-2, +2] | 16 / 17 |
 
 The learned generator matches the generators; every interval includes 0, so there is no significant gain, and
-fine-tuning on kills changes little (kills per program and mutant: generators 0.212, small DPO 0.214). One held-out
-result stands out: Encarsia's Rocket mix-up 9 (`driver/804`), which none of DifuzzRTL, ProcessorFuzz or Cascade
-detects (with or without coverage) and none of our 360 generator programs kills, is killed by two `base` samples
-(pre and DPO-without-grammar, ext profile, register mismatch); a re-run of those two programs is in progress.
+fine-tuning on kills changes little (kills per program and mutant: generators 0.212, small DPO 0.214). The one
+difference on published bugs is Encarsia's Rocket mix-up 9 (`driver/804`), which none of DifuzzRTL, ProcessorFuzz or
+Cascade detects: two `base` samples kill it (pre and DPO-without-grammar, ext profile, register mismatch; re-run
+46032665516 reproduces both) and none of the 360 pool programs does. It is not beyond our generators: the Step 1
+campaigns find it with ext (5/5 seeds, median 62 programs) and the LLM templates (3/5); it is only rare in a
+360-program pool.
 
 **On-policy round 1.** 720 samples per core from small DPO (half at temperature 1.0, half at 1.3), labelled against a
 fixed random 100 per core x kind of the train mutants that no generator program kills (`genmodel-onpolicy.yml`).
