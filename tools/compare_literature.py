@@ -1015,6 +1015,69 @@ def section_llmgen(logs, M, md):
     return "\n".join(lines) + "\n\\bottomrule\\end{tabular}"
 
 
+def section_gate(logs, M, md):
+    """Gate mode on BOOM (results/v0.9/gate/boom/<profile>): instructions the quirk filter would replace are kept and
+    every mismatch is re-checked on the bug-free core at once. Per profile and union, replay-confirmed (macros Gate*),
+    against the filtered runs in logs/bench/boom."""
+    pub_f, G = ROOT / "docs" / "encarsia_published.json", ROOT / "results" / "v0.9" / "gate" / "boom"
+    F = logs / "bench" / "boom"
+    if not pub_f.exists() or not G.exists() or not F.exists():
+        return ""
+    pub = json.loads(pub_f.read_text())["boom"]
+    union = {k: set().union(*(set(pub["detected"][k][fz]) for fz in ("DifuzzRTL", "ProcessorFuzz", "Cascade")))
+             for k in ("mixups", "conditionals")}
+    fconf = load(F / "confirmations.json") or {}
+
+    def found(files, conf):
+        out = {"mixups": set(), "conditionals": set()}
+        for f in files:
+            r = json.loads(f.read_text())
+            if r.get("first_detection") and conf.get(f.name, {}).get("confirmed"):
+                key = "mixups" if r["kind"] == "driver" else "conditionals"
+                out[key].add((pub["driver_dirs"] if key == "mixups" else pub["multiplexer_dirs"]).index(r["dir"]) + 1)
+        return out
+    lines = ["\\begin{tabular}{@{}l r r r r@{}}\\toprule",
+             "& \\multicolumn{2}{c}{quirk filter} & \\multicolumn{2}{c}{gate mode}\\\\\\cmidrule(lr){2-3}\\cmidrule(l){4-5}",
+             "Profile (programs per seed) & Mix & Cond & Mix & Cond\\\\\\midrule"]
+    uf, ug = {"mixups": set(), "conditionals": set()}, {"mixups": set(), "conditionals": set()}
+    skipped = progs = confirmed = dets = 0
+    for p, label, tag in (("base", "random (2,000)", "Base"), ("ext", "hand-designed ext (400)", "Ext"),
+                          ("llmflash", "LLM templates (400)", "Flash")):
+        sfx = "" if p == "base" else "_" + p
+        if not (G / p).exists():
+            continue
+        gconf = load(G / p / "confirmations.json") or {}
+        fs = found([f for f in F.glob(f"*_seed?{sfx}.json")], fconf)
+        gfiles = list((G / p).glob(f"*_seed?{sfx}_gate.json"))
+        gs = found(gfiles, gconf)
+        for f in gfiles:
+            r = json.loads(f.read_text())
+            if r["kind"] in ("driver", "multiplexer") and not f.name.startswith("golden"):
+                skipped += r.get("reference_disagreements", 0); progs += r["programs"]
+                if r.get("first_detection"):
+                    dets += 1; confirmed += bool(gconf.get(f.name, {}).get("confirmed"))
+        for k in uf:
+            uf[k] |= fs[k]; ug[k] |= gs[k]
+        M[f"GateBoom{tag}Mix"], M[f"GateBoom{tag}Cond"] = len(gs["mixups"]), len(gs["conditionals"])
+        M[f"FiltBoom{tag}Mix"], M[f"FiltBoom{tag}Cond"] = len(fs["mixups"]), len(fs["conditionals"])
+        lines.append(f"{label} & {len(fs['mixups'])} & {len(fs['conditionals'])} & {len(gs['mixups'])} & {len(gs['conditionals'])}\\\\")
+    lines.append(f"union & {len(uf['mixups'])} & {len(uf['conditionals'])} & {len(ug['mixups'])} & {len(ug['conditionals'])}\\\\")
+    M["GateBoomUnionMix"], M["GateBoomUnionCond"] = len(ug["mixups"]), len(ug["conditionals"])
+    M["FiltBoomUnionMix"], M["FiltBoomUnionCond"] = len(uf["mixups"]), len(uf["conditionals"])
+    gained = [f"M{x}" for x in sorted(ug["mixups"] - uf["mixups"])] + [f"C{x}" for x in sorted(ug["conditionals"] - uf["conditionals"])]
+    lost = [f"M{x}" for x in sorted(uf["mixups"] - ug["mixups"])] + [f"C{x}" for x in sorted(uf["conditionals"] - ug["conditionals"])]
+    beyond = ([f"M{x}" for x in sorted((ug["mixups"] | uf["mixups"]) - union["mixups"])]
+              + [f"C{x}" for x in sorted((ug["conditionals"] | uf["conditionals"]) - union["conditionals"])])
+    M["GateBoomGained"], M["GateBoomLost"] = ", ".join(gained) or "none", ", ".join(lost) or "none"
+    M["GateBoomBeyond"], M["GateBoomBeyondList"] = len(beyond), ", ".join(beyond) or "none"
+    M["GateBoomSkipPct"] = f"{100 * skipped / max(progs, 1):.1f}"
+    M["GateBoomDetConfirmed"], M["GateBoomDetections"] = confirmed, dets
+    md.append(f"## Gate mode on BOOM\n- union: filter {len(uf['mixups'])}/{len(uf['conditionals'])}, gate "
+              f"{len(ug['mixups'])}/{len(ug['conditionals'])}; gained {gained or 'none'}, lost {lost or 'none'}; "
+              f"beyond published {beyond}; {confirmed}/{dets} confirmed; {100 * skipped / max(progs, 1):.1f}% skipped")
+    return "\n".join(lines) + "\n\\bottomrule\\end{tabular}"
+
+
 def section_real_bug(M, md):
     v = load(ROOT / "hw_design" / "real_bugs" / "picorv32_fence_rd" / "verification.json")
     if not v:
@@ -1162,6 +1225,7 @@ def main():
     tabs["rocket"] = section_encarsia(logs, M, md, "rocket", "Roc")
     tabs["boom"] = section_encarsia(logs, M, md, "boom", "Boom")
     tabs["llmgen"] = section_llmgen(logs, M, md)
+    tabs["gate"] = section_gate(logs, M, md)
     from llm_figures import all_figures
     all_figures(logs, figs, plt, save, ROOT, at_programs)
     tabs["lit_testcases"], tabs["lit_encarsia"] = section_literature(json.loads(Path(a.lit).read_text()), logs, M, md, figs, plt, cov, bugagg)
