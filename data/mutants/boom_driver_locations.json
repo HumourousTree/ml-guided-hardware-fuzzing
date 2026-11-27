@@ -1,0 +1,4037 @@
+{
+ "core": "boom",
+ "kind": "driver",
+ "locations": {
+  "2": {
+   "modules": [
+    "IssueUnitCollapsing"
+   ],
+   "signals": [
+    "slots_5_io_in_uop_bits_ppred_busy",
+    "GEN_1064",
+    "slots_6_io_out_uop_ppred_busy"
+   ],
+   "lines": 2
+  },
+  "3": {
+   "modules": [
+    "IssueUnitCollapsing"
+   ],
+   "signals": [
+    "GEN_827",
+    "issue_slots_3_grant"
+   ],
+   "lines": 6
+  },
+  "6": {
+   "modules": [
+    "IssueUnitCollapsing"
+   ],
+   "signals": [
+    "slots_6_io_in_uop_bits_ppred_busy",
+    "issue_slots_3_grant"
+   ],
+   "lines": 6
+  },
+  "9": {
+   "modules": [
+    "IssueUnitCollapsing"
+   ],
+   "signals": [
+    "slots_7_reset",
+    "issue_slots_6_in_uop_valid"
+   ],
+   "lines": 6
+  },
+  "10": {
+   "modules": [
+    "IssueUnitCollapsing"
+   ],
+   "signals": [
+    "slots_7_clock",
+    "slots_0_io_uop_rob_idx",
+    "clock"
+   ],
+   "lines": 2
+  },
+  "11": {
+   "modules": [
+    "IssueUnitCollapsing"
+   ],
+   "signals": [
+    "slots_3_io_brupdate_b1_mispredict_mask",
+    "GEN_1007",
+    "io_brupdate_b1_mispredict_mask"
+   ],
+   "lines": 2
+  },
+  "13": {
+   "modules": [
+    "IssueSlot"
+   ],
+   "signals": [
+    "slot_uop_prs1",
+    "T_36"
+   ],
+   "lines": 6
+  },
+  "15": {
+   "modules": [
+    "IssueSlot"
+   ],
+   "signals": [
+    "T_3",
+    "T_32"
+   ],
+   "lines": 6
+  },
+  "18": {
+   "modules": [
+    "IssueSlot"
+   ],
+   "signals": [
+    "slot_uop_imm_packed",
+    "next_uop_prs1"
+   ],
+   "lines": 6
+  },
+  "19": {
+   "modules": [
+    "IssueSlot"
+   ],
+   "signals": [
+    "io_brupdate_b1_resolve_mask",
+    "T_3"
+   ],
+   "lines": 6
+  },
+  "22": {
+   "modules": [
+    "IssueSlot"
+   ],
+   "signals": [
+    "GEN_125",
+    "GEN_121"
+   ],
+   "lines": 6
+  },
+  "23": {
+   "modules": [
+    "FPUExeUnit"
+   ],
+   "signals": [
+    "fp_sdq_io_deq_ready",
+    "fpu_io_resp_bits_uop_is_amo"
+   ],
+   "lines": 6
+  },
+  "25": {
+   "modules": [
+    "FPUExeUnit"
+   ],
+   "signals": [
+    "io_brupdate_b1_mispredict_mask",
+    "fp_sdq_io_enq_bits_data_prevUnrecoded_rawIn__sig",
+    "fpu_io_brupdate_b1_mispredict_mask"
+   ],
+   "lines": 6
+  },
+  "28": {
+   "modules": [
+    "FPUExeUnit"
+   ],
+   "signals": [
+    "fp_sdq_io_enq_bits_uop_uses_stq",
+    "fp_sdq_io_enq_bits_data_unrecoded_rawIn_isZero"
+   ],
+   "lines": 6
+  },
+  "29": {
+   "modules": [
+    "FPUExeUnit"
+   ],
+   "signals": [
+    "fdivsqrt_io_resp_bits_uop_dst_rtype",
+    "T_7"
+   ],
+   "lines": 6
+  },
+  "30": {
+   "modules": [
+    "FPUExeUnit"
+   ],
+   "signals": [
+    "io_enq_valid",
+    "resp_arb_io_in_0_bits_uop_br_mask",
+    "fp_sdq_io_enq_valid"
+   ],
+   "lines": 6
+  },
+  "31": {
+   "modules": [
+    "FPUExeUnit"
+   ],
+   "signals": [
+    "reset",
+    "fp_sdq_io_enq_bits_data_prevUnrecoded_rawIn_isSpecial",
+    "queue_reset"
+   ],
+   "lines": 6
+  },
+  "32": {
+   "modules": [
+    "FPUExeUnit"
+   ],
+   "signals": [
+    "fpu_io_fcsr_rm",
+    "io_fresp_valid_T_4"
+   ],
+   "lines": 6
+  },
+  "33": {
+   "modules": [
+    "FPUExeUnit"
+   ],
+   "signals": [
+    "io_brupdate_b1_resolve_mask",
+    "fp_sdq_io_enq_bits_data_unrecoded_rawIn_exp",
+    "fpu_io_brupdate_b1_resolve_mask"
+   ],
+   "lines": 6
+  },
+  "34": {
+   "modules": [
+    "Arbiter_16"
+   ],
+   "signals": [
+    "io_in_0_bits_predicated",
+    "io_in_1_bits_fflags_valid"
+   ],
+   "lines": 6
+  },
+  "35": {
+   "modules": [
+    "Arbiter_16"
+   ],
+   "signals": [
+    "io_in_1_bits_uop_uopc",
+    "io_in_0_bits_fflags_valid"
+   ],
+   "lines": 6
+  },
+  "37": {
+   "modules": [
+    "Arbiter_16"
+   ],
+   "signals": [
+    "io_in_0_bits_uop_br_mask",
+    "io_out_ready"
+   ],
+   "lines": 6
+  },
+  "38": {
+   "modules": [
+    "Arbiter_16"
+   ],
+   "signals": [
+    "io_in_1_bits_uop_rob_idx",
+    "io_in_0_valid"
+   ],
+   "lines": 6
+  },
+  "40": {
+   "modules": [
+    "Arbiter_16"
+   ],
+   "signals": [
+    "io_in_0_bits_uop_br_mask",
+    "io_in_0_valid"
+   ],
+   "lines": 6
+  },
+  "42": {
+   "modules": [
+    "Arbiter_16"
+   ],
+   "signals": [
+    "io_in_1_bits_uop_stq_idx",
+    "io_in_0_valid"
+   ],
+   "lines": 6
+  },
+  "43": {
+   "modules": [
+    "Arbiter_16"
+   ],
+   "signals": [
+    "io_in_1_bits_fflags_bits_flags",
+    "io_in_0_bits_uop_fp_val"
+   ],
+   "lines": 6
+  },
+  "46": {
+   "modules": [
+    "BranchKillableQueue_5"
+   ],
+   "signals": [
+    "uops_0_stq_idx",
+    "do_enq"
+   ],
+   "lines": 6
+  },
+  "48": {
+   "modules": [
+    "BranchKillableQueue_5"
+   ],
+   "signals": [
+    "uops_1_stq_idx",
+    "io_enq_bits_uop_stq_idx"
+   ],
+   "lines": 6
+  },
+  "50": {
+   "modules": [
+    "BranchKillableQueue_5"
+   ],
+   "signals": [
+    "out_uop_pdst",
+    "valids_0"
+   ],
+   "lines": 6
+  },
+  "61": {
+   "modules": [
+    "BranchKillableQueue_4"
+   ],
+   "signals": [
+    "valids_0_T_1",
+    "io_flush"
+   ],
+   "lines": 6
+  },
+  "64": {
+   "modules": [
+    "BranchKillableQueue_4"
+   ],
+   "signals": [
+    "uops_3_br_mask",
+    "valids_6"
+   ],
+   "lines": 6
+  },
+  "68": {
+   "modules": [
+    "FDivSqrtUnit"
+   ],
+   "signals": [
+    "io_resp_bits_uop_is_amo",
+    "divsqrt_io_inReady_div",
+    "r_out_uop_is_amo"
+   ],
+   "lines": 2
+  },
+  "70": {
+   "modules": [
+    "FDivSqrtUnit"
+   ],
+   "signals": [
+    "downvert_d2s_io_out",
+    "io_req_bits_uop_fp_val"
+   ],
+   "lines": 6
+  },
+  "75": {
+   "modules": [
+    "FDivSqrtUnit"
+   ],
+   "signals": [
+    "r_out_uop_uses_stq",
+    "divsqrt_io_outValid_sqrt"
+   ],
+   "lines": 6
+  },
+  "76": {
+   "modules": [
+    "FDivSqrtUnit"
+   ],
+   "signals": [
+    "r_buffer_fin_in1",
+    "io_req_valid"
+   ],
+   "lines": 6
+  },
+  "78": {
+   "modules": [
+    "DivSqrtRecF64"
+   ],
+   "signals": [
+    "io_latch_a_s0",
+    "ds_io_usingMulAdd",
+    "mul_io_latch_a_s0"
+   ],
+   "lines": 6
+  },
+  "82": {
+   "modules": [
+    "DivSqrtRecF64"
+   ],
+   "signals": [
+    "io_outValid_div",
+    "clock",
+    "ds_io_outValid_div"
+   ],
+   "lines": 2
+  },
+  "87": {
+   "modules": [
+    "DivSqrtRecF64"
+   ],
+   "signals": [
+    "io_b",
+    "ds_io_mulAddResult_3",
+    "ds_io_b"
+   ],
+   "lines": 6
+  },
+  "89": {
+   "modules": [
+    "Mul54"
+   ],
+   "signals": [
+    "io_a_s0",
+    "io_val_s0"
+   ],
+   "lines": 2
+  },
+  "90": {
+   "modules": [
+    "Mul54"
+   ],
+   "signals": [
+    "io_latch_a_s0",
+    "val_s1"
+   ],
+   "lines": 2
+  },
+  "92": {
+   "modules": [
+    "Mul54"
+   ],
+   "signals": [
+    "io_c_s2",
+    "io_b_s0"
+   ],
+   "lines": 6
+  },
+  "97": {
+   "modules": [
+    "Mul54"
+   ],
+   "signals": [
+    "reg_result_s3_T",
+    "reg_a_s1"
+   ],
+   "lines": 6
+  },
+  "100": {
+   "modules": [
+    "DivSqrtRecF64_mulAddZ31"
+   ],
+   "signals": [
+    "clock",
+    "divSqrtRecF64ToRaw_io_sqrtOp",
+    "divSqrtRecF64ToRaw_clock"
+   ],
+   "lines": 6
+  },
+  "102": {
+   "modules": [
+    "DivSqrtRecF64_mulAddZ31"
+   ],
+   "signals": [
+    "roundRawFNToRecFN_io_invalidExc",
+    "divSqrtRecF64ToRaw_io_rawOut_isNaN",
+    "divSqrtRecF64ToRaw_io_invalidExc"
+   ],
+   "lines": 2
+  },
+  "105": {
+   "modules": [
+    "DivSqrtRecF64_mulAddZ31"
+   ],
+   "signals": [
+    "io_invalidExc",
+    "roundRawFNToRecFN_io_in_isNaN",
+    "roundRawFNToRecFN_io_invalidExc"
+   ],
+   "lines": 6
+  },
+  "106": {
+   "modules": [
+    "DivSqrtRecF64_mulAddZ31"
+   ],
+   "signals": [
+    "roundRawFNToRecFN_io_in_isNaN",
+    "clock",
+    "divSqrtRecF64ToRaw_io_rawOut_isNaN"
+   ],
+   "lines": 2
+  },
+  "108": {
+   "modules": [
+    "DivSqrtRecF64_mulAddZ31"
+   ],
+   "signals": [
+    "divSqrtRecF64ToRaw_reset",
+    "roundRawFNToRecFN_io_in_isZero",
+    "reset"
+   ],
+   "lines": 2
+  },
+  "109": {
+   "modules": [
+    "DivSqrtRecF64_mulAddZ31"
+   ],
+   "signals": [
+    "io_latchMulAddB_0",
+    "roundRawFNToRecFN_io_infiniteExc",
+    "divSqrtRecF64ToRaw_io_latchMulAddB_0"
+   ],
+   "lines": 2
+  },
+  "110": {
+   "modules": [
+    "DivSqrtRecF64_mulAddZ31"
+   ],
+   "signals": [
+    "io_outValid_sqrt",
+    "divSqrtRecF64ToRaw_io_rawOutValid_div",
+    "divSqrtRecF64ToRaw_io_rawOutValid_sqrt"
+   ],
+   "lines": 2
+  },
+  "115": {
+   "modules": [
+    "RoundRawFNToRecFN_2"
+   ],
+   "signals": [
+    "io_in_sign",
+    "io_infiniteExc",
+    "roundAnyRawFNToRecFN_io_in_sign"
+   ],
+   "lines": 6
+  },
+  "116": {
+   "modules": [
+    "RoundRawFNToRecFN_2"
+   ],
+   "signals": [
+    "roundAnyRawFNToRecFN_io_roundingMode",
+    "io_in_sig",
+    "io_roundingMode"
+   ],
+   "lines": 2
+  },
+  "117": {
+   "modules": [
+    "RoundRawFNToRecFN_2"
+   ],
+   "signals": [
+    "roundAnyRawFNToRecFN_io_in_isZero",
+    "io_in_sig",
+    "io_in_isZero"
+   ],
+   "lines": 2
+  },
+  "121": {
+   "modules": [
+    "RoundRawFNToRecFN_2"
+   ],
+   "signals": [
+    "io_in_isZero",
+    "roundAnyRawFNToRecFN_io_exceptionFlags",
+    "roundAnyRawFNToRecFN_io_in_isZero"
+   ],
+   "lines": 6
+  },
+  "122": {
+   "modules": [
+    "RoundAnyRawFNToRecFN_7"
+   ],
+   "signals": [
+    "io_in_sign"
+   ],
+   "lines": 6
+  },
+  "123": {
+   "modules": [
+    "RoundAnyRawFNToRecFN_7"
+   ],
+   "signals": [
+    "commonCase"
+   ],
+   "lines": 6
+  },
+  "125": {
+   "modules": [
+    "RoundAnyRawFNToRecFN_7"
+   ],
+   "signals": [
+    "roundMask_T_31",
+    "expOut_T_14"
+   ],
+   "lines": 6
+  },
+  "128": {
+   "modules": [
+    "RoundAnyRawFNToRecFN_7"
+   ],
+   "signals": [
+    "expOut_T_20"
+   ],
+   "lines": 6
+  },
+  "133": {
+   "modules": [
+    "DivSqrtRecF64ToRaw_mulAddZ31"
+   ],
+   "signals": [
+    "zK2_A7_sqrt_T_2"
+   ],
+   "lines": 6
+  },
+  "138": {
+   "modules": [
+    "DivSqrtRecF64ToRaw_mulAddZ31"
+   ],
+   "signals": [
+    "io_b",
+    "majorExc_S_T_11"
+   ],
+   "lines": 6
+  },
+  "139": {
+   "modules": [
+    "DivSqrtRecF64ToRaw_mulAddZ31"
+   ],
+   "signals": [
+    "zFractR0_A6_sqrt",
+    "cyc_B4"
+   ],
+   "lines": 6
+  },
+  "142": {
+   "modules": [
+    "DivSqrtRecF64ToRaw_mulAddZ31"
+   ],
+   "signals": [
+    "GEN_62",
+    "cycleNum_A"
+   ],
+   "lines": 6
+  },
+  "143": {
+   "modules": [
+    "DivSqrtRecF64ToRaw_mulAddZ31"
+   ],
+   "signals": [
+    "cyc_B1_sqrt",
+    "hiSqrR0_A_sqrt"
+   ],
+   "lines": 6
+  },
+  "146": {
+   "modules": [
+    "RecFNToRecFN_1"
+   ],
+   "signals": [
+    "rawIn_out_sig_T",
+    "rawIn__isNaN"
+   ],
+   "lines": 6
+  },
+  "158": {
+   "modules": [
+    "RoundAnyRawFNToRecFN_5"
+   ],
+   "signals": [
+    "expOut_T_2",
+    "io_in_sign"
+   ],
+   "lines": 6
+  },
+  "159": {
+   "modules": [
+    "RoundAnyRawFNToRecFN_5"
+   ],
+   "signals": [
+    "GEN_0",
+    "io_in_sign"
+   ],
+   "lines": 6
+  },
+  "170": {
+   "modules": [
+    "UOPCodeFDivDecoder"
+   ],
+   "signals": [
+    "decoder_decoded_andMatrixInput_0_2",
+    "decoder_decoded_T_5",
+    "io_uopc"
+   ],
+   "lines": 2
+  },
+  "172": {
+   "modules": [
+    "UOPCodeFDivDecoder"
+   ],
+   "signals": [
+    "decoder_decoded_andMatrixInput_0_1",
+    "decoder_decoded_orMatrixOutputs",
+    "decoder_decoded_invInputs"
+   ],
+   "lines": 2
+  },
+  "173": {
+   "modules": [
+    "UOPCodeFDivDecoder"
+   ],
+   "signals": [
+    "decoder_decoded_andMatrixInput_0_1",
+    "decoder_decoded_invInputs"
+   ],
+   "lines": 2
+  },
+  "174": {
+   "modules": [
+    "UOPCodeFDivDecoder"
+   ],
+   "signals": [
+    "decoder_decoded_orMatrixOutputs",
+    "decoder_decoded_orMatrixOutputs_T_3"
+   ],
+   "lines": 6
+  },
+  "175": {
+   "modules": [
+    "UOPCodeFDivDecoder"
+   ],
+   "signals": [
+    "decoder_decoded_andMatrixInput_3",
+    "decoder_decoded_invInputs"
+   ],
+   "lines": 2
+  },
+  "178": {
+   "modules": [
+    "FPUUnit"
+   ],
+   "signals": [
+    "io_resp_bits_uop_fp_val",
+    "io_req_bits_rs2_data",
+    "r_uops_3_fp_val"
+   ],
+   "lines": 2
+  },
+  "181": {
+   "modules": [
+    "FPUUnit"
+   ],
+   "signals": [
+    "r_uops_1_is_amo[0",
+    "r_valids_0_T_4",
+    "r_uops_0_is_amo"
+   ],
+   "lines": 2
+  },
+  "182": {
+   "modules": [
+    "FPUUnit"
+   ],
+   "signals": [
+    "r_uops_1_is_amo",
+    "io_resp_valid_T_1"
+   ],
+   "lines": 6
+  },
+  "183": {
+   "modules": [
+    "FPUUnit"
+   ],
+   "signals": [
+    "r_uops_2_is_amo[0",
+    "r_uops_1_uopc",
+    "r_uops_1_is_amo"
+   ],
+   "lines": 2
+  },
+  "184": {
+   "modules": [
+    "FPUUnit"
+   ],
+   "signals": [
+    "io_req_bits_uop_uses_stq",
+    "reset"
+   ],
+   "lines": 2
+  },
+  "185": {
+   "modules": [
+    "FPUUnit"
+   ],
+   "signals": [
+    "fpu_reset",
+    "r_uops_1_uses_ldq",
+    "reset"
+   ],
+   "lines": 2
+  },
+  "186": {
+   "modules": [
+    "FPUUnit"
+   ],
+   "signals": [
+    "r_uops_2_stq_idx[2",
+    "r_valids_0_T",
+    "r_uops_1_stq_idx"
+   ],
+   "lines": 2
+  },
+  "188": {
+   "modules": [
+    "FPU"
+   ],
+   "signals": [
+    "fpu_out_data_T_6"
+   ],
+   "lines": 6
+  },
+  "192": {
+   "modules": [
+    "FPU"
+   ],
+   "signals": [
+    "dfma_io_in_bits_req_in1_unswizzled",
+    "io_req_bits_uop_imm_packed"
+   ],
+   "lines": 6
+  },
+  "196": {
+   "modules": [
+    "FPU"
+   ],
+   "signals": [
+    "io_req_bits_rs3_data",
+    "fp_decoder_io_sigs_wflags"
+   ],
+   "lines": 6
+  },
+  "201": {
+   "modules": [
+    "FPToFP"
+   ],
+   "signals": [
+    "reset"
+   ],
+   "lines": 6
+  },
+  "202": {
+   "modules": [
+    "FPToFP"
+   ],
+   "signals": [
+    "io_out_outPipe_bits_exc",
+    "inPipe_bits_wflags"
+   ],
+   "lines": 6
+  },
+  "204": {
+   "modules": [
+    "FPToFP"
+   ],
+   "signals": [
+    "isnan2",
+    "inPipe_bits_in2"
+   ],
+   "lines": 6
+  },
+  "206": {
+   "modules": [
+    "FPToFP"
+   ],
+   "signals": [
+    "inPipe_bits_in1",
+    "io_in_valid"
+   ],
+   "lines": 6
+  },
+  "210": {
+   "modules": [
+    "RecFNToRecFN"
+   ],
+   "signals": [
+    "io_in",
+    "rawIn_isZero"
+   ],
+   "lines": 6
+  },
+  "212": {
+   "modules": [
+    "RecFNToRecFN"
+   ],
+   "signals": [
+    "rawIn__isNaN",
+    "rawIn_isSpecial"
+   ],
+   "lines": 6
+  },
+  "216": {
+   "modules": [
+    "RecFNToRecFN"
+   ],
+   "signals": [
+    "io_detectTininess",
+    "rawIn__isNaN",
+    "roundAnyRawFNToRecFN_io_detectTininess"
+   ],
+   "lines": 6
+  },
+  "217": {
+   "modules": [
+    "RecFNToRecFN"
+   ],
+   "signals": [
+    "io_in_sign",
+    "rawIn_exp",
+    "roundAnyRawFNToRecFN_io_in_sign"
+   ],
+   "lines": 6
+  },
+  "224": {
+   "modules": [
+    "RoundAnyRawFNToRecFN_4"
+   ],
+   "signals": [
+    "roundedSig_T_2",
+    "sRoundedExp"
+   ],
+   "lines": 6
+  },
+  "226": {
+   "modules": [
+    "RoundAnyRawFNToRecFN_4"
+   ],
+   "signals": [
+    "roundMask_msb_2",
+    "overflow"
+   ],
+   "lines": 6
+  },
+  "229": {
+   "modules": [
+    "RoundAnyRawFNToRecFN_4"
+   ],
+   "signals": [],
+   "lines": 6
+  },
+  "232": {
+   "modules": [
+    "FPToInt"
+   ],
+   "signals": [
+    "excOut_T_3",
+    "store_prevUnrecoded_rawIn__isNaN"
+   ],
+   "lines": 6
+  },
+  "233": {
+   "modules": [
+    "FPToInt"
+   ],
+   "signals": [
+    "classify_out_expOut_T_4",
+    "store_unrecoded_rawIn_exp"
+   ],
+   "lines": 6
+  },
+  "236": {
+   "modules": [
+    "FPToInt"
+   ],
+   "signals": [
+    "store_T_5",
+    "store_unrecoded_rawIn__sign"
+   ],
+   "lines": 6
+  },
+  "237": {
+   "modules": [
+    "FPToInt"
+   ],
+   "signals": [
+    "toint_T_2"
+   ],
+   "lines": 6
+  },
+  "239": {
+   "modules": [
+    "FPToInt"
+   ],
+   "signals": [
+    "dcmp_io_a",
+    "toint"
+   ],
+   "lines": 6
+  },
+  "240": {
+   "modules": [
+    "FPToInt"
+   ],
+   "signals": [
+    "store_unrecoded_fractOut",
+    "classify_out_T"
+   ],
+   "lines": 6
+  },
+  "242": {
+   "modules": [
+    "FPToInt"
+   ],
+   "signals": [
+    "store_unrecoded_expOut_T_2"
+   ],
+   "lines": 6
+  },
+  "243": {
+   "modules": [
+    "RecFNToIN_1"
+   ],
+   "signals": [
+    "io_signedOut",
+    "magGeOne"
+   ],
+   "lines": 6
+  },
+  "244": {
+   "modules": [
+    "RecFNToIN_1"
+   ],
+   "signals": [
+    "io_in",
+    "common_inexact_T_1"
+   ],
+   "lines": 6
+  },
+  "245": {
+   "modules": [
+    "RecFNToIN_1"
+   ],
+   "signals": [
+    "rawIn__sExp",
+    "io_roundingMode"
+   ],
+   "lines": 6
+  },
+  "247": {
+   "modules": [
+    "RecFNToIN_1"
+   ],
+   "signals": [
+    "roundIncr"
+   ],
+   "lines": 6
+  },
+  "248": {
+   "modules": [
+    "RecFNToIN_1"
+   ],
+   "signals": [
+    "roundingMode_near_maxMag",
+    "magGeOne_atOverflowEdge"
+   ],
+   "lines": 6
+  },
+  "249": {
+   "modules": [
+    "RecFNToIN_1"
+   ],
+   "signals": [
+    "io_intExceptionFlags_hi",
+    "roundIncr_T_9"
+   ],
+   "lines": 6
+  },
+  "250": {
+   "modules": [
+    "RecFNToIN_1"
+   ],
+   "signals": [
+    "overflow_T",
+    "common_overflow_T_11"
+   ],
+   "lines": 6
+  },
+  "251": {
+   "modules": [
+    "RecFNToIN_1"
+   ],
+   "signals": [
+    "roundIncr_near_even_T_8",
+    "rawIn__sign"
+   ],
+   "lines": 6
+  },
+  "252": {
+   "modules": [
+    "RecFNToIN_1"
+   ],
+   "signals": [
+    "roundIncr_near_maxMag",
+    "roundCarryBut2"
+   ],
+   "lines": 6
+  },
+  "253": {
+   "modules": [
+    "RecFNToIN_1"
+   ],
+   "signals": [
+    "shiftedSig",
+    "common_overflow_T_13"
+   ],
+   "lines": 6
+  },
+  "255": {
+   "modules": [
+    "RecFNToIN"
+   ],
+   "signals": [
+    "io_signedOut"
+   ],
+   "lines": 6
+  },
+  "260": {
+   "modules": [
+    "RecFNToIN"
+   ],
+   "signals": [
+    "rawIn_isZero",
+    "rawIn__isNaN"
+   ],
+   "lines": 6
+  },
+  "262": {
+   "modules": [
+    "RecFNToIN"
+   ],
+   "signals": [
+    "invalidExc"
+   ],
+   "lines": 6
+  },
+  "263": {
+   "modules": [
+    "RecFNToIN"
+   ],
+   "signals": [
+    "roundingMode_max",
+    "roundingMode_min"
+   ],
+   "lines": 6
+  },
+  "270": {
+   "modules": [
+    "CompareRecFN"
+   ],
+   "signals": [
+    "rawA__isInf",
+    "rawA_isZero"
+   ],
+   "lines": 6
+  },
+  "273": {
+   "modules": [
+    "CompareRecFN"
+   ],
+   "signals": [
+    "rawA_exp",
+    "ordered"
+   ],
+   "lines": 6
+  },
+  "274": {
+   "modules": [
+    "CompareRecFN"
+   ],
+   "signals": [
+    "rawA_isSpecial",
+    "rawA__isNaN"
+   ],
+   "lines": 6
+  },
+  "276": {
+   "modules": [
+    "FPUFMAPipe_1"
+   ],
+   "signals": [
+    "reset",
+    "io_in_bits_in2",
+    "fma_reset"
+   ],
+   "lines": 6
+  },
+  "279": {
+   "modules": [
+    "FPUFMAPipe_1"
+   ],
+   "signals": [
+    "io_in_bits_ren3",
+    "fma_io_validout"
+   ],
+   "lines": 2
+  },
+  "287": {
+   "modules": [
+    "MulAddRecFNPipe_1"
+   ],
+   "signals": [
+    "io_fromPreMul_doSubMags",
+    "io_validout_v",
+    "mulAddRecFNToRaw_postMul_io_fromPreMul_doSubMags"
+   ],
+   "lines": 6
+  },
+  "288": {
+   "modules": [
+    "MulAddRecFNPipe_1"
+   ],
+   "signals": [
+    "mulAddRecFNToRaw_postMul_io_fromPreMul_b_isZeroB",
+    "valid_stage0_v"
+   ],
+   "lines": 2
+  },
+  "289": {
+   "modules": [
+    "MulAddRecFNPipe_1"
+   ],
+   "signals": [
+    "mulAddRecFNToRaw_postMul_io_fromPreMul_isSigNaNAny",
+    "valid_stage0_v"
+   ],
+   "lines": 2
+  },
+  "290": {
+   "modules": [
+    "MulAddRecFNPipe_1"
+   ],
+   "signals": [
+    "io_validin"
+   ],
+   "lines": 2
+  },
+  "294": {
+   "modules": [
+    "MulAddRecFNPipe_1"
+   ],
+   "signals": [
+    "roundRawFNToRecFN_io_in_sExp",
+    "mulAddRecFNToRaw_postMul_io_fromPreMul_highAlignedSigC",
+    "roundRawFNToRecFN_io_in_b_sExp"
+   ],
+   "lines": 2
+  },
+  "298": {
+   "modules": [
+    "RoundRawFNToRecFN_1"
+   ],
+   "signals": [
+    "io_in_isZero",
+    "io_in_sig",
+    "roundAnyRawFNToRecFN_io_in_isZero"
+   ],
+   "lines": 6
+  },
+  "302": {
+   "modules": [
+    "RoundRawFNToRecFN_1"
+   ],
+   "signals": [
+    "io_in_isZero",
+    "io_in_isNaN",
+    "roundAnyRawFNToRecFN_io_in_isZero"
+   ],
+   "lines": 6
+  },
+  "303": {
+   "modules": [
+    "RoundRawFNToRecFN_1"
+   ],
+   "signals": [
+    "roundAnyRawFNToRecFN_io_in_isNaN",
+    "roundAnyRawFNToRecFN_io_in_isZero",
+    "io_in_isNaN"
+   ],
+   "lines": 2
+  },
+  "306": {
+   "modules": [
+    "RoundRawFNToRecFN_1"
+   ],
+   "signals": [
+    "io_invalidExc",
+    "roundAnyRawFNToRecFN_io_in_isNaN",
+    "roundAnyRawFNToRecFN_io_invalidExc"
+   ],
+   "lines": 6
+  },
+  "312": {
+   "modules": [
+    "RoundAnyRawFNToRecFN_3"
+   ],
+   "signals": [
+    "expOut_T_14",
+    "expOut_T_16"
+   ],
+   "lines": 6
+  },
+  "313": {
+   "modules": [
+    "RoundAnyRawFNToRecFN_3"
+   ],
+   "signals": [
+    "GEN_6",
+    "common_underflow_T_17"
+   ],
+   "lines": 6
+  },
+  "314": {
+   "modules": [
+    "RoundAnyRawFNToRecFN_3"
+   ],
+   "signals": [
+    "roundMask_T_7"
+   ],
+   "lines": 6
+  },
+  "317": {
+   "modules": [
+    "RoundAnyRawFNToRecFN_3"
+   ],
+   "signals": [
+    "io_in_sig",
+    "roundingMode_odd"
+   ],
+   "lines": 6
+  },
+  "318": {
+   "modules": [
+    "RoundAnyRawFNToRecFN_3"
+   ],
+   "signals": [
+    "expOut_T_8"
+   ],
+   "lines": 6
+  },
+  "319": {
+   "modules": [
+    "RoundAnyRawFNToRecFN_3"
+   ],
+   "signals": [
+    "shiftedRoundMask",
+    "commonCase"
+   ],
+   "lines": 6
+  },
+  "321": {
+   "modules": [
+    "MulAddRecFNToRaw_postMul_1"
+   ],
+   "signals": [
+    "notCDom_reduced2AbsSigSum_reducedVec_5",
+    "io_fromPreMul_isNaNAOrB"
+   ],
+   "lines": 6
+  },
+  "323": {
+   "modules": [
+    "MulAddRecFNToRaw_postMul_1"
+   ],
+   "signals": [
+    "notCDom_normDistReduced2_T_43",
+    "roundingMode_min"
+   ],
+   "lines": 6
+  },
+  "326": {
+   "modules": [
+    "MulAddRecFNToRaw_postMul_1"
+   ],
+   "signals": [
+    "sigSum",
+    "notCDom_normDistReduced2_T_28"
+   ],
+   "lines": 6
+  },
+  "330": {
+   "modules": [
+    "MulAddRecFNToRaw_postMul_1"
+   ],
+   "signals": [
+    "notCDom_absSigSum",
+    "notCDom_reduced2AbsSigSum"
+   ],
+   "lines": 6
+  },
+  "332": {
+   "modules": [
+    "MulAddRecFNToRaw_preMul_1"
+   ],
+   "signals": [
+    "rawC_exp",
+    "doSubMags"
+   ],
+   "lines": 6
+  },
+  "333": {
+   "modules": [
+    "MulAddRecFNToRaw_preMul_1"
+   ],
+   "signals": [
+    "rawB_out_sig_T",
+    "doSubMags"
+   ],
+   "lines": 6
+  },
+  "334": {
+   "modules": [
+    "MulAddRecFNToRaw_preMul_1"
+   ],
+   "signals": [
+    "rawC_isZero"
+   ],
+   "lines": 6
+  },
+  "336": {
+   "modules": [
+    "MulAddRecFNToRaw_preMul_1"
+   ],
+   "signals": [
+    "rawB__sig"
+   ],
+   "lines": 6
+  },
+  "340": {
+   "modules": [
+    "MulAddRecFNToRaw_preMul_1"
+   ],
+   "signals": [
+    "reduced4CExtra_reducedVec_0",
+    "rawA__sign"
+   ],
+   "lines": 6
+  },
+  "343": {
+   "modules": [
+    "FMADecoder"
+   ],
+   "signals": [
+    "io_uopc",
+    "decoder_decoded_orMatrixOutputs_T"
+   ],
+   "lines": 6
+  },
+  "346": {
+   "modules": [
+    "FMADecoder"
+   ],
+   "signals": [
+    "decoder_decoded_T_6",
+    "decoder_decoded_T_2"
+   ],
+   "lines": 6
+  },
+  "347": {
+   "modules": [
+    "FMADecoder"
+   ],
+   "signals": [
+    "decoder_decoded_andMatrixInput_0",
+    "decoder_decoded_andMatrixInput_0_1",
+    "decoder_decoded_invInputs"
+   ],
+   "lines": 2
+  },
+  "351": {
+   "modules": [
+    "FMADecoder"
+   ],
+   "signals": [
+    "decoder_decoded_andMatrixInput_2_4",
+    "decoder_decoded_andMatrixInput_3_4",
+    "decoder_decoded_invInputs"
+   ],
+   "lines": 2
+  },
+  "353": {
+   "modules": [
+    "FPUFMAPipe"
+   ],
+   "signals": [
+    "in_rm",
+    "io_in_valid"
+   ],
+   "lines": 2
+  },
+  "357": {
+   "modules": [
+    "FPUFMAPipe"
+   ],
+   "signals": [
+    "fma_io_op",
+    "fma_io_out",
+    "in_fmaCmd"
+   ],
+   "lines": 2
+  },
+  "358": {
+   "modules": [
+    "FPUFMAPipe"
+   ],
+   "signals": [
+    "fma_io_b"
+   ],
+   "lines": 6
+  },
+  "364": {
+   "modules": [
+    "MulAddRecFNPipe"
+   ],
+   "signals": [
+    "mulAddRecFNToRaw_preMul_io_toPostMul_sExpSum",
+    "roundRawFNToRecFN_io_roundingMode_b"
+   ],
+   "lines": 6
+  },
+  "365": {
+   "modules": [
+    "MulAddRecFNPipe"
+   ],
+   "signals": [
+    "roundRawFNToRecFN_io_in_b_isZero",
+    "valid_stage0_v"
+   ],
+   "lines": 2
+  },
+  "366": {
+   "modules": [
+    "MulAddRecFNPipe"
+   ],
+   "signals": [
+    "roundRawFNToRecFN_io_in_b_sExp",
+    "mulAddRecFNToRaw_preMul_io_toPostMul_CDom_CAlignDist"
+   ],
+   "lines": 6
+  },
+  "367": {
+   "modules": [
+    "MulAddRecFNPipe"
+   ],
+   "signals": [
+    "roundRawFNToRecFN_io_invalidExc",
+    "mulAddRecFNToRaw_postMul_io_rawOut_isZero",
+    "roundRawFNToRecFN_io_invalidExc_b"
+   ],
+   "lines": 2
+  },
+  "369": {
+   "modules": [
+    "MulAddRecFNPipe"
+   ],
+   "signals": [
+    "io_fromPreMul_isZeroB",
+    "roundingMode_stage0_b",
+    "mulAddRecFNToRaw_postMul_io_fromPreMul_isZeroB"
+   ],
+   "lines": 6
+  },
+  "370": {
+   "modules": [
+    "MulAddRecFNPipe"
+   ],
+   "signals": [
+    "roundRawFNToRecFN_io_in_b_sign",
+    "valid_stage0_v"
+   ],
+   "lines": 2
+  },
+  "371": {
+   "modules": [
+    "MulAddRecFNPipe"
+   ],
+   "signals": [
+    "mulAddRecFNToRaw_postMul_io_fromPreMul_CIsDominant",
+    "io_validin",
+    "mulAddRecFNToRaw_postMul_io_fromPreMul_b_CIsDominant"
+   ],
+   "lines": 2
+  },
+  "372": {
+   "modules": [
+    "MulAddRecFNPipe"
+   ],
+   "signals": [
+    "mulAddRecFNToRaw_preMul_io_toPostMul_isZeroB",
+    "io_validin"
+   ],
+   "lines": 2
+  },
+  "373": {
+   "modules": [
+    "MulAddRecFNPipe"
+   ],
+   "signals": [
+    "mulAddRecFNToRaw_postMul_io_fromPreMul_highAlignedSigC",
+    "mulAddRecFNToRaw_preMul_io_toPostMul_signProd"
+   ],
+   "lines": 6
+  },
+  "380": {
+   "modules": [
+    "RoundRawFNToRecFN"
+   ],
+   "signals": [
+    "io_in_isInf",
+    "io_in_isNaN",
+    "roundAnyRawFNToRecFN_io_in_isInf"
+   ],
+   "lines": 6
+  },
+  "387": {
+   "modules": [
+    "RoundAnyRawFNToRecFN_2"
+   ],
+   "signals": [
+    "roundMask_T_63",
+    "roundMask_msb_5"
+   ],
+   "lines": 6
+  },
+  "393": {
+   "modules": [
+    "RoundAnyRawFNToRecFN_2"
+   ],
+   "signals": [
+    "roundMask_msb",
+    "roundMask_T_1"
+   ],
+   "lines": 2
+  },
+  "395": {
+   "modules": [
+    "RoundAnyRawFNToRecFN_2"
+   ],
+   "signals": [
+    "roundMask_T_11",
+    "roundMask"
+   ],
+   "lines": 6
+  },
+  "397": {
+   "modules": [
+    "MulAddRecFNToRaw_postMul"
+   ],
+   "signals": [
+    "CDom_sExp",
+    "io_fromPreMul_doSubMags"
+   ],
+   "lines": 6
+  },
+  "398": {
+   "modules": [
+    "MulAddRecFNToRaw_postMul"
+   ],
+   "signals": [
+    "notCDom_reduced2AbsSigSum"
+   ],
+   "lines": 6
+  },
+  "401": {
+   "modules": [
+    "MulAddRecFNToRaw_postMul"
+   ],
+   "signals": [
+    "CDom_reduced4SigExtra_shift",
+    "io_fromPreMul_isInfB"
+   ],
+   "lines": 6
+  },
+  "405": {
+   "modules": [
+    "MulAddRecFNToRaw_postMul"
+   ],
+   "signals": [
+    "notCDom_reduced2AbsSigSum",
+    "notNaN_addZeros"
+   ],
+   "lines": 6
+  },
+  "409": {
+   "modules": [
+    "MulAddRecFNToRaw_preMul"
+   ],
+   "signals": [
+    "rawB__sign",
+    "reduced4CExtra_reducedVec_4",
+    "io_b"
+   ],
+   "lines": 2
+  },
+  "411": {
+   "modules": [
+    "MulAddRecFNToRaw_preMul"
+   ],
+   "signals": [
+    "mainAlignedSigC_T_5"
+   ],
+   "lines": 6
+  },
+  "412": {
+   "modules": [
+    "MulAddRecFNToRaw_preMul"
+   ],
+   "signals": [
+    "rawB_out_sig_T",
+    "alignedSigC_T_7"
+   ],
+   "lines": 6
+  },
+  "413": {
+   "modules": [
+    "MulAddRecFNToRaw_preMul"
+   ],
+   "signals": [
+    "reduced4CExtra_reducedVec_6",
+    "rawA_exp"
+   ],
+   "lines": 6
+  },
+  "415": {
+   "modules": [
+    "MulAddRecFNToRaw_preMul"
+   ],
+   "signals": [
+    "io_toPostMul_bit0AlignedSigC",
+    "rawC_exp",
+    "alignedSigC"
+   ],
+   "lines": 2
+  },
+  "418": {
+   "modules": [
+    "MulAddRecFNToRaw_preMul"
+   ],
+   "signals": [
+    "reduced4CExtra"
+   ],
+   "lines": 6
+  },
+  "422": {
+   "modules": [
+    "ALUExeUnit_1"
+   ],
+   "signals": [
+    "io_iresp_bits_uop_csr_addr_lo_lo",
+    "io_req_bits_uop_fp_val",
+    "alu_io_resp_bits_uop_imm_packed"
+   ],
+   "lines": 2
+  },
+  "424": {
+   "modules": [
+    "ALUExeUnit_1"
+   ],
+   "signals": [
+    "alu_io_req_bits_uop_imm_packed",
+    "imul_io_req_bits_rs2_data",
+    "io_req_bits_uop_imm_packed"
+   ],
+   "lines": 2
+  },
+  "425": {
+   "modules": [
+    "ALUExeUnit_1"
+   ],
+   "signals": [
+    "alu_io_req_bits_uop_is_amo",
+    "ifpu_io_req_bits_kill",
+    "io_req_bits_uop_is_amo"
+   ],
+   "lines": 2
+  },
+  "426": {
+   "modules": [
+    "ALUExeUnit_1"
+   ],
+   "signals": [
+    "div_io_req_bits_uop_ctrl_fcn_dw",
+    "io_req_bits_uop_fu_code",
+    "io_req_bits_uop_ctrl_fcn_dw"
+   ],
+   "lines": 2
+  },
+  "427": {
+   "modules": [
+    "ALUExeUnit_1"
+   ],
+   "signals": [
+    "io_ll_fresp_bits_fflags_bits_flags",
+    "io_iresp_bits_uop_csr_addr_lo_hi_lo",
+    "queue_io_deq_bits_fflags_bits_flags"
+   ],
+   "lines": 2
+  },
+  "429": {
+   "modules": [
+    "ALUExeUnit_1"
+   ],
+   "signals": [
+    "io_req_bits_uop_is_rvc",
+    "imul_io_resp_valid"
+   ],
+   "lines": 6
+  },
+  "434": {
+   "modules": [
+    "DivUnit"
+   ],
+   "signals": [
+    "div_io_req_bits_dw",
+    "do_kill_T",
+    "io_req_bits_uop_ctrl_fcn_dw"
+   ],
+   "lines": 2
+  },
+  "436": {
+   "modules": [
+    "DivUnit"
+   ],
+   "signals": [
+    "div_io_req_bits_in2",
+    "r_uop_dst_rtype"
+   ],
+   "lines": 6
+  },
+  "437": {
+   "modules": [
+    "DivUnit"
+   ],
+   "signals": [
+    "io_resp_ready",
+    "io_req_valid"
+   ],
+   "lines": 6
+  },
+  "439": {
+   "modules": [
+    "DivUnit"
+   ],
+   "signals": [
+    "io_req_valid",
+    "io_resp_ready",
+    "div_io_req_valid"
+   ],
+   "lines": 6
+  },
+  "446": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "divisorMSB_hi",
+    "T_23"
+   ],
+   "lines": 2
+  },
+  "447": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "divisorMSB_hi_5",
+    "dividendMSB_hi_4"
+   ],
+   "lines": 6
+  },
+  "449": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "decoded_orMatrixOutputs_T_5",
+    "io_req_bits_dw"
+   ],
+   "lines": 6
+  },
+  "454": {
+   "modules": [
+    "BranchKillableQueue_3"
+   ],
+   "signals": [
+    "uops_4_br_mask_T_1",
+    "do_enq"
+   ],
+   "lines": 2
+  },
+  "455": {
+   "modules": [
+    "BranchKillableQueue_3"
+   ],
+   "signals": [
+    "GEN_1391",
+    "do_enq"
+   ],
+   "lines": 2
+  },
+  "459": {
+   "modules": [
+    "BranchKillableQueue_3"
+   ],
+   "signals": [
+    "GEN_1348"
+   ],
+   "lines": 6
+  },
+  "462": {
+   "modules": [
+    "BranchKillableQueue_3"
+   ],
+   "signals": [
+    "uops_0_fp_val",
+    "do_enq"
+   ],
+   "lines": 2
+  },
+  "465": {
+   "modules": [
+    "IntToFPUnit"
+   ],
+   "signals": [
+    "r_valids_0"
+   ],
+   "lines": 6
+  },
+  "466": {
+   "modules": [
+    "IntToFPUnit"
+   ],
+   "signals": [
+    "io_resp_bits_uop_fp_val",
+    "fp_decoder_io_sigs_wflags",
+    "r_uops_1_fp_val"
+   ],
+   "lines": 2
+  },
+  "468": {
+   "modules": [
+    "IntToFPUnit"
+   ],
+   "signals": [
+    "io_in_bits_typ",
+    "r_uops_1_stq_idx",
+    "ifpu_io_in_bits_typ"
+   ],
+   "lines": 6
+  },
+  "472": {
+   "modules": [
+    "IntToFPUnit"
+   ],
+   "signals": [
+    "r_uops_1_stq_idx[2",
+    "req_in1_unswizzled",
+    "r_uops_0_stq_idx"
+   ],
+   "lines": 2
+  },
+  "473": {
+   "modules": [
+    "IntToFPUnit"
+   ],
+   "signals": [
+    "io_req_valid"
+   ],
+   "lines": 6
+  },
+  "480": {
+   "modules": [
+    "IntToFP"
+   ],
+   "signals": [
+    "mux_data_rawIn_normDist_T_70",
+    "mux_data_rawIn_isZeroFractIn_1"
+   ],
+   "lines": 6
+  },
+  "484": {
+   "modules": [
+    "IntToFP"
+   ],
+   "signals": [],
+   "lines": 6
+  },
+  "485": {
+   "modules": [
+    "INToRecFN_1"
+   ],
+   "signals": [
+    "intAsRawFloat_extAbsIn"
+   ],
+   "lines": 6
+  },
+  "487": {
+   "modules": [
+    "INToRecFN_1"
+   ],
+   "signals": [],
+   "lines": 6
+  },
+  "489": {
+   "modules": [
+    "INToRecFN_1"
+   ],
+   "signals": [
+    "intAsRawFloat_extAbsIn"
+   ],
+   "lines": 6
+  },
+  "491": {
+   "modules": [
+    "INToRecFN_1"
+   ],
+   "signals": [
+    "intAsRawFloat_adjustedNormDist_T_122"
+   ],
+   "lines": 6
+  },
+  "492": {
+   "modules": [
+    "INToRecFN_1"
+   ],
+   "signals": [
+    "intAsRawFloat_extAbsIn"
+   ],
+   "lines": 6
+  },
+  "493": {
+   "modules": [
+    "INToRecFN_1"
+   ],
+   "signals": [
+    "intAsRawFloat_adjustedNormDist_T_115"
+   ],
+   "lines": 6
+  },
+  "494": {
+   "modules": [
+    "INToRecFN_1"
+   ],
+   "signals": [
+    "intAsRawFloat_extAbsIn"
+   ],
+   "lines": 6
+  },
+  "495": {
+   "modules": [
+    "INToRecFN_1"
+   ],
+   "signals": [
+    "intAsRawFloat_extAbsIn",
+    "intAsRawFloat_adjustedNormDist_T_78"
+   ],
+   "lines": 6
+  },
+  "504": {
+   "modules": [
+    "RoundAnyRawFNToRecFN_1"
+   ],
+   "signals": [
+    "sRoundedExp",
+    "anyRound"
+   ],
+   "lines": 6
+  },
+  "507": {
+   "modules": [
+    "INToRecFN"
+   ],
+   "signals": [
+    "intAsRawFloat_extAbsIn"
+   ],
+   "lines": 6
+  },
+  "509": {
+   "modules": [
+    "INToRecFN"
+   ],
+   "signals": [],
+   "lines": 6
+  },
+  "512": {
+   "modules": [
+    "INToRecFN"
+   ],
+   "signals": [],
+   "lines": 6
+  },
+  "515": {
+   "modules": [
+    "INToRecFN"
+   ],
+   "signals": [
+    "intAsRawFloat_adjustedNormDist_T_74"
+   ],
+   "lines": 6
+  },
+  "516": {
+   "modules": [
+    "INToRecFN"
+   ],
+   "signals": [],
+   "lines": 6
+  },
+  "520": {
+   "modules": [
+    "RoundAnyRawFNToRecFN"
+   ],
+   "signals": [
+    "sAdjustedExp",
+    "roundingMode_near_maxMag"
+   ],
+   "lines": 6
+  },
+  "523": {
+   "modules": [
+    "RoundAnyRawFNToRecFN"
+   ],
+   "signals": [
+    "roundPosBit"
+   ],
+   "lines": 6
+  },
+  "524": {
+   "modules": [
+    "RoundAnyRawFNToRecFN"
+   ],
+   "signals": [
+    "io_roundingMode",
+    "io_in_isZero"
+   ],
+   "lines": 6
+  },
+  "525": {
+   "modules": [
+    "RoundAnyRawFNToRecFN"
+   ],
+   "signals": [
+    "common_expOut",
+    "sRoundedExp"
+   ],
+   "lines": 2
+  },
+  "527": {
+   "modules": [
+    "RoundAnyRawFNToRecFN"
+   ],
+   "signals": [
+    "roundedSig_T_8"
+   ],
+   "lines": 6
+  },
+  "528": {
+   "modules": [
+    "RoundAnyRawFNToRecFN"
+   ],
+   "signals": [
+    "GEN_0"
+   ],
+   "lines": 6
+  },
+  "531": {
+   "modules": [
+    "UOPCodeFPUDecoder"
+   ],
+   "signals": [
+    "decoder_decoded_andMatrixInput_2",
+    "decoder_decoded_T_67",
+    "io_uopc"
+   ],
+   "lines": 2
+  },
+  "532": {
+   "modules": [
+    "UOPCodeFPUDecoder"
+   ],
+   "signals": [
+    "decoder_decoded_andMatrixInput_4_24",
+    "decoder_decoded_T_16",
+    "io_uopc"
+   ],
+   "lines": 2
+  },
+  "535": {
+   "modules": [
+    "UOPCodeFPUDecoder"
+   ],
+   "signals": [
+    "decoder_decoded_T_24",
+    "decoder_decoded_T_50"
+   ],
+   "lines": 6
+  },
+  "536": {
+   "modules": [
+    "UOPCodeFPUDecoder"
+   ],
+   "signals": [
+    "io_sigs_fastpipe",
+    "decoder_decoded_invInputs",
+    "decoder_decoded_invMatrixOutputs"
+   ],
+   "lines": 2
+  },
+  "538": {
+   "modules": [
+    "UOPCodeFPUDecoder"
+   ],
+   "signals": [
+    "decoder_decoded_andMatrixInput_1_14",
+    "decoder_decoded_T_33",
+    "io_uopc"
+   ],
+   "lines": 2
+  },
+  "540": {
+   "modules": [
+    "PipelinedMulUnit"
+   ],
+   "signals": [
+    "io_resp_bits_uop_is_amo",
+    "io_req_bits_rs1_data",
+    "r_uops_2_is_amo"
+   ],
+   "lines": 2
+  },
+  "541": {
+   "modules": [
+    "PipelinedMulUnit"
+   ],
+   "signals": [
+    "clock",
+    "r_valids_0_T",
+    "imul_clock"
+   ],
+   "lines": 6
+  },
+  "542": {
+   "modules": [
+    "PipelinedMulUnit"
+   ],
+   "signals": [
+    "r_uops_1_bypassable",
+    "reset"
+   ],
+   "lines": 2
+  },
+  "543": {
+   "modules": [
+    "PipelinedMulUnit"
+   ],
+   "signals": [
+    "io_req_bits_uop_br_mask",
+    "io_req_bits_kill"
+   ],
+   "lines": 6
+  },
+  "544": {
+   "modules": [
+    "PipelinedMulUnit"
+   ],
+   "signals": [
+    "io_req_bits_dw",
+    "io_req_bits_uop_rob_idx",
+    "imul_io_req_bits_dw"
+   ],
+   "lines": 6
+  },
+  "545": {
+   "modules": [
+    "PipelinedMulUnit"
+   ],
+   "signals": [
+    "r_valids_1_T",
+    "reset"
+   ],
+   "lines": 2
+  },
+  "546": {
+   "modules": [
+    "PipelinedMulUnit"
+   ],
+   "signals": [
+    "io_resp_bits_uop_pdst",
+    "io_req_bits_rs2_data",
+    "r_uops_2_pdst"
+   ],
+   "lines": 2
+  },
+  "548": {
+   "modules": [
+    "PipelinedMulUnit"
+   ],
+   "signals": [
+    "imul_io_resp_bits_data",
+    "io_req_bits_uop_br_mask"
+   ],
+   "lines": 6
+  },
+  "549": {
+   "modules": [
+    "PipelinedMulUnit"
+   ],
+   "signals": [
+    "io_req_bits_uop_is_amo"
+   ],
+   "lines": 6
+  },
+  "550": {
+   "modules": [
+    "PipelinedMulUnit"
+   ],
+   "signals": [
+    "io_req_bits_uop_dst_rtype"
+   ],
+   "lines": 6
+  },
+  "552": {
+   "modules": [
+    "PipelinedMultiplier"
+   ],
+   "signals": [
+    "decoded_orMatrixOutputs_T_2",
+    "io_req_valid"
+   ],
+   "lines": 2
+  },
+  "556": {
+   "modules": [
+    "PipelinedMultiplier"
+   ],
+   "signals": [
+    "decoded_invMatrixOutputs",
+    "inPipe_bits_dw"
+   ],
+   "lines": 6
+  },
+  "558": {
+   "modules": [
+    "PipelinedMultiplier"
+   ],
+   "signals": [
+    "inPipe_bits_fn",
+    "io_req_valid"
+   ],
+   "lines": 2
+  },
+  "559": {
+   "modules": [
+    "PipelinedMultiplier"
+   ],
+   "signals": [
+    "decoded_plaInput",
+    "prod"
+   ],
+   "lines": 6
+  },
+  "561": {
+   "modules": [
+    "PipelinedMultiplier"
+   ],
+   "signals": [
+    "decoded_andMatrixInput_0_3",
+    "decoded_T_3",
+    "decoded_invInputs"
+   ],
+   "lines": 2
+  },
+  "565": {
+   "modules": [
+    "ALUUnit"
+   ],
+   "signals": [
+    "io_req_bits_uop_imm_packed",
+    "pc_sel_T_4"
+   ],
+   "lines": 6
+  },
+  "567": {
+   "modules": [
+    "ALUUnit"
+   ],
+   "signals": [
+    "r_uops_1_uses_stq[0",
+    "r_uops_0_is_amo",
+    "r_uops_0_uses_stq"
+   ],
+   "lines": 2
+  },
+  "570": {
+   "modules": [
+    "ALUUnit"
+   ],
+   "signals": [
+    "r_uops_1_br_mask",
+    "pc_sel"
+   ],
+   "lines": 6
+  },
+  "571": {
+   "modules": [
+    "ALUUnit"
+   ],
+   "signals": [
+    "pc_sel_T_4"
+   ],
+   "lines": 6
+  },
+  "572": {
+   "modules": [
+    "ALUUnit"
+   ],
+   "signals": [
+    "is_jalr",
+    "is_taken_T_1"
+   ],
+   "lines": 6
+  },
+  "576": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "shift_logic"
+   ],
+   "lines": 6
+  },
+  "577": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "in2_inv_T_1",
+    "io_fn"
+   ],
+   "lines": 6
+  },
+  "578": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "shin_T_11",
+    "slt"
+   ],
+   "lines": 6
+  },
+  "579": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "shout",
+    "io_fn"
+   ],
+   "lines": 6
+  },
+  "580": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "shout_l_T_38",
+    "io_fn"
+   ],
+   "lines": 6
+  },
+  "582": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "logic_T_1"
+   ],
+   "lines": 6
+  },
+  "585": {
+   "modules": [
+    "ALUExeUnit"
+   ],
+   "signals": [
+    "io_ll_fresp_valid",
+    "maddrcalc_io_req_bits_uop_br_mask",
+    "io_lsu_io_fresp_valid"
+   ],
+   "lines": 2
+  },
+  "586": {
+   "modules": [
+    "ALUExeUnit"
+   ],
+   "signals": [
+    "maddrcalc_io_req_bits_uop_ctrl_is_sta",
+    "maddrcalc_io_resp_bits_addr",
+    "io_req_bits_uop_ctrl_is_sta"
+   ],
+   "lines": 2
+  },
+  "588": {
+   "modules": [
+    "ALUExeUnit"
+   ],
+   "signals": [
+    "clock",
+    "io_req_bits_uop_is_fence",
+    "maddrcalc_clock"
+   ],
+   "lines": 6
+  },
+  "590": {
+   "modules": [
+    "ALUExeUnit"
+   ],
+   "signals": [
+    "io_lsu_io_req_bits_uop_uses_ldq",
+    "io_brupdate_b1_resolve_mask",
+    "maddrcalc_io_resp_bits_uop_uses_ldq"
+   ],
+   "lines": 2
+  },
+  "592": {
+   "modules": [
+    "ALUExeUnit"
+   ],
+   "signals": [
+    "maddrcalc_io_req_bits_uop_ctrl_is_sta",
+    "maddrcalc_io_req_valid_T_1",
+    "io_req_bits_uop_ctrl_is_sta"
+   ],
+   "lines": 2
+  },
+  "593": {
+   "modules": [
+    "ALUExeUnit"
+   ],
+   "signals": [
+    "maddrcalc_io_req_bits_uop_uses_stq",
+    "io_req_bits_uop_fu_code"
+   ],
+   "lines": 2
+  },
+  "596": {
+   "modules": [
+    "MemAddrCalcUnit"
+   ],
+   "signals": [
+    "sum",
+    "io_req_bits_uop_ctrl_is_std"
+   ],
+   "lines": 6
+  },
+  "601": {
+   "modules": [
+    "MemAddrCalcUnit"
+   ],
+   "signals": [
+    "io_resp_bits_uop_br_mask_T",
+    "io_req_bits_uop_mem_size"
+   ],
+   "lines": 6
+  },
+  "603": {
+   "modules": [
+    "MemAddrCalcUnit"
+   ],
+   "signals": [
+    "io_req_valid",
+    "io_req_bits_uop_fp_val"
+   ],
+   "lines": 6
+  },
+  "606": {
+   "modules": [
+    "rob_debug_inst_mem"
+   ],
+   "signals": [
+    "rob_debug_inst_mem_ext_W0_mask",
+    "W0_data_0",
+    "W0_mask_0"
+   ],
+   "lines": 2
+  },
+  "612": {
+   "modules": [
+    "rob_debug_inst_mem"
+   ],
+   "signals": [
+    "rob_debug_inst_mem_ext_R0_clk",
+    "rob_debug_inst_mem_ext_W0_data",
+    "R0_clk"
+   ],
+   "lines": 2
+  },
+  "613": {
+   "modules": [
+    "rob_debug_inst_mem"
+   ],
+   "signals": [
+    "W0_mask",
+    "rob_debug_inst_mem_ext_R0_en",
+    "rob_debug_inst_mem_ext_W0_mask"
+   ],
+   "lines": 6
+  },
+  "614": {
+   "modules": [
+    "rob_debug_inst_mem"
+   ],
+   "signals": [
+    "R0_en",
+    "rob_debug_inst_mem_ext_W0_mask",
+    "rob_debug_inst_mem_ext_R0_en"
+   ],
+   "lines": 6
+  },
+  "615": {
+   "modules": [
+    "rob_debug_inst_mem"
+   ],
+   "signals": [
+    "R0_addr",
+    "rob_debug_inst_mem_ext_R0_addr"
+   ],
+   "lines": 6
+  },
+  "617": {
+   "modules": [
+    "split_rob_debug_inst_mem_ext"
+   ],
+   "signals": [
+    "R0_en"
+   ],
+   "lines": 2
+  },
+  "618": {
+   "modules": [
+    "split_rob_debug_inst_mem_ext"
+   ],
+   "signals": [
+    "ram_W_0_en"
+   ],
+   "lines": 6
+  },
+  "619": {
+   "modules": [
+    "split_rob_debug_inst_mem_ext"
+   ],
+   "signals": [
+    "R0_en",
+    "ram_W_0_en"
+   ],
+   "lines": 6
+  },
+  "621": {
+   "modules": [
+    "split_rob_debug_inst_mem_ext"
+   ],
+   "signals": [
+    "ram_R_0_en_pipe_0[0",
+    "R0_en"
+   ],
+   "lines": 2
+  },
+  "622": {
+   "modules": [
+    "split_rob_debug_inst_mem_ext"
+   ],
+   "signals": [
+    "R0_addr"
+   ],
+   "lines": 6
+  },
+  "625": {
+   "modules": [
+    "split_rob_debug_inst_mem_ext"
+   ],
+   "signals": [
+    "ram_R_0_en_pipe_0[0",
+    "ram_R_0_addr_pipe_0",
+    "R0_en"
+   ],
+   "lines": 2
+  },
+  "628": {
+   "modules": [
+    "rob_debug_inst_mem_ext"
+   ],
+   "signals": [
+    "W0_addr",
+    "mem_0_0_R0_addr",
+    "mem_0_0_W0_addr"
+   ],
+   "lines": 6
+  },
+  "630": {
+   "modules": [
+    "rob_debug_inst_mem_ext"
+   ],
+   "signals": [
+    "mem_0_0_W0_en",
+    "W0_addr",
+    "W0_en"
+   ],
+   "lines": 2
+  },
+  "632": {
+   "modules": [
+    "rob_debug_inst_mem_ext"
+   ],
+   "signals": [
+    "mem_0_0_R0_clk",
+    "mem_0_0_W0_clk",
+    "R0_clk"
+   ],
+   "lines": 2
+  },
+  "634": {
+   "modules": [
+    "rob_debug_inst_mem_ext"
+   ],
+   "signals": [
+    "W0_mask",
+    "mem_0_0_R0_clk",
+    "mem_0_0_W0_mask"
+   ],
+   "lines": 6
+  },
+  "635": {
+   "modules": [
+    "rob_debug_inst_mem_ext"
+   ],
+   "signals": [
+    "mem_0_0_R0_clk",
+    "W0_mask",
+    "R0_clk"
+   ],
+   "lines": 2
+  },
+  "636": {
+   "modules": [
+    "rob_debug_inst_mem_ext"
+   ],
+   "signals": [
+    "mem_0_0_W0_clk",
+    "mem_0_0_W0_addr",
+    "W0_clk"
+   ],
+   "lines": 2
+  },
+  "638": {
+   "modules": [
+    "rob_debug_inst_mem_ext"
+   ],
+   "signals": [
+    "mem_0_0_W0_clk",
+    "W0_mask",
+    "W0_clk"
+   ],
+   "lines": 2
+  },
+  "640": {
+   "modules": [
+    "BoomCore"
+   ],
+   "signals": [
+    "dispatcher_io_dis_uops_0_0_bits_uopc",
+    "dec_finished_mask"
+   ],
+   "lines": 6
+  },
+  "645": {
+   "modules": [
+    "BoomCore"
+   ],
+   "signals": [
+    "dispatcher_io_dis_uops_1_0_bits_is_sfb",
+    "fast_wakeup_valid_T_1"
+   ],
+   "lines": 6
+  },
+  "649": {
+   "modules": [
+    "BoomCore"
+   ],
+   "signals": [
+    "io_dis_uops_0_bits_edge_inst",
+    "mem_issue_unit_io_iss_uops_0_uses_ldq",
+    "int_issue_unit_io_dis_uops_0_bits_edge_inst"
+   ],
+   "lines": 6
+  },
+  "651": {
+   "modules": [
+    "Arbiter_19"
+   ],
+   "signals": [
+    "io_in_0_bits",
+    "io_in_0_valid"
+   ],
+   "lines": 6
+  },
+  "652": {
+   "modules": [
+    "Arbiter_19"
+   ],
+   "signals": [
+    "io_in_1_valid",
+    "io_in_0_valid"
+   ],
+   "lines": 6
+  },
+  "655": {
+   "modules": [
+    "Arbiter_19"
+   ],
+   "signals": [
+    "io_in_2_bits",
+    "io_in_0_valid"
+   ],
+   "lines": 6
+  },
+  "658": {
+   "modules": [
+    "Arbiter_19"
+   ],
+   "signals": [
+    "io_in_2_bits",
+    "io_in_1_valid"
+   ],
+   "lines": 6
+  },
+  "659": {
+   "modules": [
+    "Arbiter_19"
+   ],
+   "signals": [
+    "io_in_0_bits",
+    "io_in_1_valid"
+   ],
+   "lines": 6
+  },
+  "662": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "decoded_decoded_T_142",
+    "reg_dcsr_prv"
+   ],
+   "lines": 6
+  },
+  "664": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "io_tval",
+    "csr_wen"
+   ],
+   "lines": 2
+  },
+  "669": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "GEN_222"
+   ],
+   "lines": 6
+  },
+  "670": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "wdata",
+    "reset"
+   ],
+   "lines": 2
+  },
+  "672": {
+   "modules": [
+    "Rob"
+   ],
+   "signals": [
+    "GEN_7837",
+    "GEN_10611"
+   ],
+   "lines": 6
+  },
+  "673": {
+   "modules": [
+    "Rob"
+   ],
+   "signals": [
+    "GEN_5681",
+    "GEN_5736"
+   ],
+   "lines": 6
+  },
+  "674": {
+   "modules": [
+    "Rob"
+   ],
+   "signals": [
+    "rob_uop_19_pc_lob",
+    "rob_tail"
+   ],
+   "lines": 6
+  },
+  "677": {
+   "modules": [
+    "Rob"
+   ],
+   "signals": [
+    "GEN_9203",
+    "GEN_6903"
+   ],
+   "lines": 6
+  },
+  "678": {
+   "modules": [
+    "Rob"
+   ],
+   "signals": [],
+   "lines": 6
+  },
+  "679": {
+   "modules": [
+    "Rob"
+   ],
+   "signals": [
+    "GEN_8711",
+    "GEN_5526"
+   ],
+   "lines": 6
+  },
+  "680": {
+   "modules": [
+    "Rob"
+   ],
+   "signals": [
+    "rob_uop_0_pdst"
+   ],
+   "lines": 6
+  },
+  "681": {
+   "modules": [
+    "Rob"
+   ],
+   "signals": [
+    "rob_uop_9_is_jal",
+    "GEN_6334"
+   ],
+   "lines": 6
+  },
+  "682": {
+   "modules": [
+    "Rob"
+   ],
+   "signals": [
+    "rob_uop_18_fp_val",
+    "GEN_6363"
+   ],
+   "lines": 6
+  },
+  "685": {
+   "modules": [
+    "RegisterRead_1"
+   ],
+   "signals": [
+    "exe_reg_uops_1_ftq_idx",
+    "rrd_kill_1"
+   ],
+   "lines": 2
+  },
+  "688": {
+   "modules": [
+    "RegisterRead_1"
+   ],
+   "signals": [
+    "rrd_uops_1_REG_lrs1_rtype[1",
+    "rrd_decode_unit_1_io_iss_uop_prs1",
+    "rrd_decode_unit_1_io_rrd_uop_lrs1_rtype"
+   ],
+   "lines": 2
+  },
+  "692": {
+   "modules": [
+    "RegisterRead_1"
+   ],
+   "signals": [
+    "exe_reg_uops_1_prs1",
+    "rrd_kill_1"
+   ],
+   "lines": 2
+  },
+  "693": {
+   "modules": [
+    "RegisterRead_1"
+   ],
+   "signals": [
+    "io_iss_uop_ldq_idx",
+    "rrd_decode_unit_io_rrd_uop_uopc",
+    "rrd_decode_unit_1_io_iss_uop_ldq_idx"
+   ],
+   "lines": 6
+  },
+  "694": {
+   "modules": [
+    "RegisterReadDecode_2"
+   ],
+   "signals": [
+    "rrd_cs_decoder_decoded_T_162",
+    "rrd_cs_decoder_decoded_orMatrixOutputs"
+   ],
+   "lines": 6
+  },
+  "697": {
+   "modules": [
+    "RegisterReadDecode_2"
+   ],
+   "signals": [
+    "io_iss_uop_br_mask",
+    "rrd_cs_decoder_10"
+   ],
+   "lines": 6
+  },
+  "698": {
+   "modules": [
+    "RegisterReadDecode_2"
+   ],
+   "signals": [
+    "rrd_cs_decoder_decoded_T_40",
+    "rrd_cs_decoder_decoded_orMatrixOutputs_T_15"
+   ],
+   "lines": 6
+  },
+  "700": {
+   "modules": [
+    "RegisterReadDecode_2"
+   ],
+   "signals": [
+    "io_rrd_uop_ftq_idx",
+    "rrd_cs_decoder_decoded_T_156",
+    "io_iss_uop_ftq_idx"
+   ],
+   "lines": 2
+  },
+  "701": {
+   "modules": [
+    "RegisterReadDecode_2"
+   ],
+   "signals": [
+    "rrd_cs_decoder_decoded_T_124",
+    "rrd_cs_decoder_decoded_orMatrixOutputs_T_32"
+   ],
+   "lines": 6
+  },
+  "702": {
+   "modules": [
+    "RegisterReadDecode_2"
+   ],
+   "signals": [
+    "rrd_cs_decoder_decoded_T_114",
+    "rrd_cs_decoder_decoded_T_164"
+   ],
+   "lines": 6
+  },
+  "707": {
+   "modules": [
+    "RegisterReadDecode_1"
+   ],
+   "signals": [
+    "io_iss_uop_mem_cmd",
+    "io_rrd_uop_ctrl_is_sta"
+   ],
+   "lines": 6
+  },
+  "711": {
+   "modules": [
+    "RegisterReadDecode_1"
+   ],
+   "signals": [
+    "io_rrd_uop_fp_val",
+    "io_iss_uop_br_mask",
+    "io_iss_uop_fp_val"
+   ],
+   "lines": 2
+  },
+  "712": {
+   "modules": [
+    "RegisterReadDecode_1"
+   ],
+   "signals": [
+    "io_rrd_uop_stq_idx",
+    "io_iss_uop_prs2",
+    "io_iss_uop_stq_idx"
+   ],
+   "lines": 2
+  },
+  "715": {
+   "modules": [
+    "RegisterReadDecode_1"
+   ],
+   "signals": [
+    "io_rrd_valid",
+    "io_iss_uop_br_mask",
+    "io_iss_valid"
+   ],
+   "lines": 2
+  },
+  "716": {
+   "modules": [
+    "Arbiter_18"
+   ],
+   "signals": [
+    "io_in_0_bits_uop_dst_rtype",
+    "io_in_0_valid"
+   ],
+   "lines": 6
+  },
+  "717": {
+   "modules": [
+    "Arbiter_18"
+   ],
+   "signals": [
+    "io_in_1_bits_data",
+    "io_in_0_valid"
+   ],
+   "lines": 6
+  },
+  "722": {
+   "modules": [
+    "Arbiter_18"
+   ],
+   "signals": [
+    "io_in_0_bits_uop_pdst",
+    "io_in_0_bits_uop_is_amo"
+   ],
+   "lines": 6
+  },
+  "726": {
+   "modules": [
+    "Arbiter_18"
+   ],
+   "signals": [
+    "io_in_1_bits_uop_pdst",
+    "io_in_0_valid"
+   ],
+   "lines": 6
+  },
+  "727": {
+   "modules": [
+    "RegisterFileSynthesizable_1"
+   ],
+   "signals": [
+    "regfile_read_data_3_MPORT_data",
+    "io_write_ports_0_bits_data"
+   ],
+   "lines": 6
+  },
+  "728": {
+   "modules": [
+    "RegisterFileSynthesizable_1"
+   ],
+   "signals": [
+    "bypass_ens_1",
+    "bypass_ens_1_1"
+   ],
+   "lines": 6
+  },
+  "729": {
+   "modules": [
+    "RegisterFileSynthesizable_1"
+   ],
+   "signals": [
+    "bypass_data_T_9",
+    "bypass_data_1"
+   ],
+   "lines": 6
+  },
+  "730": {
+   "modules": [
+    "RegisterFileSynthesizable_1"
+   ],
+   "signals": [
+    "read_data_3",
+    "bypass_ens_0_1"
+   ],
+   "lines": 6
+  },
+  "731": {
+   "modules": [
+    "RegisterFileSynthesizable_1"
+   ],
+   "signals": [
+    "T_1",
+    "io_write_ports_0_valid"
+   ],
+   "lines": 6
+  },
+  "734": {
+   "modules": [
+    "RegisterFileSynthesizable_1"
+   ],
+   "signals": [
+    "regfile_read_data_3_MPORT_data",
+    "bypass_ens_0_2"
+   ],
+   "lines": 6
+  },
+  "740": {
+   "modules": [
+    "BasicDispatcher"
+   ],
+   "signals": [
+    "io_dis_uops_1_0_bits_edge_inst",
+    "io_ren_uops_0_bits_is_sfb",
+    "io_ren_uops_0_bits_edge_inst"
+   ],
+   "lines": 2
+  },
+  "743": {
+   "modules": [
+    "BasicDispatcher"
+   ],
+   "signals": [
+    "io_dis_uops_1_0_bits_exception",
+    "io_ren_uops_0_bits_mem_signed",
+    "io_ren_uops_0_bits_exception"
+   ],
+   "lines": 2
+  },
+  "745": {
+   "modules": [
+    "BasicDispatcher"
+   ],
+   "signals": [
+    "io_dis_uops_1_0_bits_bypassable",
+    "io_ren_uops_0_bits_prs1_busy",
+    "io_ren_uops_0_bits_bypassable"
+   ],
+   "lines": 2
+  },
+  "747": {
+   "modules": [
+    "BasicDispatcher"
+   ],
+   "signals": [
+    "io_dis_uops_2_0_bits_prs3_busy",
+    "io_ren_uops_0_bits_prs2",
+    "io_ren_uops_0_bits_prs3_busy"
+   ],
+   "lines": 2
+  },
+  "748": {
+   "modules": [
+    "BasicDispatcher"
+   ],
+   "signals": [
+    "io_dis_uops_1_0_bits_mem_signed",
+    "io_ren_uops_0_bits_taken",
+    "io_ren_uops_0_bits_mem_signed"
+   ],
+   "lines": 2
+  },
+  "750": {
+   "modules": [
+    "IssueUnitCollapsing_2"
+   ],
+   "signals": [
+    "slots_3_io_uop_is_amo",
+    "issue_slots_4_grant"
+   ],
+   "lines": 6
+  },
+  "751": {
+   "modules": [
+    "IssueUnitCollapsing_2"
+   ],
+   "signals": [
+    "slots_0_io_ldspec_miss",
+    "issue_slots_1_uop_taken"
+   ],
+   "lines": 6
+  },
+  "752": {
+   "modules": [
+    "IssueUnitCollapsing_2"
+   ],
+   "signals": [
+    "slots_7_io_in_uop_bits_pdst"
+   ],
+   "lines": 6
+  },
+  "758": {
+   "modules": [
+    "IssueUnitCollapsing_2"
+   ],
+   "signals": [
+    "slots_4_io_uop_is_sfb",
+    "issue_slots_3_grant"
+   ],
+   "lines": 6
+  },
+  "759": {
+   "modules": [
+    "IssueUnitCollapsing_2"
+   ],
+   "signals": [
+    "slots_6_io_uop_taken",
+    "T_102"
+   ],
+   "lines": 6
+  },
+  "763": {
+   "modules": [
+    "IssueUnitCollapsing_1"
+   ],
+   "signals": [
+    "slots_6_io_in_uop_bits_uses_ldq",
+    "GEN_1020",
+    "slots_7_io_out_uop_uses_ldq"
+   ],
+   "lines": 2
+  },
+  "765": {
+   "modules": [
+    "IssueUnitCollapsing_1"
+   ],
+   "signals": [
+    "slots_4_io_in_uop_bits_prs1_busy",
+    "slots_0_io_wakeup_ports_0_bits_pdst",
+    "slots_5_io_out_uop_prs1_busy"
+   ],
+   "lines": 2
+  },
+  "766": {
+   "modules": [
+    "IssueUnitCollapsing_1"
+   ],
+   "signals": [
+    "issue_slots_1_uop_is_fence",
+    "slots_7_io_in_uop_bits_rob_idx",
+    "slots_1_io_uop_is_fence"
+   ],
+   "lines": 2
+  },
+  "767": {
+   "modules": [
+    "IssueUnitCollapsing_1"
+   ],
+   "signals": [
+    "io_in_uop_bits_is_rvc",
+    "issue_slots_0_uop_is_fence",
+    "slots_1_io_in_uop_bits_is_rvc"
+   ],
+   "lines": 6
+  },
+  "771": {
+   "modules": [
+    "IssueSlot_8"
+   ],
+   "signals": [
+    "slot_uop_lrs1_rtype"
+   ],
+   "lines": 6
+  },
+  "772": {
+   "modules": [
+    "IssueSlot_8"
+   ],
+   "signals": [
+    "io_out_uop_is_sfb",
+    "slot_uop_stq_idx",
+    "slot_uop_is_sfb"
+   ],
+   "lines": 2
+  },
+  "773": {
+   "modules": [
+    "IssueSlot_8"
+   ],
+   "signals": [
+    "io_in_uop_bits_stq_idx",
+    "T_2"
+   ],
+   "lines": 6
+  },
+  "774": {
+   "modules": [
+    "IssueSlot_8"
+   ],
+   "signals": [
+    "next_uop_prs3",
+    "io_in_uop_valid"
+   ],
+   "lines": 2
+  },
+  "776": {
+   "modules": [
+    "IssueSlot_8"
+   ],
+   "signals": [
+    "state",
+    "T_35"
+   ],
+   "lines": 6
+  },
+  "777": {
+   "modules": [
+    "IssueSlot_8"
+   ],
+   "signals": [
+    "GEN_9",
+    "GEN_103"
+   ],
+   "lines": 6
+  },
+  "779": {
+   "modules": [
+    "IssueSlot_8"
+   ],
+   "signals": [
+    "GEN_12",
+    "slot_uop_stq_idx"
+   ],
+   "lines": 6
+  },
+  "780": {
+   "modules": [
+    "IssueSlot_8"
+   ],
+   "signals": [
+    "next_uop_prs3",
+    "slot_uop_lrs1_rtype"
+   ],
+   "lines": 6
+  },
+  "781": {
+   "modules": [
+    "IssueSlot_8"
+   ],
+   "signals": [
+    "io_in_uop_bits_mem_cmd",
+    "io_ldspec_miss"
+   ],
+   "lines": 6
+  },
+  "782": {
+   "modules": [
+    "RenameStage_1"
+   ],
+   "signals": [
+    "io_dealloc_pregs_0_valid",
+    "maptable_io_map_resps_0_prs3",
+    "freelist_io_dealloc_pregs_0_valid"
+   ],
+   "lines": 6
+  },
+  "785": {
+   "modules": [
+    "RenameStage_1"
+   ],
+   "signals": [
+    "freelist_io_alloc_pregs_0_bits",
+    "r_uop_bypass_hits_rs3_0"
+   ],
+   "lines": 2
+  },
+  "791": {
+   "modules": [
+    "RenameStage_1"
+   ],
+   "signals": [
+    "io_wb_pdsts_0",
+    "ren2_uops_0_pdst",
+    "busytable_io_wb_pdsts_0"
+   ],
+   "lines": 6
+  },
+  "793": {
+   "modules": [
+    "RenameBusyTable_1"
+   ],
+   "signals": [
+    "io_wb_valids_0"
+   ],
+   "lines": 6
+  },
+  "795": {
+   "modules": [
+    "RenameBusyTable_1"
+   ],
+   "signals": [
+    "busy_table_wb_T_3",
+    "io_ren_uops_0_prs2"
+   ],
+   "lines": 6
+  },
+  "798": {
+   "modules": [
+    "RenameBusyTable_1"
+   ],
+   "signals": [
+    "busy_table_wb_T_2",
+    "io_ren_uops_0_prs2"
+   ],
+   "lines": 6
+  },
+  "800": {
+   "modules": [
+    "RenameBusyTable_1"
+   ],
+   "signals": [
+    "busy_table_wb_T_7",
+    "busy_table"
+   ],
+   "lines": 6
+  },
+  "803": {
+   "modules": [
+    "RenameBusyTable_1"
+   ],
+   "signals": [
+    "busy_table_next_T_3",
+    "io_ren_uops_0_prs3"
+   ],
+   "lines": 6
+  },
+  "804": {
+   "modules": [
+    "RenameFreeList_1"
+   ],
+   "signals": [
+    "free_list",
+    "io_debug_freelist"
+   ],
+   "lines": 6
+  },
+  "805": {
+   "modules": [
+    "RenameFreeList_1"
+   ],
+   "signals": [
+    "r_sel_lo_3",
+    "free_list"
+   ],
+   "lines": 6
+  },
+  "806": {
+   "modules": [
+    "RenameFreeList_1"
+   ],
+   "signals": [
+    "br_alloc_lists_4_T_2"
+   ],
+   "lines": 6
+  },
+  "807": {
+   "modules": [
+    "RenameFreeList_1"
+   ],
+   "signals": [
+    "dealloc_mask_T_4",
+    "GEN_25"
+   ],
+   "lines": 6
+  },
+  "810": {
+   "modules": [
+    "RenameFreeList_1"
+   ],
+   "signals": [
+    "sels_sels_0_T_55",
+    "GEN_36"
+   ],
+   "lines": 6
+  },
+  "814": {
+   "modules": [
+    "RenameFreeList_1"
+   ],
+   "signals": [
+    "GEN_21"
+   ],
+   "lines": 6
+  },
+  "822": {
+   "modules": [
+    "RenameMapTable_1"
+   ],
+   "signals": [
+    "GEN_562",
+    "io_ren_br_tags_0_bits"
+   ],
+   "lines": 6
+  },
+  "823": {
+   "modules": [
+    "RenameMapTable_1"
+   ],
+   "signals": [
+    "br_snapshots_3_10",
+    "io_ren_br_tags_0_valid"
+   ],
+   "lines": 2
+  },
+  "825": {
+   "modules": [
+    "RenameMapTable_1"
+   ],
+   "signals": [
+    "GEN_652",
+    "GEN_806"
+   ],
+   "lines": 6
+  },
+  "828": {
+   "modules": [
+    "RenameStage"
+   ],
+   "signals": [
+    "r_uop_exc_cause",
+    "io_dec_uops_0_is_amo"
+   ],
+   "lines": 6
+  },
+  "837": {
+   "modules": [
+    "RenameBusyTable"
+   ],
+   "signals": [
+    "busy_table_next_T_3"
+   ],
+   "lines": 6
+  },
+  "841": {
+   "modules": [
+    "RenameBusyTable"
+   ],
+   "signals": [
+    "busy_table_wb_T_7",
+    "GEN_4"
+   ],
+   "lines": 6
+  },
+  "843": {
+   "modules": [
+    "RenameBusyTable"
+   ],
+   "signals": [
+    "busy_table_wb_T",
+    "io_wb_pdsts_2"
+   ],
+   "lines": 6
+  },
+  "848": {
+   "modules": [
+    "RenameFreeList"
+   ],
+   "signals": [
+    "free_list"
+   ],
+   "lines": 6
+  },
+  "850": {
+   "modules": [
+    "RenameFreeList"
+   ],
+   "signals": [
+    "dealloc_mask_T",
+    "sels_sels_0_T_92"
+   ],
+   "lines": 6
+  },
+  "855": {
+   "modules": [
+    "RenameFreeList"
+   ],
+   "signals": [
+    "GEN_17"
+   ],
+   "lines": 6
+  },
+  "860": {
+   "modules": [
+    "RenameMapTable"
+   ],
+   "signals": [
+    "br_snapshots_7_20",
+    "io_remap_reqs_0_pdst"
+   ],
+   "lines": 6
+  },
+  "861": {
+   "modules": [
+    "RenameMapTable"
+   ],
+   "signals": [
+    "br_snapshots_5_23",
+    "map_table_7"
+   ],
+   "lines": 6
+  },
+  "864": {
+   "modules": [
+    "RenameMapTable"
+   ],
+   "signals": [
+    "GEN_916",
+    "br_snapshots_6_26"
+   ],
+   "lines": 6
+  },
+  "865": {
+   "modules": [
+    "RenameMapTable"
+   ],
+   "signals": [
+    "br_snapshots_7_4"
+   ],
+   "lines": 6
+  },
+  "868": {
+   "modules": [
+    "RenameMapTable"
+   ],
+   "signals": [
+    "GEN_674",
+    "br_snapshots_1_31"
+   ],
+   "lines": 6
+  },
+  "871": {
+   "modules": [
+    "BranchMaskGenerationLogic"
+   ],
+   "signals": [
+    "io_br_mask_0_T",
+    "branch_mask"
+   ],
+   "lines": 6
+  },
+  "875": {
+   "modules": [
+    "BranchMaskGenerationLogic"
+   ],
+   "signals": [],
+   "lines": 6
+  },
+  "878": {
+   "modules": [
+    "BranchMaskGenerationLogic"
+   ],
+   "signals": [],
+   "lines": 6
+  },
+  "887": {
+   "modules": [
+    "DecodeUnit"
+   ],
+   "signals": [
+    "cs_decoder_decoded_T_150",
+    "cs_decoder_23"
+   ],
+   "lines": 6
+  },
+  "889": {
+   "modules": [
+    "DecodeUnit"
+   ],
+   "signals": [
+    "cs_decoder_decoded_andMatrixInput_14",
+    "cs_decoder_decoded_andMatrixInput_3",
+    "cs_decoder_decoded_invInputs"
+   ],
+   "lines": 2
+  },
+  "890": {
+   "modules": [
+    "DecodeUnit"
+   ],
+   "signals": [
+    "cs_decoder_decoded_T_258"
+   ],
+   "lines": 6
+  },
+  "896": {
+   "modules": [
+    "FpPipeline"
+   ],
+   "signals": [
+    "fregister_read_io_rf_read_ports_0_addr",
+    "io_debug_wb_wdata_0_prevUnrecoded_denormShiftDist"
+   ],
+   "lines": 6
+  },
+  "898": {
+   "modules": [
+    "FpPipeline"
+   ],
+   "signals": [
+    "io_debug_wb_wdata_0_prevUnrecoded_denormFract",
+    "ll_wbarb_io_in_0_bits_data_rawIn_normDist_T_94"
+   ],
+   "lines": 6
+  },
+  "899": {
+   "modules": [
+    "FpPipeline"
+   ],
+   "signals": [
+    "io_iss_uops_0_dst_rtype",
+    "fregister_read_io_iss_uops_0_dst_rtype"
+   ],
+   "lines": 6
+  },
+  "900": {
+   "modules": [
+    "FpPipeline"
+   ],
+   "signals": [
+    "ll_wbarb_io_in_0_bits_uop_fp_val",
+    "io_ll_wports_0_bits_uop_stq_idx",
+    "io_ll_wports_0_bits_uop_fp_val"
+   ],
+   "lines": 2
+  },
+  "902": {
+   "modules": [
+    "FpPipeline"
+   ],
+   "signals": [
+    "fp_issue_unit_io_wakeup_ports_1_valid",
+    "io_debug_wb_wdata_0_prevUnrecoded_expOut_T_6",
+    "io_wakeups_1_valid"
+   ],
+   "lines": 2
+  },
+  "904": {
+   "modules": [
+    "RegisterRead"
+   ],
+   "signals": [
+    "io_exe_reqs_0_bits_uop_fp_val",
+    "rrd_uops_0_REG_fp_val",
+    "exe_reg_uops_0_fp_val"
+   ],
+   "lines": 2
+  },
+  "905": {
+   "modules": [
+    "RegisterRead"
+   ],
+   "signals": [
+    "exe_reg_rs1_data_0"
+   ],
+   "lines": 6
+  },
+  "906": {
+   "modules": [
+    "RegisterRead"
+   ],
+   "signals": [
+    "rrd_decode_unit_io_iss_uop_is_amo",
+    "io_rf_read_ports_2_data",
+    "io_iss_uops_0_is_amo"
+   ],
+   "lines": 2
+  },
+  "907": {
+   "modules": [
+    "RegisterRead"
+   ],
+   "signals": [
+    "rrd_decode_unit_io_iss_uop_uses_stq",
+    "rrd_valids_0_REG"
+   ],
+   "lines": 6
+  },
+  "910": {
+   "modules": [
+    "RegisterRead"
+   ],
+   "signals": [
+    "exe_reg_rs2_data_0",
+    "rrd_rs3_data_0_REG"
+   ],
+   "lines": 2
+  },
+  "911": {
+   "modules": [
+    "RegisterRead"
+   ],
+   "signals": [
+    "io_rf_read_ports_2_addr",
+    "exe_reg_rs2_data_0",
+    "io_iss_uops_0_prs3"
+   ],
+   "lines": 2
+  },
+  "913": {
+   "modules": [
+    "RegisterRead"
+   ],
+   "signals": [
+    "rrd_decode_unit_io_rrd_valid",
+    "rrd_kill"
+   ],
+   "lines": 2
+  },
+  "914": {
+   "modules": [
+    "RegisterReadDecode"
+   ],
+   "signals": [
+    "io_iss_uop_imm_packed",
+    "io_rrd_uop_mem_cmd"
+   ],
+   "lines": 6
+  },
+  "915": {
+   "modules": [
+    "RegisterReadDecode"
+   ],
+   "signals": [
+    "io_rrd_uop_pdst",
+    "io_rrd_uop_uopc",
+    "io_iss_uop_pdst"
+   ],
+   "lines": 2
+  },
+  "916": {
+   "modules": [
+    "RegisterReadDecode"
+   ],
+   "signals": [
+    "io_rrd_valid",
+    "io_iss_valid"
+   ],
+   "lines": 2
+  },
+  "917": {
+   "modules": [
+    "RegisterReadDecode"
+   ],
+   "signals": [
+    "io_rrd_uop_fp_val",
+    "io_iss_uop_uopc",
+    "io_iss_uop_fp_val"
+   ],
+   "lines": 2
+  },
+  "920": {
+   "modules": [
+    "RegisterReadDecode"
+   ],
+   "signals": [
+    "io_rrd_uop_uses_stq",
+    "io_iss_uop_uopc",
+    "io_iss_uop_uses_stq"
+   ],
+   "lines": 2
+  },
+  "921": {
+   "modules": [
+    "RegisterReadDecode"
+   ],
+   "signals": [
+    "io_rrd_uop_uses_stq",
+    "io_iss_uop_rob_idx",
+    "io_iss_uop_uses_stq"
+   ],
+   "lines": 2
+  },
+  "922": {
+   "modules": [
+    "RegisterReadDecode"
+   ],
+   "signals": [
+    "io_rrd_uop_fp_val",
+    "io_rrd_uop_ctrl_is_sta_T_1",
+    "io_iss_uop_fp_val"
+   ],
+   "lines": 2
+  },
+  "926": {
+   "modules": [
+    "RegisterFileSynthesizable"
+   ],
+   "signals": [
+    "io_write_ports_0_bits_addr"
+   ],
+   "lines": 6
+  },
+  "927": {
+   "modules": [
+    "RegisterFileSynthesizable"
+   ],
+   "signals": [
+    "io_write_ports_1_bits_data",
+    "T_1"
+   ],
+   "lines": 6
+  },
+  "929": {
+   "modules": [
+    "RegisterFileSynthesizable"
+   ],
+   "signals": [
+    "regfile_read_data_2_MPORT_en",
+    "read_addrs_1"
+   ],
+   "lines": 2
+  },
+  "931": {
+   "modules": [
+    "RegisterFileSynthesizable"
+   ],
+   "signals": [
+    "io_write_ports_0_bits_addr"
+   ],
+   "lines": 6
+  },
+  "932": {
+   "modules": [
+    "RegisterFileSynthesizable"
+   ],
+   "signals": [
+    "read_addrs_2[5",
+    "io_write_ports_0_bits_data",
+    "io_read_ports_2_addr"
+   ],
+   "lines": 2
+  }
+ }
+}

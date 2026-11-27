@@ -1,0 +1,3914 @@
+{
+ "core": "rocket",
+ "kind": "driver",
+ "locations": {
+  "6": {
+   "modules": [
+    "PlusArgTimeout"
+   ],
+   "signals": [
+    "plusarg_reader_out"
+   ],
+   "lines": 6
+  },
+  "112": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "negated_remainder",
+    "dividendMSB_lo_3"
+   ],
+   "lines": 6
+  },
+  "115": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "remainder",
+    "dividendMSB_T_12"
+   ],
+   "lines": 6
+  },
+  "116": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "dividendMSB_lo_4",
+    "divisorMSB_hi_4"
+   ],
+   "lines": 6
+  },
+  "117": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "decoded_orMatrixOutputs"
+   ],
+   "lines": 6
+  },
+  "118": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "divisorMSB_hi_3"
+   ],
+   "lines": 6
+  },
+  "119": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "divisorMSB_hi_14"
+   ],
+   "lines": 6
+  },
+  "122": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "divisorMSB_hi_1"
+   ],
+   "lines": 6
+  },
+  "123": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "count",
+    "divisorMSB_hi_11"
+   ],
+   "lines": 6
+  },
+  "124": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "cmdHi",
+    "io_resp_ready",
+    "decoded_invMatrixOutputs"
+   ],
+   "lines": 2
+  },
+  "127": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "divisorMSB_lo_8",
+    "dividendMSB_T_38"
+   ],
+   "lines": 6
+  },
+  "128": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "dividendMSB_hi_12",
+    "divisorMSB_hi_13"
+   ],
+   "lines": 6
+  },
+  "130": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "divisorMSB_hi_13",
+    "dividendMSB_useHi_11"
+   ],
+   "lines": 6
+  },
+  "131": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "dividendMSB_hi_14",
+    "unrolls_less"
+   ],
+   "lines": 6
+  },
+  "132": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "divisorMSB_T_79",
+    "GEN_6"
+   ],
+   "lines": 6
+  },
+  "133": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "divisorMSB_T_21",
+    "divisorMSB_hi_14"
+   ],
+   "lines": 6
+  },
+  "134": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "divisorMSB_hi_1",
+    "decoded_orMatrixOutputs_T_4"
+   ],
+   "lines": 6
+  },
+  "136": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "dividendMSB_hi_10",
+    "cmdMul"
+   ],
+   "lines": 2
+  },
+  "138": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "hi_T_4",
+    "count"
+   ],
+   "lines": 6
+  },
+  "139": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "dividendMSB_hi_1",
+    "dividendMSB_T_43"
+   ],
+   "lines": 6
+  },
+  "140": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "dividendMSB_T_85",
+    "dividendMSB_hi_3"
+   ],
+   "lines": 6
+  },
+  "141": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "divisorMSB_hi_1",
+    "loOut_T"
+   ],
+   "lines": 6
+  },
+  "142": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "io_req_bits_in2",
+    "dividendMSB_hi_13"
+   ],
+   "lines": 6
+  },
+  "143": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "divisorMSB_T_97",
+    "divisorMSB_useHi_1"
+   ],
+   "lines": 6
+  },
+  "146": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "divisorMSB_hi_8"
+   ],
+   "lines": 6
+  },
+  "147": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "result",
+    "req_dw"
+   ],
+   "lines": 6
+  },
+  "148": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "decoded_invInputs",
+    "dividendMSB_useHi_12"
+   ],
+   "lines": 6
+  },
+  "149": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "divisorMSB_useHi_3",
+    "neg_out"
+   ],
+   "lines": 6
+  },
+  "150": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "dividendMSB_lo_6",
+    "dividendMSB_hi_5"
+   ],
+   "lines": 2
+  },
+  "152": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "dividendMSB_lo_11",
+    "divby0"
+   ],
+   "lines": 6
+  },
+  "154": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "eOutMask",
+    "decoded_orMatrixOutputs_T"
+   ],
+   "lines": 6
+  },
+  "155": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "decoded_andMatrixInput_0_3",
+    "dividendMSB_lo_12",
+    "decoded_plaInput"
+   ],
+   "lines": 2
+  },
+  "157": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "divisorMSB_lo_12",
+    "neg_out"
+   ],
+   "lines": 6
+  },
+  "159": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "req_dw"
+   ],
+   "lines": 6
+  },
+  "160": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "eOutMask",
+    "state"
+   ],
+   "lines": 6
+  },
+  "162": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "divisorMSB_T_92"
+   ],
+   "lines": 6
+  },
+  "163": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "nextMulReg1_T_1",
+    "eOutPos"
+   ],
+   "lines": 6
+  },
+  "164": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "dividendMSB_lo_7",
+    "reset"
+   ],
+   "lines": 2
+  },
+  "166": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "divisorMSB_useHi_7",
+    "divisorMSB_hi_11"
+   ],
+   "lines": 6
+  },
+  "168": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [],
+   "lines": 6
+  },
+  "169": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "dividendMSB_T_91"
+   ],
+   "lines": 6
+  },
+  "170": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "divisorMSB_T_47",
+    "dividendMSB_T_30"
+   ],
+   "lines": 6
+  },
+  "171": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "divisorMSB_T_9"
+   ],
+   "lines": 6
+  },
+  "175": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "dividendMSB_lo_12"
+   ],
+   "lines": 6
+  },
+  "179": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "divisorMSB_lo_9",
+    "divisorMSB_hi_4"
+   ],
+   "lines": 6
+  },
+  "180": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "divisorMSB_T_25",
+    "eOut_T_4"
+   ],
+   "lines": 6
+  },
+  "182": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [],
+   "lines": 6
+  },
+  "183": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "dividendMSB_useHi_1",
+    "dividendMSB_hi_7"
+   ],
+   "lines": 6
+  },
+  "186": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "dividendMSB_lo_7"
+   ],
+   "lines": 6
+  },
+  "189": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "dividendMSB_hi_8",
+    "divisorMSB_T_24"
+   ],
+   "lines": 6
+  },
+  "192": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "divisorMSB_hi_8"
+   ],
+   "lines": 6
+  },
+  "193": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "dividendMSB_lo_9",
+    "unrolls_T_2",
+    "dividendMSB_hi_8"
+   ],
+   "lines": 2
+  },
+  "196": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "dividendMSB_lo",
+    "state"
+   ],
+   "lines": 6
+  },
+  "197": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "GEN_8"
+   ],
+   "lines": 6
+  },
+  "199": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "dividendMSB_lo_12",
+    "divisorMSB_useHi_10"
+   ],
+   "lines": 6
+  },
+  "204": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "count",
+    "divisorMSB_T_48"
+   ],
+   "lines": 6
+  },
+  "207": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "decoded_orMatrixOutputs_T",
+    "io_req_bits_dw"
+   ],
+   "lines": 6
+  },
+  "212": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "hi_1"
+   ],
+   "lines": 6
+  },
+  "213": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "divisorMSB_hi_14",
+    "remainder"
+   ],
+   "lines": 6
+  },
+  "215": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "dividendMSB_hi_2"
+   ],
+   "lines": 6
+  },
+  "217": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "dividendMSB_hi_9"
+   ],
+   "lines": 6
+  },
+  "220": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "divisorMSB_hi_11",
+    "dividendMSB_lo_4"
+   ],
+   "lines": 6
+  },
+  "221": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "dividendMSB_hi_6",
+    "divisorMSB_T_70"
+   ],
+   "lines": 6
+  },
+  "222": {
+   "modules": [
+    "MulDiv"
+   ],
+   "signals": [
+    "decoded_orMatrixOutputs_T",
+    "io_req_bits_in1"
+   ],
+   "lines": 6
+  },
+  "223": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "shout_l_T_57",
+    "io_fn"
+   ],
+   "lines": 6
+  },
+  "225": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "GEN_14",
+    "shin_T_10"
+   ],
+   "lines": 6
+  },
+  "227": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "GEN_1",
+    "shout"
+   ],
+   "lines": 6
+  },
+  "231": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "io_adder_out",
+    "io_in1"
+   ],
+   "lines": 6
+  },
+  "233": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "shin_T_56"
+   ],
+   "lines": 6
+  },
+  "234": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "shin_T_30"
+   ],
+   "lines": 6
+  },
+  "239": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [],
+   "lines": 6
+  },
+  "240": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "shout_l_T_17"
+   ],
+   "lines": 6
+  },
+  "241": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "io_adder_out_T_1"
+   ],
+   "lines": 6
+  },
+  "243": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "io_adder_out"
+   ],
+   "lines": 6
+  },
+  "244": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "shin_T_10",
+    "io_fn"
+   ],
+   "lines": 6
+  },
+  "247": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "shin_T_31",
+    "io_fn"
+   ],
+   "lines": 6
+  },
+  "248": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "out"
+   ],
+   "lines": 6
+  },
+  "252": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "io_adder_out_T_1",
+    "io_in1"
+   ],
+   "lines": 6
+  },
+  "260": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "shin_T_21",
+    "io_fn"
+   ],
+   "lines": 6
+  },
+  "261": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "shout_r",
+    "shout_l_T_47"
+   ],
+   "lines": 6
+  },
+  "262": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "GEN_1",
+    "logic_"
+   ],
+   "lines": 6
+  },
+  "272": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "shin",
+    "io_in2"
+   ],
+   "lines": 6
+  },
+  "273": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "io_in2"
+   ],
+   "lines": 6
+  },
+  "274": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "io_adder_out",
+    "slt"
+   ],
+   "lines": 6
+  },
+  "275": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "shout_T_5"
+   ],
+   "lines": 6
+  },
+  "277": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "shout_l_T_7",
+    "io_in1"
+   ],
+   "lines": 6
+  },
+  "280": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "shout_l_T_27",
+    "T_2"
+   ],
+   "lines": 6
+  },
+  "283": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "shin_T_51",
+    "io_dw"
+   ],
+   "lines": 6
+  },
+  "284": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "shout_l_T_8",
+    "io_fn"
+   ],
+   "lines": 6
+  },
+  "285": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "io_fn"
+   ],
+   "lines": 6
+  },
+  "286": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "slt_T_7",
+    "shift_logic_T"
+   ],
+   "lines": 6
+  },
+  "287": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "io_in2",
+    "shin_T_36"
+   ],
+   "lines": 6
+  },
+  "288": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "io_out_T_2",
+    "shift_logic_T"
+   ],
+   "lines": 6
+  },
+  "289": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "shin_T_60",
+    "io_in2"
+   ],
+   "lines": 6
+  },
+  "290": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "in2_inv"
+   ],
+   "lines": 6
+  },
+  "295": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "shout_l_T_8",
+    "shift_logic_T"
+   ],
+   "lines": 6
+  },
+  "299": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "shout_l",
+    "in2_inv"
+   ],
+   "lines": 6
+  },
+  "300": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "shin_T_50",
+    "in2_inv"
+   ],
+   "lines": 6
+  },
+  "302": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "io_dw"
+   ],
+   "lines": 6
+  },
+  "303": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "logic_T_7"
+   ],
+   "lines": 6
+  },
+  "304": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "shout_l_T_48",
+    "shamt"
+   ],
+   "lines": 6
+  },
+  "306": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "shout_r_T_5",
+    "io_in1"
+   ],
+   "lines": 6
+  },
+  "307": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "io_in1",
+    "io_out_T_4"
+   ],
+   "lines": 6
+  },
+  "308": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "shin_T_61",
+    "io_fn"
+   ],
+   "lines": 6
+  },
+  "312": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "io_out_T_2",
+    "shin"
+   ],
+   "lines": 6
+  },
+  "315": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "GEN_1",
+    "shout_l_T_3"
+   ],
+   "lines": 6
+  },
+  "319": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "shin_T_20",
+    "io_fn"
+   ],
+   "lines": 6
+  },
+  "320": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "shout_l"
+   ],
+   "lines": 6
+  },
+  "323": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "shin_T_21",
+    "io_in2"
+   ],
+   "lines": 6
+  },
+  "325": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "shin_T_51",
+    "out"
+   ],
+   "lines": 6
+  },
+  "326": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "shin_r",
+    "shin_T_36"
+   ],
+   "lines": 6
+  },
+  "329": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "shout_l_T_13",
+    "in1_xor_in2"
+   ],
+   "lines": 6
+  },
+  "330": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "GEN_14",
+    "io_fn"
+   ],
+   "lines": 6
+  },
+  "332": {
+   "modules": [
+    "ALU"
+   ],
+   "signals": [
+    "out",
+    "shin"
+   ],
+   "lines": 6
+  },
+  "334": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "en_T_1",
+    "en"
+   ],
+   "lines": 6
+  },
+  "336": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "io_bp_0_control_w",
+    "x_T_25"
+   ],
+   "lines": 6
+  },
+  "338": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "r_T_4",
+    "r_T_26"
+   ],
+   "lines": 6
+  },
+  "340": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "io_bp_0_address",
+    "r_T_26"
+   ],
+   "lines": 6
+  },
+  "341": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "io_ea"
+   ],
+   "lines": 6
+  },
+  "343": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "io_bp_0_address",
+    "r"
+   ],
+   "lines": 6
+  },
+  "344": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "r_T_4",
+    "io_bp_0_control_x"
+   ],
+   "lines": 6
+  },
+  "346": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "io_ea",
+    "io_bp_0_address"
+   ],
+   "lines": 6
+  },
+  "349": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "io_status_prv",
+    "en_T_2"
+   ],
+   "lines": 6
+  },
+  "350": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "r_T_15",
+    "io_pc"
+   ],
+   "lines": 6
+  },
+  "351": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "io_bp_0_address",
+    "io_ea"
+   ],
+   "lines": 6
+  },
+  "352": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "io_bp_0_address",
+    "en"
+   ],
+   "lines": 6
+  },
+  "353": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "r_T_14",
+    "r_T_25"
+   ],
+   "lines": 6
+  },
+  "354": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "x_T_4",
+    "io_bp_0_control_tmatch"
+   ],
+   "lines": 6
+  },
+  "355": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "io_bp_0_control_action",
+    "io_bp_0_control_tmatch"
+   ],
+   "lines": 6
+  },
+  "362": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "io_ea",
+    "x_T_26"
+   ],
+   "lines": 6
+  },
+  "367": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "r_T_4",
+    "io_bp_0_control_r"
+   ],
+   "lines": 6
+  },
+  "369": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "r_T_25",
+    "io_bp_0_control_tmatch"
+   ],
+   "lines": 6
+  },
+  "374": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "r_T_8",
+    "r"
+   ],
+   "lines": 6
+  },
+  "377": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "io_bp_0_address",
+    "r_T_4"
+   ],
+   "lines": 6
+  },
+  "378": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "x_T_26",
+    "w"
+   ],
+   "lines": 6
+  },
+  "380": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "x_T_5",
+    "io_bp_0_address"
+   ],
+   "lines": 6
+  },
+  "383": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "io_bp_0_address",
+    "x_T_26"
+   ],
+   "lines": 6
+  },
+  "391": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "io_bp_0_address",
+    "io_bp_0_control_r"
+   ],
+   "lines": 6
+  },
+  "392": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "r_T_12",
+    "en_T_2"
+   ],
+   "lines": 6
+  },
+  "394": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "r_T_5",
+    "x"
+   ],
+   "lines": 6
+  },
+  "396": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "io_bp_0_control_m",
+    "io_bp_0_control_action"
+   ],
+   "lines": 6
+  },
+  "398": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "r_T_25",
+    "io_bp_0_control_tmatch"
+   ],
+   "lines": 6
+  },
+  "399": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "r_T_12",
+    "io_xcpt_ld_T"
+   ],
+   "lines": 6
+  },
+  "400": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "r_T_26",
+    "x_T_25"
+   ],
+   "lines": 6
+  },
+  "401": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "io_status_prv",
+    "r_T_26"
+   ],
+   "lines": 6
+  },
+  "406": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "x_T_14",
+    "r_T_26"
+   ],
+   "lines": 6
+  },
+  "407": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "io_bp_0_control_action",
+    "r"
+   ],
+   "lines": 6
+  },
+  "408": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "r_T_14",
+    "x_T_4"
+   ],
+   "lines": 6
+  },
+  "409": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "x_T_25",
+    "en_T_2"
+   ],
+   "lines": 6
+  },
+  "411": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "GEN_11",
+    "en_T_2"
+   ],
+   "lines": 6
+  },
+  "416": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "io_ea",
+    "io_bp_0_control_r"
+   ],
+   "lines": 6
+  },
+  "417": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "io_bp_0_control_x",
+    "io_bp_0_control_action"
+   ],
+   "lines": 6
+  },
+  "420": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "io_status_prv",
+    "io_bp_0_address"
+   ],
+   "lines": 6
+  },
+  "421": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "io_bp_0_address",
+    "r_T_4"
+   ],
+   "lines": 6
+  },
+  "423": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "r_T_5",
+    "r"
+   ],
+   "lines": 6
+  },
+  "426": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "r_T_15",
+    "en_T_2"
+   ],
+   "lines": 6
+  },
+  "428": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "io_bp_0_control_r",
+    "io_bp_0_control_x"
+   ],
+   "lines": 6
+  },
+  "430": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "io_bp_0_control_u",
+    "w"
+   ],
+   "lines": 6
+  },
+  "431": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "io_bp_0_control_r",
+    "io_bp_0_control_tmatch"
+   ],
+   "lines": 6
+  },
+  "434": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "io_bp_0_address"
+   ],
+   "lines": 6
+  },
+  "435": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "io_status_debug",
+    "r_T_4"
+   ],
+   "lines": 6
+  },
+  "436": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "io_bp_0_address",
+    "io_bp_0_control_action"
+   ],
+   "lines": 6
+  },
+  "438": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "io_bp_0_control_tmatch",
+    "io_bp_0_control_action"
+   ],
+   "lines": 6
+  },
+  "440": {
+   "modules": [
+    "BreakpointUnit"
+   ],
+   "signals": [
+    "io_bp_0_control_x",
+    "io_bp_0_control_tmatch"
+   ],
+   "lines": 6
+  },
+  "446": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "io_pmp_2_cfg_x",
+    "decoded_invInputs_1",
+    "reg_pmp_2_cfg_x"
+   ],
+   "lines": 2
+  },
+  "449": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "reg_mstatus_tvm",
+    "notDebugTVec_base"
+   ],
+   "lines": 6
+  },
+  "450": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "GEN_685",
+    "T_38"
+   ],
+   "lines": 6
+  },
+  "454": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "io_decode_0_fp_illegal",
+    "T_297"
+   ],
+   "lines": 6
+  },
+  "460": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "decoded_decoded_andMatrixInput_3_26",
+    "io_csr_stall"
+   ],
+   "lines": 6
+  },
+  "461": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "m_interrupts",
+    "T_1920"
+   ],
+   "lines": 6
+  },
+  "464": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "T_34",
+    "reg_pmp_1_cfg_l"
+   ],
+   "lines": 6
+  },
+  "466": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "T_43",
+    "reg_pmp_3_addr"
+   ],
+   "lines": 6
+  },
+  "469": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "reg_mtvec"
+   ],
+   "lines": 6
+  },
+  "472": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "wdata",
+    "reset"
+   ],
+   "lines": 2
+  },
+  "473": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "io_status_mpie",
+    "decoded_decoded_orMatrixOutputs_T_115",
+    "reg_mstatus_mpie"
+   ],
+   "lines": 2
+  },
+  "474": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "io_decode_0_inst",
+    "io_pc"
+   ],
+   "lines": 6
+  },
+  "475": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "decoded_T_16",
+    "io_decode_0_read_illegal_orMatrixOutputs"
+   ],
+   "lines": 6
+  },
+  "476": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "decoded_andMatrixInput_9_6",
+    "io_rw_addr"
+   ],
+   "lines": 6
+  },
+  "483": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "decoded_decoded_T_288"
+   ],
+   "lines": 6
+  },
+  "486": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "reg_pmp_7_cfg_l"
+   ],
+   "lines": 6
+  },
+  "487": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "decoded_decoded_orMatrixOutputs_T_37",
+    "io_hartid"
+   ],
+   "lines": 6
+  },
+  "488": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "io_rw_rdata_T_124",
+    "reg_sscratch"
+   ],
+   "lines": 6
+  },
+  "489": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "reg_mscratch",
+    "io_rw_rdata_T_153"
+   ],
+   "lines": 6
+  },
+  "493": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "causeIsDebugBreak_T_3",
+    "reg_pmp_6_cfg_x"
+   ],
+   "lines": 6
+  },
+  "495": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "decoded_decoded_T_278"
+   ],
+   "lines": 6
+  },
+  "497": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "io_decode_0_fp_csr_andMatrixInput_2",
+    "T_73",
+    "io_decode_0_fp_csr_invInputs"
+   ],
+   "lines": 2
+  },
+  "501": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "csr_wen"
+   ],
+   "lines": 2
+  },
+  "502": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "reg_bp_0_control_x",
+    "csr_wen"
+   ],
+   "lines": 6
+  },
+  "505": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "decoded_decoded_T_14",
+    "reg_mstatus_spie"
+   ],
+   "lines": 6
+  },
+  "509": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "decoded_decoded_invMatrixOutputs",
+    "newBPC_action"
+   ],
+   "lines": 6
+  },
+  "510": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "io_status_debug",
+    "reg_bp_0_control_x"
+   ],
+   "lines": 6
+  },
+  "512": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "io_decode_0_read_illegal_T_8",
+    "io_rw_addr"
+   ],
+   "lines": 6
+  },
+  "514": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "decoded_decoded_orMatrixOutputs_T_15",
+    "is_wfi"
+   ],
+   "lines": 6
+  },
+  "515": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "decoded_decoded_andMatrixInput_0",
+    "decoded_decoded_T_122",
+    "decoded_decoded_invInputs"
+   ],
+   "lines": 2
+  },
+  "516": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "pmp_mask_T_19",
+    "reg_pmp_5_cfg_l"
+   ],
+   "lines": 6
+  },
+  "517": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "decoded_invMatrixOutputs",
+    "io_rw_addr"
+   ],
+   "lines": 6
+  },
+  "520": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "wdata"
+   ],
+   "lines": 6
+  },
+  "521": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "T_1930",
+    "io_status_cease_r"
+   ],
+   "lines": 6
+  },
+  "522": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "decoded_decoded_T_278",
+    "decoded_decoded_T_234"
+   ],
+   "lines": 6
+  },
+  "524": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "decoded_invMatrixOutputs_1",
+    "reg_pmp_1_cfg_l"
+   ],
+   "lines": 6
+  },
+  "525": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "T_1858",
+    "exception"
+   ],
+   "lines": 6
+  },
+  "526": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "io_status_tsr",
+    "reg_pmp_7_cfg_l",
+    "reg_mstatus_tsr"
+   ],
+   "lines": 2
+  },
+  "528": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "reg_dcsr_ebreakm",
+    "exception"
+   ],
+   "lines": 6
+  },
+  "533": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "decoded_decoded_T_120"
+   ],
+   "lines": 6
+  },
+  "535": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "newCfg_6_r",
+    "reset"
+   ],
+   "lines": 6
+  },
+  "536": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "decoded_decoded_T_254"
+   ],
+   "lines": 6
+  },
+  "537": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "io_status_cease_r",
+    "reset"
+   ],
+   "lines": 2
+  },
+  "539": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "decoded_decoded_T_100",
+    "csr_wen"
+   ],
+   "lines": 2
+  },
+  "543": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "newCfg_5_w",
+    "decoded_decoded_orMatrixOutputs_T_36",
+    "wdata"
+   ],
+   "lines": 2
+  },
+  "545": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "decoded_invMatrixOutputs_1",
+    "reg_debug"
+   ],
+   "lines": 6
+  },
+  "546": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [],
+   "lines": 6
+  },
+  "548": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "which_T_106",
+    "reg_pmp_3_cfg_a"
+   ],
+   "lines": 6
+  },
+  "550": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "decoded_120",
+    "io_rw_rdata_T_155",
+    "decoded_decoded_invMatrixOutputs"
+   ],
+   "lines": 2
+  },
+  "552": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "decoded_decoded_T_144"
+   ],
+   "lines": 6
+  },
+  "553": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "decoded_decoded_orMatrixOutputs_T_143",
+    "m_interrupts"
+   ],
+   "lines": 6
+  },
+  "554": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "decoded_orMatrixOutputs_T_3",
+    "reset"
+   ],
+   "lines": 2
+  },
+  "555": {
+   "modules": [
+    "CSRFile"
+   ],
+   "signals": [
+    "new_mstatus_WIRE",
+    "reg_mcountinhibit"
+   ],
+   "lines": 6
+  },
+  "557": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "nBufValid_T_2",
+    "exp_io_rvc"
+   ],
+   "lines": 6
+  },
+  "559": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "nReady",
+    "valid"
+   ],
+   "lines": 6
+  },
+  "560": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "icShiftAmt",
+    "io_inst_0_ready"
+   ],
+   "lines": 2
+  },
+  "562": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "ic_replay_T",
+    "exp_io_rvc"
+   ],
+   "lines": 6
+  },
+  "563": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "nICReady",
+    "GEN_58"
+   ],
+   "lines": 6
+  },
+  "565": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "ibufBTBResp_bht_history",
+    "io_inst_0_ready"
+   ],
+   "lines": 2
+  },
+  "566": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "icMask"
+   ],
+   "lines": 6
+  },
+  "567": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "buf_pc_T_5",
+    "buf__xcpt_pf_inst"
+   ],
+   "lines": 6
+  },
+  "570": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "io_imem_bits_btb_bht_history",
+    "nIC_T_1"
+   ],
+   "lines": 6
+  },
+  "571": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "io_imem_bits_data",
+    "exp_io_rvc"
+   ],
+   "lines": 6
+  },
+  "572": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "GEN_0",
+    "bufMask"
+   ],
+   "lines": 6
+  },
+  "574": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "nBufValid_T_2",
+    "io_imem_bits_xcpt_ae_inst"
+   ],
+   "lines": 6
+  },
+  "577": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "icData_T_4",
+    "nReady"
+   ],
+   "lines": 6
+  },
+  "579": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "ibufBTBResp_bht_history",
+    "ibufBTBResp_entry"
+   ],
+   "lines": 6
+  },
+  "583": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "icData_T_4",
+    "buf__data"
+   ],
+   "lines": 6
+  },
+  "584": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "io_inst_0_bits_xcpt1_T_5",
+    "buf__replay"
+   ],
+   "lines": 6
+  },
+  "585": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "nBufValid_T_5"
+   ],
+   "lines": 6
+  },
+  "586": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "nIC",
+    "buf__xcpt_pf_inst"
+   ],
+   "lines": 6
+  },
+  "588": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "GEN_59",
+    "buf__xcpt_ae_inst"
+   ],
+   "lines": 6
+  },
+  "589": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "ibufBTBResp_bht_history"
+   ],
+   "lines": 6
+  },
+  "590": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "ic_replay_T",
+    "buf__xcpt_ae_inst"
+   ],
+   "lines": 6
+  },
+  "591": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "buf__data",
+    "nReady"
+   ],
+   "lines": 6
+  },
+  "592": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "io_inst_0_bits_xcpt1_gf_inst",
+    "io_imem_bits_btb_bht_history",
+    "io_inst_0_bits_xcpt1_T_5"
+   ],
+   "lines": 2
+  },
+  "593": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "nReady",
+    "nIC"
+   ],
+   "lines": 6
+  },
+  "594": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "io_imem_bits_btb_bht_history"
+   ],
+   "lines": 6
+  },
+  "599": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "nICReady",
+    "io_imem_valid"
+   ],
+   "lines": 6
+  },
+  "600": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "buf__replay",
+    "reset"
+   ],
+   "lines": 2
+  },
+  "603": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "buf_replay"
+   ],
+   "lines": 6
+  },
+  "604": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "inst_T",
+    "io_imem_bits_btb_bht_history"
+   ],
+   "lines": 6
+  },
+  "606": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "pcWordBits",
+    "io_imem_bits_pc"
+   ],
+   "lines": 2
+  },
+  "608": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "nIC",
+    "io_imem_valid"
+   ],
+   "lines": 6
+  },
+  "610": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "valid_T"
+   ],
+   "lines": 6
+  },
+  "614": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "ibufBTBResp_entry"
+   ],
+   "lines": 6
+  },
+  "615": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "icShiftAmt_T_1",
+    "exp_io_rvc"
+   ],
+   "lines": 6
+  },
+  "618": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "nIC",
+    "GEN_59"
+   ],
+   "lines": 6
+  },
+  "619": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "valid",
+    "nIC_T",
+    "valid_T_2"
+   ],
+   "lines": 2
+  },
+  "622": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "buf_replay",
+    "nReady"
+   ],
+   "lines": 6
+  },
+  "623": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "exp_io_out_bits",
+    "bufMask"
+   ],
+   "lines": 6
+  },
+  "624": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "nValid_T",
+    "GEN_59"
+   ],
+   "lines": 6
+  },
+  "625": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "icData",
+    "GEN_58"
+   ],
+   "lines": 6
+  },
+  "626": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "exp_io_rvc"
+   ],
+   "lines": 6
+  },
+  "627": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "nICReady"
+   ],
+   "lines": 6
+  },
+  "628": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "icData_T_3",
+    "io_kill"
+   ],
+   "lines": 6
+  },
+  "629": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "inst_T_2",
+    "nIC"
+   ],
+   "lines": 6
+  },
+  "630": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "io_imem_bits_replay",
+    "buf__xcpt_ae_inst"
+   ],
+   "lines": 6
+  },
+  "631": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "bufMask"
+   ],
+   "lines": 6
+  },
+  "634": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "GEN_0",
+    "nICReady"
+   ],
+   "lines": 6
+  },
+  "635": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "icData",
+    "T_21"
+   ],
+   "lines": 6
+  },
+  "636": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "GEN_0",
+    "buf_replay"
+   ],
+   "lines": 6
+  },
+  "637": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "exp_io_in"
+   ],
+   "lines": 6
+  },
+  "638": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "io_imem_bits_data",
+    "buf_replay"
+   ],
+   "lines": 6
+  },
+  "639": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "valid_T_2",
+    "exp_io_rvc"
+   ],
+   "lines": 6
+  },
+  "641": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "replay_T_5",
+    "bufMask"
+   ],
+   "lines": 6
+  },
+  "642": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "io_imem_ready_T",
+    "buf__replay"
+   ],
+   "lines": 6
+  },
+  "643": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "inst_T",
+    "bufMask"
+   ],
+   "lines": 6
+  },
+  "644": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "io_imem_bits_xcpt_ae_inst",
+    "bufMask"
+   ],
+   "lines": 6
+  },
+  "645": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "bufMask",
+    "io_inst_0_ready"
+   ],
+   "lines": 2
+  },
+  "646": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "GEN_24",
+    "io_imem_ready_T_4"
+   ],
+   "lines": 6
+  },
+  "648": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "reset",
+    "io_imem_bits_xcpt_ae_inst"
+   ],
+   "lines": 6
+  },
+  "650": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "io_inst_0_bits_xcpt1_pf_inst",
+    "icMask_T_1",
+    "io_inst_0_bits_xcpt1_T_5"
+   ],
+   "lines": 2
+  },
+  "652": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "buf_pc_T_5",
+    "nICReady"
+   ],
+   "lines": 6
+  },
+  "655": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "io_imem_bits_btb_bht_history",
+    "io_imem_bits_xcpt_pf_inst"
+   ],
+   "lines": 6
+  },
+  "657": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "ic_replay_T_2",
+    "buf__xcpt_pf_inst"
+   ],
+   "lines": 6
+  },
+  "658": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "nICReady"
+   ],
+   "lines": 6
+  },
+  "659": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "nIC_T_1",
+    "GEN_58"
+   ],
+   "lines": 6
+  },
+  "660": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "buf_replay",
+    "buf__xcpt_pf_inst"
+   ],
+   "lines": 6
+  },
+  "664": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "valid_T_2",
+    "buf__xcpt_pf_inst"
+   ],
+   "lines": 6
+  },
+  "665": {
+   "modules": [
+    "IBuf"
+   ],
+   "signals": [
+    "io_imem_bits_xcpt_ae_inst",
+    "io_imem_bits_replay"
+   ],
+   "lines": 6
+  },
+  "672": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [],
+   "lines": 6
+  },
+  "674": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_T_14_rs3",
+    "io_out_T_62_rs2"
+   ],
+   "lines": 6
+  },
+  "676": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_T_42_rs2",
+    "io_out_T_62_rd"
+   ],
+   "lines": 6
+  },
+  "677": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_s_T_135",
+    "io_out_T_2"
+   ],
+   "lines": 6
+  },
+  "678": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_T_4_rs3"
+   ],
+   "lines": 6
+  },
+  "679": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_T_54_rs3",
+    "io_out_T_12_rd"
+   ],
+   "lines": 2
+  },
+  "682": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_T_10_rs1"
+   ],
+   "lines": 6
+  },
+  "686": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_s_13_bits",
+    "io_in"
+   ],
+   "lines": 6
+  },
+  "688": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_T_34_rs3",
+    "io_out_s_T_17"
+   ],
+   "lines": 6
+  },
+  "689": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_T_62_bits",
+    "io_in"
+   ],
+   "lines": 6
+  },
+  "691": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_T_34_rs1"
+   ],
+   "lines": 6
+  },
+  "692": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_T_12_rd",
+    "io_out_s_funct_T_2"
+   ],
+   "lines": 6
+  },
+  "693": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_T_6_rs1"
+   ],
+   "lines": 6
+  },
+  "694": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_s_0_rs3",
+    "io_in"
+   ],
+   "lines": 6
+  },
+  "698": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_T_2"
+   ],
+   "lines": 6
+  },
+  "699": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [],
+   "lines": 6
+  },
+  "705": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_T_16_bits",
+    "io_out_T_2"
+   ],
+   "lines": 6
+  },
+  "708": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_T_32_rs2",
+    "io_out_T_46_rs2"
+   ],
+   "lines": 6
+  },
+  "709": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_T_2"
+   ],
+   "lines": 6
+  },
+  "717": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_T_46_rs3"
+   ],
+   "lines": 2
+  },
+  "718": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_T_50_rd"
+   ],
+   "lines": 6
+  },
+  "719": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_T_26_rs1",
+    "io_in"
+   ],
+   "lines": 6
+  },
+  "724": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_in"
+   ],
+   "lines": 6
+  },
+  "726": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_s_T_115"
+   ],
+   "lines": 6
+  },
+  "727": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [],
+   "lines": 6
+  },
+  "729": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_T_38_rs3"
+   ],
+   "lines": 6
+  },
+  "730": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_T_20_rs3"
+   ],
+   "lines": 6
+  },
+  "731": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_s_3_bits",
+    "io_in"
+   ],
+   "lines": 6
+  },
+  "732": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_s_T_234"
+   ],
+   "lines": 6
+  },
+  "733": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_T_20_rd",
+    "io_out_T_32_rs2"
+   ],
+   "lines": 6
+  },
+  "734": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_T_6_rd"
+   ],
+   "lines": 2
+  },
+  "735": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_T_2"
+   ],
+   "lines": 6
+  },
+  "736": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_T_2"
+   ],
+   "lines": 6
+  },
+  "740": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [],
+   "lines": 6
+  },
+  "745": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_s_T_17"
+   ],
+   "lines": 6
+  },
+  "747": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_s_24_rs2",
+    "io_out_T_18_rs3"
+   ],
+   "lines": 2
+  },
+  "748": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_T_32_rd",
+    "io_out_T_34_rs1"
+   ],
+   "lines": 6
+  },
+  "749": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_T_50_rs1",
+    "io_out_T_2"
+   ],
+   "lines": 6
+  },
+  "751": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_T_2"
+   ],
+   "lines": 6
+  },
+  "753": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_s_17_bits"
+   ],
+   "lines": 6
+  },
+  "755": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [],
+   "lines": 6
+  },
+  "756": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [],
+   "lines": 6
+  },
+  "757": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_s_T_227",
+    "io_out_T_2"
+   ],
+   "lines": 6
+  },
+  "761": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_T_16_rs3"
+   ],
+   "lines": 2
+  },
+  "762": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_s_17_bits"
+   ],
+   "lines": 6
+  },
+  "763": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_s_jr_mv_rs3",
+    "io_out_T_2"
+   ],
+   "lines": 6
+  },
+  "764": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_T_40_rs3"
+   ],
+   "lines": 6
+  },
+  "765": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_s_T_235",
+    "io_out_T_2"
+   ],
+   "lines": 6
+  },
+  "768": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "GEN_1",
+    "io_out_T_2"
+   ],
+   "lines": 6
+  },
+  "770": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_s_opc_4",
+    "io_out_T_2"
+   ],
+   "lines": 6
+  },
+  "771": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_s_T_51",
+    "io_out_s_T_17"
+   ],
+   "lines": 6
+  },
+  "772": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "io_out_T_40_rs2"
+   ],
+   "lines": 6
+  },
+  "773": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [
+    "GEN_1",
+    "io_out_T_2"
+   ],
+   "lines": 6
+  },
+  "777": {
+   "modules": [
+    "RVCExpander"
+   ],
+   "signals": [],
+   "lines": 6
+  },
+  "889": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "mem_br_target_hi_lo_lo",
+    "reset"
+   ],
+   "lines": 6
+  },
+  "893": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "io_ptw_pmp_3_cfg_r",
+    "ibuf_io_imem_bits_data",
+    "csr_io_pmp_3_cfg_r"
+   ],
+   "lines": 2
+  },
+  "895": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "io_ptw_pmp_4_cfg_l",
+    "csr_io_fcsr_rm",
+    "csr_io_pmp_4_cfg_l"
+   ],
+   "lines": 2
+  },
+  "896": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "fp_data_hazard_mem",
+    "ex_ctrl_jalr"
+   ],
+   "lines": 6
+  },
+  "899": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "id_ctrl_decoder_decoded_T_42",
+    "id_illegal_insn_T_42"
+   ],
+   "lines": 6
+  },
+  "900": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "io_ptw_pmp_0_cfg_r",
+    "id_ctrl_decoder_decoded_andMatrixInput_8_11",
+    "csr_io_pmp_0_cfg_r"
+   ],
+   "lines": 2
+  },
+  "901": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "GEN_240",
+    "mem_reg_store"
+   ],
+   "lines": 6
+  },
+  "902": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "csr_io_interrupts_mtip",
+    "id_ctrl_decoder_decoded_lo_121",
+    "io_interrupts_mtip"
+   ],
+   "lines": 2
+  },
+  "904": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "io_gva",
+    "ibuf_io_inst_0_valid",
+    "csr_io_gva"
+   ],
+   "lines": 6
+  },
+  "905": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "coreMonitorBundle_rd0val_REG",
+    "ex_reg_valid_T"
+   ],
+   "lines": 6
+  },
+  "906": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "mem_br_target_sign",
+    "ex_imm_b11_T_2",
+    "mem_reg_inst"
+   ],
+   "lines": 2
+  },
+  "908": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "id_mem_busy"
+   ],
+   "lines": 6
+  },
+  "911": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "T_44",
+    "io_dmem_req_ready"
+   ],
+   "lines": 6
+  },
+  "912": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [],
+   "lines": 6
+  },
+  "914": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "GEN_234",
+    "data_hazard_wb_T_4"
+   ],
+   "lines": 6
+  },
+  "916": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "ex_reg_valid",
+    "rf_wen"
+   ],
+   "lines": 6
+  },
+  "919": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "reset",
+    "csr_io_trace_0_iaddr",
+    "csr_reset"
+   ],
+   "lines": 6
+  },
+  "920": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "id_ctrl_decoder_decoded_orMatrixOutputs_T_9",
+    "ex_imm_sign"
+   ],
+   "lines": 6
+  },
+  "924": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "T_147",
+    "ex_imm_b11_T_9"
+   ],
+   "lines": 6
+  },
+  "925": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "csr_io_pmp_3_cfg_r",
+    "id_ctrl_decoder_1"
+   ],
+   "lines": 6
+  },
+  "926": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "id_ctrl_decoder_decoded_T_83",
+    "alu_io_adder_out"
+   ],
+   "lines": 6
+  },
+  "930": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "id_ctrl_decoder_decoded_andMatrixInput_2_5",
+    "id_ctrl_decoder_6",
+    "id_ctrl_decoder_decoded_plaInput"
+   ],
+   "lines": 2
+  },
+  "931": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "id_ctrl_decoder_decoded_T_222",
+    "ex_reg_rs_bypass_1"
+   ],
+   "lines": 6
+  },
+  "932": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "id_ctrl_decoder_decoded_T_31",
+    "mem_ctrl_wxd"
+   ],
+   "lines": 6
+  },
+  "936": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "csr_reset",
+    "bpu_io_xcpt_if"
+   ],
+   "lines": 6
+  },
+  "941": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "id_ctrl_decoder_decoded_andMatrixInput_8_30",
+    "ibuf_io_inst_0_bits_xcpt1_ae_inst",
+    "id_ctrl_decoder_decoded_plaInput"
+   ],
+   "lines": 2
+  },
+  "942": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "csr_io_interrupts_mtip",
+    "io_interrupts_mtip"
+   ],
+   "lines": 2
+  },
+  "943": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "id_ctrl_decoder_decoded_andMatrixInput_6",
+    "id_ctrl_decoder_decoded_plaInput",
+    "id_ctrl_decoder_decoded_invInputs"
+   ],
+   "lines": 2
+  },
+  "946": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "id_ctrl_decoder_decoded_andMatrixInput_17_5",
+    "T_155",
+    "id_ctrl_decoder_decoded_plaInput"
+   ],
+   "lines": 2
+  },
+  "948": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "id_stall_fpu_T_24",
+    "ctrl_stalld_T_6"
+   ],
+   "lines": 6
+  },
+  "949": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "reset",
+    "id_ctrl_decoder_decoded_T_72",
+    "ibuf_reset"
+   ],
+   "lines": 6
+  },
+  "951": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "id_ctrl_decoder_decoded_orMatrixOutputs_T_49",
+    "mem_reg_flush_pipe"
+   ],
+   "lines": 6
+  },
+  "952": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "id_ctrl_decoder_decoded_T_191",
+    "mem_reg_load_T_23"
+   ],
+   "lines": 6
+  },
+  "954": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "ctrl_stalld_T_9",
+    "ibuf_io_inst_0_bits_replay"
+   ],
+   "lines": 6
+  },
+  "958": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "csr_io_bp_0_address",
+    "id_ctrl_decoder_decoded_T_178"
+   ],
+   "lines": 6
+  },
+  "959": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "bpu_io_bp_0_address",
+    "fp_data_hazard_mem_T_5"
+   ],
+   "lines": 6
+  },
+  "962": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "id_ctrl_decoder_decoded_T_163",
+    "mem_reg_wdata"
+   ],
+   "lines": 6
+  },
+  "964": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "id_ctrl_decoder_decoded_lo_30",
+    "wb_ctrl_rxs1"
+   ],
+   "lines": 6
+  },
+  "970": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "mem_reg_valid"
+   ],
+   "lines": 6
+  },
+  "972": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "wb_ctrl_mem"
+   ],
+   "lines": 6
+  },
+  "973": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "ex_imm_b11_T_8"
+   ],
+   "lines": 6
+  },
+  "976": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "io_bp_0_control_u",
+    "ex_reg_pc",
+    "bpu_io_bp_0_control_u"
+   ],
+   "lines": 6
+  },
+  "977": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "io_dmem_resp_bits_data",
+    "ibuf_io_inst_0_bits_replay"
+   ],
+   "lines": 6
+  },
+  "978": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "id_ctrl_decoder_7"
+   ],
+   "lines": 6
+  },
+  "979": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "mem_waddr",
+    "mem_ctrl_rocc"
+   ],
+   "lines": 6
+  },
+  "980": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "ctrl_stalld_T_6",
+    "io_fpu_dec_wen"
+   ],
+   "lines": 6
+  },
+  "981": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "id_ctrl_decoder_decoded_lo_81"
+   ],
+   "lines": 6
+  },
+  "983": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "bypass_src_T",
+    "bpu_io_xcpt_if"
+   ],
+   "lines": 6
+  },
+  "984": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "csr_io_retire",
+    "T_107"
+   ],
+   "lines": 6
+  },
+  "985": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "io_dmem_resp_bits_has_data",
+    "ex_pc_valid"
+   ],
+   "lines": 2
+  },
+  "986": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "id_ctrl_decoder_decoded_T_102",
+    "ex_ctrl_csr"
+   ],
+   "lines": 6
+  },
+  "987": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "ibuf_io_imem_bits_xcpt_ae_inst",
+    "data_hazard_ex_T_4"
+   ],
+   "lines": 6
+  },
+  "988": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "id_ctrl_decoder_decoded_orMatrixOutputs_T_63",
+    "ex_pc_valid"
+   ],
+   "lines": 2
+  },
+  "989": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "id_ctrl_decoder_decoded_lo_119",
+    "io_fpu_dec_ren2"
+   ],
+   "lines": 6
+  },
+  "990": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "id_ctrl_decoder_decoded_lo_125",
+    "mem_ctrl_fp"
+   ],
+   "lines": 6
+  },
+  "992": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "ibuf_io_inst_0_bits_inst_rs3",
+    "ex_reg_valid"
+   ],
+   "lines": 6
+  },
+  "994": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "id_ctrl_decoder_decoded_andMatrixInput_5_9",
+    "mem_pc_valid"
+   ],
+   "lines": 2
+  },
+  "995": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "mem_ctrl_rxs2",
+    "ex_reg_flush_pipe"
+   ],
+   "lines": 6
+  },
+  "996": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "wb_reg_mem_size",
+    "ex_ctrl_fp"
+   ],
+   "lines": 6
+  },
+  "997": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "id_ctrl_decoder_decoded_T_123",
+    "ex_reg_valid_T"
+   ],
+   "lines": 2
+  },
+  "999": {
+   "modules": [
+    "Rocket"
+   ],
+   "signals": [
+    "id_ctrl_decoder_decoded_lo_52",
+    "ex_ctrl_jalr"
+   ],
+   "lines": 6
+  }
+ }
+}

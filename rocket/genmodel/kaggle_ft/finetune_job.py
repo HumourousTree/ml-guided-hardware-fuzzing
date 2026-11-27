@@ -38,7 +38,7 @@ DPO_BS = {"r1": 8, "r2": 8, "r3": 32, "r4": 32}[ROUND]
 N_TARGETED = int(os.environ.get("BF_TARGETED", "64"))
 TARGETED = {"r4"}
 RECIPES = {
-    "r4": {"small_tgt": ("small_pre.pt", 400, 1e-4, 300, 2e-5, "rarity", GEN_LABELS + OP1Q_LABELS, GEN_POOLS + OP1Q_POOLS, ("dpo",))},
+    "r4": {"small_tgt": ("small_pre.pt", 800, 1e-4, 300, 2e-5, "rarity", GEN_LABELS + OP1Q_LABELS, GEN_POOLS + OP1Q_POOLS, ("dpo",))},
     "r3": {"small_r3": ("small_pre.pt", 300, 1e-4, 300, 2e-5, "rarity", GEN_LABELS + OP1Q_LABELS, GEN_POOLS + OP1Q_POOLS, ("dpo",)),
            "small_r3g": ("small_pre.pt", 300, 1e-4, 300, 2e-5, "rarity", GEN_LABELS, GEN_POOLS, ("dpo",))},
     "r1": {"base": ("base_pre.pt", 150, 5e-5, 200, 5e-6, "count", GEN_LABELS, GEN_POOLS, ("pre", "sft", "dpo", "dponogram")),
