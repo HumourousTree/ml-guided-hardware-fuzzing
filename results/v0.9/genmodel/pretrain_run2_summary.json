@@ -1,0 +1,99 @@
+{
+ "commit": "234963a",
+ "n_sequences": 400000,
+ "torch": "2.11.0+cu130",
+ "gpus": [
+  "Tesla T4",
+  "Tesla T4"
+ ],
+ "stages": {
+  "base": {
+   "rc": 0,
+   "log_tail": [
+    {
+     "step": 4500,
+     "train_loss": 1.8358,
+     "val_loss": 1.8645,
+     "seconds": 7674
+    },
+    {
+     "step": 4750,
+     "train_loss": 1.8836,
+     "val_loss": 1.8641,
+     "seconds": 8101
+    },
+    {
+     "step": 4999,
+     "train_loss": 1.8774,
+     "val_loss": 1.8641,
+     "seconds": 8526
+    }
+   ],
+   "samples": {
+    "rocket/base": {
+     "n": 128,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 45.015625,
+     "grammar": true,
+     "gen_seconds": 18.8
+    },
+    "rocket/ext": {
+     "n": 128,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 45.0859375,
+     "grammar": true,
+     "gen_seconds": 19.3
+    },
+    "rocket/llmflash": {
+     "n": 128,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 66.9140625,
+     "grammar": true,
+     "gen_seconds": 80.2
+    },
+    "boom/base": {
+     "n": 128,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 43.328125,
+     "grammar": true,
+     "gen_seconds": 17.9
+    },
+    "boom/ext": {
+     "n": 128,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 48.2578125,
+     "grammar": true,
+     "gen_seconds": 19.1
+    },
+    "boom/llmflash": {
+     "n": 128,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 70.625,
+     "grammar": true,
+     "gen_seconds": 44.1
+    }
+   }
+  }
+ },
+ "data": {
+  "sequences": 400000,
+  "tokens": 126970682,
+  "mean_len": 317.426705,
+  "truncated": 0,
+  "mix": {
+   "rocket/llmflash": 66621,
+   "boom/base": 66688,
+   "boom/llmflash": 66513,
+   "rocket/ext": 66997,
+   "boom/ext": 66255,
+   "rocket/base": 66926
+  },
+  "vocab": 607
+ }
+}

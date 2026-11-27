@@ -13,8 +13,8 @@ replaces the API model with a small local one whose training signal is "this pro
 | 2. Pool | `rocket/label_mutants.py pool` | GitHub Actions | 120 base + 120 ext + 120 LLM-template programs per core, gated |
 | 3. Labels | `rocket/label_mutants.py label` | GitHub Actions (20 shards) | done: Rocket and BOOM, both kinds |
 | 4. Tokenizer | `rocket/isa_tokenizer.py` | anywhere | done, lossless |
-| 5. Pretrain | `rocket/genmodel/{data,train}.py` | Kaggle (`rocket/genmodel/kaggle/`) | small done; base running |
-| 6. SFT + DPO on kills | `rocket/genmodel/train.py sft / dpo` | Kaggle (`rocket/genmodel/kaggle_ft/`) | small running |
+| 5. Pretrain | `rocket/genmodel/{data,train}.py` | Kaggle (`rocket/genmodel/kaggle/`) | done: small (run 1), base (run 2) |
+| 6. SFT + DPO on kills | `rocket/genmodel/train.py sft / dpo` | Kaggle (`rocket/genmodel/kaggle_ft/`) | small done; base running |
 | 7. Evaluation | `rocket/genmodel/sample.py` + `label_mutants.py` | GitHub Actions | dev mutants, then held-out bugs |
 
 ## Rules that keep the result honest
@@ -51,7 +51,13 @@ Unconstrained samples (128 per core x profile): 100% decode, 99.6% pass the harn
 for base / ext / LLM-template, matching the generators. The grammar removes the assembly failures by construction.
 `base` (85M) ran out of memory in this run: `torch.cuda.is_bf16_supported()` is true on a T4 (it counts emulation),
 so training ran in emulated bf16, which is slow (1.9 s per step even for `small`) and sends attention to the
-unfused kernel. Fixed (fp16 + loss scaling below compute capability 8); run 2 trains `base` only.
+unfused kernel. Fixed (fp16 + loss scaling below compute capability 8).
+
+**Pretraining, run 2** (`base`, 85M, fp16, 5000 steps of 32 x 1024 tokens, 1.7 s per step, 2.4 h): validation loss
+1.921 (step 500) -> 1.876 (3000) -> 1.864 (5000), against 1.869 for `small`. Eight times the parameters buy 0.005
+nats per token: the pretraining corpus is at its entropy floor, so `small` is the efficient choice for this stage, and
+`base` is kept only to see whether capacity helps once the kill signal is added. Grammar-constrained samples: 100%
+pass the harness check.
 
 **Fine-tuning, run 1** (`small`, Kaggle T4, 1 min of training in all). Data: 720 gated pool programs (Rocket and
 BOOM, 120 per core x profile), weighted by the training mutants they kill (477 training mutants have a killer), and
