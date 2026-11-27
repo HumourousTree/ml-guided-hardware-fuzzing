@@ -13,12 +13,13 @@ on:
       programs: {description: "programs per seed (stop at first detection)", required: true, default: "2000"}
       calibrate: {description: "calibration programs per reference", required: true, default: "500"}
       shards: {description: "parallel runners (1-20)", required: true, default: "20"}
+      quirks: {description: "filter: substitute known core-vs-Spike differences; gate: test them, re-checking every mismatch on the bug-free core", required: false, default: filter, type: choice, options: [filter, gate]}
 
 permissions:
   contents: read
 
 concurrency:
-  group: encarsia-${{ inputs.core }}-${{ inputs.profile }}
+  group: encarsia-${{ inputs.core }}-${{ inputs.profile }}-${{ inputs.quirks }}
   cancel-in-progress: false
 
 jobs:
@@ -65,6 +66,8 @@ jobs:
     container:
       image: ${{ needs.image.outputs.image }}
       credentials: {username: "${{ github.actor }}", password: "${{ secrets.GITHUB_TOKEN }}"}
+    env:
+      BENCHFUZZ_QUIRKS: ${{ inputs.quirks }}
     steps:
       - uses: actions/checkout@v4
       - name: Run shard
@@ -76,7 +79,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: shard-${{ inputs.core }}-${{ inputs.profile }}-${{ matrix.shard }}
+          name: shard-${{ inputs.core }}-${{ inputs.profile }}-${{ inputs.quirks }}-${{ matrix.shard }}
           path: logs/bench/${{ inputs.core }}/
           if-no-files-found: warn
 
@@ -91,13 +94,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
-        with: {pattern: "shard-${{ inputs.core }}-${{ inputs.profile }}-*", path: shards}
+        with: {pattern: "shard-${{ inputs.core }}-${{ inputs.profile }}-${{ inputs.quirks }}-*", path: shards}
       - name: Merge and validate
+        env:
+          BENCHFUZZ_QUIRKS: ${{ inputs.quirks }}
         run: |
           [ -e "$HOME/ext" ] || ln -s /root/ext "$HOME/ext"
           python3 rocket/merge_shards.py --core ${{ inputs.core }} --profile ${{ inputs.profile }} shards/*
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: merged-${{ inputs.core }}-${{ inputs.profile }}
+          name: merged-${{ inputs.core }}-${{ inputs.profile }}-${{ inputs.quirks }}
           path: logs/bench/${{ inputs.core }}/

@@ -342,14 +342,25 @@ def run_rocket(sim: Path, elf: Path, simlen: int, timeout: int = 300) -> tuple[l
     return vals, "Found a stop request" in p.stdout
 
 
+def quirk_mode() -> str:
+    """'filter' (default): known core-vs-Spike differences are avoided by substituting instructions (QUIRKS).
+    'gate': nothing is substituted; instead every mismatch is re-run at once on the bug's bug-free core and counts only
+    if that core agrees with Spike, so instructions the filter bars (e.g. BOOM's FP divide/sqrt) are tested too. The
+    random draws are the same in both modes, so a seed generates the same programs up to the substituted lines."""
+    m = os.environ.get("BENCHFUZZ_QUIRKS", "filter")
+    assert m in ("filter", "gate"), m
+    return m
+
+
 def campaign(sim: Path, n: int, seed: int, length: int, simlen: int, fp: bool, stop_on_bug: bool, log=None,
-             profile: str = "base", core: str = "rocket", templates=None) -> dict:
+             profile: str = "base", core: str = "rocket", templates=None, ref_sim: Path | None = None) -> dict:
+    """ref_sim: the bug-free core; with it, a mismatch is a detection only if ref_sim agrees with Spike (gate mode)."""
     rng = random.Random(seed)
-    quirks = QUIRKS.get(core, {})
+    quirks = QUIRKS.get(core, {}) if quirk_mode() == "filter" else {}
     if profile in TEMPLATE_FILES and templates is None:          # accepted Step 2 templates (BENCHFUZZ_TEMPLATES overrides)
         tf = Path(os.environ.get("BENCHFUZZ_TEMPLATES", Path(__file__).resolve().parent / "templates" / TEMPLATE_FILES[profile]))
         templates = json.loads(tf.read_text())["templates"]
-    res = {"seed": seed, "length": length, "fp": fp, "profile": profile, "core": core, "quirks": quirks, "programs": 0, "mismatches": 0, "nonterminating": 0,
+    res = {"seed": seed, "length": length, "fp": fp, "profile": profile, "core": core, "quirks": quirks, "quirk_mode": quirk_mode(), "programs": 0, "mismatches": 0, "nonterminating": 0,
            "spike_failures": 0, "first_detection": None, "t_start": time.time()}
     work = Path(tempfile.mkdtemp(prefix="rv64fuzz-"))
     try:
@@ -363,6 +374,11 @@ def campaign(sim: Path, n: int, seed: int, length: int, simlen: int, fp: bool, s
             got, stopped = run_rocket(sim, elf, simlen)
             res["programs"] += 1
             bad = (not stopped) or got != exp
+            if bad and ref_sim is not None:      # gate: the bug-free core must agree with Spike on this program
+                rgot, rstop = run_rocket(ref_sim, elf, simlen)
+                if not rstop or rgot != exp:
+                    res["reference_disagreements"] = res.get("reference_disagreements", 0) + 1
+                    continue
             if bad:
                 kind = "nontermination" if not stopped else "mismatch"
                 res["mismatches" if stopped else "nonterminating"] += 1

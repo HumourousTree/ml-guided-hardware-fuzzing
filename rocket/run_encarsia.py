@@ -103,7 +103,8 @@ def migrate_rocket():
 
 
 def suffix(profile: str) -> str:
-    return "" if profile == "base" else f"_{profile}"
+    """File-name suffix of a profile's results; gate-mode results (rv64fuzz.quirk_mode) never overwrite filtered ones."""
+    return ("" if profile == "base" else f"_{profile}") + ("_gate" if rv64fuzz.quirk_mode() == "gate" else "")
 
 
 def fuzz(core: str, kind: str, d: int, seed: int, programs: int, profile: str = "base") -> dict:
@@ -112,8 +113,9 @@ def fuzz(core: str, kind: str, d: int, seed: int, programs: int, profile: str = 
     if f.exists():
         return json.loads(f.read_text())
     sim = runs / f"{kind}_{d}" / "Vtop_tiny_soc"
+    ref = runs / golden_name(core, kind, d) / "Vtop_tiny_soc" if rv64fuzz.quirk_mode() == "gate" else None
     r = rv64fuzz.campaign(sim, programs, 1000 * seed + d + (0 if profile == "base" else 500000), 40, 400000, True,
-                          stop_on_bug=True, profile=profile, core=core)
+                          stop_on_bug=True, profile=profile, core=core, ref_sim=ref)
     r.update(core=core, kind=kind, dir=d, seed=seed, budget_programs=programs)
     f.write_text(json.dumps(r))
     return r

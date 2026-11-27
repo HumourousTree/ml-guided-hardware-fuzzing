@@ -44,12 +44,16 @@ def main():
     conf_f.write_text(json.dumps(conf, indent=1))
     # validity: every reference used by a run of this profile must be calibrated without a single disagreement
     bad, missing = [], set()
+    gate = "_gate" if re_.rv64fuzz.quirk_mode() == "gate" else ""
+    cal_rates = {}
     for g in sorted(out.glob(f"golden_*{sfx}.json")):
-        if (a.profile == "ext") != g.name.endswith("_ext.json"):
+        if (a.profile == "ext") != g.name.endswith(f"_ext{gate}.json") or g.name.endswith("_gate.json") != bool(gate):
             continue
         r = json.loads(g.read_text())
-        if r["mismatches"] or r["nonterminating"]:
-            bad.append(g.name)
+        if (r["mismatches"] or r["nonterminating"]) and not gate:   # gate mode: disagreements are expected and are
+            bad.append(g.name)                                         # rejected per program; the rate is reported
+        elif gate:
+            cal_rates[g.name] = (r["mismatches"] + r["nonterminating"], r["programs"])
     for f in sorted(out.glob(f"*_seed?{sfx}.json")):
         r = json.loads(f.read_text())
         g = re_.golden_name(a.core, r["kind"], r["dir"])
@@ -60,6 +64,8 @@ def main():
     print(f"{a.core} {a.profile}: {copied} files merged, {len(runs)} runs, {len(det)} detections, "
           f"{sum(1 for n in det if conf.get(n, {}).get('confirmed'))} replay-confirmed, "
           f"{sum(1 for n in det if n not in conf)} not replayed")
+    if cal_rates:
+        print("gate mode, bug-free core vs Spike in calibration (disagreeing / programs):", cal_rates)
     if clashes:
         print("files with different content left untouched:", clashes)
     if bad or missing:
