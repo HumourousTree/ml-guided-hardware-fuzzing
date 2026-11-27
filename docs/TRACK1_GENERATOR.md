@@ -14,7 +14,7 @@ replaces the API model with a small local one whose training signal is "this pro
 | 3. Labels | `rocket/label_mutants.py label` | GitHub Actions (20 shards) | done: Rocket and BOOM, both kinds |
 | 4. Tokenizer | `rocket/isa_tokenizer.py` | anywhere | done, lossless |
 | 5. Pretrain | `rocket/genmodel/{data,train}.py` | Kaggle (`rocket/genmodel/kaggle/`) | done: small (run 1), base (run 2) |
-| 6. SFT + DPO on kills | `rocket/genmodel/train.py sft / dpo` | Kaggle (`rocket/genmodel/kaggle_ft/`) | small done; base running |
+| 6. SFT + DPO on kills | `rocket/genmodel/train.py sft / dpo` | Kaggle (`rocket/genmodel/kaggle_ft/`) | done: small, base; on-policy round 2 |
 | 7. Evaluation | `rocket/genmodel/sample.py` + `label_mutants.py` | GitHub Actions | dev mutants, then held-out bugs |
 
 ## Rules that keep the result honest
@@ -28,7 +28,8 @@ replaces the API model with a small local one whose training signal is "this pro
 * **No reward hacking.** A kill counts only for programs that pass the pool gate (Spike and the bug-free reference
   agree and both stop). A program cannot "kill" by hanging or by an implementation-defined difference.
 * **Same harness.** The model writes only the body; `rv64fuzz.gen_program(body=...)` puts it in the same prologue,
-  dump and trap handler as every other profile, with the same per-core quirk filters.
+  dump and trap handler as every other profile, with the same per-core quirk filters (enforced since 2026-11-28, see
+  "Two harness bugs" below; BOOM results before that are not used).
 
 ## Model and data
 
@@ -67,6 +68,46 @@ Grammar ablation, same DPO model: with the grammar 4608/4608 samples (pre, SFT, 
 without it 706/762 (92.6%; spliced operands, duplicate labels, out-of-range constants, a write to `x30`).
 Kill rates on dev mutants and on the published Encarsia bugs: `genmodel-eval.yml` (pool of 120 gate-passing samples
 per stage x profile, the same size as a generator profile).
+
+**Evaluation on Rocket** (`results/v0.9/genmodel/eval/`, `tools/genmodel_stats.py`). Pools of 120 gate-passing
+samples per stage x profile (360 programs, the generators' pool size); 119 dev mutants (60 driver, 59 conditional)
+and the 30 published Encarsia Rocket bugs. Intervals: 2000 random pools of 60 programs per profile, against an
+independent generator pool of the same size.
+
+| Stage | dev killed (of 119) | diff vs generators, 60/profile (95%) | published killed (of 30) |
+|---|---|---|---|
+| generators | 44 | | 16 |
+| small pre / SFT / DPO | 45 / 45 / 45 | +1.6 [-1, +4] / +0.7 [-2, +3] / +1.0 [-2, +3] | 16 / 16 / 16 |
+| base pre / SFT / DPO | 44 / 45 / 45 | +0.9 [-1, +3] / +1.2 [-1, +3] / +1.0 [-1, +3] | 17 / 16 / 16 |
+| DPO without grammar (small / base) | 43 / 44 | -0.1 [-2, +2] / +0.3 [-2, +2] | 16 / 17 |
+
+The learned generator matches the generators; every interval includes 0, so there is no significant gain, and
+fine-tuning on kills changes little (kills per program and mutant: generators 0.212, small DPO 0.214). One held-out
+result stands out: Encarsia's Rocket mix-up 9 (`driver/804`), which none of DifuzzRTL, ProcessorFuzz or Cascade
+detects (with or without coverage) and none of our 360 generator programs kills, is killed by two `base` samples
+(pre and DPO-without-grammar, ext profile, register mismatch); a re-run of those two programs is in progress.
+
+**On-policy round 1.** 720 samples per core from small DPO (half at temperature 1.0, half at 1.3), labelled against a
+fixed random 100 per core x kind of the train mutants that no generator program kills (`genmodel-onpolicy.yml`).
+Rocket: 2 such mutants killed (4 kills in 48,000 runs). BOOM: 25 (588 kills), but 21 of them needed `fsqrt`/`fdiv.d`,
+which the generators are barred from on BOOM: the first harness bug below. Temperature 1.3 gave about twice the
+new kills of 1.0. The model learned `fsqrt` from Rocket's LLM templates (130/300 programs) and used it on BOOM, so the
+core token is weak; BOOM's divide/square-root unit is untested by every generator here (and by Cascade, which filters
+it too).
+
+**Two harness bugs (found 2026-11-28, both fixed).**
+1. `gen_program(body=...)` did not apply the core quirk filters, so on BOOM 19% of the small model's samples used
+   barred instructions (`fdiv.d`, `fsqrt`). Bodies now get the quirks of the profile they stand for; generator
+   programs are byte-identical (1,800 checked). All BOOM samples were re-wrapped (same seeds) and BOOM is evaluated
+   again under equal rules; the earlier BOOM runs were cancelled and are not used. Rocket is unaffected (no quirks).
+2. `data.body_from_asm` took the last `fsrmi x0,` as the end of the prologue; ~20% of generator-pool bodies contain
+   their own, so their SFT/DPO training bodies lost their front part. Fixed (the prologue has exactly one); round trip
+   exact on all 7,627 Rocket samples. Fine-tuning runs 1-3 trained on the truncated bodies; later rounds do not.
+
+**Upstream reports.** The two core issues found by calibration are already known upstream: BOOM executing FP
+instructions with `dyn` rounding while `frm` is invalid is riscv-boom#752 (open; also #492, found before by DifuzzRTL
+and MorFuzz), and the PicoRV32 FENCE `rd` write is picorv32#293 (closed; the repository is archived). Nothing new
+to file. The injector bug was filed as encarsia-yosys#1.
 
 **Decoding speed.** The key-value cache is preallocated (one position written per step; the first version
 concatenated, which copies the cache every token), the grammar mask is built on the host and sent in one copy, the
