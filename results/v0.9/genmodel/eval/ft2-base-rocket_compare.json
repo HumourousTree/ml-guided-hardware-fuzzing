@@ -1,0 +1,161 @@
+{
+ "driver/dev": {
+  "mutants": 60,
+  "groups": {
+   "base_dpo": {
+    "programs": 360,
+    "killed": 30,
+    "only": [
+     731,
+     896
+    ],
+    "missed": [
+     112
+    ]
+   },
+   "base_dponogram": {
+    "programs": 336,
+    "killed": 29,
+    "only": [
+     896
+    ],
+    "missed": [
+     112
+    ]
+   },
+   "base_pre": {
+    "programs": 360,
+    "killed": 29,
+    "only": [
+     896
+    ],
+    "missed": [
+     112
+    ]
+   },
+   "base_sft": {
+    "programs": 360,
+    "killed": 30,
+    "only": [
+     731
+    ],
+    "missed": []
+   },
+   "generators": {
+    "programs": 360,
+    "killed": 29,
+    "only": [],
+    "missed": []
+   }
+  }
+ },
+ "driver/published": {
+  "mutants": 15,
+  "groups": {
+   "base_dpo": {
+    "programs": 360,
+    "killed": 12,
+    "only": [],
+    "missed": []
+   },
+   "base_dponogram": {
+    "programs": 336,
+    "killed": 13,
+    "only": [
+     804
+    ],
+    "missed": []
+   },
+   "base_pre": {
+    "programs": 360,
+    "killed": 13,
+    "only": [
+     804
+    ],
+    "missed": []
+   },
+   "base_sft": {
+    "programs": 360,
+    "killed": 12,
+    "only": [],
+    "missed": []
+   },
+   "generators": {
+    "programs": 360,
+    "killed": 12,
+    "only": [],
+    "missed": []
+   }
+  }
+ },
+ "multiplexer/dev": {
+  "mutants": 59,
+  "groups": {
+   "base_dpo": {
+    "programs": 360,
+    "killed": 15,
+    "only": [],
+    "missed": []
+   },
+   "base_dponogram": {
+    "programs": 336,
+    "killed": 15,
+    "only": [],
+    "missed": []
+   },
+   "base_pre": {
+    "programs": 360,
+    "killed": 15,
+    "only": [],
+    "missed": []
+   },
+   "base_sft": {
+    "programs": 360,
+    "killed": 15,
+    "only": [],
+    "missed": []
+   },
+   "generators": {
+    "programs": 360,
+    "killed": 15,
+    "only": [],
+    "missed": []
+   }
+  }
+ },
+ "multiplexer/published": {
+  "mutants": 15,
+  "groups": {
+   "base_dpo": {
+    "programs": 360,
+    "killed": 4,
+    "only": [],
+    "missed": []
+   },
+   "base_dponogram": {
+    "programs": 336,
+    "killed": 4,
+    "only": [],
+    "missed": []
+   },
+   "base_pre": {
+    "programs": 360,
+    "killed": 4,
+    "only": [],
+    "missed": []
+   },
+   "base_sft": {
+    "programs": 360,
+    "killed": 4,
+    "only": [],
+    "missed": []
+   },
+   "generators": {
+    "programs": 360,
+    "killed": 4,
+    "only": [],
+    "missed": []
+   }
+  }
+ }
+}

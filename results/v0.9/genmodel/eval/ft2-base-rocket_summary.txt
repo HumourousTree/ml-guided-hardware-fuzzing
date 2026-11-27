@@ -1,0 +1,75 @@
+pool rocket: 1416 programs kept, 50 dropped (assembly or Spike failure, or the bug-free core disagrees with Spike / does not stop)
+  samples_base_dpo_rocket_base: {'samples': 120, 'kept': 120}
+  samples_base_dpo_rocket_ext: {'samples': 120, 'kept': 120}
+  samples_base_dpo_rocket_llmflash: {'samples': 121, 'kept': 120, 'spike': 1}
+  samples_base_dponogram_rocket_base: {'samples': 128, 'kept': 102, 'assembly': 24, 'static_or_decode': 1, 'spike': 1}
+  samples_base_dponogram_rocket_ext: {'samples': 127, 'assembly': 7, 'kept': 120}
+  samples_base_dponogram_rocket_llmflash: {'samples': 128, 'kept': 114, 'assembly': 12, 'static_or_decode': 1, 'spike': 1}
+  samples_base_pre_rocket_base: {'samples': 120, 'kept': 120}
+  samples_base_pre_rocket_ext: {'samples': 120, 'kept': 120}
+  samples_base_pre_rocket_llmflash: {'samples': 123, 'kept': 120, 'spike': 2, 'reference_disagrees': 1}
+  samples_base_sft_rocket_base: {'samples': 120, 'kept': 120}
+  samples_base_sft_rocket_ext: {'samples': 120, 'kept': 120}
+  samples_base_sft_rocket_llmflash: {'samples': 121, 'kept': 120, 'spike': 1}
+
+== driver: learned generator (dev mutants)
+rocket driver: 60 mutants (0 build errors), killed by any 31, unkilled 29
+   coverage by profile: {'samples_base_dpo_rocket_base': 17, 'samples_base_dpo_rocket_ext': 26, 'samples_base_dpo_rocket_llmflash': 30, 'samples_base_dponogram_rocket_base': 23, 'samples_base_dponogram_rocket_ext': 26, 'samples_base_dponogram_rocket_llmflash': 29, 'samples_base_pre_rocket_base': 17, 'samples_base_pre_rocket_ext': 26, 'samples_base_pre_rocket_llmflash': 29, 'samples_base_sft_rocket_base': 17, 'samples_base_sft_rocket_ext': 26, 'samples_base_sft_rocket_llmflash': 30}  only this profile: {'samples_base_dpo_rocket_base': 0, 'samples_base_dpo_rocket_ext': 0, 'samples_base_dpo_rocket_llmflash': 0, 'samples_base_dponogram_rocket_base': 0, 'samples_base_dponogram_rocket_ext': 0, 'samples_base_dponogram_rocket_llmflash': 0, 'samples_base_pre_rocket_base': 0, 'samples_base_pre_rocket_ext': 0, 'samples_base_pre_rocket_llmflash': 0, 'samples_base_sft_rocket_base': 0, 'samples_base_sft_rocket_ext': 0, 'samples_base_sft_rocket_llmflash': 1}
+   program kill rate: {'samples_base_dpo_rocket_base': 0.2129, 'samples_base_dpo_rocket_ext': 0.3504, 'samples_base_dpo_rocket_llmflash': 0.3094, 'samples_base_dponogram_rocket_base': 0.2155, 'samples_base_dponogram_rocket_ext': 0.344, 'samples_base_dponogram_rocket_llmflash': 0.3018, 'samples_base_pre_rocket_base': 0.2181, 'samples_base_pre_rocket_ext': 0.3417, 'samples_base_pre_rocket_llmflash': 0.3035, 'samples_base_sft_rocket_base': 0.2144, 'samples_base_sft_rocket_ext': 0.349, 'samples_base_sft_rocket_llmflash': 0.3054}  detections: {'mismatch': 12483, 'hang': 12132}
+== driver: generator pools (same dev mutants)
+rocket driver: 60 mutants (0 build errors), killed by any 29, unkilled 31
+   coverage by profile: {'base': 18, 'ext': 26, 'llmflash': 28}  only this profile: {'base': 1, 'ext': 0, 'llmflash': 2}
+   program kill rate: {'base': 0.2214, 'ext': 0.3468, 'llmflash': 0.3119}  detections: {'hang': 3130, 'mismatch': 3207}
+== multiplexer: learned generator (dev mutants)
+rocket multiplexer: 59 mutants (0 build errors), killed by any 15, unkilled 44
+   coverage by profile: {'samples_base_dpo_rocket_base': 11, 'samples_base_dpo_rocket_ext': 15, 'samples_base_dpo_rocket_llmflash': 15, 'samples_base_dponogram_rocket_base': 13, 'samples_base_dponogram_rocket_ext': 15, 'samples_base_dponogram_rocket_llmflash': 15, 'samples_base_pre_rocket_base': 11, 'samples_base_pre_rocket_ext': 15, 'samples_base_pre_rocket_llmflash': 15, 'samples_base_sft_rocket_base': 11, 'samples_base_sft_rocket_ext': 15, 'samples_base_sft_rocket_llmflash': 15}  only this profile: {'samples_base_dpo_rocket_base': 0, 'samples_base_dpo_rocket_ext': 0, 'samples_base_dpo_rocket_llmflash': 0, 'samples_base_dponogram_rocket_base': 0, 'samples_base_dponogram_rocket_ext': 0, 'samples_base_dponogram_rocket_llmflash': 0, 'samples_base_pre_rocket_base': 0, 'samples_base_pre_rocket_ext': 0, 'samples_base_pre_rocket_llmflash': 0, 'samples_base_sft_rocket_base': 0, 'samples_base_sft_rocket_ext': 0, 'samples_base_sft_rocket_llmflash': 0}
+   program kill rate: {'samples_base_dpo_rocket_base': 0.097, 'samples_base_dpo_rocket_ext': 0.1507, 'samples_base_dpo_rocket_llmflash': 0.1294, 'samples_base_dponogram_rocket_base': 0.0967, 'samples_base_dponogram_rocket_ext': 0.1451, 'samples_base_dponogram_rocket_llmflash': 0.1244, 'samples_base_pre_rocket_base': 0.104, 'samples_base_pre_rocket_ext': 0.1414, 'samples_base_pre_rocket_llmflash': 0.129, 'samples_base_sft_rocket_base': 0.0934, 'samples_base_sft_rocket_ext': 0.1469, 'samples_base_sft_rocket_llmflash': 0.1268}  detections: {'hang': 6587, 'mismatch': 3778}
+== multiplexer: generator pools (same dev mutants)
+rocket multiplexer: 59 mutants (0 build errors), killed by any 15, unkilled 44
+   coverage by profile: {'base': 11, 'ext': 15, 'llmflash': 15}  only this profile: {'base': 0, 'ext': 0, 'llmflash': 0}
+   program kill rate: {'base': 0.1076, 'ext': 0.1492, 'llmflash': 0.1315}  detections: {'mismatch': 1012, 'hang': 1737}
+== driver: learned generator (published Encarsia bugs, held out)
+rocket driver: 15 mutants (0 build errors), killed by any 13, unkilled 2
+   coverage by profile: {'samples_base_dpo_rocket_base': 7, 'samples_base_dpo_rocket_ext': 12, 'samples_base_dpo_rocket_llmflash': 11, 'samples_base_dponogram_rocket_base': 9, 'samples_base_dponogram_rocket_ext': 13, 'samples_base_dponogram_rocket_llmflash': 11, 'samples_base_pre_rocket_base': 7, 'samples_base_pre_rocket_ext': 13, 'samples_base_pre_rocket_llmflash': 11, 'samples_base_sft_rocket_base': 7, 'samples_base_sft_rocket_ext': 12, 'samples_base_sft_rocket_llmflash': 11}  only this profile: {'samples_base_dpo_rocket_base': 0, 'samples_base_dpo_rocket_ext': 0, 'samples_base_dpo_rocket_llmflash': 0, 'samples_base_dponogram_rocket_base': 0, 'samples_base_dponogram_rocket_ext': 0, 'samples_base_dponogram_rocket_llmflash': 0, 'samples_base_pre_rocket_base': 0, 'samples_base_pre_rocket_ext': 0, 'samples_base_pre_rocket_llmflash': 0, 'samples_base_sft_rocket_base': 0, 'samples_base_sft_rocket_ext': 0, 'samples_base_sft_rocket_llmflash': 0}
+   program kill rate: {'samples_base_dpo_rocket_base': 0.3044, 'samples_base_dpo_rocket_ext': 0.5822, 'samples_base_dpo_rocket_llmflash': 0.4933, 'samples_base_dponogram_rocket_base': 0.3026, 'samples_base_dponogram_rocket_ext': 0.5678, 'samples_base_dponogram_rocket_llmflash': 0.4667, 'samples_base_pre_rocket_base': 0.32, 'samples_base_pre_rocket_ext': 0.5517, 'samples_base_pre_rocket_llmflash': 0.4828, 'samples_base_sft_rocket_base': 0.3072, 'samples_base_sft_rocket_ext': 0.5739, 'samples_base_sft_rocket_llmflash': 0.47}  detections: {'mismatch': 7884, 'hang': 1753}
+== driver: generator pools (published Encarsia bugs)
+rocket driver: 15 mutants (0 build errors), killed by any 12, unkilled 3
+   coverage by profile: {'base': 7, 'ext': 12, 'llmflash': 11}  only this profile: {'base': 0, 'ext': 1, 'llmflash': 0}
+   program kill rate: {'base': 0.3372, 'ext': 0.5639, 'llmflash': 0.5039}  detections: {'mismatch': 2074, 'hang': 455}
+== multiplexer: learned generator (published Encarsia bugs, held out)
+rocket multiplexer: 15 mutants (0 build errors), killed by any 4, unkilled 11
+   coverage by profile: {'samples_base_dpo_rocket_base': 3, 'samples_base_dpo_rocket_ext': 4, 'samples_base_dpo_rocket_llmflash': 4, 'samples_base_dponogram_rocket_base': 3, 'samples_base_dponogram_rocket_ext': 4, 'samples_base_dponogram_rocket_llmflash': 4, 'samples_base_pre_rocket_base': 3, 'samples_base_pre_rocket_ext': 4, 'samples_base_pre_rocket_llmflash': 4, 'samples_base_sft_rocket_base': 3, 'samples_base_sft_rocket_ext': 4, 'samples_base_sft_rocket_llmflash': 4}  only this profile: {'samples_base_dpo_rocket_base': 0, 'samples_base_dpo_rocket_ext': 0, 'samples_base_dpo_rocket_llmflash': 0, 'samples_base_dponogram_rocket_base': 0, 'samples_base_dponogram_rocket_ext': 0, 'samples_base_dponogram_rocket_llmflash': 0, 'samples_base_pre_rocket_base': 0, 'samples_base_pre_rocket_ext': 0, 'samples_base_pre_rocket_llmflash': 0, 'samples_base_sft_rocket_base': 0, 'samples_base_sft_rocket_ext': 0, 'samples_base_sft_rocket_llmflash': 0}
+   program kill rate: {'samples_base_dpo_rocket_base': 0.1767, 'samples_base_dpo_rocket_ext': 0.2089, 'samples_base_dpo_rocket_llmflash': 0.2178, 'samples_base_dponogram_rocket_base': 0.1725, 'samples_base_dponogram_rocket_ext': 0.2106, 'samples_base_dponogram_rocket_llmflash': 0.2152, 'samples_base_pre_rocket_base': 0.1772, 'samples_base_pre_rocket_ext': 0.2072, 'samples_base_pre_rocket_llmflash': 0.2128, 'samples_base_sft_rocket_base': 0.175, 'samples_base_sft_rocket_ext': 0.2106, 'samples_base_sft_rocket_llmflash': 0.2122}  detections: {'mismatch': 901, 'hang': 3347}
+== multiplexer: generator pools (published Encarsia bugs)
+rocket multiplexer: 15 mutants (0 build errors), killed by any 4, unkilled 11
+   coverage by profile: {'base': 3, 'ext': 4, 'llmflash': 4}  only this profile: {'base': 0, 'ext': 0, 'llmflash': 0}
+   program kill rate: {'base': 0.1811, 'ext': 0.2183, 'llmflash': 0.2144}  detections: {'mismatch': 250, 'hang': 855}
+== per model stage (union over profiles) vs the generator pools
+== driver / dev: 60 mutants labelled by both
+   group                  programs  killed  only this  (vs generators)
+   base_dpo                    360      30          2  missed 1
+   base_dponogram              336      29          1  missed 1
+   base_pre                    360      29          1  missed 1
+   base_sft                    360      30          1  missed 0
+   generators                  360      29           
+== driver / published: 15 mutants labelled by both
+   group                  programs  killed  only this  (vs generators)
+   base_dpo                    360      12          0  missed 0
+   base_dponogram              336      13          1  missed 0
+   base_pre                    360      13          1  missed 0
+   base_sft                    360      12          0  missed 0
+   generators                  360      12           
+== multiplexer / dev: 59 mutants labelled by both
+   group                  programs  killed  only this  (vs generators)
+   base_dpo                    360      15          0  missed 0
+   base_dponogram              336      15          0  missed 0
+   base_pre                    360      15          0  missed 0
+   base_sft                    360      15          0  missed 0
+   generators                  360      15           
+== multiplexer / published: 15 mutants labelled by both
+   group                  programs  killed  only this  (vs generators)
+   base_dpo                    360       4          0  missed 0
+   base_dponogram              336       4          0  missed 0
+   base_pre                    360       4          0  missed 0
+   base_sft                    360       4          0  missed 0
+   generators                  360       4           
