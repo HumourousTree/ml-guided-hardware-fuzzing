@@ -11,10 +11,10 @@ replaces the API model with a small local one whose training signal is "this pro
 |---|---|---|---|
 | 1. Mutants | `rocket/mutant_factory.py` | GitHub Actions (`mutant-factory.yml`) | Rocket/BOOM driver done; conditional pass after the `inject_amt.cc` fix |
 | 2. Pool | `rocket/label_mutants.py pool` | GitHub Actions | 120 base + 120 ext + 120 LLM-template programs per core, gated |
-| 3. Labels | `rocket/label_mutants.py label` | GitHub Actions (20 shards) | Rocket driver running |
+| 3. Labels | `rocket/label_mutants.py label` | GitHub Actions (20 shards) | done: Rocket and BOOM, both kinds |
 | 4. Tokenizer | `rocket/isa_tokenizer.py` | anywhere | done, lossless |
-| 5. Pretrain | `rocket/genmodel/{data,train}.py` | Kaggle (`rocket/genmodel/kaggle/`) | first run (small, then base) |
-| 6. SFT + DPO on kills | `rocket/genmodel/train.py sft / dpo` | Kaggle | needs step 3 |
+| 5. Pretrain | `rocket/genmodel/{data,train}.py` | Kaggle (`rocket/genmodel/kaggle/`) | small done; base running |
+| 6. SFT + DPO on kills | `rocket/genmodel/train.py sft / dpo` | Kaggle (`rocket/genmodel/kaggle_ft/`) | small running |
 | 7. Evaluation | `rocket/genmodel/sample.py` + `label_mutants.py` | GitHub Actions | dev mutants, then held-out bugs |
 
 ## Rules that keep the result honest
@@ -39,6 +39,19 @@ replaces the API model with a small local one whose training signal is "this pro
   windows. It teaches syntax and the harness rules; usability is measured by `sample.py` (decodes, passes the
   harness check, assembles).
 * Fine-tuning: SFT on pool programs weighted by training-mutant kills, then DPO on (killer, non-killer) pairs.
+
+## Results so far
+
+**Pretraining, run 1** (Kaggle T4, commit ae942f2, 400k bodies = 127M tokens). `small` (11M), 6000 steps of
+32 x 1024 tokens: validation loss 6.34 -> 1.94 (step 500) -> 1.876 (step 3000) -> 1.869 (step 6000). The curve is flat
+after step ~3000, at the entropy of the generators themselves (immediates and register choices are random), so more
+pretraining buys little; what the model learns beyond syntax has to come from the kill signal (SFT/DPO).
+Unconstrained samples (128 per core x profile): 100% decode, 99.6% pass the harness check, 90.4% assemble
+(683/756; the failures are operands spliced from two instructions, e.g. `sub x10,x8,c.and,x15`), 44 / 50 / 74 lines
+for base / ext / LLM-template, matching the generators. The grammar removes the assembly failures by construction.
+`base` (85M) ran out of memory in this run: `torch.cuda.is_bf16_supported()` is true on a T4 (it counts emulation),
+so training ran in emulated bf16, which is slow (1.9 s per step even for `small`) and sends attention to the
+unfused kernel. Fixed (fp16 + loss scaling below compute capability 8); run 2 trains `base` only.
 
 ## Decoding: grammar-constrained, cached
 

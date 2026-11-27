@@ -1,0 +1,90 @@
+{
+ "commit": "ae942f2",
+ "n_sequences": 400000,
+ "torch": "2.11.0+cu130",
+ "gpus": [
+  "Tesla T4",
+  "Tesla T4"
+ ],
+ "stages": {
+  "small": {
+   "rc": 0,
+   "log_tail": [
+    {
+     "step": 5500,
+     "train_loss": 1.8906,
+     "val_loss": 1.8688,
+     "seconds": 10273
+    },
+    {
+     "step": 5750,
+     "train_loss": 1.8868,
+     "val_loss": 1.8689,
+     "seconds": 10740
+    },
+    {
+     "step": 5999,
+     "train_loss": 1.8504,
+     "val_loss": 1.8686,
+     "seconds": 11205
+    }
+   ],
+   "samples": {
+    "rocket/base": {
+     "n": 128,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 43.5703125
+    },
+    "rocket/ext": {
+     "n": 128,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 50.4296875
+    },
+    "rocket/llmflash": {
+     "n": 128,
+     "decoded": 1.0,
+     "static_ok": 0.9921875,
+     "mean_lines": 74.2109375
+    },
+    "boom/base": {
+     "n": 128,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 43.578125
+    },
+    "boom/ext": {
+     "n": 128,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 50.9375
+    },
+    "boom/llmflash": {
+     "n": 128,
+     "decoded": 1.0,
+     "static_ok": 0.9921875,
+     "mean_lines": 73.9921875
+    }
+   }
+  },
+  "base": {
+   "rc": 1
+  }
+ },
+ "data": {
+  "sequences": 400000,
+  "tokens": 126970682,
+  "mean_len": 317.426705,
+  "truncated": 0,
+  "mix": {
+   "rocket/llmflash": 66621,
+   "boom/base": 66688,
+   "boom/llmflash": 66513,
+   "rocket/ext": 66997,
+   "boom/ext": 66255,
+   "rocket/base": 66926
+  },
+  "vocab": 607
+ }
+}

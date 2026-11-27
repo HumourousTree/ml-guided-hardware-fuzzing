@@ -1,0 +1,152 @@
+[
+ {
+  "step": 0,
+  "train_loss": 6.4157,
+  "val_loss": 6.3425,
+  "seconds": 10
+ },
+ {
+  "step": 250,
+  "train_loss": 2.3668,
+  "val_loss": 2.3642,
+  "seconds": 471
+ },
+ {
+  "step": 500,
+  "train_loss": 1.9407,
+  "val_loss": 1.9407,
+  "seconds": 937
+ },
+ {
+  "step": 750,
+  "train_loss": 1.8608,
+  "val_loss": 1.9087,
+  "seconds": 1404
+ },
+ {
+  "step": 1000,
+  "train_loss": 1.8833,
+  "val_loss": 1.9035,
+  "seconds": 1870
+ },
+ {
+  "step": 1250,
+  "train_loss": 1.8545,
+  "val_loss": 1.8974,
+  "seconds": 2337
+ },
+ {
+  "step": 1500,
+  "train_loss": 1.9416,
+  "val_loss": 1.8941,
+  "seconds": 2804
+ },
+ {
+  "step": 1750,
+  "train_loss": 1.8296,
+  "val_loss": 1.8934,
+  "seconds": 3271
+ },
+ {
+  "step": 2000,
+  "train_loss": 1.8819,
+  "val_loss": 1.8895,
+  "seconds": 3737
+ },
+ {
+  "step": 2250,
+  "train_loss": 1.8984,
+  "val_loss": 1.8803,
+  "seconds": 4204
+ },
+ {
+  "step": 2500,
+  "train_loss": 1.8913,
+  "val_loss": 1.8786,
+  "seconds": 4670
+ },
+ {
+  "step": 2750,
+  "train_loss": 1.8242,
+  "val_loss": 1.8774,
+  "seconds": 5138
+ },
+ {
+  "step": 3000,
+  "train_loss": 1.9169,
+  "val_loss": 1.8761,
+  "seconds": 5605
+ },
+ {
+  "step": 3250,
+  "train_loss": 1.8799,
+  "val_loss": 1.8759,
+  "seconds": 6071
+ },
+ {
+  "step": 3500,
+  "train_loss": 1.8299,
+  "val_loss": 1.8753,
+  "seconds": 6538
+ },
+ {
+  "step": 3750,
+  "train_loss": 1.8956,
+  "val_loss": 1.8742,
+  "seconds": 7006
+ },
+ {
+  "step": 4000,
+  "train_loss": 1.8218,
+  "val_loss": 1.8732,
+  "seconds": 7473
+ },
+ {
+  "step": 4250,
+  "train_loss": 1.86,
+  "val_loss": 1.8718,
+  "seconds": 7940
+ },
+ {
+  "step": 4500,
+  "train_loss": 1.8419,
+  "val_loss": 1.8713,
+  "seconds": 8408
+ },
+ {
+  "step": 4750,
+  "train_loss": 1.8643,
+  "val_loss": 1.8706,
+  "seconds": 8873
+ },
+ {
+  "step": 5000,
+  "train_loss": 1.8935,
+  "val_loss": 1.8698,
+  "seconds": 9340
+ },
+ {
+  "step": 5250,
+  "train_loss": 1.8328,
+  "val_loss": 1.8696,
+  "seconds": 9807
+ },
+ {
+  "step": 5500,
+  "train_loss": 1.8906,
+  "val_loss": 1.8688,
+  "seconds": 10273
+ },
+ {
+  "step": 5750,
+  "train_loss": 1.8868,
+  "val_loss": 1.8689,
+  "seconds": 10740
+ },
+ {
+  "step": 5999,
+  "train_loss": 1.8504,
+  "val_loss": 1.8686,
+  "seconds": 11205
+ }
+]
