@@ -89,7 +89,9 @@ def main():
     tk = tokenizer()
     pad = tk.id["<pad>"]
     model = GPT.load(a.init, dev) if a.init else GPT(Config.preset(a.preset, len(tk))).to(dev)
-    assert model.c.vocab >= len(tk), "checkpoint vocabulary is smaller than the tokenizer"
+    if model.c.vocab < len(tk):          # control tokens added after pretraining (bug-location tokens)
+        print(json.dumps({"grow_vocab": [model.c.vocab, len(tk)]}), flush=True)
+        model.grow_vocab(len(tk))
     ctx = model.c.ctx
     print(json.dumps({"stage": a.stage, "params": model.params(), "device": dev, "gpus": torch.cuda.device_count()}), flush=True)
     opt = torch.optim.AdamW(model.parameters(), lr=a.lr, betas=(0.9, 0.95), weight_decay=0.1)
@@ -131,6 +133,8 @@ def main():
     else:
         pairs = json.loads(a.pairs.read_text())
         ref = GPT.load(a.init, dev).eval()
+        if ref.c.vocab < model.c.vocab:      # same rows as the policy's grown embedding (new tokens start equal)
+            ref.tok = type(model.tok)(model.c.vocab, model.c.dim).to(dev); ref.tok.weight.data.copy_(model.tok.weight.data); ref.c.vocab = model.c.vocab
         for p in ref.parameters():
             p.requires_grad_(False)
         order = rng.permutation(len(pairs))

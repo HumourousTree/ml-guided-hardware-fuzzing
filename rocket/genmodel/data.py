@@ -31,11 +31,65 @@ from isa_tokenizer import ISATokenizer  # noqa: E402
 CORES = ("rocket", "boom")
 PROFILES = ("base", "ext", "llmflash")
 CONTROL = [f"ctl:core:{c}" for c in CORES] + [f"ctl:prof:{p}" for p in PROFILES] + ["ctl:kill"]
+# bug-location tokens (bug-targeted generation): one per module class in rocket/genmodel/modules.json (written by the
+# `modules` command from the mutant locations) plus ctl:mod:other. Appended after CONTROL so earlier token ids (and
+# checkpoints) are unchanged; train.py grows the embedding of an older checkpoint.
+MODULES_FILE = Path(__file__).with_name("modules.json")
+MODULES = json.loads(MODULES_FILE.read_text())["classes"] if MODULES_FILE.exists() else []
+LOCATIONS = [ROOT / "data" / "mutants" / f"{c}_{k}_locations.json" for c in CORES for k in ("driver", "multiplexer")]
+
+
+def module_class(name: str) -> str:
+    """Module class of a located module: the instance suffix of Chisel-generated names is dropped (Arbiter_16 ->
+    Arbiter, BranchKillableQueue_5 -> BranchKillableQueue)."""
+    return re.sub(r"_\d+$", "", name)
+
+
+def mod_token(name: str | None) -> str:
+    c = module_class(name) if name else "other"
+    return f"ctl:mod:{c}" if c in MODULES else "ctl:mod:other"
+
+
+def load_locations(paths=None) -> dict:
+    """(core, kind, dir) -> first located module, from the *_locations.json files that exist."""
+    out = {}
+    for p in paths or LOCATIONS:
+        if Path(p).exists():
+            d = json.loads(Path(p).read_text())
+            for k, v in d["locations"].items():
+                if v["modules"]:
+                    out[(d["core"], d["kind"], int(k))] = v["modules"][0]
+    return out
+
+
+PUBLISHED_LOCATIONS = ROOT / "data" / "mutants" / "published_locations.json"
+
+
+def published_locations() -> dict:
+    """(core, kind, dir) -> first located module of the published Encarsia bugs (rocket/locate_mutants.py)."""
+    if not PUBLISHED_LOCATIONS.exists():
+        return {}
+    d = json.loads(PUBLISHED_LOCATIONS.read_text())
+    return {(c, k, int(n)): v["modules"][0] for c, ks in d.items() for k, ms in ks.items() for n, v in ms.items()
+            if v["modules"]}
+
+
+def target_classes(core: str) -> list[str]:
+    """Location classes to sample for in a bug-targeted evaluation: those of the core's dev mutants and published bugs
+    (a class outside MODULES is sampled as "other")."""
+    split = {}
+    for k in ("driver", "multiplexer"):
+        mf = ROOT / "data" / "mutants" / f"{core}_{k}_manifest.json"
+        if mf.exists():
+            split.update({(core, k, m["dir"]): m["split"] for m in json.loads(mf.read_text())["mutants"]})
+    mods = [v for key, v in load_locations().items() if split.get(key) == "dev"]
+    mods += [v for key, v in published_locations().items() if key[0] == core]
+    return sorted({mod_token(v)[len("ctl:mod:"):] for v in mods})
 
 
 def tokenizer() -> ISATokenizer:
     tk = ISATokenizer()
-    for t in CONTROL:
+    for t in CONTROL + ([f"ctl:mod:{m}" for m in MODULES] + ["ctl:mod:other"] if MODULES else []):
         tk.id[t] = len(tk.vocab); tk.vocab.append(t)
     return tk
 
@@ -54,8 +108,11 @@ def body_of(core: str, profile: str, seed: int, length: int = 40) -> list[str]:
     return body
 
 
-def encode(tk: ISATokenizer, core: str, profile: str, body: list[str], kill: bool = False) -> list[int]:
-    ctl = [tk.id["<bos>"], tk.id[f"ctl:core:{core}"], tk.id[f"ctl:prof:{profile}"]] + ([tk.id["ctl:kill"]] if kill else [])
+def encode(tk: ISATokenizer, core: str, profile: str, body: list[str], kill: bool = False,
+           module: str | None = None) -> list[int]:
+    """module: a ctl:mod:* token (bug-targeted sequences), placed after ctl:kill."""
+    ctl = ([tk.id["<bos>"], tk.id[f"ctl:core:{core}"], tk.id[f"ctl:prof:{profile}"]] + ([tk.id["ctl:kill"]] if kill else [])
+           + ([tk.id[module]] if module else []))
     return ctl + tk.encode("\n".join(body), bos=False)
 
 
@@ -110,13 +167,16 @@ def _profile(p: str) -> str:
 
 
 def build_sft_pairs(labels: list[Path], pools: list[Path], ctx: int, seed: int,
-                    weighting: str = "count") -> tuple[dict, list, dict]:
+                    weighting: str = "count", targeted: bool = False) -> tuple[dict, list, dict]:
     """SFT sequences (pool programs that kill >= 1 TRAIN mutant) and DPO pairs (for each train mutant: up to 4 of its
     killers, each against a random program labelled against that mutant that does not kill it). Any number of pools
     per core (the generator pools, and pools of the model's own samples for on-policy rounds); programs are keyed by
     (core, id) and mutants by (core, kind, dir), so nothing collides across cores or bug kinds; dev mutants are not
     read. weighting: "count" = number of train mutants killed; "rarity" = sum over them of 1 / (number of killers),
-    so a program that kills a mutant almost nothing else kills outweighs one that kills many easy ones."""
+    so a program that kills a mutant almost nothing else kills outweighs one that kills many easy ones.
+    targeted: also condition on where the bug is. Each killer additionally appears once per module class of the train
+    mutants it kills, with that ctl:mod token and the weight of those kills only, and DPO pairs carry the mutant's
+    token. The untargeted sequences are kept, so the model can still be sampled without a location."""
     tk = tokenizer()
     cores = set()
     bodies, prof = {}, {}
@@ -142,13 +202,22 @@ def build_sft_pairs(labels: list[Path], pools: list[Path], ctx: int, seed: int,
             labelled[m].add(key)
             if r["killed"]:
                 killers[m].add(key)
+    loc = load_locations() if targeted else {}
+    assert not targeted or (loc and MODULES), "targeted needs data/mutants/*_locations.json and genmodel/modules.json"
+    mtok = lambda m: mod_token(loc.get((m[0], m[1], int(m[2]))))
     kills = collections.defaultdict(float)
+    tkills = collections.defaultdict(float)                     # (program key, ctl:mod token) -> weight
     for m, ks in killers.items():
         for key in ks:
-            kills[key] += 1.0 / len(ks) if weighting == "rarity" else 1.0
+            wt = 1.0 / len(ks) if weighting == "rarity" else 1.0
+            kills[key] += wt
+            if targeted:
+                tkills[(key, mtok(m))] += wt
     sft, w = [], []
     for key, k in sorted(kills.items()):
         sft.append(encode(tk, key[0], prof[key], bodies[key], kill=True)); w.append(k)
+    for (key, mt), k in sorted(tkills.items()):
+        sft.append(encode(tk, key[0], prof[key], bodies[key], kill=True, module=mt)); w.append(k)
     rng = random.Random(seed)
     pairs = []
     for m, ks in sorted(killers.items()):
@@ -157,12 +226,14 @@ def build_sft_pairs(labels: list[Path], pools: list[Path], ctx: int, seed: int,
             continue
         for win in rng.sample(sorted(ks), min(4, len(ks))):
             lose = rng.choice(losers)
-            pairs.append((encode(tk, win[0], prof[win], bodies[win], True)[:ctx],
-                          encode(tk, lose[0], prof[lose], bodies[lose], True)[:ctx]))
+            mt = mtok(m) if targeted else None
+            pairs.append((encode(tk, win[0], prof[win], bodies[win], True, mt)[:ctx],
+                          encode(tk, lose[0], prof[lose], bodies[lose], True, mt)[:ctx]))
     rng.shuffle(pairs)
     arr = pack(sft, ctx)
     arr["weights"] = np.array(w, dtype=np.float32)
-    return arr, pairs, {"cores": sorted(cores), "weighting": weighting, "label_rows": dict(seen), "sft_programs": len(sft),
+    return arr, pairs, {"cores": sorted(cores), "weighting": weighting, "label_rows": dict(seen), "sft_programs": len(kills), "sft_sequences": len(sft), "targeted": targeted,
+                        "targeted_by_module": dict(collections.Counter(mt for _, mt in tkills)),
                         "pairs": len(pairs), "train_mutants_with_killers": len(killers),
                         "sft_programs_by_core_profile": dict(collections.Counter(f"{k[0]}/{prof[k]}" for k in kills))}
 
@@ -175,13 +246,29 @@ def main():
     s = sub.add_parser("sft"); s.add_argument("--labels", type=Path, nargs="+", required=True); s.add_argument("--pool", type=Path, nargs="+", required=True)
     s.add_argument("--ctx", type=int, default=1024); s.add_argument("--seed", type=int, default=1); s.add_argument("--out", type=Path, required=True)
     s.add_argument("--weighting", choices=["count", "rarity"], default="count")
+    s.add_argument("--targeted", action="store_true", help="add bug-location (ctl:mod) conditioned sequences")
+    mo = sub.add_parser("modules", help="write genmodel/modules.json: module classes with >= --min train mutants")
+    mo.add_argument("--min", type=int, default=5); mo.add_argument("--out", type=Path, default=MODULES_FILE)
     a = ap.parse_args()
     a.out.parent.mkdir(parents=True, exist_ok=True)
+    if a.cmd == "modules":
+        split = {}
+        for c in CORES:
+            for k in ("driver", "multiplexer"):
+                mf = ROOT / "data" / "mutants" / f"{c}_{k}_manifest.json"
+                if mf.exists():
+                    split.update({(c, k, m["dir"]): m["split"] for m in json.loads(mf.read_text())["mutants"]})
+        cnt = collections.Counter(module_class(v) for key, v in load_locations().items() if split.get(key) == "train")
+        classes = sorted(c for c, n in cnt.items() if n >= a.min)
+        a.out.write_text(json.dumps({"min_train_mutants": a.min, "classes": classes,
+                                     "train_counts": dict(cnt.most_common())}, indent=1))
+        print(f"{len(classes)} classes (>= {a.min} train mutants) of {len(cnt)}: {classes}")
+        return
     if a.cmd == "pretrain":
         arr, info = build_pretrain(a.n, a.seed, a.ctx)
         np.savez_compressed(a.out, **arr)
     else:
-        arr, pairs, info = build_sft_pairs(a.labels, a.pool, a.ctx, a.seed, a.weighting)
+        arr, pairs, info = build_sft_pairs(a.labels, a.pool, a.ctx, a.seed, a.weighting, a.targeted)
         np.savez_compressed(a.out, **arr)
         a.out.with_suffix(".pairs.json").write_text(json.dumps(pairs))
     a.out.with_suffix(".json").write_text(json.dumps(info, indent=1))

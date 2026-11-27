@@ -22,7 +22,7 @@ from pathlib import Path
 
 import torch
 
-from rocket.genmodel.data import ROOT, tokenizer
+from rocket.genmodel.data import ROOT, mod_token, tokenizer
 from rocket.genmodel import grammar
 from rocket.genmodel.model import GPT
 
@@ -90,6 +90,7 @@ def main():
     ap.add_argument("--n", type=int, default=64); ap.add_argument("--temperature", type=float, default=1.0)
     ap.add_argument("--top-k", type=int, default=0); ap.add_argument("--seed", type=int, default=1)
     ap.add_argument("--batch", type=int, default=64)
+    ap.add_argument("--module", help="bug-targeted sampling: condition on this module (ctl:mod token)")
     ap.add_argument("--no-grammar", action="store_true", help="unconstrained sampling (default: grammar-constrained)")
     ap.add_argument("--assemble", action="store_true"); ap.add_argument("--out", type=Path, required=True)
     a = ap.parse_args()
@@ -98,6 +99,9 @@ def main():
     tk = tokenizer()
     model = GPT.load(a.ckpt, dev).eval()
     prefix = [tk.id["<bos>"], tk.id[f"ctl:core:{a.core}"], tk.id[f"ctl:prof:{a.profile}"]] + ([tk.id["ctl:kill"]] if a.kill else [])
+    if a.module:                         # bug-targeted: the module the bug is in (a class name or a located module)
+        prefix.append(tk.id[mod_token(a.module)])
+        assert model.c.vocab > max(prefix), "checkpoint has no location tokens (train it with --targeted data)"
     # fp16 autocast on the GPU (several times faster on a T4; logits are cast back to fp32 before sampling), in
     # batches so memory stays bounded for long contexts
     # grammar-constrained decoding (rocket/genmodel/grammar.py): every sampled body is well-formed by construction

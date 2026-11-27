@@ -29,9 +29,16 @@ OP1_POOLS = ["data/labels/op1_rocket_pool.json.gz", "data/labels/op1_boom_pool.j
 #       on-policy data.
 OP1Q_LABELS = ["data/labels/op1_rocket_labels.jsonl.gz", "data/labels/op1q_boom_labels.jsonl.gz"]
 OP1Q_POOLS = ["data/labels/op1_rocket_pool.json.gz", "data/labels/op1q_boom_pool.json.gz"]
-ROUND = os.environ.get("BF_ROUND", "r3")
-DPO_BS = {"r1": 8, "r2": 8, "r3": 32}[ROUND]
+#   r4: bug-targeted generation: the r3 recipe plus location-conditioned sequences (data.py --targeted: each killer
+#       also appears with the ctl:mod token of the module its train mutants are in). Besides the untargeted samples,
+#       N_TARGETED bodies per profile are sampled for every module class that holds a dev mutant or a published bug
+#       (samples_small_tgt_dpo@<class>_<core>_<profile>.json); the untargeted samples of the same model are the control.
+ROUND = os.environ.get("BF_ROUND", "r4")
+DPO_BS = {"r1": 8, "r2": 8, "r3": 32, "r4": 32}[ROUND]
+N_TARGETED = int(os.environ.get("BF_TARGETED", "64"))
+TARGETED = {"r4"}
 RECIPES = {
+    "r4": {"small_tgt": ("small_pre.pt", 400, 1e-4, 300, 2e-5, "rarity", GEN_LABELS + OP1Q_LABELS, GEN_POOLS + OP1Q_POOLS, ("dpo",))},
     "r3": {"small_r3": ("small_pre.pt", 300, 1e-4, 300, 2e-5, "rarity", GEN_LABELS + OP1Q_LABELS, GEN_POOLS + OP1Q_POOLS, ("dpo",)),
            "small_r3g": ("small_pre.pt", 300, 1e-4, 300, 2e-5, "rarity", GEN_LABELS, GEN_POOLS, ("dpo",))},
     "r1": {"base": ("base_pre.pt", 150, 5e-5, 200, 5e-6, "count", GEN_LABELS, GEN_POOLS, ("pre", "sft", "dpo", "dponogram")),
@@ -90,7 +97,7 @@ def main():
             summary["models"][preset] = {"error": f"missing: {init if not pre else missing}"}; continue
         data = f"/tmp/sft_{preset}.npz"
         if run([py, "-m", "rocket.genmodel.data", "sft", "--labels", *labels, "--pool", *pools,
-                "--weighting", weighting, "--out", data], log):
+                "--weighting", weighting, "--out", data] + (["--targeted"] if ROUND in TARGETED else []), log):
             summary["models"][preset] = {"error": "sft data build failed"}; continue
         st = {"pretrained": pre[0], "data": json.load(open(data.replace(".npz", ".json")))}
         sft, dpo = f"{W}/{preset}_sft.pt", f"{W}/{preset}_dpo.pt"
@@ -114,6 +121,17 @@ def main():
                     + (["--kill"] if kill else []) + extra + ["--out", out], log)
                 if os.path.exists(out):
                     st["samples"][f"{tag}/{core}/{prof}"] = json.load(open(out))["summary"]
+        if ROUND in TARGETED and os.path.exists(dpo):
+            sys.path.insert(0, "/tmp/code")
+            from rocket.genmodel.data import target_classes
+            for core in ("rocket", "boom"):
+                for cls in target_classes(core):
+                    for prof in ("base", "ext", "llmflash"):
+                        out = f"{W}/samples_{preset}_dpo@{cls}_{core}_{prof}.json"
+                        run([py, "-m", "rocket.genmodel.sample", "--ckpt", dpo, "--core", core, "--profile", prof,
+                             "--n", str(N_TARGETED), "--seed", "11", "--kill", "--module", cls, "--out", out], log)
+                        if os.path.exists(out):
+                            st["samples"][f"dpo@{cls}/{core}/{prof}"] = json.load(open(out))["summary"]
         for ck in (sft, dpo):
             lj = ck.replace(".pt", ".log.json")
             if os.path.exists(lj):

@@ -14,7 +14,10 @@ ROOT = Path(__file__).resolve().parents[3]
 FILES = ["rocket/rv64fuzz.py", "rocket/isa_tokenizer.py", "rocket/genmodel/grammar.json", *sorted(str(p.relative_to(ROOT)).replace("\\", "/")
          for p in (ROOT / "rocket/genmodel").glob("*.py")), *sorted(str(p.relative_to(ROOT)).replace("\\", "/")
          for p in (ROOT / "rocket/templates").glob("*.json")), *sorted(str(p.relative_to(ROOT)).replace("\\", "/")
-         for p in (ROOT / "data/labels").glob("*.gz"))]
+         for p in (ROOT / "data/labels").glob("*.gz")),
+         # bug-targeted generation: location tokens and the mutant / published-bug locations
+         *sorted(str(p.relative_to(ROOT)).replace("\\", "/") for p in [*(ROOT / "rocket/genmodel").glob("modules.json"),
+                 *(ROOT / "data/mutants").glob("*.json")])]
 
 
 def main(out: Path) -> None:

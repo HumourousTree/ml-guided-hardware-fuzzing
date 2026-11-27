@@ -140,6 +140,19 @@ class GPT(nn.Module):
             pos += 1
         return out
 
+    @torch.no_grad()
+    def grow_vocab(self, n: int):
+        """Extend the (tied) embedding to n tokens for control tokens added after pretraining: old rows are kept, new
+        rows start at the mean embedding plus small noise, so the model's behaviour on old sequences is unchanged."""
+        old = self.tok.weight
+        if n <= old.shape[0]:
+            return
+        new = nn.Embedding(n, old.shape[1]).to(old.device, old.dtype)
+        new.weight[: old.shape[0]] = old
+        new.weight[old.shape[0]:] = old.mean(0) + 0.02 * torch.randn(n - old.shape[0], old.shape[1], device=old.device)
+        self.tok = new
+        self.c.vocab = n
+
     def save(self, path, **extra):
         torch.save({"config": asdict(self.c), "state": self.state_dict(), **extra}, path)
 
