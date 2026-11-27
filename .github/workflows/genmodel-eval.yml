@@ -10,6 +10,7 @@ on:
       run: {description: "folder under data/genmodel/ with samples_*.json", required: true}
       core: {description: "core", required: true, default: rocket, type: choice, options: [rocket, boom]}
       per_file: {description: "gate-passing samples kept per file (120 = a generator profile's pool size)", required: false, default: "120"}
+      match_class: {description: "bug-targeted run: label each mutant only against the samples for its location class (samples_*@<class>_*)", required: false, default: "false", type: choice, options: ["false", "true"]}
 
 permissions:
   contents: read
@@ -73,7 +74,7 @@ jobs:
           [ -e "$HOME/ext" ] || ln -s /root/ext "$HOME/ext"
           python3 rocket/label_mutants.py label --core ${{ inputs.core }} --kind ${{ matrix.kind }} --split dev \
             --manifest data/mutants/${{ inputs.core }}_${{ matrix.kind }}_manifest.json --pool pool.json \
-            --shard ${{ matrix.shard }} --of 10 --jobs 4 --out gm_${{ matrix.kind }}_${{ matrix.shard }}.jsonl
+            --shard ${{ matrix.shard }} --of 10 --jobs 4 --out gm_${{ matrix.kind }}_${{ matrix.shard }}.jsonl             $([ "${{ inputs.match_class }}" = true ] && echo --match-class)
       - uses: actions/upload-artifact@v4
         if: always()
         with: {name: "gm-labels-${{ inputs.run }}-${{ matrix.kind }}-${{ matrix.shard }}", path: "gm_*.jsonl"}
@@ -98,8 +99,12 @@ jobs:
         with: {name: "gm-pool-${{ inputs.run }}"}
       - run: |
           [ -e "$HOME/ext" ] || ln -s /root/ext "$HOME/ext"
+          MC=""; if [ "${{ inputs.match_class }}" = true ]; then
+            # targeted run: the generator pools' published labels are unchanged (earlier runs); no class filter for them
+            [ "${{ matrix.source }}" = generators ] && { : > pub_${{ matrix.source }}_${{ matrix.kind }}_${{ matrix.shard }}.jsonl; exit 0; }
+            MC=--match-class; fi
           if [ "${{ matrix.source }}" = model ]; then P=pool.json; else P=data/labels/${{ inputs.core }}_pool.json.gz; fi
-          python3 rocket/label_mutants.py label --core ${{ inputs.core }} --kind ${{ matrix.kind }} --published             --pool "$P" --shard ${{ matrix.shard }} --of 3 --jobs 4             --out pub_${{ matrix.source }}_${{ matrix.kind }}_${{ matrix.shard }}.jsonl
+          python3 rocket/label_mutants.py label --core ${{ inputs.core }} --kind ${{ matrix.kind }} --published             --pool "$P" --shard ${{ matrix.shard }} --of 3 --jobs 4 $MC             --out pub_${{ matrix.source }}_${{ matrix.kind }}_${{ matrix.shard }}.jsonl
       - uses: actions/upload-artifact@v4
         if: always()
         with: {name: "gm-pub-${{ inputs.run }}-${{ matrix.source }}-${{ matrix.kind }}-${{ matrix.shard }}", path: "pub_*.jsonl"}
