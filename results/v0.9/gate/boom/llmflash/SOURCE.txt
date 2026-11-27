@@ -1,0 +1,2 @@
+GitHub Actions run 46040906083 (encarsia-campaign.yml, core=boom, profile=llmflash, quirks=gate, 5 seeds), artifact merged-boom-llmflash-gate.
+Filter-mode comparison: results/v0.4/bench/boom.
