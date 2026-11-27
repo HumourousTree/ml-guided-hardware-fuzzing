@@ -1,0 +1,2 @@
+{"core": "rocket", "kind": "driver", "mutant": 804, "split": "published", "program": "samples_base_dponogram_rocket_ext-44", "profile": "samples_base_dponogram_rocket_ext", "killed": true, "how": "mismatch", "first_diff": 10}
+{"core": "rocket", "kind": "driver", "mutant": 804, "split": "published", "program": "samples_base_pre_rocket_ext-55", "profile": "samples_base_pre_rocket_ext", "killed": true, "how": "mismatch", "first_diff": 1}

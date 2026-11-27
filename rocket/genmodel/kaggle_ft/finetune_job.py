@@ -24,8 +24,16 @@ OP1_POOLS = ["data/labels/op1_rocket_pool.json.gz", "data/labels/op1_boom_pool.j
 #   r2: on-policy round 1: the model's own samples labelled against train mutants no generator program kills
 #       (genmodel-onpolicy.yml), merged with the generator labels; kills weighted by rarity. "small_rar" is the
 #       ablation without the on-policy data (rarity weighting alone), so the two effects can be told apart.
-ROUND = os.environ.get("BF_ROUND", "r2")
+#   r3: as r2 after the two harness fixes of 2026-11-28 (whole training bodies; BOOM on-policy data restricted to the
+#       programs the quirk filter leaves unchanged, op1q), DPO batch 32. "small_r3g" is the ablation without the
+#       on-policy data.
+OP1Q_LABELS = ["data/labels/op1_rocket_labels.jsonl.gz", "data/labels/op1q_boom_labels.jsonl.gz"]
+OP1Q_POOLS = ["data/labels/op1_rocket_pool.json.gz", "data/labels/op1q_boom_pool.json.gz"]
+ROUND = os.environ.get("BF_ROUND", "r3")
+DPO_BS = {"r1": 8, "r2": 8, "r3": 32}[ROUND]
 RECIPES = {
+    "r3": {"small_r3": ("small_pre.pt", 300, 1e-4, 300, 2e-5, "rarity", GEN_LABELS + OP1Q_LABELS, GEN_POOLS + OP1Q_POOLS, ("dpo",)),
+           "small_r3g": ("small_pre.pt", 300, 1e-4, 300, 2e-5, "rarity", GEN_LABELS, GEN_POOLS, ("dpo",))},
     "r1": {"base": ("base_pre.pt", 150, 5e-5, 200, 5e-6, "count", GEN_LABELS, GEN_POOLS, ("pre", "sft", "dpo", "dponogram")),
            "small": ("small_pre.pt", 150, 1e-4, 200, 1e-5, "count", GEN_LABELS, GEN_POOLS, ("pre", "sft", "dpo", "dponogram"))},
     "r2": {"small_op1": ("small_pre.pt", 300, 1e-4, 300, 1e-5, "rarity", GEN_LABELS + OP1_LABELS, GEN_POOLS + OP1_POOLS, ("dpo",)),
@@ -91,7 +99,7 @@ def main():
                             "--val-frac", "0.05", "--eval-every", "25", "--out", sft], log)
         if st["sft_rc"] == 0:
             st["dpo_rc"] = run([py, "-m", "rocket.genmodel.train", "dpo", "--pairs", data.replace(".npz", ".pairs.json"),
-                                "--init", sft, "--steps", str(d_steps), "--bs", "8", "--lr", str(d_lr), "--beta", "0.1",
+                                "--init", sft, "--steps", str(d_steps), "--bs", str(DPO_BS), "--lr", str(d_lr), "--beta", "0.1",
                                 "--eval-every", "25", "--out", dpo], log)
         st["samples"] = {}
         # grammar-constrained samples from every stage; plus unconstrained DPO samples to measure the grammar
