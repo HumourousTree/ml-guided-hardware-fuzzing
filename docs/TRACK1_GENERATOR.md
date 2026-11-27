@@ -39,3 +39,25 @@ replaces the API model with a small local one whose training signal is "this pro
   windows. It teaches syntax and the harness rules; usability is measured by `sample.py` (decodes, passes the
   harness check, assembles).
 * Fine-tuning: SFT on pool programs weighted by training-mutant kills, then DPO on (killer, non-killer) pairs.
+
+## Decoding: grammar-constrained, cached
+
+The model never has to "learn" what the assembler will reject. `rocket/genmodel/grammar.py` derives an ISA grammar
+from the existing generators, separately for each profile:
+
+* the operand signature of every mnemonic (register, FP register, CSR, rounding mode, immediate, memory, label);
+* for every immediate field, the range and alignment seen, widened to the ISA's legal range where the generator draws
+  it at random, with a hex-digit lookahead so that a value can always be completed (no dead ends);
+* memory operands: the base registers seen (in practice `x30`, the data region) and offsets inside the region;
+* compressed instructions only while `.option rvc` is in force (tracked through `.option push/pop`), with their
+  register sets (x8-x15 for most);
+* the harness rules: never write `x30`/`x31` (or `x29` with a trap handler), labels referenced forward only, the body
+  ends only when every reference is defined and every push popped.
+
+At each step, tokens outside the grammar get probability zero. The grammar accepts 956/956 unseen generator bodies,
+so it removes nothing the generators can produce. Bodies cut off by the context are closed (missing labels defined
+at the end, open pushes popped). Generation uses a key-value cache, which matches the full forward pass to within 1e-7.
+
+Measured on a 140k-parameter smoke-test model (CPU): 383/383 grammar-constrained samples assemble, against 0/127
+without the grammar; 128 bodies in about 4 s. The fine-tuning job samples the real models both ways (the grammar
+ablation).
