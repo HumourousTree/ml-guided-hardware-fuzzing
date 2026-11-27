@@ -129,6 +129,19 @@ def cmd_pool(a):
         print(f"  {k}: {dict(v)}")
 
 
+def target_class(core: str, kind: str, d, published: bool) -> str:
+    """Location class of a mutant, as rocket/genmodel/data.py names it (ctl:mod:<class>, "other" outside the
+    classes of rocket/genmodel/modules.json); read directly so this script needs no numpy / torch."""
+    import re as _re
+    if published:
+        mods = json.loads((ROOT / "data/mutants/published_locations.json").read_text())[core][kind][str(d)]["modules"]
+    else:
+        mods = json.loads((ROOT / f"data/mutants/{core}_{kind}_locations.json").read_text())["locations"][str(d)]["modules"]
+    classes = json.loads((ROOT / "rocket/genmodel/modules.json").read_text())["classes"]
+    c = _re.sub(r"_\d+$", "", mods[0]) if mods else "other"
+    return c if c in classes else "other"
+
+
 def cmd_label(a):
     import gzip
     pool = json.loads(gzip.open(a.pool, "rt").read() if a.pool.endswith(".gz") else Path(a.pool).read_text())
@@ -176,10 +189,17 @@ def cmd_label(a):
             out.write(json.dumps({"core": a.core, "kind": a.kind, "mutant": m["dir"], "split": m["split"],
                                   "error": str(e)[:300]}) + "\n"); out.flush()
             continue
-        jobs = [(str(sim), p["asm"], p["expected"]) for p in pool["programs"]]
+        progs = pool["programs"]
+        if a.match_class:   # bug-targeted evaluation: only the programs sampled for this mutant's location class
+            cls = target_class(a.core, a.kind, m["dir"], a.published)
+            progs = [p for p in progs if f"@{cls}_" in p["profile"]]
+            print(f"mutant {a.kind} {m['dir']}: class {cls}, {len(progs)} targeted programs", flush=True)
+            if not progs:
+                subprocess.run(["rm", "-rf", str(work / f"m{m['dir']}")]); continue
+        jobs = [(str(sim), p["asm"], p["expected"]) for p in progs]
         with ProcessPoolExecutor(a.jobs) as ex:
             res = list(ex.map(_run_one, jobs))
-        for p, (killed, how, first) in zip(pool["programs"], res):
+        for p, (killed, how, first) in zip(progs, res):
             out.write(json.dumps({"core": a.core, "kind": a.kind, "mutant": m["dir"], "split": m["split"],
                                   "program": p["id"], "profile": p["profile"], "killed": killed, "how": how,
                                   "first_diff": first}) + "\n")
@@ -212,6 +232,9 @@ def main():
     l.add_argument("--only-mutants", default="", help="comma-separated mutant dirs: label only these")
     l.add_argument("--prog-shard", type=int, default=0); l.add_argument("--prog-of", type=int, default=1,
                                                                         help="label only every prog-of-th pool program")
+    l.add_argument("--match-class", action="store_true",
+                   help="bug-targeted evaluation: label each mutant only against programs sampled for its location "
+                        "class (pool profile contains @<class>_)")
     l.add_argument("--mutants", default=str(Path.home() / "ext" / "mutants"))
     l.add_argument("--yosys", default=None, help="default: the injector build the factory used for this kind")
     a = ap.parse_args()
