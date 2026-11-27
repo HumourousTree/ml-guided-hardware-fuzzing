@@ -1,0 +1,3 @@
+targeted: run 46063024035 (genmodel-eval.yml match_class=true, samples data/genmodel/ft5-r4tgt-rocket)
+untargeted: run 46063027788 (same model, no module token, samples data/genmodel/ft5-r4-rocket)
+targeted_vs_untargeted: python tools/genmodel_targeted.py --targeted targeted_*labels.jsonl.gz --untargeted untargeted_*labels.jsonl.gz

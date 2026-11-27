@@ -155,8 +155,21 @@ that part of the core.
   Keeping only the killers of hard mutants (<= 25% or 10% of the pool) does not sharpen it. Programs sampled from
   random generators are not location-specific, so a model trained on their kills cannot learn location from them.
   A location-aware generator needs location-specific training programs (programs that cover the module, or that are written for it).
-* The kill-rate evaluation still runs as the definitive test (Rocket, targeted samples labelled only against the
-  mutants of their class, `genmodel-eval.yml match_class=true`, run 46063024035; untargeted control 46063027788).
+* Kill-rate test (Rocket; `results/v0.9/genmodel/r4/eval/`, `tools/genmodel_targeted.py`). 64 samples per module
+  class x profile with the token, each labelled only against the mutants of its class (`genmodel-eval.yml
+  match_class=true`, run 46063024035), against 120 per profile from the same model without it (run 46063027788).
+  Paired per (mutant, profile), over the cells either side kills:
+
+  | Split | per-program kill rate, targeted vs untargeted | diff (95%, bootstrap over mutants) | higher / lower | mutants killed, 54 programs/profile |
+  |---|---|---|---|---|
+  | dev (118 mutants) | 0.702 vs 0.689 | +0.014 [+0.003, +0.027] | 45 / 29 (sign p = 0.08) | 43.9 vs 42.4 |
+  | published (30) | 0.734 vs 0.740 | -0.006 [-0.024, +0.012] | 14 / 15 | 16.8 vs 16.4 (17 vs 17 all) |
+
+  A small effect on dev, almost all from MulDiv (+0.045 over 40 cells; the others are within +-0.025), and none on
+  the published bugs. Two rare dev mutants of the `Rocket` class are killed only with the token (driver/906, /951, 1-2
+  programs), one MulDiv mutant only without (driver/112, 1 program). The untargeted model matches the generators
+  (43 vs 44 dev mutants, +0.0 [-2, +2]). The token is a weak steer for an arithmetic unit and nothing more, as the
+  likelihood test predicted; no BOOM run (it would cost ~35 Actions jobs for an effect this size).
 
 **Decoding speed.** The key-value cache is preallocated (one position written per step; the first version
 concatenated, which copies the cache every token), the grammar mask is built on the host and sent in one copy, the

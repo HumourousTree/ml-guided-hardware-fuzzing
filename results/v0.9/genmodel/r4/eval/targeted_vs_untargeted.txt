@@ -1,0 +1,10 @@
+== dev: 118 mutants with a module class, 114 (mutant, profile) cells killed by either side
+   mean kill rate  targeted 0.7024  untargeted 0.6885  diff +0.0139 [+0.0025, +0.0267]
+   cells targeted higher 45, lower 29, equal 40; sign test p = 0.081
+   mutants killed, all programs: targeted 44, untargeted 43; 54/profile: targeted 43.9 [43, 44], untargeted 42.4 [42, 43]
+   by class (mean diff, cells): ALU -0.006 (15), BreakpointUnit +0.000 (3), CSRFile +0.013 (4), IBuf +0.006 (18), MulDiv +0.045 (40), RVCExpander -0.024 (12), Rocket +0.001 (22)
+== published: 30 mutants with a module class, 42 (mutant, profile) cells killed by either side
+   mean kill rate  targeted 0.7336  untargeted 0.7395  diff -0.0059 [-0.0240, +0.0119]
+   cells targeted higher 14, lower 15, equal 13; sign test p = 1.000
+   mutants killed, all programs: targeted 17, untargeted 17; 54/profile: targeted 16.8 [16, 17], untargeted 16.4 [16, 17]
+   by class (mean diff, cells): ALU -0.010 (9), CSRFile -0.049 (5), IBuf +0.028 (8), MulDiv +0.031 (3), RVCExpander -0.015 (11), Rocket -0.011 (6)

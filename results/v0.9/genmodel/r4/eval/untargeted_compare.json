@@ -1,0 +1,77 @@
+{
+ "driver/dev": {
+  "mutants": 60,
+  "groups": {
+   "generators": {
+    "programs": 360,
+    "killed": 29,
+    "only": [],
+    "missed": []
+   },
+   "small_tgt_dpo": {
+    "programs": 360,
+    "killed": 28,
+    "only": [
+     731
+    ],
+    "missed": [
+     906,
+     951
+    ]
+   }
+  }
+ },
+ "driver/published": {
+  "mutants": 15,
+  "groups": {
+   "generators": {
+    "programs": 360,
+    "killed": 12,
+    "only": [],
+    "missed": []
+   },
+   "small_tgt_dpo": {
+    "programs": 360,
+    "killed": 13,
+    "only": [
+     804
+    ],
+    "missed": []
+   }
+  }
+ },
+ "multiplexer/dev": {
+  "mutants": 59,
+  "groups": {
+   "generators": {
+    "programs": 360,
+    "killed": 15,
+    "only": [],
+    "missed": []
+   },
+   "small_tgt_dpo": {
+    "programs": 360,
+    "killed": 15,
+    "only": [],
+    "missed": []
+   }
+  }
+ },
+ "multiplexer/published": {
+  "mutants": 15,
+  "groups": {
+   "generators": {
+    "programs": 360,
+    "killed": 4,
+    "only": [],
+    "missed": []
+   },
+   "small_tgt_dpo": {
+    "programs": 360,
+    "killed": 4,
+    "only": [],
+    "missed": []
+   }
+  }
+ }
+}

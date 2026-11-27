@@ -140,7 +140,9 @@ Not done: anything needing an LLM (semantic/hybrid generation, pass@k) - no API 
   `GPT.grow_vocab`, `data.py sft --targeted`, `sample.py --module`, classifier-free guidance, `label --match-class`):
   every mutant located (60/60 published, 1,577/1,595 factory, all netlist hashes reproduced); round 4 trained, but the
   model barely uses the location token (+-0.05 nats per body, unchanged instruction mix, guidance does not help),
-  because kills of random-pool programs carry little location signal. Kill-rate evaluation on Rocket running.
+  because kills of random-pool programs carry little location signal. Kill-rate test on Rocket
+  (`tools/genmodel_targeted.py`, runs 46063024035/46063027788): per-program kill rate +0.014 [+0.003, +0.027] on dev
+  mutants (mostly MulDiv; sign test p = 0.08), none on the published bugs (17 vs 17).
 - Local toolchain: Docker in WSL with the CI image (`ghcr.io/.../encarsia-env`), so labelling and mutant
   regeneration can run on the laptop as well as on GitHub Actions.
 
