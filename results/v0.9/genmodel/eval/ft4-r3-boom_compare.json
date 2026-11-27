@@ -1,0 +1,108 @@
+{
+ "driver/dev": {
+  "mutants": 60,
+  "groups": {
+   "generators": {
+    "programs": 360,
+    "killed": 33,
+    "only": [],
+    "missed": []
+   },
+   "small_r3_dpo": {
+    "programs": 360,
+    "killed": 33,
+    "only": [
+     28,
+     31
+    ],
+    "missed": [
+     249,
+     251
+    ]
+   },
+   "small_r3g_dpo": {
+    "programs": 360,
+    "killed": 35,
+    "only": [
+     28,
+     236,
+     253,
+     751
+    ],
+    "missed": [
+     249,
+     251
+    ]
+   }
+  }
+ },
+ "driver/published": {
+  "mutants": 15,
+  "groups": {
+   "generators": {
+    "programs": 360,
+    "killed": 12,
+    "only": [],
+    "missed": []
+   },
+   "small_r3_dpo": {
+    "programs": 360,
+    "killed": 12,
+    "only": [],
+    "missed": []
+   },
+   "small_r3g_dpo": {
+    "programs": 360,
+    "killed": 12,
+    "only": [],
+    "missed": []
+   }
+  }
+ },
+ "multiplexer/dev": {
+  "mutants": 60,
+  "groups": {
+   "generators": {
+    "programs": 360,
+    "killed": 13,
+    "only": [],
+    "missed": []
+   },
+   "small_r3_dpo": {
+    "programs": 360,
+    "killed": 13,
+    "only": [],
+    "missed": []
+   },
+   "small_r3g_dpo": {
+    "programs": 360,
+    "killed": 13,
+    "only": [],
+    "missed": []
+   }
+  }
+ },
+ "multiplexer/published": {
+  "mutants": 15,
+  "groups": {
+   "generators": {
+    "programs": 360,
+    "killed": 6,
+    "only": [],
+    "missed": []
+   },
+   "small_r3_dpo": {
+    "programs": 360,
+    "killed": 6,
+    "only": [],
+    "missed": []
+   },
+   "small_r3g_dpo": {
+    "programs": 360,
+    "killed": 6,
+    "only": [],
+    "missed": []
+   }
+  }
+ }
+}

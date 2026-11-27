@@ -82,6 +82,16 @@ independent generator pool of the same size.
 | DPO without grammar (small / base) | 43 / 44 | -0.1 [-2, +2] / +0.3 [-2, +2] | 16 / 17 |
 | round 2: on-policy + rarity (small_op1) | 45 | +1.5 [-1, +4] | 17 |
 | round 2: rarity only (small_rar) | 44 | +0.5 [-2, +3] | 16 |
+| round 3: generator kills, after the fixes (small_r3g) | 46 | +2.1 [+0, +4] | 16 |
+| round 3: + on-policy kills (small_r3) | 44 | +1.4 [+0, +3] | 17 |
+
+Round 3 (runs 46036238505 Rocket, 46036243632 BOOM) is round 2 retrained after the two harness fixes below, with DPO
+batch 32. Without the on-policy data (small_r3g) it is the best model so far on both cores, +2.1 and +2.0 mutants,
+but still not significant: in 8.7% (Rocket) and 17.2% (BOOM) of the 2000 subsample pairs it kills no more than the
+generators. Its gains are single mutants killed by a few samples (Rocket driver/139, /554, /896; BOOM driver/28,
+/236, /253, /751), against one generator-only mutant per core. Adding the model's own kills (small_r3) is worse on
+both cores, so the on-policy labels (2 new Rocket kills, 4 BOOM) are too few to help. Published bugs: unchanged,
+except one small_r3 sample killing Rocket mix-up 9 again (`driver/804`).
 
 Round 2 (run 46023954014) trained before the two harness fixes below. The on-policy model has the best pool-size curve
 so far (about 1.3 mutants ahead of the generators at 40 programs per profile); rarity weighting alone adds nothing, so
@@ -103,6 +113,8 @@ conditional) and the 30 published Encarsia BOOM bugs, quirk filter on for model 
 | generators | 46 | | 18 |
 | small DPO | 47 | +0.9 [-2, +4] | 18 |
 | base DPO | 46 | -0.1 [-3, +3] | 19 |
+| round 3: generator kills, after the fixes (small_r3g) | 48 | +2.0 [-1, +5] | 18 |
+| round 3: + on-policy kills (small_r3) | 46 | +0.6 [-2, +4] | 18 |
 
 BOOM agrees with Rocket: no interval excludes 0 (kills per program and mutant: generators 0.170, small DPO 0.171).
 The extra published bug of base DPO is conditional C4 (`multiplexer/160`, `BranchKillableQueue_5`), killed by one

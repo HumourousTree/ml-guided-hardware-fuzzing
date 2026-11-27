@@ -127,7 +127,9 @@ Not done: anything needing an LLM (semantic/hybrid generation, pass@k) - no API 
   intervals and pool-size curves): on 119 Rocket dev mutants the learned generators match the generator pools (44-45
   killed; best +1.5 [-1, +4] for the on-policy round), 17 vs 16 of the 30 published Rocket bugs (mix-up 9, which our
   ext and LLM-template campaigns also find). BOOM (120 dev mutants, quirk-fixed samples): 46 generators, 47 small DPO
-  (+0.9 [-2, +4]), 46 base DPO; published 18 / 18 / 19 (C4, also found by our LLM-template campaign).
+  (+0.9 [-2, +4]), 46 base DPO; published 18 / 18 / 19 (C4, also found by our LLM-template campaign). Round 3 after
+  the harness fixes, generator kills only: +2.1 [+0, +4] Rocket (46 of 119), +2.0 [-1, +5] BOOM (48 of 120), the best
+  so far but not significant (P(diff <= 0) 0.09 / 0.17); with on-policy kills it is worse (+1.4 / +0.6).
   `docs/TRACK1_GENERATOR.md`.
 - Track 1 decoding: grammar-constrained sampling (100% of samples assemble vs 90.6-92.6% without), preallocated
   key-value cache and batch compaction (2.2-2.4x faster); T4 training in fp16 with loss scaling (emulated bf16 ran out
