@@ -202,6 +202,14 @@ decoded from the glyph positions of the tables, and the decoder reproduces the R
   BOOM base ran on the laptop, BOOM ext on GitHub Actions (run 45677937135, 20 shards).
 * Signal mix-ups: **12/15** (DifuzzRTL/ProcessorFuzz 9, Cascade 10); missed only mix-up 12 (found by DifuzzRTL/ProcessorFuzz).
   Broken conditionals: **6/15**, exactly every conditional any published fuzzer finds (DifuzzRTL/ProcessorFuzz 6, Cascade 5).
+* **Gate mode instead of the filter (2026-11-28).** `BENCHFUZZ_QUIRKS=gate` keeps the instructions the filter replaces
+  and re-runs every mismatch at once on the bug's bug-free core; it counts only if that core agrees with Spike (the same
+  rule as the replay confirmation, applied per program). Random draws are unchanged, so each seed generates the same
+  programs up to the formerly substituted lines. First result (local, LLM-template profile): **BOOM mix-up 3**, an FP
+  division whose result is zero, missed by DifuzzRTL, ProcessorFuzz, Cascade and every filtered BenchFuzz run, is
+  detected on **5/5 seeds** after 29, 7, 19, 5 and 2 programs (filter: 0 of 400); one program was rejected because the
+  bug-free BOOM disagreed with Spike. Full gate-mode campaigns on all 30 BOOM bugs (base, ext, LLM templates): GitHub
+  Actions runs 46040906083, 46040910415, 46040916021.
 * No BOOM bug is found by us and missed by all three; ext adds nothing on BOOM (unlike Rocket). Only 6 of 15 BOOM
   conditionals are found by anyone: the rest are in the branch queues, the CSR file and the reorder buffer.
 
