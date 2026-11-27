@@ -1,0 +1,73 @@
+[
+ {
+  "core": "boom",
+  "kind": "multiplexer",
+  "file": "C:\\Users\\subod\\AppData\\Local\\Temp\\claude\\b62daf4fbfbc44f8\\9c4dc705-70e1-4dd1-bc02-9d8e91daeb33\\scratchpad\\labels_boom_multiplexer\\labels.jsonl",
+  "rows": 144000,
+  "build_errors": 0,
+  "detections_by_how": {
+   "mismatch": 860,
+   "hang": 7636
+  },
+  "all": {
+   "mutants": 400,
+   "killed_by_any": 62,
+   "unkilled_possibly_equivalent": 338,
+   "coverage_by_profile": {
+    "base": 49,
+    "ext": 52,
+    "llmflash": 56
+   },
+   "only_this_profile": {
+    "base": 1,
+    "ext": 5,
+    "llmflash": 7
+   },
+   "program_kill_rate": {
+    "base": 0.0561,
+    "ext": 0.0595,
+    "llmflash": 0.0614
+   }
+  },
+  "train": {
+   "mutants": 340,
+   "killed_by_any": 49,
+   "unkilled_possibly_equivalent": 291,
+   "coverage_by_profile": {
+    "base": 41,
+    "ext": 41,
+    "llmflash": 46
+   },
+   "only_this_profile": {
+    "base": 1,
+    "ext": 2,
+    "llmflash": 5
+   },
+   "program_kill_rate": {
+    "base": 0.0508,
+    "ext": 0.0529,
+    "llmflash": 0.0566
+   }
+  },
+  "dev": {
+   "mutants": 60,
+   "killed_by_any": 13,
+   "unkilled_possibly_equivalent": 47,
+   "coverage_by_profile": {
+    "base": 8,
+    "ext": 11,
+    "llmflash": 10
+   },
+   "only_this_profile": {
+    "base": 0,
+    "ext": 3,
+    "llmflash": 2
+   },
+   "program_kill_rate": {
+    "base": 0.0864,
+    "ext": 0.0969,
+    "llmflash": 0.0886
+   }
+  }
+ }
+]

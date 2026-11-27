@@ -1,0 +1,73 @@
+[
+ {
+  "core": "boom",
+  "kind": "driver",
+  "file": "C:\\Users\\subod\\AppData\\Local\\Temp\\claude\\b62daf4fbfbc44f8\\9c4dc705-70e1-4dd1-bc02-9d8e91daeb33\\scratchpad\\labels_boom_driver\\labels.jsonl",
+  "rows": 144000,
+  "build_errors": 0,
+  "detections_by_how": {
+   "hang": 15905,
+   "mismatch": 12709
+  },
+  "all": {
+   "mutants": 400,
+   "killed_by_any": 210,
+   "unkilled_possibly_equivalent": 190,
+   "coverage_by_profile": {
+    "base": 171,
+    "ext": 168,
+    "llmflash": 198
+   },
+   "only_this_profile": {
+    "base": 3,
+    "ext": 7,
+    "llmflash": 28
+   },
+   "program_kill_rate": {
+    "base": 0.1894,
+    "ext": 0.186,
+    "llmflash": 0.2208
+   }
+  },
+  "train": {
+   "mutants": 340,
+   "killed_by_any": 177,
+   "unkilled_possibly_equivalent": 163,
+   "coverage_by_profile": {
+    "base": 143,
+    "ext": 141,
+    "llmflash": 166
+   },
+   "only_this_profile": {
+    "base": 2,
+    "ext": 7,
+    "llmflash": 24
+   },
+   "program_kill_rate": {
+    "base": 0.1812,
+    "ext": 0.1768,
+    "llmflash": 0.2114
+   }
+  },
+  "dev": {
+   "mutants": 60,
+   "killed_by_any": 33,
+   "unkilled_possibly_equivalent": 27,
+   "coverage_by_profile": {
+    "base": 28,
+    "ext": 27,
+    "llmflash": 32
+   },
+   "only_this_profile": {
+    "base": 1,
+    "ext": 0,
+    "llmflash": 4
+   },
+   "program_kill_rate": {
+    "base": 0.2357,
+    "ext": 0.2385,
+    "llmflash": 0.2736
+   }
+  }
+ }
+]
