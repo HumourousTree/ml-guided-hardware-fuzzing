@@ -14,8 +14,23 @@ import sys
 import time
 
 W = "/kaggle/working"
-# preset: (sft steps, sft lr, dpo steps, dpo lr)
-PLAN = {"base": (150, 5e-5, 200, 5e-6), "small": (150, 1e-4, 200, 1e-5)}
+GEN_LABELS = [f"data/labels/{c}_{k}_labels.jsonl.gz" for c in ("rocket", "boom") for k in ("driver", "multiplexer")]
+GEN_POOLS = ["data/labels/rocket_pool.json.gz", "data/labels/boom_pool.json.gz"]
+OP1_LABELS = ["data/labels/op1_rocket_labels.jsonl.gz", "data/labels/op1_boom_labels.jsonl.gz"]
+OP1_POOLS = ["data/labels/op1_rocket_pool.json.gz", "data/labels/op1_boom_pool.json.gz"]
+# ROUND selects the recipe. Each model: init checkpoint (glob under /kaggle/input), sft steps, sft lr, dpo steps,
+# dpo lr, SFT weighting, labels, pools, sample tags.
+#   r1: run 1 (small) and run 2 (base): SFT + DPO on the generator pools' kills.
+#   r2: on-policy round 1: the model's own samples labelled against train mutants no generator program kills
+#       (genmodel-onpolicy.yml), merged with the generator labels; kills weighted by rarity. "small_rar" is the
+#       ablation without the on-policy data (rarity weighting alone), so the two effects can be told apart.
+ROUND = os.environ.get("BF_ROUND", "r2")
+RECIPES = {
+    "r1": {"base": ("base_pre.pt", 150, 5e-5, 200, 5e-6, "count", GEN_LABELS, GEN_POOLS, ("pre", "sft", "dpo", "dponogram")),
+           "small": ("small_pre.pt", 150, 1e-4, 200, 1e-5, "count", GEN_LABELS, GEN_POOLS, ("pre", "sft", "dpo", "dponogram"))},
+    "r2": {"small_op1": ("small_pre.pt", 300, 1e-4, 300, 1e-5, "rarity", GEN_LABELS + OP1_LABELS, GEN_POOLS + OP1_POOLS, ("dpo",)),
+           "small_rar": ("small_pre.pt", 300, 1e-4, 300, 1e-5, "rarity", GEN_LABELS, GEN_POOLS, ("dpo",))},
+}
 N_SAMPLES = int(os.environ.get("BF_SAMPLES", "256"))
 
 
@@ -59,32 +74,30 @@ def main():
     import torch
     gpu = [torch.cuda.get_device_name(i) for i in range(torch.cuda.device_count())]
     log = f"{W}/console.txt"
-    summary = {"commit": commit, "gpus": gpu, "models": {}}
-    if run([py, "-m", "rocket.genmodel.data", "sft", "--labels", "data/labels/rocket_driver_labels.jsonl.gz",
-            "data/labels/rocket_multiplexer_labels.jsonl.gz", "data/labels/boom_driver_labels.jsonl.gz",
-            "data/labels/boom_multiplexer_labels.jsonl.gz", "--pool", "data/labels/rocket_pool.json.gz",
-            "data/labels/boom_pool.json.gz",
-            "--out", "/tmp/sft.npz"], log):
-        raise SystemExit("sft data build failed")
-    summary["data"] = json.load(open("/tmp/sft.json"))
-    for preset, (s_steps, s_lr, d_steps, d_lr) in PLAN.items():
-        pre = glob.glob(f"/kaggle/input/**/{preset}_pre.pt", recursive=True)
-        if not pre:
-            summary["models"][preset] = {"error": "no pretrained checkpoint"}; continue
-        st = {"pretrained": pre[0]}
+    summary = {"commit": commit, "gpus": gpu, "round": ROUND, "models": {}}
+    for preset, (init, s_steps, s_lr, d_steps, d_lr, weighting, labels, pools, tags) in RECIPES[ROUND].items():
+        pre = glob.glob(f"/kaggle/input/**/{init}", recursive=True)
+        missing = [p for p in labels + pools if not os.path.exists(p)]
+        if not pre or missing:
+            summary["models"][preset] = {"error": f"missing: {init if not pre else missing}"}; continue
+        data = f"/tmp/sft_{preset}.npz"
+        if run([py, "-m", "rocket.genmodel.data", "sft", "--labels", *labels, "--pool", *pools,
+                "--weighting", weighting, "--out", data], log):
+            summary["models"][preset] = {"error": "sft data build failed"}; continue
+        st = {"pretrained": pre[0], "data": json.load(open(data.replace(".npz", ".json")))}
         sft, dpo = f"{W}/{preset}_sft.pt", f"{W}/{preset}_dpo.pt"
-        st["sft_rc"] = run([py, "-m", "rocket.genmodel.train", "sft", "--data", "/tmp/sft.npz", "--init", pre[0],
+        st["sft_rc"] = run([py, "-m", "rocket.genmodel.train", "sft", "--data", data, "--init", pre[0],
                             "--steps", str(s_steps), "--bs", "16", "--lr", str(s_lr), "--warmup", "20",
                             "--val-frac", "0.05", "--eval-every", "25", "--out", sft], log)
         if st["sft_rc"] == 0:
-            st["dpo_rc"] = run([py, "-m", "rocket.genmodel.train", "dpo", "--pairs", "/tmp/sft.pairs.json", "--init", sft,
-                                "--steps", str(d_steps), "--bs", "8", "--lr", str(d_lr), "--beta", "0.1",
+            st["dpo_rc"] = run([py, "-m", "rocket.genmodel.train", "dpo", "--pairs", data.replace(".npz", ".pairs.json"),
+                                "--init", sft, "--steps", str(d_steps), "--bs", "8", "--lr", str(d_lr), "--beta", "0.1",
                                 "--eval-every", "25", "--out", dpo], log)
         st["samples"] = {}
         # grammar-constrained samples from every stage; plus unconstrained DPO samples to measure the grammar
         for tag, ck, kill, extra in (("pre", pre[0], False, []), ("sft", sft, True, []), ("dpo", dpo, True, []),
                                      ("dponogram", dpo, True, ["--no-grammar"])):
-            if not os.path.exists(ck):
+            if tag not in tags or not os.path.exists(ck):
                 continue
             for core, prof in [(c, p) for c in ("rocket", "boom") for p in ("base", "ext", "llmflash")]:
                 out = f"{W}/samples_{preset}_{tag}_{core}_{prof}.json"

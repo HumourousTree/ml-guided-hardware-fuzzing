@@ -7,7 +7,7 @@
   "is_private": true,
   "enable_gpu": true,
   "enable_internet": false,
-  "dataset_sources": ["subodhdalvi/benchfuzz-code"],
+  "dataset_sources": ["subodhdalvi/benchfuzz-code", "subodhdalvi/benchfuzz-ckpt"],
   "competition_sources": [],
   "kernel_sources": ["subodhdalvi/benchfuzz-genmodel-pretrain"]
 }
