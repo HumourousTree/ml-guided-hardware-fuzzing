@@ -137,6 +137,7 @@ class Constraint:
         # assembler option state: compressed code is on from the start only in ext (the harness writes
         # `.option rvc` before an ext body); `.option push/pop` nest, `.option rvc/norvc` switch
         self.rvc, self.opt_stack = profile == "ext", []
+        self.lines = 0                                   # completed lines: an empty body is never allowed
         self._new_line()
 
     def _new_line(self):
@@ -205,7 +206,7 @@ class Constraint:
             if self.after_def:
                 a.add(self.ids["<nl>"])                  # a label alone on its line
             a.add(self.ids["@def"])
-            if self.referenced <= self.defined and not self.opt_stack:   # references resolved, pushes popped
+            if self.lines and self.referenced <= self.defined and not self.opt_stack:   # non-empty, refs resolved, pushes popped
                 a.add(self.ids["<eos>"])
             return a
         if self.state == "def":
@@ -240,7 +241,7 @@ class Constraint:
     def step(self, tid: int) -> None:
         t = self.tk.vocab[tid]
         if t == "<nl>":
-            self._new_line(); return
+            self.lines += 1; self._new_line(); return
         if self.state == "start":
             if t == "@def":
                 self.state = "def"; return

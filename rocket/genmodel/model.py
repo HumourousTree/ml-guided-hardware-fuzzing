@@ -6,6 +6,7 @@ from __future__ import annotations
 import math
 from dataclasses import dataclass, asdict
 
+import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -35,15 +36,20 @@ class Block(nn.Module):
         self.heads, self.drop = c.heads, c.dropout
 
     def forward(self, x, cache=None):
-        """cache: None (training), or a dict that collects / extends this block's keys and values (generation)."""
+        """cache: None (training), or a dict {"max": length} that holds this block's keys and values in preallocated
+        buffers (generation: each step writes one position instead of copying the whole cache)."""
         b, t, d = x.shape
         q, k, v = self.qkv(self.n1(x)).view(b, t, 3, self.heads, d // self.heads).permute(2, 0, 3, 1, 4)
         causal = True
         if cache is not None:
-            if "k" in cache:
-                k, v = torch.cat([cache["k"], k], 2), torch.cat([cache["v"], v], 2)
-                causal = t > 1                      # one new query attends to every cached key
-            cache["k"], cache["v"] = k, v
+            if "k" not in cache:
+                cache["k"] = k.new_zeros(b, self.heads, cache["max"], d // self.heads)
+                cache["v"] = torch.zeros_like(cache["k"]); cache["n"] = 0
+            n0 = cache["n"]
+            cache["k"][:, :, n0:n0 + t], cache["v"][:, :, n0:n0 + t] = k, v
+            cache["n"] = n0 + t
+            k, v = cache["k"][:, :, :n0 + t], cache["v"][:, :, :n0 + t]
+            causal = t > 1                          # the prefix is causal; one new query attends to every cached key
         a = F.scaled_dot_product_attention(q, k, v, is_causal=causal, dropout_p=self.drop if self.training else 0.0)
         x = x + self.proj(a.transpose(1, 2).reshape(b, t, d))
         return x + self.mlp(self.n2(x))
@@ -90,34 +96,46 @@ class GPT(nn.Module):
         """Sample n continuations with a key-value cache (linear in length). `constraints`: optional list of n objects
         with allowed() -> set of token ids and step(token id); tokens outside the allowed set get zero probability."""
         x = torch.tensor([prefix] * n, device=device)
-        caches = [dict() for _ in self.blocks]
+        caches = [dict(max=self.c.ctx) for _ in self.blocks]
         logits = self(x, caches)[:, -1].float()
         out = [[] for _ in range(n)]
-        done = torch.zeros(n, dtype=torch.bool, device=device)
+        act = list(range(n))            # sequence held in each batch row
+        live = [True] * n               # per batch row: still generating
         pos = len(prefix)
         V = logits.shape[-1]
         for _ in range(min(max_new, self.c.ctx - len(prefix))):
             logits = logits / max(temperature, 1e-5)
-            if constraints is not None:
-                mask = torch.full((n, V), float("-inf"), device=device)
-                for r, c in enumerate(constraints):
-                    if not done[r]:
-                        mask[r, list(c.allowed())] = 0.0
-                mask[done, eos] = 0.0
-                logits = logits + mask
+            if constraints is not None:   # the mask is built on the host and sent in one copy
+                mask = np.full((len(act), V), -np.inf, dtype=np.float32)
+                for j, r in enumerate(act):
+                    if live[j]:
+                        mask[j, list(constraints[r].allowed())] = 0.0
+                    else:
+                        mask[j, eos] = 0.0
+                logits = logits + torch.from_numpy(mask).to(device, non_blocking=True)
             if top_k:
                 kth = torch.topk(logits, top_k).values[:, -1:]
                 logits = logits.masked_fill(logits < kth, float("-inf"))
             nxt = torch.multinomial(F.softmax(logits, -1), 1)
-            nxt[done] = eos
-            for r in range(n):
-                if not done[r]:
-                    tid = int(nxt[r]); out[r].append(tid)
-                    if constraints is not None and tid != eos:
-                        constraints[r].step(tid)
-            done |= nxt.squeeze(1) == eos
-            if done.all():
+            ids = nxt.squeeze(1).tolist()                    # one device sync per step
+            for j, (r, tid) in enumerate(zip(act, ids)):
+                if not live[j]:
+                    continue
+                out[r].append(tid)
+                if tid == eos:
+                    live[j] = False
+                elif constraints is not None:
+                    constraints[r].step(tid)
+            if not any(live):
                 break
+            dead = len(live) - sum(live)
+            if dead and dead * 4 >= len(live):             # drop finished rows once a quarter of the batch is done
+                keep = [j for j in range(len(act)) if live[j]]
+                idx = torch.tensor(keep, device=device)
+                for c in caches:
+                    c["k"], c["v"] = c["k"].index_select(0, idx), c["v"].index_select(0, idx)
+                nxt, act, live = nxt.index_select(0, idx), [act[j] for j in keep], [True] * len(keep)
+            nxt = torch.where(torch.tensor(live, device=device)[:, None], nxt, torch.full_like(nxt, eos))
             logits = self(nxt, caches, start=pos)[:, -1].float()
             pos += 1
         return out
