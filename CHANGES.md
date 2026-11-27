@@ -126,7 +126,9 @@ Not done: anything needing an LLM (semantic/hybrid generation, pass@k) - no API 
 - Track 1 evaluation (`genmodel-eval.yml`, `tools/genmodel_compare.py`, `tools/genmodel_stats.py`: subsampling
   intervals and pool-size curves): on 119 Rocket dev mutants the learned generators match the generator pools (44-45
   killed; best +1.5 [-1, +4] for the on-policy round), 17 vs 16 of the 30 published Rocket bugs (mix-up 9, which our
-  ext and LLM-template campaigns also find). `docs/TRACK1_GENERATOR.md`.
+  ext and LLM-template campaigns also find). BOOM (120 dev mutants, quirk-fixed samples): 46 generators, 47 small DPO
+  (+0.9 [-2, +4]), 46 base DPO; published 18 / 18 / 19 (C4, also found by our LLM-template campaign).
+  `docs/TRACK1_GENERATOR.md`.
 - Track 1 decoding: grammar-constrained sampling (100% of samples assemble vs 90.6-92.6% without), preallocated
   key-value cache and batch compaction (2.2-2.4x faster); T4 training in fp16 with loss scaling (emulated bf16 ran out
   of memory); base (85M) pretrained (validation 1.864 vs 1.869 for small: the corpus is at its entropy floor).

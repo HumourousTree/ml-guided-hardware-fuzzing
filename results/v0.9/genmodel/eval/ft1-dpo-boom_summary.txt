@@ -1,0 +1,61 @@
+pool boom: 720 programs kept, 5 dropped (assembly or Spike failure, or the bug-free core disagrees with Spike / does not stop)
+  samples_base_dpo_boom_base: {'samples': 120, 'kept': 120}
+  samples_base_dpo_boom_ext: {'samples': 121, 'kept': 120, 'reference_disagrees': 1}
+  samples_base_dpo_boom_llmflash: {'samples': 120, 'kept': 120}
+  samples_small_dpo_boom_base: {'samples': 120, 'kept': 120}
+  samples_small_dpo_boom_ext: {'samples': 120, 'kept': 120}
+  samples_small_dpo_boom_llmflash: {'samples': 124, 'kept': 120, 'spike': 4}
+
+== driver: learned generator (dev mutants)
+boom driver: 60 mutants (0 build errors), killed by any 35, unkilled 25
+   coverage by profile: {'samples_base_dpo_boom_base': 28, 'samples_base_dpo_boom_ext': 30, 'samples_base_dpo_boom_llmflash': 29, 'samples_small_dpo_boom_base': 29, 'samples_small_dpo_boom_ext': 30, 'samples_small_dpo_boom_llmflash': 30}  only this profile: {'samples_base_dpo_boom_base': 0, 'samples_base_dpo_boom_ext': 1, 'samples_base_dpo_boom_llmflash': 0, 'samples_small_dpo_boom_base': 0, 'samples_small_dpo_boom_ext': 0, 'samples_small_dpo_boom_llmflash': 1}
+   program kill rate: {'samples_base_dpo_boom_base': 0.2253, 'samples_base_dpo_boom_ext': 0.2304, 'samples_base_dpo_boom_llmflash': 0.2737, 'samples_small_dpo_boom_base': 0.2371, 'samples_small_dpo_boom_ext': 0.2407, 'samples_small_dpo_boom_llmflash': 0.2729}  detections: {'mismatch': 6694, 'hang': 3963}
+== driver: generator pools (same dev mutants)
+boom driver: 60 mutants (0 build errors), killed by any 33, unkilled 27
+   coverage by profile: {'base': 28, 'ext': 27, 'llmflash': 32}  only this profile: {'base': 1, 'ext': 0, 'llmflash': 4}
+   program kill rate: {'base': 0.2357, 'ext': 0.2385, 'llmflash': 0.2736}  detections: {'mismatch': 3390, 'hang': 1994}
+== multiplexer: learned generator (dev mutants)
+boom multiplexer: 60 mutants (0 build errors), killed by any 13, unkilled 47
+   coverage by profile: {'samples_base_dpo_boom_base': 7, 'samples_base_dpo_boom_ext': 11, 'samples_base_dpo_boom_llmflash': 9, 'samples_small_dpo_boom_base': 7, 'samples_small_dpo_boom_ext': 11, 'samples_small_dpo_boom_llmflash': 10}  only this profile: {'samples_base_dpo_boom_base': 0, 'samples_base_dpo_boom_ext': 0, 'samples_base_dpo_boom_llmflash': 0, 'samples_small_dpo_boom_base': 0, 'samples_small_dpo_boom_ext': 0, 'samples_small_dpo_boom_llmflash': 1}
+   program kill rate: {'samples_base_dpo_boom_base': 0.0879, 'samples_base_dpo_boom_ext': 0.0976, 'samples_base_dpo_boom_llmflash': 0.0861, 'samples_small_dpo_boom_base': 0.0881, 'samples_small_dpo_boom_ext': 0.0978, 'samples_small_dpo_boom_llmflash': 0.0862}  detections: {'hang': 3754, 'mismatch': 161}
+== multiplexer: generator pools (same dev mutants)
+boom multiplexer: 60 mutants (0 build errors), killed by any 13, unkilled 47
+   coverage by profile: {'base': 8, 'ext': 11, 'llmflash': 10}  only this profile: {'base': 0, 'ext': 3, 'llmflash': 2}
+   program kill rate: {'base': 0.0864, 'ext': 0.0969, 'llmflash': 0.0886}  detections: {'hang': 1886, 'mismatch': 72}
+== driver: learned generator (published Encarsia bugs, held out)
+boom driver: 15 mutants (0 build errors), killed by any 12, unkilled 3
+   coverage by profile: {'samples_base_dpo_boom_base': 12, 'samples_base_dpo_boom_ext': 12, 'samples_base_dpo_boom_llmflash': 10, 'samples_small_dpo_boom_base': 12, 'samples_small_dpo_boom_ext': 12, 'samples_small_dpo_boom_llmflash': 10}  only this profile: {'samples_base_dpo_boom_base': 0, 'samples_base_dpo_boom_ext': 0, 'samples_base_dpo_boom_llmflash': 0, 'samples_small_dpo_boom_base': 0, 'samples_small_dpo_boom_ext': 0, 'samples_small_dpo_boom_llmflash': 0}
+   program kill rate: {'samples_base_dpo_boom_base': 0.5211, 'samples_base_dpo_boom_ext': 0.5178, 'samples_base_dpo_boom_llmflash': 0.5256, 'samples_small_dpo_boom_base': 0.5561, 'samples_small_dpo_boom_ext': 0.5494, 'samples_small_dpo_boom_llmflash': 0.5517}  detections: {'hang': 3343, 'mismatch': 2456}
+== driver: generator pools (published Encarsia bugs)
+boom driver: 15 mutants (0 build errors), killed by any 12, unkilled 3
+   coverage by profile: {'base': 12, 'ext': 12, 'llmflash': 12}  only this profile: {'base': 0, 'ext': 0, 'llmflash': 0}
+   program kill rate: {'base': 0.5594, 'ext': 0.5333, 'llmflash': 0.5594}  detections: {'hang': 1740, 'mismatch': 1234}
+== multiplexer: learned generator (published Encarsia bugs, held out)
+boom multiplexer: 15 mutants (0 build errors), killed by any 7, unkilled 8
+   coverage by profile: {'samples_base_dpo_boom_base': 6, 'samples_base_dpo_boom_ext': 6, 'samples_base_dpo_boom_llmflash': 7, 'samples_small_dpo_boom_base': 6, 'samples_small_dpo_boom_ext': 6, 'samples_small_dpo_boom_llmflash': 6}  only this profile: {'samples_base_dpo_boom_base': 0, 'samples_base_dpo_boom_ext': 0, 'samples_base_dpo_boom_llmflash': 1, 'samples_small_dpo_boom_base': 0, 'samples_small_dpo_boom_ext': 0, 'samples_small_dpo_boom_llmflash': 0}
+   program kill rate: {'samples_base_dpo_boom_base': 0.1633, 'samples_base_dpo_boom_ext': 0.1622, 'samples_base_dpo_boom_llmflash': 0.1539, 'samples_small_dpo_boom_base': 0.1689, 'samples_small_dpo_boom_ext': 0.1683, 'samples_small_dpo_boom_llmflash': 0.1606}  detections: {'mismatch': 278, 'hang': 1481}
+== multiplexer: generator pools (published Encarsia bugs)
+boom multiplexer: 15 mutants (0 build errors), killed by any 6, unkilled 9
+   coverage by profile: {'base': 6, 'ext': 6, 'llmflash': 6}  only this profile: {'base': 0, 'ext': 0, 'llmflash': 0}
+   program kill rate: {'base': 0.1656, 'ext': 0.1672, 'llmflash': 0.17}  detections: {'mismatch': 164, 'hang': 741}
+== per model stage (union over profiles) vs the generator pools
+== driver / dev: 60 mutants labelled by both
+   group                  programs  killed  only this  (vs generators)
+   base_dpo                    360      34          2  missed 1
+   generators                  360      33           
+   small_dpo                   360      34          2  missed 1
+== driver / published: 15 mutants labelled by both
+   group                  programs  killed  only this  (vs generators)
+   base_dpo                    360      12          0  missed 0
+   generators                  360      12           
+   small_dpo                   360      12          0  missed 0
+== multiplexer / dev: 60 mutants labelled by both
+   group                  programs  killed  only this  (vs generators)
+   base_dpo                    360      12          0  missed 1
+   generators                  360      13           
+   small_dpo                   360      13          0  missed 0
+== multiplexer / published: 15 mutants labelled by both
+   group                  programs  killed  only this  (vs generators)
+   base_dpo                    360       7          1  missed 0
+   generators                  360       6           
+   small_dpo                   360       6          0  missed 0

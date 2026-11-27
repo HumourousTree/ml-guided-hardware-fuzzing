@@ -95,6 +95,20 @@ Cascade detects: two `base` samples kill it (pre and DPO-without-grammar, ext pr
 campaigns find it with ext (5/5 seeds, median 62 programs) and the LLM templates (3/5); it is only rare in a
 360-program pool.
 
+**Evaluation on BOOM** (round 1, quirk-fixed samples, run 46032275438). Same design: 120 dev mutants (60 driver, 60
+conditional) and the 30 published Encarsia BOOM bugs, quirk filter on for model and generators alike.
+
+| Stage | dev killed (of 120) | diff vs generators, 60/profile (95%) | published killed (of 30) |
+|---|---|---|---|
+| generators | 46 | | 18 |
+| small DPO | 47 | +0.9 [-2, +4] | 18 |
+| base DPO | 46 | -0.1 [-3, +3] | 19 |
+
+BOOM agrees with Rocket: no interval excludes 0 (kills per program and mutant: generators 0.170, small DPO 0.171).
+The extra published bug of base DPO is conditional C4 (`multiplexer/160`, `BranchKillableQueue_5`), killed by one
+sample of the LLM-template profile; it is not beyond our generators, since the Step 1 LLM-template campaign finds it on
+5/5 seeds.
+
 **On-policy round 1.** 720 samples per core from small DPO (half at temperature 1.0, half at 1.3), labelled against a
 fixed random 100 per core x kind of the train mutants that no generator program kills (`genmodel-onpolicy.yml`).
 Rocket: 2 such mutants killed (4 kills in 48,000 runs). BOOM: 25 (588 kills), but 21 of them needed `fsqrt`/`fdiv.d`,
