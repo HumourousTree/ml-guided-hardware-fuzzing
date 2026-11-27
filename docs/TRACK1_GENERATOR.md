@@ -53,6 +53,20 @@ for base / ext / LLM-template, matching the generators. The grammar removes the 
 so training ran in emulated bf16, which is slow (1.9 s per step even for `small`) and sends attention to the
 unfused kernel. Fixed (fp16 + loss scaling below compute capability 8); run 2 trains `base` only.
 
+**Fine-tuning, run 1** (`small`, Kaggle T4, 1 min of training in all). Data: 720 gated pool programs (Rocket and
+BOOM, 120 per core x profile), weighted by the training mutants they kill (477 training mutants have a killer), and
+1481 (killer, non-killer) pairs. SFT, 150 steps: train loss 1.88 -> 1.69, validation 2.146 -> 2.143. DPO, 200 steps:
+loss 0.69 -> 0.61. SFT shortens bodies (base 43 -> 34 lines); DPO brings them back (46).
+Grammar ablation, same DPO model: with the grammar 4608/4608 samples (pre, SFT, DPO x 2 cores x 3 profiles) assemble;
+without it 706/762 (92.6%; spliced operands, duplicate labels, out-of-range constants, a write to `x30`).
+Kill rates on dev mutants and on the published Encarsia bugs: `genmodel-eval.yml` (pool of 120 gate-passing samples
+per stage x profile, the same size as a generator profile).
+
+**Decoding speed.** The key-value cache is preallocated (one position written per step; the first version
+concatenated, which copies the cache every token), the grammar mask is built on the host and sent in one copy, the
+sampled tokens are read back once per step, and finished sequences leave the batch. On a CPU, 32 kill-conditioned ext
+bodies from `small`: 8.7 -> 4.0 s unconstrained, 10.6 -> 4.4 s with the grammar, so the grammar costs ~10%.
+
 ## Decoding: grammar-constrained, cached
 
 The model never has to "learn" what the assembler will reject. `rocket/genmodel/grammar.py` derives an ISA grammar
@@ -68,8 +82,10 @@ from the existing generators, separately for each profile:
   ends only when every reference is defined and every push popped.
 
 At each step, tokens outside the grammar get probability zero. The grammar accepts 956/956 unseen generator bodies,
-so it removes nothing the generators can produce. Bodies cut off by the context are closed (missing labels defined
-at the end, open pushes popped). Generation uses a key-value cache, which matches the full forward pass to within 1e-7.
+so it removes nothing the generators can produce (re-checked after every change; latest 774/774). A body cannot be
+empty. Bodies cut off by the context are closed (missing labels defined at the end, open pushes popped). Generation
+uses a key-value cache; cached and full-forward logits agree to fp32 rounding (both within 3e-4 of an fp64 forward,
+logits up to 21), also after finished rows are dropped.
 
 Measured on a 140k-parameter smoke-test model (CPU): 383/383 grammar-constrained samples assemble, against 0/127
 without the grammar; 128 bodies in about 4 s. The fine-tuning job samples the real models both ways (the grammar
