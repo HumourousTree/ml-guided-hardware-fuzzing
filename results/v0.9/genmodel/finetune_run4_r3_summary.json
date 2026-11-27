@@ -1,0 +1,248 @@
+{
+ "commit": "f78fcdc",
+ "gpus": [
+  "Tesla T4",
+  "Tesla T4"
+ ],
+ "round": "r3",
+ "models": {
+  "small_r3": {
+   "pretrained": "/kaggle/input/benchfuzz-ckpt/small_pre.pt",
+   "data": {
+    "cores": [
+     "boom",
+     "rocket"
+    ],
+    "weighting": "rarity",
+    "label_rows": {
+     "rocket/driver": 170400,
+     "rocket/multiplexer": 168960,
+     "boom/driver": 159400,
+     "boom/multiplexer": 159400
+    },
+    "sft_programs": 733,
+    "pairs": 1494,
+    "train_mutants_with_killers": 483,
+    "sft_programs_by_core_profile": {
+     "rocket/ext": 120,
+     "rocket/base": 122,
+     "rocket/llmflash": 122,
+     "boom/llmflash": 121,
+     "boom/base": 123,
+     "boom/ext": 125
+    }
+   },
+   "sft_rc": 0,
+   "dpo_rc": 0,
+   "samples": {
+    "dpo/rocket/base": {
+     "n": 256,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 39.28515625,
+     "grammar": true,
+     "gen_seconds": 6.4
+    },
+    "dpo/rocket/ext": {
+     "n": 256,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 51.28515625,
+     "grammar": true,
+     "gen_seconds": 7.7
+    },
+    "dpo/rocket/llmflash": {
+     "n": 256,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 83.18359375,
+     "grammar": true,
+     "gen_seconds": 14.7
+    },
+    "dpo/boom/base": {
+     "n": 256,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 39.4453125,
+     "grammar": true,
+     "gen_seconds": 6.2
+    },
+    "dpo/boom/ext": {
+     "n": 256,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 51.38671875,
+     "grammar": true,
+     "gen_seconds": 7.8
+    },
+    "dpo/boom/llmflash": {
+     "n": 256,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 82.7421875,
+     "grammar": true,
+     "gen_seconds": 15.6
+    }
+   },
+   "small_r3_sft.log.json": [
+    {
+     "step": 250,
+     "train_loss": 1.9062,
+     "val_loss": 2.1304,
+     "seconds": 39
+    },
+    {
+     "step": 275,
+     "train_loss": 1.9053,
+     "val_loss": 2.1309,
+     "seconds": 43
+    },
+    {
+     "step": 299,
+     "train_loss": 1.843,
+     "val_loss": 2.1305,
+     "seconds": 46
+    }
+   ],
+   "small_r3_dpo.log.json": [
+    {
+     "step": 250,
+     "dpo_loss": 0.4804,
+     "pref_acc": 0.875,
+     "seconds": 182
+    },
+    {
+     "step": 275,
+     "dpo_loss": 0.5573,
+     "pref_acc": 0.75,
+     "seconds": 200
+    },
+    {
+     "step": 299,
+     "dpo_loss": 0.5505,
+     "pref_acc": 0.719,
+     "seconds": 217
+    }
+   ]
+  },
+  "small_r3g": {
+   "pretrained": "/kaggle/input/benchfuzz-ckpt/small_pre.pt",
+   "data": {
+    "cores": [
+     "boom",
+     "rocket"
+    ],
+    "weighting": "rarity",
+    "label_rows": {
+     "rocket/driver": 122400,
+     "rocket/multiplexer": 120960,
+     "boom/driver": 122400,
+     "boom/multiplexer": 122400
+    },
+    "sft_programs": 720,
+    "pairs": 1481,
+    "train_mutants_with_killers": 477,
+    "sft_programs_by_core_profile": {
+     "rocket/ext": 120,
+     "rocket/base": 120,
+     "rocket/llmflash": 120,
+     "boom/llmflash": 120,
+     "boom/base": 120,
+     "boom/ext": 120
+    }
+   },
+   "sft_rc": 0,
+   "dpo_rc": 0,
+   "samples": {
+    "dpo/rocket/base": {
+     "n": 256,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 46.19921875,
+     "grammar": true,
+     "gen_seconds": 7.4
+    },
+    "dpo/rocket/ext": {
+     "n": 256,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 50.8828125,
+     "grammar": true,
+     "gen_seconds": 7.6
+    },
+    "dpo/rocket/llmflash": {
+     "n": 256,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 80.46875,
+     "grammar": true,
+     "gen_seconds": 16.1
+    },
+    "dpo/boom/base": {
+     "n": 256,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 46.14453125,
+     "grammar": true,
+     "gen_seconds": 7.3
+    },
+    "dpo/boom/ext": {
+     "n": 256,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 50.921875,
+     "grammar": true,
+     "gen_seconds": 7.6
+    },
+    "dpo/boom/llmflash": {
+     "n": 256,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 80.5234375,
+     "grammar": true,
+     "gen_seconds": 14.4
+    }
+   },
+   "small_r3g_sft.log.json": [
+    {
+     "step": 250,
+     "train_loss": 1.8565,
+     "val_loss": 2.1308,
+     "seconds": 42
+    },
+    {
+     "step": 275,
+     "train_loss": 1.9262,
+     "val_loss": 2.1303,
+     "seconds": 46
+    },
+    {
+     "step": 299,
+     "train_loss": 1.9545,
+     "val_loss": 2.1301,
+     "seconds": 50
+    }
+   ],
+   "small_r3g_dpo.log.json": [
+    {
+     "step": 250,
+     "dpo_loss": 0.5673,
+     "pref_acc": 0.688,
+     "seconds": 182
+    },
+    {
+     "step": 275,
+     "dpo_loss": 0.5322,
+     "pref_acc": 0.688,
+     "seconds": 200
+    },
+    {
+     "step": 299,
+     "dpo_loss": 0.4176,
+     "pref_acc": 0.875,
+     "seconds": 217
+    }
+   ]
+  }
+ }
+}
