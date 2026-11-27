@@ -61,7 +61,9 @@ def main():
     log = f"{W}/console.txt"
     summary = {"commit": commit, "gpus": gpu, "models": {}}
     if run([py, "-m", "rocket.genmodel.data", "sft", "--labels", "data/labels/rocket_driver_labels.jsonl.gz",
-            "data/labels/rocket_multiplexer_labels.jsonl.gz", "--pool", "data/labels/rocket_pool.json.gz",
+            "data/labels/rocket_multiplexer_labels.jsonl.gz", "data/labels/boom_driver_labels.jsonl.gz",
+            "data/labels/boom_multiplexer_labels.jsonl.gz", "--pool", "data/labels/rocket_pool.json.gz",
+            "data/labels/boom_pool.json.gz",
             "--out", "/tmp/sft.npz"], log):
         raise SystemExit("sft data build failed")
     summary["data"] = json.load(open("/tmp/sft.json"))
@@ -82,12 +84,12 @@ def main():
         for tag, ck, kill in (("pre", pre[0], False), ("sft", sft, True), ("dpo", dpo, True)):
             if not os.path.exists(ck):
                 continue
-            for prof in ("base", "ext", "llmflash"):
-                out = f"{W}/samples_{preset}_{tag}_rocket_{prof}.json"
-                run([py, "-m", "rocket.genmodel.sample", "--ckpt", ck, "--core", "rocket", "--profile", prof,
+            for core, prof in [(c, p) for c in ("rocket", "boom") for p in ("base", "ext", "llmflash")]:
+                out = f"{W}/samples_{preset}_{tag}_{core}_{prof}.json"
+                run([py, "-m", "rocket.genmodel.sample", "--ckpt", ck, "--core", core, "--profile", prof,
                      "--n", str(N_SAMPLES), "--seed", "7"] + (["--kill"] if kill else []) + ["--out", out], log)
                 if os.path.exists(out):
-                    st["samples"][f"{tag}/{prof}"] = json.load(open(out))["summary"]
+                    st["samples"][f"{tag}/{core}/{prof}"] = json.load(open(out))["summary"]
         for ck in (sft, dpo):
             lj = ck.replace(".pt", ".log.json")
             if os.path.exists(lj):
