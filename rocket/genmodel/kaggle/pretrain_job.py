@@ -14,7 +14,10 @@ REPO = "https://github.com/HumourousTree/ml-guided-hardware-fuzzing.git"
 BRANCH = "v0.4-evaluation"
 W = "/kaggle/working"
 N_SEQ = int(os.environ.get("BF_N", "400000"))
-STAGES = [("small", 6000, 32, 1e-3), ("base", 8000, 32, 3e-4)]
+# (preset, steps, micro-batch, accumulation, lr). Run 1 (commit ae942f2) trained small: 6000 steps, val loss flat
+# at 1.87 from step ~3000 (the generators' entropy), so base gets 5000 steps; micro-batch 16 x 2 fits a T4 in fp16.
+STAGES = [(p, *s) for p, s in {"small": (6000, 32, 1, 1e-3), "base": (5000, 16, 2, 3e-4)}.items()
+          if p in os.environ.get("BF_STAGES", "base").split(",")]
 
 
 def run(cmd, log):
@@ -68,10 +71,11 @@ def main():
     if run([py, "-m", "rocket.genmodel.data", "pretrain", "--n", str(N_SEQ), "--out", "/tmp/pre.npz"], log):
         raise SystemExit("data build failed")
     summary["data"] = json.load(open("/tmp/pre.json"))
-    for preset, steps, bs, lr in STAGES:
+    for preset, steps, bs, accum, lr in STAGES:
         ck = f"{W}/{preset}_pre.pt"
         rc = run([py, "-m", "rocket.genmodel.train", "pretrain", "--data", "/tmp/pre.npz", "--preset", preset,
-                  "--steps", str(steps), "--bs", str(bs), "--lr", str(lr), "--warmup", "300", "--eval-every", "250",
+                  "--steps", str(steps), "--bs", str(bs), "--accum", str(accum), "--lr", str(lr), "--warmup", "300",
+                  "--eval-every", "250",
                   "--out", ck], log)
         st = {"rc": rc}
         if os.path.exists(ck.replace(".pt", ".log.json")):
