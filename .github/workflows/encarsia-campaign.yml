@@ -14,12 +14,13 @@ on:
       calibrate: {description: "calibration programs per reference", required: true, default: "500"}
       shards: {description: "parallel runners (1-20)", required: true, default: "20"}
       quirks: {description: "filter: substitute known core-vs-Spike differences; gate: test them, re-checking every mismatch on the bug-free core", required: false, default: filter, type: choice, options: [filter, gate]}
+      coverage: {description: "coverage feedback: none, or toggle1 (toggle coverage of 1-bit signals of the bug-free core; corpus + block mutation)", required: false, default: none, type: choice, options: [none, toggle1]}
 
 permissions:
   contents: read
 
 concurrency:
-  group: encarsia-${{ inputs.core }}-${{ inputs.profile }}-${{ inputs.quirks }}
+  group: encarsia-${{ inputs.core }}-${{ inputs.profile }}-${{ inputs.quirks }}-${{ inputs.coverage }}
   cancel-in-progress: false
 
 jobs:
@@ -68,6 +69,7 @@ jobs:
       credentials: {username: "${{ github.actor }}", password: "${{ secrets.GITHUB_TOKEN }}"}
     env:
       BENCHFUZZ_QUIRKS: ${{ inputs.quirks }}
+      BENCHFUZZ_COVERAGE: ${{ inputs.coverage != 'none' && inputs.coverage || '' }}
     steps:
       - uses: actions/checkout@v4
       - name: Run shard
@@ -79,7 +81,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: shard-${{ inputs.core }}-${{ inputs.profile }}-${{ inputs.quirks }}-${{ matrix.shard }}
+          name: shard-${{ inputs.core }}-${{ inputs.profile }}-${{ inputs.quirks }}-${{ inputs.coverage }}-${{ matrix.shard }}
           path: logs/bench/${{ inputs.core }}/
           if-no-files-found: warn
 
@@ -94,15 +96,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
-        with: {pattern: "shard-${{ inputs.core }}-${{ inputs.profile }}-${{ inputs.quirks }}-*", path: shards}
+        with: {pattern: "shard-${{ inputs.core }}-${{ inputs.profile }}-${{ inputs.quirks }}-${{ inputs.coverage }}-*", path: shards}
       - name: Merge and validate
         env:
           BENCHFUZZ_QUIRKS: ${{ inputs.quirks }}
+          BENCHFUZZ_COVERAGE: ${{ inputs.coverage != 'none' && inputs.coverage || '' }}
         run: |
           [ -e "$HOME/ext" ] || ln -s /root/ext "$HOME/ext"
           python3 rocket/merge_shards.py --core ${{ inputs.core }} --profile ${{ inputs.profile }} shards/*
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: merged-${{ inputs.core }}-${{ inputs.profile }}-${{ inputs.quirks }}
+          name: merged-${{ inputs.core }}-${{ inputs.profile }}-${{ inputs.quirks }}-${{ inputs.coverage }}
           path: logs/bench/${{ inputs.core }}/
