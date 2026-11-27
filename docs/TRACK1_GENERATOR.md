@@ -80,6 +80,12 @@ independent generator pool of the same size.
 | small pre / SFT / DPO | 45 / 45 / 45 | +1.6 [-1, +4] / +0.7 [-2, +3] / +1.0 [-2, +3] | 16 / 16 / 16 |
 | base pre / SFT / DPO | 44 / 45 / 45 | +0.9 [-1, +3] / +1.2 [-1, +3] / +1.0 [-1, +3] | 17 / 16 / 16 |
 | DPO without grammar (small / base) | 43 / 44 | -0.1 [-2, +2] / +0.3 [-2, +2] | 16 / 17 |
+| round 2: on-policy + rarity (small_op1) | 45 | +1.5 [-1, +4] | 17 |
+| round 2: rarity only (small_rar) | 44 | +0.5 [-2, +3] | 16 |
+
+Round 2 (run 46023954014) trained before the two harness fixes below. The on-policy model has the best pool-size curve
+so far (about 1.3 mutants ahead of the generators at 40 programs per profile); rarity weighting alone adds nothing, so
+the small gain comes from the model's own kills. No interval excludes 0.
 
 The learned generator matches the generators; every interval includes 0, so there is no significant gain, and
 fine-tuning on kills changes little (kills per program and mutant: generators 0.212, small DPO 0.214). The one
@@ -110,6 +116,33 @@ it too).
 instructions with `dyn` rounding while `frm` is invalid is riscv-boom#752 (open; also #492, found before by DifuzzRTL
 and MorFuzz), and the PicoRV32 FENCE `rd` write is picorv32#293 (closed; the repository is archived). Nothing new
 to file. The injector bug was filed as encarsia-yosys#1.
+
+**Bug-targeted generation (round 4, 2026-11-28).** Idea: tell the model where the bug is, so it writes programs for
+that part of the core.
+* Locations: `rocket/locate_mutants.py` diffs each mutant against its own bug-free reference netlist (driver: the
+  rewired `connect` and the lines that read the exposed wire; conditional: the `$amt` cell whose truth table changed
+  and its ports). Published bugs: 60/60 located (`data/mutants/published_locations.json`). Factory mutants
+  (`locate-mutants.yml`, run 46055843112): the regenerated netlists match all 1,595 manifest hashes, 1,577 located.
+  41 location classes (module name without the Chisel instance suffix, >= 5 train mutants), `rocket/genmodel/modules.json`.
+* Model: one `ctl:mod:<class>` control token per class (plus `other`), appended after the existing tokens; a
+  pretrained checkpoint's embedding is grown (`GPT.grow_vocab`: old logits unchanged, max diff 0.0). Targeted data
+  (`data.py sft --targeted`): each killer also appears with the token of the classes of the train mutants it kills,
+  weighted by those kills only; DPO pairs carry the mutant's token. Round 4 (`small_tgt`, Kaggle, 25 min): 733 killer
+  programs -> 10,783 sequences, 1,494 pairs; SFT 800 steps (val 1.91), DPO 300 (loss 0.51, preference accuracy 0.75).
+* Result: **the token is barely used.** Conditioning on the right class changes the log-likelihood of a whole killer
+  body by +-0.05 nats (SFT; DPO: -0.15 to -0.36, the same on random bodies), and the samples' instruction mix is the
+  same for every class (e.g. compressed instructions 15-17% for every Rocket class incl. RVCExpander; mul/div 8.4-9.3%
+  for MulDiv and the rest). Classifier-free guidance (`generate(guidance=g)`, cond + g(cond - uncond)) does not recover
+  it: no consistent shift at g = 2, 4, 8, and bodies get shorter (44 -> 34 lines at g = 8)
+  (`tools/genmodel_token_diag.py`, `tools/genmodel_cfg_test.py`, `results/v0.9/genmodel/r4/`).
+* Why: the signal in the data is weak. Killers of a class's mutants differ from the pool only in frequency
+  (RVCExpander killers 19.7% compressed vs 12.9%; FDivSqrtUnit killers 2.2% `fdiv`/`fsqrt` vs 0.3%; FP-unit killers
+  14-27% FP vs 12%), and the same programs kill mutants of many classes (easy mutants are killed by most of the pool).
+  Keeping only the killers of hard mutants (<= 25% or 10% of the pool) does not sharpen it. Programs sampled from
+  random generators are not location-specific, so a model trained on their kills cannot learn location from them.
+  A location-aware generator needs location-specific training programs (programs that cover the module, or that are written for it).
+* The kill-rate evaluation still runs as the definitive test (Rocket, targeted samples labelled only against the
+  mutants of their class, `genmodel-eval.yml match_class=true`, run 46063024035; untargeted control 46063027788).
 
 **Decoding speed.** The key-value cache is preallocated (one position written per step; the first version
 concatenated, which copies the cache every token), the grammar mask is built on the host and sent in one copy, the

@@ -208,10 +208,25 @@ decoded from the glyph positions of the tables, and the decoder reproduces the R
   programs up to the formerly substituted lines. First result (local, LLM-template profile): **BOOM mix-up 3**, an FP
   division whose result is zero, missed by DifuzzRTL, ProcessorFuzz, Cascade and every filtered BenchFuzz run, is
   detected on **5/5 seeds** after 29, 7, 19, 5 and 2 programs (filter: 0 of 400); one program was rejected because the
-  bug-free BOOM disagreed with Spike. Full gate-mode campaigns on all 30 BOOM bugs (base, ext, LLM templates): GitHub
-  Actions runs 46040906083, 46040910415, 46040916021.
-* No BOOM bug is found by us and missed by all three; ext adds nothing on BOOM (unlike Rocket). Only 6 of 15 BOOM
-  conditionals are found by anyone: the rest are in the branch queues, the CSR file and the reorder buffer.
+  bug-free BOOM disagreed with Spike. Full gate-mode campaigns on all 30 BOOM bugs, 5 seeds each (GitHub Actions runs
+  46040910415 base, 46040916021 ext, 46040906083 LLM templates; `results/v0.9/gate/boom/`, `tools/gate_compare.py`):
+
+  | profile (programs/seed) | filter: bugs (mix/cond) | gate: bugs (mix/cond) |
+  |---|---|---|
+  | base (2,000) | 18 (12/6) | 19 (13/6) |
+  | ext (400) | 18 (12/6) | 19 (13/6) |
+  | LLM templates (400) | 19 (12/7) | 20 (13/7) |
+  | union | 19 (12/7) | **20 (13/7)** |
+
+  Mix-up 3 is found on 5/5 seeds in every profile (first detection after 16-515 base, 3-386 ext, 2-29 LLM-template
+  programs); nothing the filter found is lost. All 290 gate-mode detections replay-confirmed. The price is 2.4-2.8% of
+  programs skipped because the bug-free BOOM disagrees with Spike on them (counted, never reported). Counting replay-
+  confirmed detections only matters here: the filtered runs' raw first detections include 16 BOOM `llm` detections (and
+  one llmflash detection of conditional 727) that replay rejected.
+* With the filter, no BOOM bug was found by us and missed by all three published fuzzers in the random and ext
+  profiles; LLM templates add conditional C4 and gate mode adds mix-up 3, so **2** BOOM bugs are beyond DifuzzRTL,
+  ProcessorFuzz and Cascade. ext adds nothing on BOOM (unlike Rocket). Only 7 of 15 BOOM conditionals are found by
+  anyone (6 by the published fuzzers, C4 by us): the rest are in the branch queues, the CSR file and the reorder buffer.
 
 ## Step 2: LLM-guided generation on Rocket and BOOM (2026-11-26)
 

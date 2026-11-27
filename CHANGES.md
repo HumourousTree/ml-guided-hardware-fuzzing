@@ -115,6 +115,33 @@ Not done: anything needing an LLM (semantic/hybrid generation, pass@k) - no API 
 - The paper text moved to the Overleaf repo HumourousTree/Hardware-Fuzzing; `paper/` here holds only the generated tables,
   macros and figures (`tools/compare_literature.py --tex` checks the Overleaf copy for undefined macros).
 
+# v0.10 (2026-11-28: gate mode, Track 1 evaluation and rounds 2-4, bug-targeted generation)
+- **Gate mode** (`BENCHFUZZ_QUIRKS=gate`, `rv64fuzz.campaign(ref_sim=...)`, `encarsia-campaign.yml quirks=gate`): instead
+  of replacing the instructions on which a bug-free core and Spike disagree, every mismatch is re-run at once on the
+  bug's bug-free core and counts only if that core agrees with Spike. BOOM, all 30 bugs x 3 profiles x 5 seeds: **20/30
+  (13 mix-ups, 7 conditionals) vs 19/30 with the filter**; mix-up 3 (FP division/sqrt, `driver/137`), missed by every
+  published fuzzer, is found on 5/5 seeds in every profile; nothing lost; 290/290 detections replay-confirmed; 2.4-2.8%
+  of programs skipped as reference disagreements. Beyond all published fuzzers on BOOM: 2 (C4, M3).
+  `results/v0.9/gate/boom/`, `tools/gate_compare.py` (replay-confirmed detections only).
+- Track 1 evaluation (`genmodel-eval.yml`, `tools/genmodel_compare.py`, `tools/genmodel_stats.py`: subsampling
+  intervals and pool-size curves): on 119 Rocket dev mutants the learned generators match the generator pools (44-45
+  killed; best +1.5 [-1, +4] for the on-policy round), 17 vs 16 of the 30 published Rocket bugs (mix-up 9, which our
+  ext and LLM-template campaigns also find). `docs/TRACK1_GENERATOR.md`.
+- Track 1 decoding: grammar-constrained sampling (100% of samples assemble vs 90.6-92.6% without), preallocated
+  key-value cache and batch compaction (2.2-2.4x faster); T4 training in fp16 with loss scaling (emulated bf16 ran out
+  of memory); base (85M) pretrained (validation 1.864 vs 1.869 for small: the corpus is at its entropy floor).
+- Track 1 rounds: on-policy labels (`genmodel-onpolicy.yml`, `label --only-unkilled --max-mutants`), rarity weighting,
+  DPO batch 32 (round 3), `label-list.yml` for named mutants x program slices.
+- Two harness bugs fixed: learned bodies did not get the core quirk filter (BOOM samples used `fdiv.d`/`fsqrt`;
+  re-wrapped, confounded runs cancelled), and `body_from_asm` cut the front off ~20% of generator-pool training bodies.
+- **Bug-targeted generation** (#3; `rocket/locate_mutants.py`, `locate-mutants.yml`, `ctl:mod` location tokens,
+  `GPT.grow_vocab`, `data.py sft --targeted`, `sample.py --module`, classifier-free guidance, `label --match-class`):
+  every mutant located (60/60 published, 1,577/1,595 factory, all netlist hashes reproduced); round 4 trained, but the
+  model barely uses the location token (+-0.05 nats per body, unchanged instruction mix, guidance does not help),
+  because kills of random-pool programs carry little location signal. Kill-rate evaluation on Rocket running.
+- Local toolchain: Docker in WSL with the CI image (`ghcr.io/.../encarsia-env`), so labelling and mutant
+  regeneration can run on the laptop as well as on GitHub Actions.
+
 # v0.9 (2026-11-26: Track 1 data/model pipeline, Track 2 dual-hart system)
 - Track 1, mutant factory (`rocket/mutant_factory.py`, workflow `mutant-factory.yml`): Encarsia's own injection passes
   (encarsia-yosys built into the toolchain image) generate training mutants; published bugs are held out; one mutant per
