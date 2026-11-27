@@ -1,0 +1,7 @@
+small_tgt_sft.pt ctl:mod:RVCExpander: mean logp gain of the class token on its killers +0.03, on random bodies -0.03 nats
+small_tgt_sft.pt ctl:mod:CSRFile: mean logp gain of the class token on its killers +0.05, on random bodies -0.04 nats
+small_tgt_sft.pt ctl:mod:MulDiv: mean logp gain of the class token on its killers -0.08, on random bodies -0.04 nats
+small_tgt_dpo.pt ctl:mod:RVCExpander: mean logp gain of the class token on its killers -0.29, on random bodies -0.24 nats
+small_tgt_dpo.pt ctl:mod:CSRFile: mean logp gain of the class token on its killers -0.36, on random bodies -0.30 nats
+small_tgt_dpo.pt ctl:mod:MulDiv: mean logp gain of the class token on its killers -0.15, on random bodies -0.33 nats
+SFT rvc share (ext): none 18.1 | RVCExpander 18.0 | other 17.8

@@ -1,0 +1,1108 @@
+{
+ "commit": "2ce2a4a",
+ "gpus": [
+  "Tesla T4",
+  "Tesla T4"
+ ],
+ "round": "r4",
+ "models": {
+  "small_tgt": {
+   "pretrained": "/kaggle/input/benchfuzz-ckpt/small_pre.pt",
+   "data": {
+    "cores": [
+     "boom",
+     "rocket"
+    ],
+    "weighting": "rarity",
+    "label_rows": {
+     "rocket/driver": 170400,
+     "rocket/multiplexer": 168960,
+     "boom/driver": 159400,
+     "boom/multiplexer": 159400
+    },
+    "sft_programs": 733,
+    "sft_sequences": 10783,
+    "targeted": true,
+    "targeted_by_module": {
+     "ctl:mod:MulDiv": 678,
+     "ctl:mod:ALU": 720,
+     "ctl:mod:IBuf": 360,
+     "ctl:mod:RVCExpander": 364,
+     "ctl:mod:Rocket": 360,
+     "ctl:mod:CSRFile": 651,
+     "ctl:mod:BreakpointUnit": 360,
+     "ctl:mod:IssueUnitCollapsing": 360,
+     "ctl:mod:MulAddRecFNToRaw_preMul": 117,
+     "ctl:mod:RoundAnyRawFNToRecFN": 227,
+     "ctl:mod:other": 367,
+     "ctl:mod:Arbiter": 360,
+     "ctl:mod:RegisterReadDecode": 360,
+     "ctl:mod:RenameBusyTable": 360,
+     "ctl:mod:FpPipeline": 44,
+     "ctl:mod:FPToFP": 166,
+     "ctl:mod:PipelinedMulUnit": 248,
+     "ctl:mod:IssueSlot": 360,
+     "ctl:mod:MulAddRecFNPipe": 226,
+     "ctl:mod:PipelinedMultiplier": 138,
+     "ctl:mod:RenameFreeList": 360,
+     "ctl:mod:BranchMaskGenerationLogic": 19,
+     "ctl:mod:RecFNToIN": 25,
+     "ctl:mod:ALUExeUnit": 360,
+     "ctl:mod:Rob": 360,
+     "ctl:mod:RoundRawFNToRecFN": 360,
+     "ctl:mod:MulAddRecFNToRaw_postMul": 110,
+     "ctl:mod:BoomCore": 360,
+     "ctl:mod:RegisterFileSynthesizable": 360,
+     "ctl:mod:FDivSqrtUnit": 46,
+     "ctl:mod:FPUUnit": 5,
+     "ctl:mod:RegisterRead": 360,
+     "ctl:mod:DivSqrtRecF64ToRaw_mulAddZ31": 11,
+     "ctl:mod:ALUUnit": 360,
+     "ctl:mod:INToRecFN": 29,
+     "ctl:mod:DivSqrtRecF64_mulAddZ31": 24,
+     "ctl:mod:BranchKillableQueue": 5,
+     "ctl:mod:RecFNToRecFN": 24,
+     "ctl:mod:UOPCodeFDivDecoder": 46
+    },
+    "pairs": 1494,
+    "train_mutants_with_killers": 483,
+    "sft_programs_by_core_profile": {
+     "rocket/base": 122,
+     "rocket/ext": 120,
+     "rocket/llmflash": 122,
+     "boom/llmflash": 121,
+     "boom/base": 123,
+     "boom/ext": 125
+    }
+   },
+   "sft_rc": 0,
+   "dpo_rc": 0,
+   "samples": {
+    "dpo/rocket/base": {
+     "n": 256,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 40.0234375,
+     "grammar": true,
+     "gen_seconds": 7.1
+    },
+    "dpo/rocket/ext": {
+     "n": 256,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.20703125,
+     "grammar": true,
+     "gen_seconds": 7.3
+    },
+    "dpo/rocket/llmflash": {
+     "n": 256,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 76.9296875,
+     "grammar": true,
+     "gen_seconds": 16.2
+    },
+    "dpo/boom/base": {
+     "n": 256,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 40.10546875,
+     "grammar": true,
+     "gen_seconds": 6.7
+    },
+    "dpo/boom/ext": {
+     "n": 256,
+     "decoded": 1.0,
+     "static_ok": 0.99609375,
+     "mean_lines": 49.12109375,
+     "grammar": true,
+     "gen_seconds": 7.6
+    },
+    "dpo/boom/llmflash": {
+     "n": 256,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 78.296875,
+     "grammar": true,
+     "gen_seconds": 17.6
+    },
+    "dpo@ALU/rocket/base": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 39.859375,
+     "grammar": true,
+     "gen_seconds": 2.0
+    },
+    "dpo@ALU/rocket/ext": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.328125,
+     "grammar": true,
+     "gen_seconds": 2.3
+    },
+    "dpo@ALU/rocket/llmflash": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 79.21875,
+     "grammar": true,
+     "gen_seconds": 4.8
+    },
+    "dpo@BreakpointUnit/rocket/base": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 39.8125,
+     "grammar": true,
+     "gen_seconds": 2.0
+    },
+    "dpo@BreakpointUnit/rocket/ext": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.65625,
+     "grammar": true,
+     "gen_seconds": 2.3
+    },
+    "dpo@BreakpointUnit/rocket/llmflash": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 87.46875,
+     "grammar": true,
+     "gen_seconds": 4.9
+    },
+    "dpo@CSRFile/rocket/base": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 39.765625,
+     "grammar": true,
+     "gen_seconds": 2.1
+    },
+    "dpo@CSRFile/rocket/ext": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.8125,
+     "grammar": true,
+     "gen_seconds": 2.3
+    },
+    "dpo@CSRFile/rocket/llmflash": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 80.140625,
+     "grammar": true,
+     "gen_seconds": 5.0
+    },
+    "dpo@IBuf/rocket/base": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 39.734375,
+     "grammar": true,
+     "gen_seconds": 2.1
+    },
+    "dpo@IBuf/rocket/ext": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.734375,
+     "grammar": true,
+     "gen_seconds": 2.3
+    },
+    "dpo@IBuf/rocket/llmflash": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 79.78125,
+     "grammar": true,
+     "gen_seconds": 4.7
+    },
+    "dpo@MulDiv/rocket/base": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 39.8125,
+     "grammar": true,
+     "gen_seconds": 2.0
+    },
+    "dpo@MulDiv/rocket/ext": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.625,
+     "grammar": true,
+     "gen_seconds": 2.2
+    },
+    "dpo@MulDiv/rocket/llmflash": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 79.4375,
+     "grammar": true,
+     "gen_seconds": 4.8
+    },
+    "dpo@RVCExpander/rocket/base": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 39.9375,
+     "grammar": true,
+     "gen_seconds": 2.2
+    },
+    "dpo@RVCExpander/rocket/ext": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.25,
+     "grammar": true,
+     "gen_seconds": 2.3
+    },
+    "dpo@RVCExpander/rocket/llmflash": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 84.515625,
+     "grammar": true,
+     "gen_seconds": 4.9
+    },
+    "dpo@Rocket/rocket/base": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 39.796875,
+     "grammar": true,
+     "gen_seconds": 2.1
+    },
+    "dpo@Rocket/rocket/ext": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.015625,
+     "grammar": true,
+     "gen_seconds": 2.1
+    },
+    "dpo@Rocket/rocket/llmflash": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 84.40625,
+     "grammar": true,
+     "gen_seconds": 4.8
+    },
+    "dpo@ALU/boom/base": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 39.734375,
+     "grammar": true,
+     "gen_seconds": 2.1
+    },
+    "dpo@ALU/boom/ext": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.6875,
+     "grammar": true,
+     "gen_seconds": 2.4
+    },
+    "dpo@ALU/boom/llmflash": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 80.5625,
+     "grammar": true,
+     "gen_seconds": 4.8
+    },
+    "dpo@ALUExeUnit/boom/base": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 39.765625,
+     "grammar": true,
+     "gen_seconds": 2.1
+    },
+    "dpo@ALUExeUnit/boom/ext": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.640625,
+     "grammar": true,
+     "gen_seconds": 2.2
+    },
+    "dpo@ALUExeUnit/boom/llmflash": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 75.609375,
+     "grammar": true,
+     "gen_seconds": 3.1
+    },
+    "dpo@ALUUnit/boom/base": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 40.140625,
+     "grammar": true,
+     "gen_seconds": 2.1
+    },
+    "dpo@ALUUnit/boom/ext": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.5625,
+     "grammar": true,
+     "gen_seconds": 2.2
+    },
+    "dpo@ALUUnit/boom/llmflash": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 74.890625,
+     "grammar": true,
+     "gen_seconds": 3.2
+    },
+    "dpo@Arbiter/boom/base": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 39.984375,
+     "grammar": true,
+     "gen_seconds": 2.0
+    },
+    "dpo@Arbiter/boom/ext": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.625,
+     "grammar": true,
+     "gen_seconds": 2.3
+    },
+    "dpo@Arbiter/boom/llmflash": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 76.90625,
+     "grammar": true,
+     "gen_seconds": 4.7
+    },
+    "dpo@BoomCore/boom/base": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 39.859375,
+     "grammar": true,
+     "gen_seconds": 2.1
+    },
+    "dpo@BoomCore/boom/ext": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.734375,
+     "grammar": true,
+     "gen_seconds": 2.4
+    },
+    "dpo@BoomCore/boom/llmflash": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 77.6875,
+     "grammar": true,
+     "gen_seconds": 4.8
+    },
+    "dpo@BranchKillableQueue/boom/base": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 39.984375,
+     "grammar": true,
+     "gen_seconds": 2.1
+    },
+    "dpo@BranchKillableQueue/boom/ext": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.453125,
+     "grammar": true,
+     "gen_seconds": 2.4
+    },
+    "dpo@BranchKillableQueue/boom/llmflash": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 77.1875,
+     "grammar": true,
+     "gen_seconds": 4.8
+    },
+    "dpo@BranchMaskGenerationLogic/boom/base": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 40.265625,
+     "grammar": true,
+     "gen_seconds": 2.2
+    },
+    "dpo@BranchMaskGenerationLogic/boom/ext": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.71875,
+     "grammar": true,
+     "gen_seconds": 2.3
+    },
+    "dpo@BranchMaskGenerationLogic/boom/llmflash": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 85.3125,
+     "grammar": true,
+     "gen_seconds": 5.1
+    },
+    "dpo@CSRFile/boom/base": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 39.828125,
+     "grammar": true,
+     "gen_seconds": 2.2
+    },
+    "dpo@CSRFile/boom/ext": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.40625,
+     "grammar": true,
+     "gen_seconds": 2.2
+    },
+    "dpo@CSRFile/boom/llmflash": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 80.328125,
+     "grammar": true,
+     "gen_seconds": 4.9
+    },
+    "dpo@DivSqrtRecF64ToRaw_mulAddZ31/boom/base": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 39.796875,
+     "grammar": true,
+     "gen_seconds": 2.0
+    },
+    "dpo@DivSqrtRecF64ToRaw_mulAddZ31/boom/ext": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.609375,
+     "grammar": true,
+     "gen_seconds": 2.2
+    },
+    "dpo@DivSqrtRecF64ToRaw_mulAddZ31/boom/llmflash": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 80.625,
+     "grammar": true,
+     "gen_seconds": 5.0
+    },
+    "dpo@DivSqrtRecF64_mulAddZ31/boom/base": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 39.65625,
+     "grammar": true,
+     "gen_seconds": 2.1
+    },
+    "dpo@DivSqrtRecF64_mulAddZ31/boom/ext": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.296875,
+     "grammar": true,
+     "gen_seconds": 2.3
+    },
+    "dpo@DivSqrtRecF64_mulAddZ31/boom/llmflash": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 77.3125,
+     "grammar": true,
+     "gen_seconds": 4.7
+    },
+    "dpo@FDivSqrtUnit/boom/base": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 39.640625,
+     "grammar": true,
+     "gen_seconds": 2.0
+    },
+    "dpo@FDivSqrtUnit/boom/ext": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.296875,
+     "grammar": true,
+     "gen_seconds": 2.3
+    },
+    "dpo@FDivSqrtUnit/boom/llmflash": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 78.484375,
+     "grammar": true,
+     "gen_seconds": 4.8
+    },
+    "dpo@FPToFP/boom/base": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 39.828125,
+     "grammar": true,
+     "gen_seconds": 2.0
+    },
+    "dpo@FPToFP/boom/ext": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.25,
+     "grammar": true,
+     "gen_seconds": 2.5
+    },
+    "dpo@FPToFP/boom/llmflash": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 75.359375,
+     "grammar": true,
+     "gen_seconds": 3.5
+    },
+    "dpo@FpPipeline/boom/base": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 39.890625,
+     "grammar": true,
+     "gen_seconds": 2.0
+    },
+    "dpo@FpPipeline/boom/ext": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.8125,
+     "grammar": true,
+     "gen_seconds": 2.4
+    },
+    "dpo@FpPipeline/boom/llmflash": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 75.640625,
+     "grammar": true,
+     "gen_seconds": 4.7
+    },
+    "dpo@INToRecFN/boom/base": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 39.6875,
+     "grammar": true,
+     "gen_seconds": 2.1
+    },
+    "dpo@INToRecFN/boom/ext": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.203125,
+     "grammar": true,
+     "gen_seconds": 2.3
+    },
+    "dpo@INToRecFN/boom/llmflash": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 75.234375,
+     "grammar": true,
+     "gen_seconds": 3.3
+    },
+    "dpo@IntToFP/boom/base": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 40.4375,
+     "grammar": true,
+     "gen_seconds": 2.2
+    },
+    "dpo@IntToFP/boom/ext": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.609375,
+     "grammar": true,
+     "gen_seconds": 2.3
+    },
+    "dpo@IntToFP/boom/llmflash": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 77.25,
+     "grammar": true,
+     "gen_seconds": 4.8
+    },
+    "dpo@IssueSlot/boom/base": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 39.765625,
+     "grammar": true,
+     "gen_seconds": 2.1
+    },
+    "dpo@IssueSlot/boom/ext": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.28125,
+     "grammar": true,
+     "gen_seconds": 2.2
+    },
+    "dpo@IssueSlot/boom/llmflash": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 78.390625,
+     "grammar": true,
+     "gen_seconds": 4.9
+    },
+    "dpo@IssueUnitCollapsing/boom/base": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 40.140625,
+     "grammar": true,
+     "gen_seconds": 2.1
+    },
+    "dpo@IssueUnitCollapsing/boom/ext": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.515625,
+     "grammar": true,
+     "gen_seconds": 2.3
+    },
+    "dpo@IssueUnitCollapsing/boom/llmflash": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 78.796875,
+     "grammar": true,
+     "gen_seconds": 5.0
+    },
+    "dpo@MulAddRecFNPipe/boom/base": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 39.75,
+     "grammar": true,
+     "gen_seconds": 2.1
+    },
+    "dpo@MulAddRecFNPipe/boom/ext": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.75,
+     "grammar": true,
+     "gen_seconds": 2.3
+    },
+    "dpo@MulAddRecFNPipe/boom/llmflash": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 77.59375,
+     "grammar": true,
+     "gen_seconds": 5.0
+    },
+    "dpo@MulAddRecFNToRaw_postMul/boom/base": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 39.984375,
+     "grammar": true,
+     "gen_seconds": 2.0
+    },
+    "dpo@MulAddRecFNToRaw_postMul/boom/ext": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.75,
+     "grammar": true,
+     "gen_seconds": 2.3
+    },
+    "dpo@MulAddRecFNToRaw_postMul/boom/llmflash": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 77.328125,
+     "grammar": true,
+     "gen_seconds": 4.9
+    },
+    "dpo@MulAddRecFNToRaw_preMul/boom/base": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 39.828125,
+     "grammar": true,
+     "gen_seconds": 2.1
+    },
+    "dpo@MulAddRecFNToRaw_preMul/boom/ext": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.625,
+     "grammar": true,
+     "gen_seconds": 2.3
+    },
+    "dpo@MulAddRecFNToRaw_preMul/boom/llmflash": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 75.6875,
+     "grammar": true,
+     "gen_seconds": 3.2
+    },
+    "dpo@MulDiv/boom/base": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 39.796875,
+     "grammar": true,
+     "gen_seconds": 2.0
+    },
+    "dpo@MulDiv/boom/ext": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.171875,
+     "grammar": true,
+     "gen_seconds": 2.3
+    },
+    "dpo@MulDiv/boom/llmflash": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 79.0,
+     "grammar": true,
+     "gen_seconds": 5.0
+    },
+    "dpo@PipelinedMulUnit/boom/base": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 40.1875,
+     "grammar": true,
+     "gen_seconds": 2.1
+    },
+    "dpo@PipelinedMulUnit/boom/ext": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.09375,
+     "grammar": true,
+     "gen_seconds": 2.3
+    },
+    "dpo@PipelinedMulUnit/boom/llmflash": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 75.96875,
+     "grammar": true,
+     "gen_seconds": 5.0
+    },
+    "dpo@RecFNToIN/boom/base": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 40.109375,
+     "grammar": true,
+     "gen_seconds": 2.0
+    },
+    "dpo@RecFNToIN/boom/ext": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.453125,
+     "grammar": true,
+     "gen_seconds": 2.4
+    },
+    "dpo@RecFNToIN/boom/llmflash": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 77.984375,
+     "grammar": true,
+     "gen_seconds": 4.8
+    },
+    "dpo@RegisterFileSynthesizable/boom/base": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 39.96875,
+     "grammar": true,
+     "gen_seconds": 2.1
+    },
+    "dpo@RegisterFileSynthesizable/boom/ext": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.6875,
+     "grammar": true,
+     "gen_seconds": 2.3
+    },
+    "dpo@RegisterFileSynthesizable/boom/llmflash": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 75.6875,
+     "grammar": true,
+     "gen_seconds": 3.2
+    },
+    "dpo@RegisterRead/boom/base": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 39.875,
+     "grammar": true,
+     "gen_seconds": 2.0
+    },
+    "dpo@RegisterRead/boom/ext": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.359375,
+     "grammar": true,
+     "gen_seconds": 2.4
+    },
+    "dpo@RegisterRead/boom/llmflash": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 79.375,
+     "grammar": true,
+     "gen_seconds": 5.0
+    },
+    "dpo@RegisterReadDecode/boom/base": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 39.625,
+     "grammar": true,
+     "gen_seconds": 2.0
+    },
+    "dpo@RegisterReadDecode/boom/ext": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.78125,
+     "grammar": true,
+     "gen_seconds": 2.4
+    },
+    "dpo@RegisterReadDecode/boom/llmflash": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 77.65625,
+     "grammar": true,
+     "gen_seconds": 5.0
+    },
+    "dpo@RenameFreeList/boom/base": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 40.234375,
+     "grammar": true,
+     "gen_seconds": 2.1
+    },
+    "dpo@RenameFreeList/boom/ext": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.390625,
+     "grammar": true,
+     "gen_seconds": 2.3
+    },
+    "dpo@RenameFreeList/boom/llmflash": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 75.703125,
+     "grammar": true,
+     "gen_seconds": 3.3
+    },
+    "dpo@Rob/boom/base": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 39.703125,
+     "grammar": true,
+     "gen_seconds": 2.0
+    },
+    "dpo@Rob/boom/ext": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.453125,
+     "grammar": true,
+     "gen_seconds": 2.4
+    },
+    "dpo@Rob/boom/llmflash": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 77.671875,
+     "grammar": true,
+     "gen_seconds": 4.7
+    },
+    "dpo@RoundAnyRawFNToRecFN/boom/base": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 40.046875,
+     "grammar": true,
+     "gen_seconds": 2.1
+    },
+    "dpo@RoundAnyRawFNToRecFN/boom/ext": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.578125,
+     "grammar": true,
+     "gen_seconds": 2.2
+    },
+    "dpo@RoundAnyRawFNToRecFN/boom/llmflash": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 75.234375,
+     "grammar": true,
+     "gen_seconds": 3.1
+    },
+    "dpo@UOPCodeFDivDecoder/boom/base": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 39.78125,
+     "grammar": true,
+     "gen_seconds": 2.0
+    },
+    "dpo@UOPCodeFDivDecoder/boom/ext": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.359375,
+     "grammar": true,
+     "gen_seconds": 2.3
+    },
+    "dpo@UOPCodeFDivDecoder/boom/llmflash": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 81.5,
+     "grammar": true,
+     "gen_seconds": 5.0
+    },
+    "dpo@other/boom/base": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 39.9375,
+     "grammar": true,
+     "gen_seconds": 2.1
+    },
+    "dpo@other/boom/ext": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.578125,
+     "grammar": true,
+     "gen_seconds": 2.3
+    },
+    "dpo@other/boom/llmflash": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 77.4375,
+     "grammar": true,
+     "gen_seconds": 4.8
+    },
+    "dpo@rob_debug_inst_mem_ext/boom/base": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 39.9375,
+     "grammar": true,
+     "gen_seconds": 2.0
+    },
+    "dpo@rob_debug_inst_mem_ext/boom/ext": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 49.109375,
+     "grammar": true,
+     "gen_seconds": 2.3
+    },
+    "dpo@rob_debug_inst_mem_ext/boom/llmflash": {
+     "n": 64,
+     "decoded": 1.0,
+     "static_ok": 1.0,
+     "mean_lines": 85.140625,
+     "grammar": true,
+     "gen_seconds": 5.0
+    }
+   },
+   "small_tgt_sft.log.json": [
+    {
+     "step": 750,
+     "train_loss": 1.6695,
+     "val_loss": 1.9105,
+     "seconds": 124
+    },
+    {
+     "step": 775,
+     "train_loss": 1.7567,
+     "val_loss": 1.9094,
+     "seconds": 128
+    },
+    {
+     "step": 799,
+     "train_loss": 1.8657,
+     "val_loss": 1.9109,
+     "seconds": 132
+    }
+   ],
+   "small_tgt_dpo.log.json": [
+    {
+     "step": 250,
+     "dpo_loss": 0.3268,
+     "pref_acc": 0.906,
+     "seconds": 191
+    },
+    {
+     "step": 275,
+     "dpo_loss": 0.5548,
+     "pref_acc": 0.75,
+     "seconds": 209
+    },
+    {
+     "step": 299,
+     "dpo_loss": 0.506,
+     "pref_acc": 0.75,
+     "seconds": 227
+    }
+   ]
+  }
+ }
+}

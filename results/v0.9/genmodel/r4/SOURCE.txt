@@ -1,0 +1,5 @@
+Kaggle kernel subodhdalvi/benchfuzz-genmodel-finetune version 5 (BF_ROUND=r4, code commit 2ce2a4a, 2x T4): small_tgt =
+small_pre + SFT 800 steps (targeted data: 733 killer programs, 10,783 sequences incl. ctl:mod location tokens) + DPO 300
+steps (1,494 pairs, batch 32). Samples: data/genmodel/ft5-r4-{rocket,boom} (untargeted, 256/profile),
+data/genmodel/ft5-r4tgt-rocket (64/profile per location class), BOOM targeted samples not committed (kept on Kaggle output).
+diag_token_use.txt: tools/genmodel_token_diag.py; guidance scan: tools/genmodel_cfg_test.py (results in docs/TRACK1_GENERATOR.md).

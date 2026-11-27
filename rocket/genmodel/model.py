@@ -92,18 +92,30 @@ class GPT(nn.Module):
 
     @torch.no_grad()
     def generate(self, prefix: list[int], max_new: int, eos: int, temperature: float = 1.0, top_k: int = 0,
-                 n: int = 1, device: str = "cpu", constraints=None) -> list[list[int]]:
+                 n: int = 1, device: str = "cpu", constraints=None, uncond_prefix=None,
+                 guidance: float = 0.0) -> list[list[int]]:
         """Sample n continuations with a key-value cache (linear in length). `constraints`: optional list of n objects
-        with allowed() -> set of token ids and step(token id); tokens outside the allowed set get zero probability."""
+        with allowed() -> set of token ids and step(token id); tokens outside the allowed set get zero probability.
+        guidance > 0 (classifier-free guidance, bug-targeted sampling): a second stream runs the same tokens after
+        `uncond_prefix` (the prefix without its condition token) and the next-token log-probabilities become
+        cond + guidance * (cond - uncond), which amplifies what the condition token changes."""
         x = torch.tensor([prefix] * n, device=device)
         caches = [dict(max=self.c.ctx) for _ in self.blocks]
         logits = self(x, caches)[:, -1].float()
+        guided = guidance > 0 and uncond_prefix is not None
+        if guided:
+            ucaches = [dict(max=self.c.ctx) for _ in self.blocks]
+            ulogits = self(torch.tensor([uncond_prefix] * n, device=device), ucaches)[:, -1].float()
+            upos = len(uncond_prefix)
         out = [[] for _ in range(n)]
         act = list(range(n))            # sequence held in each batch row
         live = [True] * n               # per batch row: still generating
         pos = len(prefix)
         V = logits.shape[-1]
         for _ in range(min(max_new, self.c.ctx - len(prefix))):
+            if guided:
+                lc, lu = F.log_softmax(logits, -1), F.log_softmax(ulogits, -1)
+                logits = lc + guidance * (lc - lu)
             logits = logits / max(temperature, 1e-5)
             if constraints is not None:   # the mask is built on the host and sent in one copy
                 mask = np.full((len(act), V), -np.inf, dtype=np.float32)
@@ -132,12 +144,15 @@ class GPT(nn.Module):
             if dead and dead * 4 >= len(live):             # drop finished rows once a quarter of the batch is done
                 keep = [j for j in range(len(act)) if live[j]]
                 idx = torch.tensor(keep, device=device)
-                for c in caches:
+                for c in caches + (ucaches if guided else []):
                     c["k"], c["v"] = c["k"].index_select(0, idx), c["v"].index_select(0, idx)
                 nxt, act, live = nxt.index_select(0, idx), [act[j] for j in keep], [True] * len(keep)
             nxt = torch.where(torch.tensor(live, device=device)[:, None], nxt, torch.full_like(nxt, eos))
             logits = self(nxt, caches, start=pos)[:, -1].float()
             pos += 1
+            if guided:
+                ulogits = self(nxt, ucaches, start=upos)[:, -1].float()
+                upos += 1
         return out
 
     @torch.no_grad()
