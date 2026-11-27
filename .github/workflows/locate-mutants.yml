@@ -1,0 +1,69 @@
+# Track 1, bug-targeted generation: where each training/dev mutant is. Regenerates the mutants of the committed
+# manifests with the mutant factory (deterministic; every host-netlist hash must match the manifest), then
+# rocket/locate_mutants.py diffs each against its bug-free reference (module + signals). Manual trigger; no secrets.
+name: Locate mutants
+
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  image:
+    runs-on: ubuntu-latest
+    permissions: {contents: read, packages: write}
+    outputs:
+      image: ${{ steps.tag.outputs.image }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: tag
+        run: |
+          owner="${GITHUB_REPOSITORY_OWNER,,}"
+          echo "image=ghcr.io/${owner}/encarsia-env:${{ hashFiles('docker/encarsia/Dockerfile') }}" >> "$GITHUB_OUTPUT"
+      - name: Build the toolchain image if this version does not exist yet
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          if docker manifest inspect "${{ steps.tag.outputs.image }}" >/dev/null 2>&1; then exit 0; fi
+          docker build --label "org.opencontainers.image.source=https://github.com/${GITHUB_REPOSITORY}" \
+                       -t "${{ steps.tag.outputs.image }}" docker/encarsia
+          docker push "${{ steps.tag.outputs.image }}"
+
+  locate:
+    needs: image
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions: {contents: read, packages: read}
+    strategy:
+      fail-fast: false
+      matrix:
+        core: [rocket, boom]
+        kind: [driver, multiplexer]
+    container:
+      image: ${{ needs.image.outputs.image }}
+      credentials: {username: "${{ github.actor }}", password: "${{ secrets.GITHUB_TOKEN }}"}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Regenerate, check hashes, locate
+        run: |
+          [ -e "$HOME/ext" ] || ln -s /root/ext "$HOME/ext"
+          M=data/mutants/${{ matrix.core }}_${{ matrix.kind }}_manifest.json
+          n=$(python3 -c "import json; print(json.load(open('$M'))['num_bugs_requested'])")
+          python3 rocket/mutant_factory.py --core ${{ matrix.core }} --kind ${{ matrix.kind }} --num-bugs $n \
+            --sample 1 --out /tmp/regen
+          D=/tmp/regen/${{ matrix.core }}/${{ matrix.kind }}
+          python3 - "$M" "$D" ${{ matrix.kind }} <<'EOF'
+          import hashlib, json, sys
+          from pathlib import Path
+          m, d, kind = json.load(open(sys.argv[1])), Path(sys.argv[2]), sys.argv[3]
+          f = {"driver": "host_driver.rtlil", "multiplexer": "host_amt.rtlil"}[kind]
+          bad = [x["dir"] for x in m["mutants"] if hashlib.sha256((d / str(x["dir"]) / f).read_bytes()).hexdigest() != x["sha256"]]
+          print(f"{len(m['mutants']) - len(bad)}/{len(m['mutants'])} host netlists match the manifest")
+          sys.exit(1 if bad else 0)
+          EOF
+          python3 rocket/locate_mutants.py --core ${{ matrix.core }} --kind ${{ matrix.kind }} --dir "$D" --manifest "$M" \
+            --out ${{ matrix.core }}_${{ matrix.kind }}_locations.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: locations-${{ matrix.core }}-${{ matrix.kind }}
+          path: "*_locations.json"

@@ -1,0 +1,630 @@
+{
+ "rocket": {
+  "driver": {
+   "144": {
+    "modules": [
+     "MulDiv"
+    ],
+    "signals": [
+     "dividendMSB_hi_10",
+     "cmdMul"
+    ],
+    "lines": 2
+   },
+   "293": {
+    "modules": [
+     "ALU"
+    ],
+    "signals": [
+     "shin_T_60",
+     "io_in2"
+    ],
+    "lines": 6
+   },
+   "347": {
+    "modules": [
+     "ALU"
+    ],
+    "signals": [],
+    "lines": 6
+   },
+   "361": {
+    "modules": [
+     "ALU"
+    ],
+    "signals": [
+     "shin_T_60"
+    ],
+    "lines": 6
+   },
+   "640": {
+    "modules": [
+     "IBuf"
+    ],
+    "signals": [
+     "io_imem_bits_data",
+     "buf_replay"
+    ],
+    "lines": 6
+   },
+   "673": {
+    "modules": [
+     "IBuf"
+    ],
+    "signals": [
+     "io_inst_0_bits_inst_rd",
+     "icData_data",
+     "exp_io_out_rd"
+    ],
+    "lines": 2
+   },
+   "767": {
+    "modules": [
+     "RVCExpander"
+    ],
+    "signals": [
+     "io_out_T_50_rs3",
+     "io_out_T_2"
+    ],
+    "lines": 6
+   },
+   "774": {
+    "modules": [
+     "RVCExpander"
+    ],
+    "signals": [
+     "io_out_T_52_rd"
+    ],
+    "lines": 6
+   },
+   "804": {
+    "modules": [
+     "RVCExpander"
+    ],
+    "signals": [
+     "io_out_T_34_rs3",
+     "io_in"
+    ],
+    "lines": 2
+   },
+   "826": {
+    "modules": [
+     "RVCExpander"
+    ],
+    "signals": [
+     "io_out_T_28_rs3",
+     "io_out_T_40_rs1"
+    ],
+    "lines": 6
+   },
+   "832": {
+    "modules": [
+     "RVCExpander"
+    ],
+    "signals": [
+     "io_out_s_12_bits"
+    ],
+    "lines": 6
+   },
+   "858": {
+    "modules": [
+     "RVCExpander"
+    ],
+    "signals": [
+     "io_out_T_28_rs3"
+    ],
+    "lines": 6
+   },
+   "863": {
+    "modules": [
+     "RVCExpander"
+    ],
+    "signals": [
+     "io_out_s_T_93",
+     "io_out_T_2"
+    ],
+    "lines": 6
+   },
+   "1081": {
+    "modules": [
+     "Rocket"
+    ],
+    "signals": [
+     "id_ctrl_decoder_24",
+     "io_fpu_illegal_rm",
+     "id_ctrl_decoder_decoded_invMatrixOutputs"
+    ],
+    "lines": 2
+   },
+   "1094": {
+    "modules": [
+     "Rocket"
+    ],
+    "signals": [
+     "mem_reg_rs2_T_8",
+     "id_ctrl_decoder_decoded_T_118"
+    ],
+    "lines": 6
+   }
+  },
+  "multiplexer": {
+   "14": {
+    "modules": [
+     "CSRFile"
+    ],
+    "signals": [
+     "large_",
+     "reset",
+     "small_",
+     "reg_mcountinhibit"
+    ],
+    "lines": 8
+   },
+   "28": {
+    "modules": [
+     "CSRFile"
+    ],
+    "signals": [
+     "small_",
+     "reset",
+     "large_",
+     "reg_mcountinhibit"
+    ],
+    "lines": 8
+   },
+   "46": {
+    "modules": [
+     "CSRFile"
+    ],
+    "signals": [
+     "small_",
+     "reset",
+     "large_",
+     "reg_mcountinhibit"
+    ],
+    "lines": 8
+   },
+   "66": {
+    "modules": [
+     "CSRFile"
+    ],
+    "signals": [
+     "reg_mip_ssip",
+     "reg_mie"
+    ],
+    "lines": 8
+   },
+   "71": {
+    "modules": [
+     "CSRFile"
+    ],
+    "signals": [
+     "reg_mip_ssip",
+     "reg_mie"
+    ],
+    "lines": 8
+   },
+   "277": {
+    "modules": [
+     "CSRFile"
+    ],
+    "signals": [
+     "reg_mepc",
+     "reg_sepc"
+    ],
+    "lines": 8
+   },
+   "285": {
+    "modules": [
+     "CSRFile"
+    ],
+    "signals": [
+     "reg_fflags",
+     "io_fcsr_flags_valid"
+    ],
+    "lines": 5
+   },
+   "295": {
+    "modules": [
+     "CSRFile"
+    ],
+    "signals": [
+     "reg_fflags",
+     "io_fcsr_flags_valid"
+    ],
+    "lines": 5
+   },
+   "305": {
+    "modules": [
+     "CSRFile"
+    ],
+    "signals": [
+     "reg_fflags",
+     "io_fcsr_flags_valid"
+    ],
+    "lines": 5
+   },
+   "394": {
+    "modules": [
+     "CSRFile"
+    ],
+    "signals": [
+     "reg_sepc",
+     "reg_mepc"
+    ],
+    "lines": 8
+   },
+   "397": {
+    "modules": [
+     "CSRFile"
+    ],
+    "signals": [
+     "reg_sepc",
+     "reg_mepc"
+    ],
+    "lines": 8
+   },
+   "408": {
+    "modules": [
+     "IBuf"
+    ],
+    "signals": [
+     "nBufValid",
+     "io_inst_0_ready",
+     "io_kill",
+     "reset"
+    ],
+    "lines": 5
+   },
+   "588": {
+    "modules": [
+     "RVCExpander"
+    ],
+    "signals": [],
+    "lines": 5
+   },
+   "633": {
+    "modules": [
+     "Rocket"
+    ],
+    "signals": [
+     "id_reg_fence",
+     "reset"
+    ],
+    "lines": 5
+   },
+   "718": {
+    "modules": [
+     "Rocket"
+    ],
+    "signals": [
+     "mem_reg_inst",
+     "mem_reg_rvc",
+     "mem_ctrl_jal"
+    ],
+    "lines": 7
+   }
+  }
+ },
+ "boom": {
+  "driver": {
+   "27": {
+    "modules": [
+     "IssueSlot"
+    ],
+    "signals": [
+     "io_uop_dst_rtype",
+     "slot_uop_uopc",
+     "slot_uop_dst_rtype"
+    ],
+    "lines": 2
+   },
+   "56": {
+    "modules": [
+     "Arbiter_16"
+    ],
+    "signals": [
+     "io_in_0_valid",
+     "io_out_ready"
+    ],
+    "lines": 6
+   },
+   "137": {
+    "modules": [
+     "DivSqrtRecF64_mulAddZ31"
+    ],
+    "signals": [
+     "roundRawFNToRecFN_io_in_isZero",
+     "roundRawFNToRecFN_io_infiniteExc",
+     "divSqrtRecF64ToRaw_io_rawOut_isZero"
+    ],
+    "lines": 2
+   },
+   "148": {
+    "modules": [
+     "DivSqrtRecF64_mulAddZ31"
+    ],
+    "signals": [
+     "reset",
+     "divSqrtRecF64ToRaw_io_inReady_sqrt",
+     "divSqrtRecF64ToRaw_reset"
+    ],
+    "lines": 6
+   },
+   "228": {
+    "modules": [
+     "UOPCodeFDivDecoder"
+    ],
+    "signals": [
+     "decoder_decoded_orMatrixOutputs_T_3"
+    ],
+    "lines": 6
+   },
+   "589": {
+    "modules": [
+     "DivUnit"
+    ],
+    "signals": [
+     "div_clock",
+     "do_kill_T_1",
+     "clock"
+    ],
+    "lines": 2
+   },
+   "604": {
+    "modules": [
+     "MulDiv"
+    ],
+    "signals": [
+     "dividendMSB_lo_9",
+     "io_req_valid"
+    ],
+    "lines": 6
+   },
+   "657": {
+    "modules": [
+     "IntToFP"
+    ],
+    "signals": [
+     "mux_data_rawIn_expIn_1",
+     "mux_data_T_2"
+    ],
+    "lines": 2
+   },
+   "741": {
+    "modules": [
+     "PipelinedMulUnit"
+    ],
+    "signals": [
+     "r_valids_0_T_1",
+     "r_valids_1"
+    ],
+    "lines": 6
+   },
+   "787": {
+    "modules": [
+     "ALU"
+    ],
+    "signals": [
+     "shin_T_50",
+     "shout_l_T_53"
+    ],
+    "lines": 6
+   },
+   "954": {
+    "modules": [
+     "RegisterReadDecode_2"
+    ],
+    "signals": [
+     "rrd_cs_decoder_decoded_orMatrixOutputs_T_30",
+     "rrd_cs_decoder_decoded_T_32"
+    ],
+    "lines": 6
+   },
+   "990": {
+    "modules": [
+     "Arbiter_18"
+    ],
+    "signals": [
+     "io_in_1_bits_uop_rob_idx",
+     "io_in_0_bits_uop_is_amo"
+    ],
+    "lines": 6
+   },
+   "1028": {
+    "modules": [
+     "IssueUnitCollapsing_2"
+    ],
+    "signals": [
+     "slots_0_io_grant",
+     "issue_slots_3_uop_bypassable"
+    ],
+    "lines": 6
+   },
+   "1073": {
+    "modules": [
+     "RenameStage_1"
+    ],
+    "signals": [
+     "freelist_clock",
+     "r_uop_bypass_hits_rs2_0"
+    ],
+    "lines": 2
+   },
+   "1236": {
+    "modules": [
+     "RegisterRead"
+    ],
+    "signals": [
+     "rrd_uops_0_REG_rob_idx",
+     "rrd_rs1_data_0_REG"
+    ],
+    "lines": 2
+   }
+  },
+  "multiplexer": {
+   "3": {
+    "modules": [
+     "ALUUnit"
+    ],
+    "signals": [],
+    "lines": 5
+   },
+   "6": {
+    "modules": [
+     "ALUUnit"
+    ],
+    "signals": [],
+    "lines": 5
+   },
+   "137": {
+    "modules": [
+     "BranchKillableQueue_4"
+    ],
+    "signals": [
+     "reset",
+     "value",
+     "value_1"
+    ],
+    "lines": 8
+   },
+   "160": {
+    "modules": [
+     "BranchKillableQueue_5"
+    ],
+    "signals": [
+     "reset"
+    ],
+    "lines": 10
+   },
+   "168": {
+    "modules": [
+     "BranchKillableQueue_5"
+    ],
+    "signals": [
+     "reset",
+     "value_1",
+     "value"
+    ],
+    "lines": 8
+   },
+   "176": {
+    "modules": [
+     "BranchKillableQueue_5"
+    ],
+    "signals": [
+     "reset",
+     "value",
+     "value_1"
+    ],
+    "lines": 8
+   },
+   "187": {
+    "modules": [
+     "BranchMaskGenerationLogic"
+    ],
+    "signals": [
+     "branch_mask"
+    ],
+    "lines": 7
+   },
+   "195": {
+    "modules": [
+     "CSRFile"
+    ],
+    "signals": [
+     "small_1",
+     "reset",
+     "large_1",
+     "reg_mcountinhibit"
+    ],
+    "lines": 8
+   },
+   "200": {
+    "modules": [
+     "CSRFile"
+    ],
+    "signals": [
+     "large_3",
+     "large_2"
+    ],
+    "lines": 8
+   },
+   "513": {
+    "modules": [
+     "Rob"
+    ],
+    "signals": [
+     "rob_val_2",
+     "rob_val_0",
+     "io_enq_valids_0",
+     "reset"
+    ],
+    "lines": 8
+   },
+   "517": {
+    "modules": [
+     "Rob"
+    ],
+    "signals": [
+     "rob_val_2",
+     "rob_val_0",
+     "io_enq_valids_0",
+     "reset"
+    ],
+    "lines": 8
+   },
+   "530": {
+    "modules": [
+     "Rob"
+    ],
+    "signals": [
+     "rob_val_4",
+     "rob_val_0",
+     "io_enq_valids_0",
+     "reset"
+    ],
+    "lines": 10
+   },
+   "708": {
+    "modules": [
+     "Rob"
+    ],
+    "signals": [
+     "rob_state",
+     "REG_2",
+     "REG_1",
+     "reset"
+    ],
+    "lines": 5
+   },
+   "727": {
+    "modules": [
+     "Rob"
+    ],
+    "signals": [
+     "rob_exception_31",
+     "rob_exception_30",
+     "rob_exception_29",
+     "rob_exception_28",
+     "rob_exception_27",
+     "rob_exception_26",
+     "rob_exception_25",
+     "rob_exception_24",
+     "rob_exception_23",
+     "rob_exception_22",
+     "rob_exception_21",
+     "rob_exception_20"
+    ],
+    "lines": 8
+   },
+   "975": {
+    "modules": [
+     "RoundAnyRawFNToRecFN_4"
+    ],
+    "signals": [],
+    "lines": 7
+   }
+  }
+ }
+}
