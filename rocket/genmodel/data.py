@@ -85,7 +85,9 @@ def body_from_asm(asm: str) -> list[str]:
     """Cut the body out of a full program: after the prologue's last line (fsrmi, FP is always on in the pool) and
     before the epilogue's first write of x31 (the body never writes x31). ext's leading `.option rvc` is harness."""
     lines = asm.splitlines()
-    start = max(i for i, l in enumerate(lines) if l.strip().startswith("fsrmi x0,")) + 1
+    # the FIRST fsrmi: the prologue has exactly one, and bodies may contain their own (until 2026-11-28 this took the
+    # last one, which cut the front off ~20% of the generator-pool bodies used for SFT/DPO)
+    start = next(i for i, l in enumerate(lines) if l.strip().startswith("fsrmi x0,")) + 1
     end = next(i for i in range(start, len(lines)) if lines[i].strip().startswith("li x31,"))
     body = [l.strip() for l in lines[start:end] if l.strip()]
     return body[1:] if body[:1] == [".option rvc"] else body

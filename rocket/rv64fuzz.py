@@ -77,6 +77,23 @@ TEMPLATE_FILES = {"llm": "llm.json", "llmflash": "llm_flash.json"}
 TEMPLATE_RE = re.compile(r"\{(x[A-Z]|f[A-Z]|imm:-?\d+:-?\d+|off:(?:1|2|4|8)|label:[A-Z])\}")
 
 
+def apply_subst(lines: list[str], tsubst) -> list[str]:
+    """Core quirks (e.g. no FP division/sqrt on BOOM): replace the listed opcodes, keeping the operands."""
+    if not tsubst:
+        return lines
+    out = []
+    for l in lines:
+        op, _, rest = l.strip().partition(" ")
+        if op in tsubst:
+            ops = [o.strip() for o in rest.split(",")]
+            if op.startswith("fsqrt"):          # fsqrt rd, rs[, rm] -> fsgnj rd, rs, rs
+                l = f"{tsubst[op]} {ops[0]}, {ops[1]}, {ops[1]}"
+            else:
+                l = f"{tsubst[op]} {rest}"
+        out.append(l)
+    return out
+
+
 def expand_template(tpl: dict, rng: random.Random, top: int, uid: int, tsubst=None) -> list[str]:
     """One instance of a template: named registers {xA}.. (writable, consistent within the instance), {fA}.., {imm:LO:HI},
     {off:ALIGN} (offset into the 256-byte data region at x30), {label:A} (unique label). Compressed templates (rvc=True)
@@ -96,19 +113,7 @@ def expand_template(tpl: dict, rng: random.Random, top: int, uid: int, tsubst=No
             al = int(k[4:])
             return str(rng.randrange(0, DATA_DWORDS * 8 - 8 + 1, al))
         return f"T{uid}_{k[6:]}"
-    lines = [TEMPLATE_RE.sub(sub, l) for l in tpl["asm"]]
-    if tsubst:                                       # core quirks (e.g. no FP division/sqrt on BOOM)
-        out = []
-        for l in lines:
-            op, _, rest = l.strip().partition(" ")
-            if op in tsubst:
-                ops = [o.strip() for o in rest.split(",")]
-                if op.startswith("fsqrt"):          # fsqrt rd, rs[, rm] -> fsgnj rd, rs, rs
-                    l = f"{tsubst[op]} {ops[0]}, {ops[1]}, {ops[1]}"
-                else:
-                    l = f"{tsubst[op]} {rest}"
-            out.append(l)
-        lines = out
+    lines = apply_subst([TEMPLATE_RE.sub(sub, l) for l in tpl["asm"]], tsubst)
     if tpl.get("rvc"):
         return [".option push", ".option rvc"] + lines + [".option pop"]
     return lines
@@ -266,7 +271,14 @@ def gen_program(rng: random.Random, length: int, fp: bool = True, profile: str =
             body.append(".option pop")
         i += 1
     if body_given is not None:
-        body = [l.strip() for l in body_given if l.strip()]
+        # A given body (a learned generator's) obeys the same core quirks as the generator profile it stands for: on
+        # BOOM, LLM-template bodies get the template rule (no FP division or square root); base/ext bodies get the
+        # generator rule (no fdiv.d) and no square root, which those generators never emit. Without this, a model
+        # body could use instructions the generators are barred from (found 2026-11-28: 21 of 25 BOOM mutants first
+        # killed by model samples needed fsqrt/fdiv.d).
+        q = (template_subst or subst) if profile in ("llm", "llmflash") else \
+            {**subst, **{k: v for k, v in (template_subst or {}).items() if k.startswith("fsqrt")}}
+        body = apply_subst([l.strip() for l in body_given if l.strip()], q)
     raw_body = list(body)
     pro = ["  .section .text.init", "  .option norvc", "  .globl _start", "_start:", "  li x31, 0x6000", "  csrs mstatus, x31",
            "  la x30, data"]
