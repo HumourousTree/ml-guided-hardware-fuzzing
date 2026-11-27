@@ -153,6 +153,11 @@ def cmd_label(a):
                     hit.add(str(r["mutant"]))
         sel = [m for m in sel if str(m["dir"]) not in hit]
         print(f"{len(sel)} mutants not killed by {len(a.only_unkilled)} label file(s)", flush=True)
+    if a.only_mutants:      # named mutants only (filling in shards that hit the job time limit)
+        want = {s.strip() for s in a.only_mutants.split(",") if s.strip()}
+        sel = [m for m in sel if str(m["dir"]) in want]
+    if a.prog_of > 1:       # and only a slice of the pool, so a slow mutant can be spread over several runners
+        pool["programs"] = pool["programs"][a.prog_shard::a.prog_of]
     if a.max_mutants and len(sel) > a.max_mutants:   # a fixed random subset, the same on every shard
         sel = sorted(random.Random(f"{a.core}-{a.kind}-subset").sample(sel, a.max_mutants), key=lambda m: m["dir"])
     mine = [m for i, m in enumerate(sel) if i % a.of == a.shard]
@@ -204,6 +209,9 @@ def main():
     l.add_argument("--split", choices=["all", "train", "dev"], default="all", help="label only these mutants")
     l.add_argument("--only-unkilled", nargs="*", help="label only mutants no program in these label files kills")
     l.add_argument("--max-mutants", type=int, default=0, help="a fixed random subset of at most N of the selected mutants")
+    l.add_argument("--only-mutants", default="", help="comma-separated mutant dirs: label only these")
+    l.add_argument("--prog-shard", type=int, default=0); l.add_argument("--prog-of", type=int, default=1,
+                                                                        help="label only every prog-of-th pool program")
     l.add_argument("--mutants", default=str(Path.home() / "ext" / "mutants"))
     l.add_argument("--yosys", default=None, help="default: the injector build the factory used for this kind")
     a = ap.parse_args()

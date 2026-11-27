@@ -1,0 +1,78 @@
+# Fill in labels for named mutants (e.g. shards that hit the 350-minute job limit): each mutant x program slice is its
+# own job. The pool is a committed file or the pool artifact of an earlier run. Artifact "list-<tag>": labels.jsonl.
+# Manual trigger only; no secrets.
+name: Label named mutants
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag: {description: "name for the output artifact", required: true}
+      core: {description: "core", required: true, type: choice, options: [rocket, boom]}
+      kind: {description: "kind", required: true, type: choice, options: [driver, multiplexer]}
+      mutants: {description: "comma-separated mutant dirs", required: true}
+      set: {description: "dev (factory manifest) or published (EnCorpus)", required: true, type: choice, options: [dev, published]}
+      pool: {description: "committed pool path, or 'artifact'", required: true}
+      pool_run: {description: "run id whose artifact holds pool.json (pool = artifact)", required: false, default: ""}
+      pool_artifact: {description: "artifact name holding pool.json", required: false, default: ""}
+      prog_of: {description: "program slices per mutant", required: false, default: "4"}
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      image: ${{ steps.p.outputs.image }}
+      matrix: ${{ steps.p.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: p
+        run: |
+          owner="${GITHUB_REPOSITORY_OWNER,,}"
+          echo "image=ghcr.io/${owner}/encarsia-env:${{ hashFiles('docker/encarsia/Dockerfile') }}" >> "$GITHUB_OUTPUT"
+          python3 -c "
+          import json
+          ms = [m.strip() for m in '${{ inputs.mutants }}'.split(',') if m.strip()]
+          print('matrix=' + json.dumps({'include': [{'m': m, 's': s} for m in ms for s in range(int('${{ inputs.prog_of }}'))]}))
+          " >> "$GITHUB_OUTPUT"
+
+  label:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    permissions: {contents: read, packages: read, actions: read}
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
+    container:
+      image: ${{ needs.plan.outputs.image }}
+      credentials: {username: "${{ github.actor }}", password: "${{ secrets.GITHUB_TOKEN }}"}
+    steps:
+      - uses: actions/checkout@v4
+      - if: inputs.pool == 'artifact'
+        uses: actions/download-artifact@v4
+        with: {name: "${{ inputs.pool_artifact }}", run-id: "${{ inputs.pool_run }}", github-token: "${{ secrets.GITHUB_TOKEN }}"}
+      - run: |
+          [ -e "$HOME/ext" ] || ln -s /root/ext "$HOME/ext"
+          P="${{ inputs.pool }}"; [ "$P" = artifact ] && P=pool.json
+          if [ "${{ inputs.set }}" = published ]; then SEL="--published"; else
+            SEL="--split dev --manifest data/mutants/${{ inputs.core }}_${{ inputs.kind }}_manifest.json"; fi
+          python3 rocket/label_mutants.py label --core ${{ inputs.core }} --kind ${{ inputs.kind }} $SEL --pool "$P" \
+            --only-mutants "${{ matrix.m }}" --prog-shard ${{ matrix.s }} --prog-of ${{ inputs.prog_of }} --jobs 4 \
+            --out list_${{ matrix.m }}_${{ matrix.s }}.jsonl
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: "list-${{ inputs.tag }}-${{ matrix.m }}-${{ matrix.s }}", path: "list_*.jsonl"}
+
+  merge:
+    needs: label
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with: {pattern: "list-${{ inputs.tag }}-*", path: parts, merge-multiple: true}
+      - run: cat parts/*.jsonl > labels.jsonl; wc -l labels.jsonl
+      - uses: actions/upload-artifact@v4
+        with: {name: "list-${{ inputs.tag }}", path: labels.jsonl}
