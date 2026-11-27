@@ -12,13 +12,21 @@ RTLIL=$(realpath "$1"); OUT=$(realpath -m "$2"); JOBS=${JOBS:-1}
 ulimit -v $(( ${MEM_CAP_GB:-10} * 1024 * 1024 ))
 EXT=${EXT:-$HOME/ext}
 CORE=${CORE:-rocket}
+# COVERAGE=line|toggle|line,toggle: Verilator coverage of the whole SoC; Cascade's toplevel.cc writes it to $COVERAGEFILE
+# at the end of each run (HAS_COVERAGE). Used for coverage feedback on the bug-free core only; detection builds stay plain.
+COVFLAGS=(); COVDEF=""
+COVERAGE=${COVERAGE:-}
+for c in ${COVERAGE//,/ }; do COVFLAGS+=("--coverage-$c"); COVDEF="-DHAS_COVERAGE"; done
+# COVERAGE_MAX_WIDTH=n: toggle coverage only of signals at most n bits wide (1: single-bit, mostly control signals)
+[ -n "${COVERAGE_MAX_WIDTH:-}" ] && COVFLAGS+=("--coverage-max-width" "$COVERAGE_MAX_WIDTH")
 CORPUS=$EXT/encarsia/out/$CORE; TB=$EXT/cascade-chipyard/cascade-$CORE; CM=$EXT/cascade-meta-common
 mkdir -p "$OUT" && cd "$OUT"
 [ -x Vtop_tiny_soc ] && { echo "already built: $OUT/Vtop_tiny_soc"; exit 0; }
 yosys -q -p "read_rtlil $RTLIL; write_verilog -noattr host.v" > yosys.log 2>&1
 python3 "$HERE/merge_dut.py" "$CORPUS/cascade_receptor.v" host.v dut.v | tee merge.log
 verilator --cc --exe --build -j "$JOBS" -O2 --output-split 20000 --output-split-cfuncs 2000 --top-module top_tiny_soc -Mdir obj \
-  -CFLAGS "-std=c++17 -DIS_VANILLA -DSYNTHESIS -DTOPLEVEL_NAME=top_tiny_soc -O0 -I$CM/dv -I$TB/dv" \
+  "${COVFLAGS[@]}" \
+  -CFLAGS "-std=c++17 $COVDEF -DIS_VANILLA -DSYNTHESIS -DTOPLEVEL_NAME=top_tiny_soc -O0 -I$CM/dv -I$TB/dv" \
   -DSTOP_COND=0 -LDFLAGS "-pthread -lutil" \
   -Wno-fatal -Wno-lint -Wno-style -Wno-PINCONNECTEMPTY -Wno-BLKANDNBLK -Wno-REDEFMACRO -Wno-PINMISSING -Wno-DECLFILENAME \
   -Wno-TIMESCALEMOD -Wno-VARHIDDEN -Wno-EOFNEWLINE -Wno-MULTIDRIVEN -Wno-UNOPTFLAT -Wno-CASEINCOMPLETE \

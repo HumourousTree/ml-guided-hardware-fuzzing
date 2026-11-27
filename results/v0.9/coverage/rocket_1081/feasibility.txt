@@ -1,0 +1,26 @@
+ref /root/ext/encarsia/out/rocket/driver/1081/reference_driver.rtlil
+build plain: 52 s, exists: /root/b_plain/Vtop_tiny_soc
+build line: 64 s, exists: /root/b_line/Vtop_tiny_soc
+build toggle: 272 s, exists: /root/b_toggle/Vtop_tiny_soc
+plain prog 0: 0.21s stop=True
+plain prog 1: 0.22s stop=True
+plain prog 2: 0.24s stop=True
+plain prog 3: 0.22s stop=True
+plain prog 4: 0.20s stop=True
+plain prog 5: 0.23s stop=True
+line prog 0: 1.63s stop=True points 27221 hit 13336 file 4213 KB
+line prog 1: 1.65s stop=True points 27221 hit 13419 file 4213 KB
+line prog 2: 2.00s stop=True points 27221 hit 13409 file 4213 KB
+line prog 3: 1.83s stop=True points 27221 hit 13435 file 4213 KB
+line prog 4: 1.76s stop=True points 27221 hit 13377 file 4213 KB
+line prog 5: 1.74s stop=True points 27221 hit 13440 file 4213 KB
+line: union 13485, intersection 13319, per-program new over first: [0, 84, 86, 101, 41, 105]
+  varying points by hierarchy: [('i_mem_top.i_chip_top', 166)]
+toggle prog 0: 13.46s stop=True points 226117 hit 143638 file 38684 KB
+toggle prog 1: 13.95s stop=True points 226117 hit 145118 file 38685 KB
+toggle prog 2: 13.32s stop=True points 226117 hit 145823 file 38682 KB
+toggle prog 3: 13.48s stop=True points 226117 hit 144404 file 38682 KB
+toggle prog 4: 13.56s stop=True points 226117 hit 143742 file 38681 KB
+toggle prog 5: 13.41s stop=True points 226117 hit 144219 file 38685 KB
+toggle: union 148103, intersection 141773, per-program new over first: [0, 2116, 2448, 1443, 1023, 1317]
+  varying points by hierarchy: [('i_mem_top.i_chip_top', 6330)]

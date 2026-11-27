@@ -69,10 +69,14 @@ def lowered(core: str, src: Path, tag: str) -> Path:
 
 
 def build(core: str, name: str, rtlil: Path) -> Path:
+    """name ending in _cov: the coverage build (rv64fuzz.coverage_mode) of that netlist, for coverage feedback only."""
     out = paths(core)[1] / name
     if not (out / "Vtop_tiny_soc").exists():
+        env = dict(os.environ, CORE=core)
+        if name.endswith("_cov"):
+            env.update(COVERAGE="toggle", COVERAGE_MAX_WIDTH="1")
         r = subprocess.run(["bash", str(ROOT / "rocket" / "build_dut.sh"), str(rtlil), str(out)],
-                           capture_output=True, text=True, env=dict(os.environ, CORE=core))
+                           capture_output=True, text=True, env=env)
         if r.returncode or not (out / "Vtop_tiny_soc").exists():
             raise RuntimeError(f"build failed for {core} {name}: {r.stdout[-300:]} {r.stderr[-300:]}")
     return out / "Vtop_tiny_soc"
@@ -104,7 +108,8 @@ def migrate_rocket():
 
 def suffix(profile: str) -> str:
     """File-name suffix of a profile's results; gate-mode results (rv64fuzz.quirk_mode) never overwrite filtered ones."""
-    return ("" if profile == "base" else f"_{profile}") + ("_gate" if rv64fuzz.quirk_mode() == "gate" else "")
+    return (("" if profile == "base" else f"_{profile}") + ("_gate" if rv64fuzz.quirk_mode() == "gate" else "")
+            + ("_cov" if rv64fuzz.coverage_mode() else ""))
 
 
 def fuzz(core: str, kind: str, d: int, seed: int, programs: int, profile: str = "base") -> dict:
@@ -113,9 +118,12 @@ def fuzz(core: str, kind: str, d: int, seed: int, programs: int, profile: str = 
     if f.exists():
         return json.loads(f.read_text())
     sim = runs / f"{kind}_{d}" / "Vtop_tiny_soc"
-    ref = runs / golden_name(core, kind, d) / "Vtop_tiny_soc" if rv64fuzz.quirk_mode() == "gate" else None
+    cov = rv64fuzz.coverage_mode()
+    g = runs / golden_name(core, kind, d)
+    ref = g / "Vtop_tiny_soc" if rv64fuzz.quirk_mode() == "gate" or cov else None
+    cov_sim = runs / f"{g.name}_cov" / "Vtop_tiny_soc" if cov else None
     r = rv64fuzz.campaign(sim, programs, 1000 * seed + d + (0 if profile == "base" else 500000), 40, 400000, True,
-                          stop_on_bug=True, profile=profile, core=core, ref_sim=ref)
+                          stop_on_bug=True, profile=profile, core=core, ref_sim=ref, cov_sim=cov_sim)
     r.update(core=core, kind=kind, dir=d, seed=seed, budget_programs=programs)
     f.write_text(json.dumps(r))
     return r

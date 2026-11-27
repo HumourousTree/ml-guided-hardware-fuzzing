@@ -156,8 +156,9 @@ def gen_program(rng: random.Random, length: int, fp: bool = True, profile: str =
     if templates:
         classes += [("tpl", 25)]
     names, weights = zip(*classes)
-    i = 0
+    i, starts = 0, []                                       # starts: first body line of each drawn block
     while body_given is None and i < length:
+        starts.append(len(body))
         c = rng.choices(names, weights)[0]
         if c == "alu":
             body.append(f"{rng.choice(R_OPS)} {rd()}, {rs()}, {rs()}")
@@ -280,6 +281,7 @@ def gen_program(rng: random.Random, length: int, fp: bool = True, profile: str =
             {**subst, **{k: v for k, v in (template_subst or {}).items() if k.startswith("fsqrt")}}
         body = apply_subst([l.strip() for l in body_given if l.strip()], q)
     raw_body = list(body)
+    blocks = [body[a:b] for a, b in zip(starts, starts[1:] + [len(body)])] if body_given is None else [list(body)]
     pro = ["  .section .text.init", "  .option norvc", "  .globl _start", "_start:", "  li x31, 0x6000", "  csrs mstatus, x31",
            "  la x30, data"]
     if ext_mix:
@@ -315,7 +317,56 @@ def gen_program(rng: random.Random, length: int, fp: bool = True, profile: str =
     toh = ["  .section .tohost, \"aw\"", "  .align 6", "  .globl tohost", "tohost: .dword 0", "  .globl fromhost",
            "fromhost: .dword 0"]
     asm = "\n".join(pro + ["  " + b if not b.endswith(":") else b for b in body] + epi + data + toh) + "\n"
+    if return_body == "blocks":                            # coverage feedback: the body as generator blocks
+        return asm, blocks
     return (asm, raw_body) if return_body else asm
+
+
+LABEL_RE = re.compile(r"\b(L\d+|T\d+_)")
+
+
+def relabel(blocks: list[list[str]]) -> list[list[str]]:
+    """Blocks taken from different programs reuse label numbers; give every block its own (a block holds at most one
+    branch label L<n> or one template instance's labels T<n>_*)."""
+    return [[LABEL_RE.sub(lambda m: f"L{j}" if m.group(1)[0] == "L" else f"T{j}_", l) for l in b]
+            for j, b in enumerate(blocks)]
+
+
+def mutate(parent: list[list[str]], fresh: list[list[str]], other: list[list[str]] | None, mrng: random.Random,
+           length: int) -> list[list[str]]:
+    """Block-level mutation of a corpus program (DifuzzRTL/Cascade style, on whole generator blocks so branches,
+    template instances and the generator's multi-line CSR sequences stay intact): replace, insert, delete, duplicate,
+    or splice with another corpus program. `fresh` supplies new blocks (a fresh body of the same profile)."""
+    b = [list(x) for x in parent]
+    for _ in range(mrng.choice((1, 1, 2, 3))):
+        op = mrng.choice(("replace", "replace", "insert", "delete", "dup", "splice") if other else
+                         ("replace", "replace", "insert", "delete", "dup"))
+        k = mrng.randrange(len(b)) if b else 0
+        n = mrng.randint(1, 4)
+        if op == "replace" and b:
+            b[k:k + n] = [mrng.choice(fresh) for _ in range(n)]
+        elif op == "insert" or not b:
+            b[k:k] = [mrng.choice(fresh) for _ in range(n)]
+        elif op == "delete" and len(b) > n:
+            del b[k:k + n]
+        elif op == "dup":
+            b[k:k] = [b[k]] * min(n, 2)
+        elif op == "splice":
+            c = mrng.randrange(len(other) + 1)
+            b = b[:k] + [list(x) for x in other[c:]]
+    return relabel(b[:2 * length] or fresh[:1])
+
+
+def read_coverage(path: Path) -> set[str]:
+    """Covered points (count > 0) of a Verilator coverage.dat."""
+    out = set()
+    with open(path, errors="replace") as f:
+        for l in f:
+            if l.startswith("C '"):
+                k, _, v = l.rstrip().rpartition("' ")
+                if v != "0":
+                    out.add(k[3:])
+    return out
 
 
 def build_elf(asm: str, work: Path) -> Path:
@@ -335,8 +386,10 @@ def run_spike(elf: Path, timeout: int = 30) -> list[int] | None:
     return vals or None
 
 
-def run_rocket(sim: Path, elf: Path, simlen: int, timeout: int = 300) -> tuple[list[int], bool]:
+def run_rocket(sim: Path, elf: Path, simlen: int, timeout: int = 300, cov_file: Path | None = None) -> tuple[list[int], bool]:
     env = dict(ENV, SIMSRAMELF=str(elf), SIMLEN=str(simlen))
+    if cov_file is not None:                               # a COVERAGE build writes its coverage there
+        env["COVERAGEFILE"] = str(cov_file)
     p = subprocess.run([str(sim)], env=env, capture_output=True, text=True, timeout=timeout)
     vals = [int(v, 16) for v in re.findall(r"Dump of reg [xf]\d+: 0x([0-9a-f]+)", p.stdout)]
     return vals, "Found a stop request" in p.stdout
@@ -352,10 +405,30 @@ def quirk_mode() -> str:
     return m
 
 
+def coverage_mode() -> str:
+    """'' (default) or 'toggle1': coverage feedback with toggle coverage of the single-bit signals of the bug-free core
+    (build_dut.sh COVERAGE=toggle COVERAGE_MAX_WIDTH=1; see campaign(cov_sim=...)). Line coverage saturates within
+    ~100 programs on these netlists (results/v0.9/coverage/)."""
+    m = os.environ.get("BENCHFUZZ_COVERAGE", "")
+    assert m in ("", "toggle1"), m
+    return m
+
+
 def campaign(sim: Path, n: int, seed: int, length: int, simlen: int, fp: bool, stop_on_bug: bool, log=None,
-             profile: str = "base", core: str = "rocket", templates=None, ref_sim: Path | None = None) -> dict:
-    """ref_sim: the bug-free core; with it, a mismatch is a detection only if ref_sim agrees with Spike (gate mode)."""
+             profile: str = "base", core: str = "rocket", templates=None, ref_sim: Path | None = None,
+             cov_sim: Path | None = None, mutate_p: float = 0.7) -> dict:
+    """ref_sim: the bug-free core; with it, a mismatch is a detection only if ref_sim agrees with Spike (gate mode).
+    cov_sim: the bug-free core built with line coverage (build_dut.sh COVERAGE=line), for coverage feedback; needs
+    ref_sim. Every program also runs on cov_sim; a valid one (no mismatch, or a mismatch on which ref_sim agrees with
+    Spike) that covers new points joins the corpus, and after the first corpus entry a program is a block-level
+    mutation of a corpus program with probability mutate_p (else a fresh one). cov_sim's own results are not used:
+    Verilator's coverage instrumentation changes this netlist's behaviour (spurious FP exception flags in fcsr on
+    7 of 8 random programs, 2026-11-28), so only the plain bug-free build is a reference."""
+    assert cov_sim is None or ref_sim is not None, "coverage feedback needs ref_sim (the plain bug-free core)"
     rng = random.Random(seed)
+    mrng = random.Random(f"mutate-{seed}")
+    corpus: list[list[list[str]]] = []
+    covered: set[str] = set()
     quirks = QUIRKS.get(core, {}) if quirk_mode() == "filter" else {}
     if profile in TEMPLATE_FILES and templates is None:          # accepted Step 2 templates (BENCHFUZZ_TEMPLATES overrides)
         tf = Path(os.environ.get("BENCHFUZZ_TEMPLATES", Path(__file__).resolve().parent / "templates" / TEMPLATE_FILES[profile]))
@@ -364,13 +437,34 @@ def campaign(sim: Path, n: int, seed: int, length: int, simlen: int, fp: bool, s
            "spike_failures": 0, "first_detection": None, "t_start": time.time()}
     work = Path(tempfile.mkdtemp(prefix="rv64fuzz-"))
     try:
+        gargs = (fp, profile, quirks.get("subst"), templates, quirks.get("keep_frm_valid", False), quirks.get("template_subst"))
+        if cov_sim is not None:
+            res.update(coverage_points=0, corpus=0, mutated=0, assembly_failures=0, coverage_curve=[])
         for k in range(n):
-            asm = gen_program(rng, length, fp, profile, quirks.get("subst"), templates, quirks.get("keep_frm_valid", False),
-                              quirks.get("template_subst"))
-            elf = build_elf(asm, work)
+            mutated = False
+            if cov_sim is None:
+                asm = gen_program(rng, length, *gargs)
+            else:
+                asm, blocks = gen_program(rng, length, *gargs, return_body="blocks")
+                if corpus and mrng.random() < mutate_p:      # mutate a corpus program; the fresh body supplies blocks
+                    blocks = mutate(mrng.choice(corpus), blocks, mrng.choice(corpus) if len(corpus) > 1 else None,
+                                    mrng, length)
+                    asm = gen_program(rng, length, *gargs, body=[l for b in blocks for l in b])
+                    mutated = True
+            try:
+                elf = build_elf(asm, work)
+            except subprocess.CalledProcessError:
+                if not mutated:
+                    raise
+                res["assembly_failures"] += 1; continue
             exp = run_spike(elf)
             if exp is None:                 # the reference did not finish: not a valid test (counted, never a detection)
                 res["spike_failures"] += 1; continue
+            if cov_sim is not None:
+                cf = work / "cov.dat"
+                cf.unlink(missing_ok=True)
+                run_rocket(cov_sim, elf, simlen, cov_file=cf)
+                pts = read_coverage(cf) if cf.exists() else set()
             got, stopped = run_rocket(sim, elf, simlen)
             res["programs"] += 1
             bad = (not stopped) or got != exp
@@ -379,19 +473,27 @@ def campaign(sim: Path, n: int, seed: int, length: int, simlen: int, fp: bool, s
                 if not rstop or rgot != exp:
                     res["reference_disagreements"] = res.get("reference_disagreements", 0) + 1
                     continue
+            if cov_sim is not None:              # a valid program: coverage feedback
+                if not pts <= covered:
+                    covered |= pts; corpus.append(blocks)
+                res["mutated"] += mutated
+                if res["programs"] % 10 == 0:
+                    res["coverage_curve"].append([res["programs"], len(covered)])
             if bad:
                 kind = "nontermination" if not stopped else "mismatch"
                 res["mismatches" if stopped else "nonterminating"] += 1
                 first = next((i for i, (a, b) in enumerate(zip(got, exp)) if a != b), min(len(got), len(exp)))
                 if res["first_detection"] is None:
                     res["first_detection"] = {"n_programs": res["programs"], "t": round(time.time() - res["t_start"], 1),
-                                              "kind": kind, "first_diff_index": first, "asm": asm}
+                                              "kind": kind, "first_diff_index": first, "asm": asm, "mutated": mutated}
                 if log:
                     print(f"[seed {seed}] program {res['programs']}: {kind} (first differing dump #{first})", file=log, flush=True)
                 if stop_on_bug:
                     break
     finally:
         shutil.rmtree(work, ignore_errors=True)
+    if cov_sim is not None:
+        res["coverage_points"], res["corpus"] = len(covered), len(corpus)
     res["seconds"] = round(time.time() - res["t_start"], 1)
     return res
 
@@ -407,10 +509,14 @@ def main():
     ap.add_argument("--stop-on-bug", action="store_true")
     ap.add_argument("--profile", choices=PROFILES, default="base")
     ap.add_argument("--core", choices=list(QUIRKS), default="rocket", help="selects the core's generator quirks")
+    ap.add_argument("--cov-sim", help="bug-free core built with COVERAGE=line: coverage feedback (see campaign)")
+    ap.add_argument("--ref-sim", help="plain bug-free core: gate every mismatch on it (needed with --cov-sim)")
+    ap.add_argument("--mutate-p", type=float, default=0.7)
     ap.add_argument("--out")
     a = ap.parse_args()
     r = campaign(Path(a.sim), a.programs, a.seed, a.length, a.simlen, not a.no_fp, a.stop_on_bug, log=sys.stdout,
-                 profile=a.profile, core=a.core)
+                 profile=a.profile, core=a.core, cov_sim=Path(a.cov_sim) if a.cov_sim else None,
+                 ref_sim=Path(a.ref_sim) if a.ref_sim else None, mutate_p=a.mutate_p)
     r["sim"] = a.sim
     if a.out:
         Path(a.out).parent.mkdir(parents=True, exist_ok=True); Path(a.out).write_text(json.dumps(r, indent=1))

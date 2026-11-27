@@ -46,8 +46,9 @@ def main():
     bad, missing = [], set()
     gate = "_gate" if re_.rv64fuzz.quirk_mode() == "gate" else ""
     cal_rates = {}
-    for g in sorted(out.glob(f"golden_*{sfx}.json")):
-        if (a.profile == "ext") != g.name.endswith(f"_ext{gate}.json") or g.name.endswith("_gate.json") != bool(gate):
+    for n in sorted(re_.golden_sources(a.core, ["driver", "multiplexer"])):   # this profile/mode's calibrations only
+        g = out / f"{n}{sfx}.json"
+        if not g.exists():
             continue
         r = json.loads(g.read_text())
         if (r["mismatches"] or r["nonterminating"]) and not gate:   # gate mode: disagreements are expected and are

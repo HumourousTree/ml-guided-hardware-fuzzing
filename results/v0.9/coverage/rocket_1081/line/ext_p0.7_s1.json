@@ -1,0 +1,83 @@
+{
+ "seed": 1,
+ "length": 40,
+ "fp": true,
+ "profile": "ext",
+ "core": "rocket",
+ "quirks": {},
+ "quirk_mode": "filter",
+ "programs": 150,
+ "mismatches": 0,
+ "nonterminating": 0,
+ "spike_failures": 0,
+ "first_detection": null,
+ "t_start": 1795819282.979196,
+ "coverage_points": 13626,
+ "corpus": 11,
+ "mutated": 103,
+ "assembly_failures": 0,
+ "coverage_curve": [
+  [
+   10,
+   13524
+  ],
+  [
+   20,
+   13560
+  ],
+  [
+   30,
+   13577
+  ],
+  [
+   40,
+   13612
+  ],
+  [
+   50,
+   13612
+  ],
+  [
+   60,
+   13612
+  ],
+  [
+   70,
+   13612
+  ],
+  [
+   80,
+   13612
+  ],
+  [
+   90,
+   13612
+  ],
+  [
+   100,
+   13612
+  ],
+  [
+   110,
+   13626
+  ],
+  [
+   120,
+   13626
+  ],
+  [
+   130,
+   13626
+  ],
+  [
+   140,
+   13626
+  ],
+  [
+   150,
+   13626
+  ]
+ ],
+ "seconds": 404.8,
+ "sim": "/root/bug/Vtop_tiny_soc"
+}

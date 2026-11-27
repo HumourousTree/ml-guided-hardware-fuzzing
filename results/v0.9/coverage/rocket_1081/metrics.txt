@@ -1,0 +1,7 @@
+build line: 64 s /root/c_line/Vtop_tiny_soc
+build expr: 0 s 
+%Error: Invalid option: --coverage-expr... Suggested alternative: '-coverage-user'
+build toggle1: 67 s /root/c_toggle1/Vtop_tiny_soc
+line: points 27221, run 1.45s, union curve [(1, 13330), (2, 13353), (5, 13566), (10, 13586), (20, 13600), (40, 13608), (60, 13608), (80, 13608)], growth 40->80: 0
+expr not built
+toggle1: points 15716, run 1.05s, union curve [(1, 10755), (2, 10831), (5, 11110), (10, 11196), (20, 11253), (40, 11310), (60, 11347), (80, 11357)], growth 40->80: 47

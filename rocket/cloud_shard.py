@@ -34,6 +34,8 @@ def items(core: str) -> list[str]:
 def source(core: str, name: str) -> Path:
     """The netlist for one simulator (only that one is lowered, unlike run_encarsia.build_targets)."""
     corpus = re_.paths(core)[0]
+    if name.endswith("_cov"):                   # coverage build of a reference (coverage feedback)
+        return source(core, name[:-4])
     if name == "golden_multiplexer":
         return re_.lowered(core, corpus / "multiplexer" / "reference.rtlil", "reference")
     if name.startswith("golden_driver_"):
@@ -61,6 +63,8 @@ def run_item(core: str, item: str, a) -> dict:
     d = int(d)
     build_one(core, f"{kind}_{d}")
     build_one(core, re_.golden_name(core, kind, d))
+    if re_.rv64fuzz.coverage_mode():
+        build_one(core, re_.golden_name(core, kind, d) + "_cov")
     with ProcessPoolExecutor(a.jobs) as ex:
         runs = list(ex.map(re_.fuzz, *zip(*[(core, kind, d, s, a.programs, a.profile) for s in range(a.seeds)])))
     sfx = re_.suffix(a.profile)
