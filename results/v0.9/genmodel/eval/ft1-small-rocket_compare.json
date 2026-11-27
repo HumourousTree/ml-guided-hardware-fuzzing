@@ -1,0 +1,162 @@
+{
+ "driver/dev": {
+  "mutants": 60,
+  "groups": {
+   "generators": {
+    "programs": 360,
+    "killed": 29,
+    "only": [],
+    "missed": []
+   },
+   "small_dpo": {
+    "programs": 360,
+    "killed": 30,
+    "only": [
+     731,
+     896
+    ],
+    "missed": [
+     112
+    ]
+   },
+   "small_dponogram": {
+    "programs": 347,
+    "killed": 28,
+    "only": [
+     896
+    ],
+    "missed": [
+     112,
+     951
+    ]
+   },
+   "small_pre": {
+    "programs": 360,
+    "killed": 30,
+    "only": [
+     139,
+     896
+    ],
+    "missed": [
+     112
+    ]
+   },
+   "small_sft": {
+    "programs": 360,
+    "killed": 30,
+    "only": [
+     731,
+     896
+    ],
+    "missed": [
+     112
+    ]
+   }
+  }
+ },
+ "driver/published": {
+  "mutants": 15,
+  "groups": {
+   "generators": {
+    "programs": 360,
+    "killed": 12,
+    "only": [],
+    "missed": []
+   },
+   "small_dpo": {
+    "programs": 360,
+    "killed": 12,
+    "only": [],
+    "missed": []
+   },
+   "small_dponogram": {
+    "programs": 347,
+    "killed": 12,
+    "only": [],
+    "missed": []
+   },
+   "small_pre": {
+    "programs": 360,
+    "killed": 12,
+    "only": [],
+    "missed": []
+   },
+   "small_sft": {
+    "programs": 360,
+    "killed": 12,
+    "only": [],
+    "missed": []
+   }
+  }
+ },
+ "multiplexer/dev": {
+  "mutants": 59,
+  "groups": {
+   "generators": {
+    "programs": 360,
+    "killed": 15,
+    "only": [],
+    "missed": []
+   },
+   "small_dpo": {
+    "programs": 360,
+    "killed": 15,
+    "only": [],
+    "missed": []
+   },
+   "small_dponogram": {
+    "programs": 347,
+    "killed": 15,
+    "only": [],
+    "missed": []
+   },
+   "small_pre": {
+    "programs": 360,
+    "killed": 15,
+    "only": [],
+    "missed": []
+   },
+   "small_sft": {
+    "programs": 360,
+    "killed": 15,
+    "only": [],
+    "missed": []
+   }
+  }
+ },
+ "multiplexer/published": {
+  "mutants": 15,
+  "groups": {
+   "generators": {
+    "programs": 360,
+    "killed": 4,
+    "only": [],
+    "missed": []
+   },
+   "small_dpo": {
+    "programs": 360,
+    "killed": 4,
+    "only": [],
+    "missed": []
+   },
+   "small_dponogram": {
+    "programs": 347,
+    "killed": 4,
+    "only": [],
+    "missed": []
+   },
+   "small_pre": {
+    "programs": 360,
+    "killed": 4,
+    "only": [],
+    "missed": []
+   },
+   "small_sft": {
+    "programs": 360,
+    "killed": 4,
+    "only": [],
+    "missed": []
+   }
+  }
+ }
+}
