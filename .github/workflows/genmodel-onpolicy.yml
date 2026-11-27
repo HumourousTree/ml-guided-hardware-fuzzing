@@ -1,0 +1,112 @@
+# Track 1, on-policy round: gate the learned generator's own samples (data/genmodel/<run>/samples_*.json) and label
+# them against TRAIN mutants that no generator-pool program kills (a fixed random subset), so the next fine-tuning
+# round sees kills the generators never produced. Dev mutants and the published bugs are not touched.
+# Artifact "onpolicy-<run>": pool.json, labels.jsonl. Manual trigger only; no secrets.
+name: Genmodel on-policy labels
+
+on:
+  workflow_dispatch:
+    inputs:
+      run: {description: "folder under data/genmodel/ with samples_*.json", required: true}
+      core: {description: "core", required: true, default: rocket, type: choice, options: [rocket, boom]}
+      per_file: {description: "gate-passing samples kept per file", required: false, default: "80"}
+      max_mutants: {description: "unkilled train mutants per kind (fixed random subset)", required: false, default: "100"}
+
+permissions:
+  contents: read
+
+jobs:
+  image:
+    runs-on: ubuntu-latest
+    permissions: {contents: read, packages: write}
+    outputs:
+      image: ${{ steps.tag.outputs.image }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: tag
+        run: |
+          owner="${GITHUB_REPOSITORY_OWNER,,}"
+          echo "image=ghcr.io/${owner}/encarsia-env:${{ hashFiles('docker/encarsia/Dockerfile') }}" >> "$GITHUB_OUTPUT"
+      - name: Build the toolchain image if this version does not exist yet
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          if docker manifest inspect "${{ steps.tag.outputs.image }}" >/dev/null 2>&1; then exit 0; fi
+          docker build --label "org.opencontainers.image.source=https://github.com/${GITHUB_REPOSITORY}" \
+                       -t "${{ steps.tag.outputs.image }}" docker/encarsia
+          docker push "${{ steps.tag.outputs.image }}"
+
+  pool:
+    needs: image
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    permissions: {contents: read, packages: read}
+    container:
+      image: ${{ needs.image.outputs.image }}
+      credentials: {username: "${{ github.actor }}", password: "${{ secrets.GITHUB_TOKEN }}"}
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          [ -e "$HOME/ext" ] || ln -s /root/ext "$HOME/ext"
+          python3 rocket/label_mutants.py pool --core ${{ inputs.core }} \
+            --from-samples data/genmodel/${{ inputs.run }}/samples_*.json --per-file ${{ inputs.per_file }} \
+            --out pool.json | tee gate.txt
+      - uses: actions/upload-artifact@v4
+        with: {name: "op-pool-${{ inputs.run }}", path: "pool.json\ngate.txt"}
+
+  shard:
+    needs: [image, pool]
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    permissions: {contents: read, packages: read}
+    strategy:
+      fail-fast: false
+      matrix:
+        kind: [driver, multiplexer]
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    container:
+      image: ${{ needs.image.outputs.image }}
+      credentials: {username: "${{ github.actor }}", password: "${{ secrets.GITHUB_TOKEN }}"}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with: {name: "op-pool-${{ inputs.run }}"}
+      - run: |
+          [ -e "$HOME/ext" ] || ln -s /root/ext "$HOME/ext"
+          python3 rocket/label_mutants.py label --core ${{ inputs.core }} --kind ${{ matrix.kind }} --split train \
+            --manifest data/mutants/${{ inputs.core }}_${{ matrix.kind }}_manifest.json --pool pool.json \
+            --only-unkilled data/labels/${{ inputs.core }}_${{ matrix.kind }}_labels.jsonl.gz \
+            --max-mutants ${{ inputs.max_mutants }} \
+            --shard ${{ matrix.shard }} --of 10 --jobs 4 --out op_${{ matrix.kind }}_${{ matrix.shard }}.jsonl
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: "op-labels-${{ inputs.run }}-${{ matrix.kind }}-${{ matrix.shard }}", path: "op_*.jsonl"}
+
+  merge:
+    needs: shard
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with: {pattern: "op-labels-${{ inputs.run }}-*", path: parts, merge-multiple: true}
+      - uses: actions/download-artifact@v4
+        with: {name: "op-pool-${{ inputs.run }}"}
+      - run: |
+          cat parts/*.jsonl > labels.jsonl
+          python3 - <<'EOF' | tee summary.txt
+          import json, collections
+          k, n, m = collections.Counter(), collections.Counter(), collections.defaultdict(set)
+          for l in open("labels.jsonl"):
+              r = json.loads(l)
+              if "killed" not in r: continue
+              n[r["kind"]] += 1; k[r["kind"]] += r["killed"]
+              if r["killed"]: m[r["kind"]].add(r["mutant"])
+          for kind in sorted(n):
+              print(f"{kind}: {len(m[kind])} previously unkilled train mutants now killed; {k[kind]} kills in {n[kind]} runs")
+          EOF
+      - uses: actions/upload-artifact@v4
+        with:
+          name: onpolicy-${{ inputs.run }}
+          path: |
+            labels.jsonl
+            pool.json
+            summary.txt

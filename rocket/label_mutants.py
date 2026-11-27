@@ -144,6 +144,17 @@ def cmd_label(a):
     a.yosys = a.yosys or mutant_factory.INJECTOR[a.kind]
     assert man["core"] == pool["core"] == a.core and man["kind"] == a.kind
     sel = [m for m in man["mutants"] if a.split == "all" or m["split"] == a.split]
+    if a.only_unkilled:     # on-policy rounds: only mutants that no program in these label files kills
+        hit = set()
+        for lp in a.only_unkilled:
+            for l in (gzip.open(lp, "rt") if lp.endswith(".gz") else open(lp)):
+                r = json.loads(l)
+                if r.get("killed") and r["core"] == a.core and r["kind"] == a.kind:
+                    hit.add(str(r["mutant"]))
+        sel = [m for m in sel if str(m["dir"]) not in hit]
+        print(f"{len(sel)} mutants not killed by {len(a.only_unkilled)} label file(s)", flush=True)
+    if a.max_mutants and len(sel) > a.max_mutants:   # a fixed random subset, the same on every shard
+        sel = sorted(random.Random(f"{a.core}-{a.kind}-subset").sample(sel, a.max_mutants), key=lambda m: m["dir"])
     mine = [m for i, m in enumerate(sel) if i % a.of == a.shard]
     mdir = (mutant_factory.CORPUS if a.published else Path(a.mutants)) / a.core / a.kind
     if not a.published and not any(mdir.glob("*/" + mutant_factory.HOST_FILE[a.kind])):
@@ -191,6 +202,8 @@ def main():
     l.add_argument("--shard", type=int, default=0); l.add_argument("--of", type=int, default=1)
     l.add_argument("--jobs", type=int, default=4)
     l.add_argument("--split", choices=["all", "train", "dev"], default="all", help="label only these mutants")
+    l.add_argument("--only-unkilled", nargs="*", help="label only mutants no program in these label files kills")
+    l.add_argument("--max-mutants", type=int, default=0, help="a fixed random subset of at most N of the selected mutants")
     l.add_argument("--mutants", default=str(Path.home() / "ext" / "mutants"))
     l.add_argument("--yosys", default=None, help="default: the injector build the factory used for this kind")
     a = ap.parse_args()

@@ -17,6 +17,7 @@ import argparse
 import collections
 import json
 import random
+import re
 import sys
 from pathlib import Path
 
@@ -99,43 +100,57 @@ def read_text(path: Path) -> str:
     return gzip.open(path, "rt").read() if str(path).endswith(".gz") else Path(path).read_text()
 
 
-def build_sft_pairs(labels: list[Path], pools: list[Path], ctx: int, seed: int) -> tuple[dict, list, dict]:
-    """SFT sequences (pool programs that kill >= 1 TRAIN mutant, weighted by how many) and DPO pairs (for each train
-    mutant: up to 4 of its killers, each against a random program of the same core that does not kill it). One pool
-    per core; programs are keyed by (core, id) and mutants by (core, kind, dir), so nothing collides across cores or
-    bug kinds; dev mutants are not read."""
+def _profile(p: str) -> str:
+    """Generator profile of a pool program; learned-generator programs carry their sample-file stem
+    (samples_<run>_<core>_<profile>)."""
+    m = re.search(r"_(base|ext|llmflash)$", p)
+    return m.group(1) if m else p
+
+
+def build_sft_pairs(labels: list[Path], pools: list[Path], ctx: int, seed: int,
+                    weighting: str = "count") -> tuple[dict, list, dict]:
+    """SFT sequences (pool programs that kill >= 1 TRAIN mutant) and DPO pairs (for each train mutant: up to 4 of its
+    killers, each against a random program labelled against that mutant that does not kill it). Any number of pools
+    per core (the generator pools, and pools of the model's own samples for on-policy rounds); programs are keyed by
+    (core, id) and mutants by (core, kind, dir), so nothing collides across cores or bug kinds; dev mutants are not
+    read. weighting: "count" = number of train mutants killed; "rarity" = sum over them of 1 / (number of killers),
+    so a program that kills a mutant almost nothing else kills outweighs one that kills many easy ones."""
     tk = tokenizer()
-    pool_by_core = {}
+    cores = set()
+    bodies, prof = {}, {}
     for pp in pools:
         d = json.loads(read_text(pp))
-        pool_by_core[d["core"]] = d
-    bodies, prof = {}, {}
-    for core, d in pool_by_core.items():
+        cores.add(d["core"])
         for pid, b in pool_bodies(d).items():
-            bodies[(core, pid)] = b
+            assert (d["core"], pid) not in bodies or bodies[(d["core"], pid)] == b, f"program id {pid} in two pools"
+            bodies[(d["core"], pid)] = b
         for p in d["programs"]:
-            prof[(core, p["id"])] = p["profile"]
-    kills, killers = collections.Counter(), collections.defaultdict(set)
-    progs_all, seen = collections.defaultdict(set), collections.Counter()
+            prof[(d["core"], p["id"])] = _profile(p["profile"])
+    killers = collections.defaultdict(set)
+    labelled, seen = collections.defaultdict(set), collections.Counter()
     for lp in labels:
         for line in read_text(lp).splitlines():
             r = json.loads(line)
             if "killed" not in r or r["split"] != "train":
                 continue
             core = r["core"]
-            assert core in pool_by_core, f"no pool for core {core}"
-            key = (core, r["program"])
+            assert core in cores, f"no pool for core {core}"
+            key, m = (core, r["program"]), (core, r["kind"], r["mutant"])
             seen[f"{core}/{r['kind']}"] += 1
-            progs_all[core].add(key)
+            labelled[m].add(key)
             if r["killed"]:
-                kills[key] += 1; killers[(core, r["kind"], r["mutant"])].add(key)
+                killers[m].add(key)
+    kills = collections.defaultdict(float)
+    for m, ks in killers.items():
+        for key in ks:
+            kills[key] += 1.0 / len(ks) if weighting == "rarity" else 1.0
     sft, w = [], []
     for key, k in sorted(kills.items()):
         sft.append(encode(tk, key[0], prof[key], bodies[key], kill=True)); w.append(k)
     rng = random.Random(seed)
     pairs = []
     for m, ks in sorted(killers.items()):
-        losers = sorted(progs_all[m[0]] - ks)
+        losers = sorted(labelled[m] - ks)
         if not losers:
             continue
         for win in rng.sample(sorted(ks), min(4, len(ks))):
@@ -145,7 +160,7 @@ def build_sft_pairs(labels: list[Path], pools: list[Path], ctx: int, seed: int) 
     rng.shuffle(pairs)
     arr = pack(sft, ctx)
     arr["weights"] = np.array(w, dtype=np.float32)
-    return arr, pairs, {"cores": sorted(pool_by_core), "label_rows": dict(seen), "sft_programs": len(sft),
+    return arr, pairs, {"cores": sorted(cores), "weighting": weighting, "label_rows": dict(seen), "sft_programs": len(sft),
                         "pairs": len(pairs), "train_mutants_with_killers": len(killers),
                         "sft_programs_by_core_profile": dict(collections.Counter(f"{k[0]}/{prof[k]}" for k in kills))}
 
@@ -157,13 +172,14 @@ def main():
     p.add_argument("--ctx", type=int, default=1024); p.add_argument("--out", type=Path, required=True)
     s = sub.add_parser("sft"); s.add_argument("--labels", type=Path, nargs="+", required=True); s.add_argument("--pool", type=Path, nargs="+", required=True)
     s.add_argument("--ctx", type=int, default=1024); s.add_argument("--seed", type=int, default=1); s.add_argument("--out", type=Path, required=True)
+    s.add_argument("--weighting", choices=["count", "rarity"], default="count")
     a = ap.parse_args()
     a.out.parent.mkdir(parents=True, exist_ok=True)
     if a.cmd == "pretrain":
         arr, info = build_pretrain(a.n, a.seed, a.ctx)
         np.savez_compressed(a.out, **arr)
     else:
-        arr, pairs, info = build_sft_pairs(a.labels, a.pool, a.ctx, a.seed)
+        arr, pairs, info = build_sft_pairs(a.labels, a.pool, a.ctx, a.seed, a.weighting)
         np.savez_compressed(a.out, **arr)
         a.out.with_suffix(".pairs.json").write_text(json.dumps(pairs))
     a.out.with_suffix(".json").write_text(json.dumps(info, indent=1))
