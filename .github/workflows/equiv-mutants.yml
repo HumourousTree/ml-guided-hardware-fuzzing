@@ -1,0 +1,96 @@
+# #7: formal equivalence of the unkilled training mutants (rocket/equiv_mutants.py), sharded over up to 20 runners.
+# A mutant whose mutated module is proven equivalent (Yosys equiv_simple + equiv_induct) can never be killed.
+# published=true runs the published Encarsia bugs instead (soundness check: none may be proven equivalent).
+# Output artifact "equiv-<core>-<kind>[-published]": equiv.jsonl, summary.json. Manual trigger only; no secrets.
+name: Equivalence of mutants
+
+on:
+  workflow_dispatch:
+    inputs:
+      core: {description: "rocket or boom", required: true, default: rocket, type: choice, options: [rocket, boom]}
+      kind: {description: "driver or multiplexer", required: true, default: driver, type: choice, options: [driver, multiplexer]}
+      published: {description: "published Encarsia bugs instead of unkilled factory mutants", required: true, default: false, type: boolean}
+      shards: {description: "parallel runners (1-20)", required: true, default: "20"}
+      seq: {description: "equiv_simple / equiv_induct depth", required: true, default: "5"}
+      timeout: {description: "seconds per mutant", required: true, default: "1800"}
+
+permissions:
+  contents: read
+
+jobs:
+  image:
+    runs-on: ubuntu-latest
+    permissions: {contents: read, packages: write}
+    outputs:
+      image: ${{ steps.tag.outputs.image }}
+      shards: ${{ steps.tag.outputs.shards }}
+      n: ${{ steps.tag.outputs.n }}
+      tag: ${{ steps.tag.outputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: tag
+        run: |
+          owner="${GITHUB_REPOSITORY_OWNER,,}"
+          echo "image=ghcr.io/${owner}/encarsia-env:${{ hashFiles('docker/encarsia/Dockerfile') }}" >> "$GITHUB_OUTPUT"
+          n=$(( ${{ inputs.shards }} < 1 ? 1 : (${{ inputs.shards }} > 20 ? 20 : ${{ inputs.shards }}) ))
+          echo "n=$n" >> "$GITHUB_OUTPUT"
+          echo "shards=$(python3 -c "import json; print(json.dumps(list(range($n))))")" >> "$GITHUB_OUTPUT"
+          echo "tag=${{ inputs.core }}-${{ inputs.kind }}${{ inputs.published && '-published' || '' }}" >> "$GITHUB_OUTPUT"
+      - name: Build the toolchain image if this version does not exist yet
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          if docker manifest inspect "${{ steps.tag.outputs.image }}" >/dev/null 2>&1; then exit 0; fi
+          docker build --label "org.opencontainers.image.source=https://github.com/${GITHUB_REPOSITORY}" \
+                       -t "${{ steps.tag.outputs.image }}" docker/encarsia
+          docker push "${{ steps.tag.outputs.image }}"
+
+  shard:
+    needs: image
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    permissions: {contents: read, packages: read}
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: ${{ fromJSON(needs.image.outputs.shards) }}
+    container:
+      image: ${{ needs.image.outputs.image }}
+      credentials: {username: "${{ github.actor }}", password: "${{ secrets.GITHUB_TOKEN }}"}
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          [ -e "$HOME/ext" ] || ln -s /root/ext "$HOME/ext"
+          python3 rocket/equiv_mutants.py --core ${{ inputs.core }} --kind ${{ inputs.kind }} \
+            ${{ inputs.published && '--published' || '' }} --seq ${{ inputs.seq }} --timeout ${{ inputs.timeout }} \
+            --shard ${{ matrix.shard }} --of ${{ needs.image.outputs.n }} --json equiv_${{ matrix.shard }}.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: "equiv-${{ needs.image.outputs.tag }}-${{ matrix.shard }}", path: "equiv_*.json"}
+
+  merge:
+    needs: [image, shard]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with: {pattern: "equiv-${{ needs.image.outputs.tag }}-*", path: parts, merge-multiple: true}
+      - name: Merge and summarise
+        run: |
+          python3 - <<'PY'
+          import json, glob, collections
+          rows = [r for f in sorted(glob.glob("parts/*.json")) for r in json.load(open(f))]
+          with open("equiv.jsonl", "w") as o:
+              for r in rows: o.write(json.dumps(r) + "\n")
+          v = collections.Counter(r["verdict"] for r in rows)
+          mods = collections.defaultdict(collections.Counter)
+          for r in rows: mods[r.get("module", "?")][r["verdict"]] += 1
+          s = {"mutants": len(rows), "verdicts": dict(v), "by_module": {m: dict(c) for m, c in mods.items()},
+               "seconds_total": round(sum(r.get("seconds", 0) for r in rows))}
+          json.dump(s, open("summary.json", "w"), indent=1); print(json.dumps(s, indent=1))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: equiv-${{ needs.image.outputs.tag }}
+          path: |
+            equiv.jsonl
+            summary.json
