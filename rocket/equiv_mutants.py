@@ -21,6 +21,7 @@ import argparse
 import json
 import re
 import subprocess
+import sys
 import tempfile
 import time
 from pathlib import Path
@@ -68,16 +69,23 @@ equiv_status
 """
 
 
-def check(d: Path, seq: int, timeout: int, yosys: str = "yosys", eyosys: str = "/opt/encarsia-yosys/bin/yosys") -> dict:
+def check(d: Path, seq: int, timeout: int, yosys: str = "yosys") -> dict:
     host, ref = files(d)
     mod = buggy_module(host)
     with tempfile.TemporaryDirectory() as w:
-        if host.name == "host_amt.rtlil":
-            # broken conditionals are Encarsia's $amt cells; its inject_map lowers them to muxes (prepare_multiplexer.tcl)
-            for src, dst in ((host, "host_m.rtlil"), (ref, "ref_m.rtlil")):
-                subprocess.run([eyosys, "-q", "-p", f"read_rtlil {src}; inject_map; write_rtlil {Path(w) / dst}"],
-                               check=True, capture_output=True, timeout=timeout)
-            host, ref = Path(w) / "host_m.rtlil", Path(w) / "ref_m.rtlil"
+        # Every $pmux becomes a first-match $mux chain, the reading the simulators use (rocket/pmux_first_match.py).
+        # Yosys SAT lets the last active select win instead; with that reading a broken conditional whose pattern
+        # overlaps another entry was "proven" equivalent although JasperGold had covered it (published Rocket
+        # multiplexer bugs 66 and 408). Broken conditionals ($amt cells) are lowered to $pmux first (lower_amt.py).
+        for src, tag in ((host, "host"), (ref, "ref")):
+            cur = src
+            if src.name.endswith("amt.rtlil") or tag == "ref" and host.name == "host_amt.rtlil":
+                subprocess.run([sys.executable, str(ROOT / "rocket" / "lower_amt.py"), str(cur),
+                                str(Path(w) / f"{tag}_l.rtlil")], check=True, capture_output=True, timeout=timeout)
+                cur = Path(w) / f"{tag}_l.rtlil"
+            subprocess.run([sys.executable, str(ROOT / "rocket" / "pmux_first_match.py"), str(cur),
+                            str(Path(w) / f"{tag}_fm.rtlil")], check=True, capture_output=True, timeout=timeout)
+        host, ref = Path(w) / "host_fm.rtlil", Path(w) / "ref_fm.rtlil"
         ys = Path(w) / "eq.ys"
         ys.write_text(SCRIPT.format(ref=ref, host=host, mod=mod, seq=seq))
         t0 = time.time()
