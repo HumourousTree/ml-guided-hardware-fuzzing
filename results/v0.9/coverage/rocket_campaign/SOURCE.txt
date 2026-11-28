@@ -1,0 +1,3 @@
+Rocket, base profile, 5 seeds, 2,000 programs, coverage feedback (toggle1, mutate_p 0.7): GitHub Actions run 46083050852 (commit 4dc4a6d).
+Paired baseline (same commit, no coverage): run 46119438532, in logs/bench/rocket (local) and results/v0.9/coverage/rocket_campaign_baseline/.
+Comparison: python tools/cov_compare.py results/v0.9/coverage/rocket_campaign_baseline "" results/v0.9/coverage/rocket_campaign _cov

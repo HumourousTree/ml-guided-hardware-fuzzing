@@ -1015,6 +1015,57 @@ def section_llmgen(logs, M, md):
     return "\n".join(lines) + "\n\\bottomrule\\end{tabular}"
 
 
+def section_covmin(logs, M, md):
+    """Coverage feedback (results/v0.9/coverage/rocket_campaign, toggle coverage of the bug-free core + block-level
+    mutation) against the paired plain campaign of the same commit (rocket_campaign_baseline), and minimised Rocket
+    detections (results/v0.9/minimize/rocket.json). Macros CovRocket*, MinRocket*."""
+    C, B = ROOT / "results" / "v0.9" / "coverage" / "rocket_campaign", ROOT / "results" / "v0.9" / "coverage" / "rocket_campaign_baseline"
+    if C.exists() and B.exists():
+        def runs(d, sfx):
+            conf = load(d / "confirmations.json") or {}
+            out = {}
+            for f in d.glob(f"*_seed?{sfx}.json"):
+                r = json.loads(f.read_text())
+                fd = r.get("first_detection")
+                ok = bool(fd) and conf.get(f.name, {}).get("confirmed", False)
+                out[(r["kind"], r["dir"], r["seed"])] = (fd["n_programs"] if ok else None, r["programs"], r["seconds"],
+                                                         bool(fd and fd.get("mutated")))
+            return out
+        c, b = runs(C, "_cov"), runs(B, "")
+        keys = sorted(set(c) & set(b))
+        bugs = lambda X: {(k[0], k[1]) for k in keys if X[k][0] is not None}
+        pairs = [(b[k][0], c[k][0]) for k in keys if b[k][0] and c[k][0]]
+        M["CovRocketRuns"] = len(keys)
+        M["CovRocketBugs"], M["CovRocketBaseBugs"] = len(bugs(c)), len(bugs(b))
+        M["CovRocketSameBugs"] = "yes" if bugs(c) == bugs(b) else "no"
+        M["CovRocketSeedDet"], M["CovRocketBaseSeedDet"] = sum(c[k][0] is not None for k in keys), sum(b[k][0] is not None for k in keys)
+        M["CovRocketEarlier"] = sum(y < x for x, y in pairs)
+        M["CovRocketLater"] = sum(y > x for x, y in pairs)
+        M["CovRocketSame"] = sum(y == x for x, y in pairs)
+        M["CovRocketMutatedFirst"] = sum(c[k][3] for k in keys if c[k][0])
+        tc = sum(c[k][2] for k in keys) / sum(c[k][1] for k in keys)
+        tb = sum(b[k][2] for k in keys) / sum(b[k][1] for k in keys)
+        M["CovRocketSecPerProg"], M["CovRocketBaseSecPerProg"] = f"{tc:.2f}", f"{tb:.2f}"
+        M["CovRocketSlowdown"] = f"{tc / tb:.1f}"
+        md.append(f"\n## Coverage feedback on Rocket (paired, {len(keys)} runs)\n\nbugs {len(bugs(c))} vs {len(bugs(b))}; "
+                  f"earlier {M.items[macro_name('CovRocketEarlier')]}, later {M.items[macro_name('CovRocketLater')]}; "
+                  f"{tc:.2f} vs {tb:.2f} s/program\n")
+    mf = ROOT / "results" / "v0.9" / "minimize" / "rocket.json"
+    if mf.exists():
+        d = [x for x in json.loads(mf.read_text()).values() if "skipped" not in x]
+        if d:
+            M["MinRocketCases"] = len(d)
+            M["MinRocketBugs"] = len({(x["bug_kind"], x["dir"]) for x in d})
+            M["MinRocketOrigMedian"] = fmt(st.median(x["body_lines"] for x in d), 0)
+            M["MinRocketMinMedian"] = fmt(st.median(x["min_body_lines"] for x in d), 0)
+            M["MinRocketMinMax"] = max(x["min_body_lines"] for x in d)
+            M["MinRocketConfirmed"] = sum(bool(x["confirmed"]) for x in d)
+            M["MinRocketOneMinimal"] = sum(bool(x["one_minimal"]) for x in d)
+            M["MinRocketTestsMedian"] = fmt(st.median(x["tests"] for x in d), 0)
+            M["MinRocketEmptyBugs"] = len({(x["bug_kind"], x["dir"]) for x in d if x["min_body_lines"] == 0})
+    return ""
+
+
 def section_gate(logs, M, md):
     """Gate mode on BOOM (results/v0.9/gate/boom/<profile>): instructions the quirk filter would replace are kept and
     every mismatch is re-checked on the bug-free core at once. Per profile and union, replay-confirmed (macros Gate*),
@@ -1226,6 +1277,7 @@ def main():
     tabs["boom"] = section_encarsia(logs, M, md, "boom", "Boom")
     tabs["llmgen"] = section_llmgen(logs, M, md)
     tabs["gate"] = section_gate(logs, M, md)
+    section_covmin(logs, M, md)
     from llm_figures import all_figures
     all_figures(logs, figs, plt, save, ROOT, at_programs)
     tabs["lit_testcases"], tabs["lit_encarsia"] = section_literature(json.loads(Path(a.lit).read_text()), logs, M, md, figs, plt, cov, bugagg)
