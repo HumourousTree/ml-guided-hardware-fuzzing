@@ -14,7 +14,7 @@ on:
       calibrate: {description: "calibration programs per reference", required: true, default: "500"}
       shards: {description: "parallel runners (1-20)", required: true, default: "20"}
       quirks: {description: "filter: substitute known core-vs-Spike differences; gate: test them, re-checking every mismatch on the bug-free core", required: false, default: filter, type: choice, options: [filter, gate]}
-      sim_opt: {description: "C++ optimisation of the simulators (0 = Cascade's setting; 1 is 5x faster and matched -O0 bit for bit; -O2 miscompiles)", required: false, default: "0", type: choice, options: ["0", "1"]}
+      sim_opt: {description: "C++ optimisation of the simulators: auto = the core's validated default (Rocket -O1, BOOM -O0); 0 = Cascade's setting; 1 = -O1 (-O2 miscompiles)", required: false, default: auto, type: choice, options: [auto, "0", "1"]}
       coverage: {description: "coverage feedback: none, or toggle1 (toggle coverage of 1-bit signals of the bug-free core; corpus + block mutation)", required: false, default: none, type: choice, options: [none, toggle1]}
 
 permissions:
@@ -71,7 +71,7 @@ jobs:
     env:
       BENCHFUZZ_QUIRKS: ${{ inputs.quirks }}
       BENCHFUZZ_COVERAGE: ${{ inputs.coverage != 'none' && inputs.coverage || '' }}
-      SIM_OPT: ${{ inputs.sim_opt }}
+      SIM_OPT: ${{ inputs.sim_opt != 'auto' && inputs.sim_opt || '' }}
     steps:
       - uses: actions/checkout@v4
       - name: Run shard

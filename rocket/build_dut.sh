@@ -9,10 +9,13 @@ RTLIL=$(realpath "$1"); OUT=$(realpath -m "$2"); JOBS=${JOBS:-1}
 # Memory safety: the SoC is ~10 MB of Verilog; parallel g++ at -O1 exhausted the WSL VM (15 GB) and restarted it, killing
 # every other job.  One compile job, -O0 (Cascade's own setting), split output files, and a per-process cap so a runaway
 # compile fails here instead of taking the VM down.
-# SIM_OPT=1|2|3 raises the C++ optimisation of the simulator (default 0) where memory allows (CI runners).
+# SIM_OPT: C++ optimisation of the simulator. Default per core: 1 on Rocket (validated 2026-11-28: a 150-run campaign and
+# all calibrations identical to -O0, 2.9x faster per program, run 46122923685 vs 46119438532), 0 elsewhere until
+# validated. -O2 miscompiles Rocket (wrong register dumps on every program; results/v0.9/speed/).
 ulimit -v $(( ${MEM_CAP_GB:-10} * 1024 * 1024 ))
 EXT=${EXT:-$HOME/ext}
 CORE=${CORE:-rocket}
+if [ "$CORE" = rocket ]; then SIM_OPT=${SIM_OPT:-1}; else SIM_OPT=${SIM_OPT:-0}; fi
 # COVERAGE=line|toggle|line,toggle: Verilator coverage of the whole SoC; Cascade's toplevel.cc writes it to $COVERAGEFILE
 # at the end of each run (HAS_COVERAGE). Used for coverage feedback on the bug-free core only; detection builds stay plain.
 COVFLAGS=(); COVDEF=""

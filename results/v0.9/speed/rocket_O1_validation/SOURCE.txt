@@ -1,0 +1,3 @@
+Rocket base, 5 seeds, -O1 simulators: run 46122923685 (commit 05d3617), against -O0 run 46119438532 (commit 4dc4a6d, same generator stream).
+All 150 runs identical in every counter and first detection (program text and first differing dump); all 6 calibrations 500/500 clean.
+Wall clock 19 min vs 52 min; 0.129 vs 0.380 s per program.
