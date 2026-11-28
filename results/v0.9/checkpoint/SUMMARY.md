@@ -35,7 +35,13 @@ divuw x11, x18, x1
 sub   x11, x0, x6
 ```
 
-Here a long-latency divide is followed directly by a write of the same register. The end-state oracle sees x11 wrong, so the bug lets the divide's late writeback overwrite the newer value.
+Here a long-latency divide is followed directly by a write of the same register, and the end-state oracle sees x11 wrong.
+
+Two independent checks confirm that this pair is the trigger:
+- **Minimisation:** `results/v0.9/minimize/rocket.json` reduces the bug's detections to exactly such a pair, 1-minimal, in two seeds:
+  - `divuw x11, x18, x1; sub x11, x0, x6`
+  - `divuw x4, x7, x30; sraiw x4, x1, 29`
+- **Location:** the bug's netlist location (`data/mutants/published_locations.json`) is Rocket's instruction buffer (`IBuf`, signals `io_inst_0_bits_inst_rd` and `exp_io_out_rd`). This is consistent with the trigger, though the mechanism is inferred rather than traced in the waveform: the second instruction waits there while the divide is busy, and the mix-up corrupts its destination field.
 
 With checkpoints, a dump falls between the two instructions:
 
@@ -45,7 +51,7 @@ divuw x11, ...
 sub   x11, ...
 ```
 
-The dump's `sd x11` has to read x11, so the pipeline waits for the divide to finish. The two writes are then no longer in flight together, and the hazard never fires.
+The dump's `sd x11` has to read x11, so the store is now the instruction that waits behind the divide. Presumably, then, the corruption hits a store, which has no destination register, and by the time `sub x11` issues the divide has finished, so the corrupted field is never used.
 
 ## Conclusion
 
