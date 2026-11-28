@@ -414,6 +414,17 @@ def coverage_mode() -> str:
     return m
 
 
+def generator_args(fp: bool, profile: str, core: str, templates=None) -> tuple[dict, tuple]:
+    """(quirks, positional gen_program arguments after rng and length) exactly as a campaign uses them, so tools that
+    regenerate a campaign's programs (rocket/minimize.py) draw the same stream."""
+    quirks = QUIRKS.get(core, {}) if quirk_mode() == "filter" else {}
+    if profile in TEMPLATE_FILES and templates is None:          # accepted Step 2 templates (BENCHFUZZ_TEMPLATES overrides)
+        tf = Path(os.environ.get("BENCHFUZZ_TEMPLATES", Path(__file__).resolve().parent / "templates" / TEMPLATE_FILES[profile]))
+        templates = json.loads(tf.read_text())["templates"]
+    return quirks, (fp, profile, quirks.get("subst"), templates, quirks.get("keep_frm_valid", False),
+                    quirks.get("template_subst"))
+
+
 def campaign(sim: Path, n: int, seed: int, length: int, simlen: int, fp: bool, stop_on_bug: bool, log=None,
              profile: str = "base", core: str = "rocket", templates=None, ref_sim: Path | None = None,
              cov_sim: Path | None = None, mutate_p: float = 0.7) -> dict:
@@ -429,15 +440,11 @@ def campaign(sim: Path, n: int, seed: int, length: int, simlen: int, fp: bool, s
     mrng = random.Random(f"mutate-{seed}")
     corpus: list[list[list[str]]] = []
     covered: set[str] = set()
-    quirks = QUIRKS.get(core, {}) if quirk_mode() == "filter" else {}
-    if profile in TEMPLATE_FILES and templates is None:          # accepted Step 2 templates (BENCHFUZZ_TEMPLATES overrides)
-        tf = Path(os.environ.get("BENCHFUZZ_TEMPLATES", Path(__file__).resolve().parent / "templates" / TEMPLATE_FILES[profile]))
-        templates = json.loads(tf.read_text())["templates"]
+    quirks, gargs = generator_args(fp, profile, core, templates)
     res = {"seed": seed, "length": length, "fp": fp, "profile": profile, "core": core, "quirks": quirks, "quirk_mode": quirk_mode(), "programs": 0, "mismatches": 0, "nonterminating": 0,
            "spike_failures": 0, "first_detection": None, "t_start": time.time()}
     work = Path(tempfile.mkdtemp(prefix="rv64fuzz-"))
     try:
-        gargs = (fp, profile, quirks.get("subst"), templates, quirks.get("keep_frm_valid", False), quirks.get("template_subst"))
         if cov_sim is not None:
             res.update(coverage_points=0, corpus=0, mutated=0, assembly_failures=0, coverage_curve=[])
         for k in range(n):

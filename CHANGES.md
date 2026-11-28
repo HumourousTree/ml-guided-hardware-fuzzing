@@ -145,6 +145,10 @@ Not done: anything needing an LLM (semantic/hybrid generation, pass@k) - no API 
   because kills of random-pool programs carry little location signal. Kill-rate test on Rocket
   (`tools/genmodel_targeted.py`, runs 46063024035/46063027788): per-program kill rate +0.014 [+0.003, +0.027] on dev
   mutants (mostly MulDiv; sign test p = 0.08), none on the published bugs (17 vs 17).
+- **Minimisation of Rocket/BOOM detections** (#5, `rocket/minimize.py`, `rv64fuzz.generator_args`): recovers the detecting
+  program from the campaign stream and runs hierarchical delta debugging over generator blocks, then lines, with the
+  replay rule as the test. Rocket, 43 detections: 43 -> 1 body line (median, max 4), all replay-confirmed and 1-minimal,
+  median 13 tests; three bugs need no body instruction (`results/v0.9/minimize/`).
 - Local toolchain: Docker in WSL with the CI image (`ghcr.io/.../encarsia-env`), so labelling and mutant
   regeneration can run on the laptop as well as on GitHub Actions.
 

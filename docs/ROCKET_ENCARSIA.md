@@ -117,6 +117,22 @@ implementation track FP dirtiness imprecisely (reporting Dirty conservatively), 
 Rocket bug. **ext v2** therefore only ever sets FS bits (never clears them); the v1 results are archived in
 `logs/archive/rocket_ext_v1/`.
 
+## Minimised detections (`rocket/minimize.py`, 2026-11-28)
+
+Every first detection can be shrunk to the instructions that still expose the bug. The detecting program is recovered by
+replaying the campaign's random stream until a generated program equals the stored one byte for byte (which also gives
+its generator blocks); only the body is minimised, prologue and dump code stay. Hierarchical delta debugging removes
+whole generator blocks (a branch with its skipped instructions and label, a template instance, the generator's multi-line
+CSR sequences), then single lines. The test is the replay rule: same failure kind on the buggy core and the bug-free core
+agrees with Spike, so every minimised program is a confirmed detection.
+
+Rocket, the 43 recoverable first detections of the coverage-feedback campaign (run 46083050852; 7 came after a mutation):
+body 43 lines (median) -> **1 line** (max 4), all replay-confirmed and all 1-minimal, median 13 tests (about 11 s per
+mismatch detection; hangs cost the 400,000-cycle timeout per test). Three bugs need no body instruction at all
+(`driver/361`, conditionals 408 and 718): the prologue and dump code alone expose them; the others reduce to one
+instruction (e.g. `or x10, x10, x14` for `driver/863`, `fmul.d f7, f15, f2, dyn` for conditional 285, which corrupts
+`fcsr`). Table: `results/v0.9/minimize/SUMMARY.md`.
+
 ## Results (2026-11-05)
 
 Replay-confirmed detecting seeds out of 5 (median programs to the detection). Published: Encarsia Tables 8-10, 24 h.
