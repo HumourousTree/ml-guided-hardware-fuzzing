@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import random
 import sys
 import tempfile
@@ -48,6 +49,7 @@ def recover(r: dict, max_programs: int = 5000) -> list[list[str]] | None:
     if fd.get("mutated"):
         return None
     seed = 1000 * r["seed"] + r["dir"] + (0 if r["profile"] == "base" else 500000)
+    os.environ["BENCHFUZZ_CHECKPOINT"] = str(r.get("checkpoint", 0))    # regenerate with the campaign's checkpoints
     _, gargs = rv64fuzz.generator_args(r.get("fp", True), r["profile"], r["core"])
     rng = random.Random(seed)
     for _ in range(max_programs):

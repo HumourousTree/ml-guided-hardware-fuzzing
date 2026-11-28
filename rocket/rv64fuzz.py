@@ -282,6 +282,13 @@ def gen_program(rng: random.Random, length: int, fp: bool = True, profile: str =
         body = apply_subst([l.strip() for l in body_given if l.strip()], q)
     raw_body = list(body)
     blocks = [body[a:b] for a, b in zip(starts, starts[1:] + [len(body)])] if body_given is None else [list(body)]
+    ck = checkpoint_every()
+    if ck and body_given is None:            # intermediate dumps of x1..x30 between generator blocks (see checkpoint_every)
+        body = []
+        for j, blk in enumerate(blocks):
+            body += blk
+            if (j + 1) % ck == 0 and j + 1 < len(blocks):
+                body += [f"li x31, {DUMP}"] + [f"sd x{r}, 0(x31)" for r in range(1, 31)] + ["li x31, 0x6000"]
     pro = ["  .section .text.init", "  .option norvc", "  .globl _start", "_start:", "  li x31, 0x6000", "  csrs mstatus, x31",
            "  la x30, data"]
     if ext_mix:
@@ -405,6 +412,17 @@ def quirk_mode() -> str:
     return m
 
 
+def checkpoint_every() -> int:
+    """BENCHFUZZ_CHECKPOINT=K (default 0, off): after every K generator blocks of the body, dump x1..x30 to the same MMIO
+    address as the epilogue (x31, the dump pointer, holds 0x6000 throughout the body and is restored). Spike's commit log
+    and the testbench both record every dump in order, so a register that is wrong at any checkpoint is a detection even
+    if a later instruction overwrites it: the end-state oracle becomes a checkpointed one. Branches only jump forward
+    within their own block, so no checkpoint is skipped. The random draws are unchanged (seeds give the same bodies)."""
+    k = int(os.environ.get("BENCHFUZZ_CHECKPOINT", "0") or 0)
+    assert k >= 0, k
+    return k
+
+
 def coverage_mode() -> str:
     """'' (default) or 'toggle1': coverage feedback with toggle coverage of the single-bit signals of the bug-free core
     (build_dut.sh COVERAGE=toggle COVERAGE_MAX_WIDTH=1; see campaign(cov_sim=...)). Line coverage saturates within
@@ -441,7 +459,7 @@ def campaign(sim: Path, n: int, seed: int, length: int, simlen: int, fp: bool, s
     corpus: list[list[list[str]]] = []
     covered: set[str] = set()
     quirks, gargs = generator_args(fp, profile, core, templates)
-    res = {"seed": seed, "length": length, "fp": fp, "profile": profile, "core": core, "quirks": quirks, "quirk_mode": quirk_mode(), "programs": 0, "mismatches": 0, "nonterminating": 0,
+    res = {"seed": seed, "length": length, "fp": fp, "profile": profile, "core": core, "quirks": quirks, "quirk_mode": quirk_mode(), "checkpoint": checkpoint_every(), "programs": 0, "mismatches": 0, "nonterminating": 0,
            "spike_failures": 0, "first_detection": None, "t_start": time.time()}
     work = Path(tempfile.mkdtemp(prefix="rv64fuzz-"))
     try:

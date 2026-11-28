@@ -109,7 +109,8 @@ def migrate_rocket():
 def suffix(profile: str) -> str:
     """File-name suffix of a profile's results; gate-mode results (rv64fuzz.quirk_mode) never overwrite filtered ones."""
     return (("" if profile == "base" else f"_{profile}") + ("_gate" if rv64fuzz.quirk_mode() == "gate" else "")
-            + ("_cov" if rv64fuzz.coverage_mode() else ""))
+            + ("_cov" if rv64fuzz.coverage_mode() else "")
+            + (f"_ck{rv64fuzz.checkpoint_every()}" if rv64fuzz.checkpoint_every() else ""))
 
 
 def fuzz(core: str, kind: str, d: int, seed: int, programs: int, profile: str = "base") -> dict:
