@@ -1,0 +1,16 @@
+build -O0: 51 s /root/opt0/Vtop_tiny_soc 4.2M
+build -O1: 66 s /root/opt1/Vtop_tiny_soc 2.3M
+build -O2: 86 s /root/opt2/Vtop_tiny_soc 2.4M
+gen        mean     0.3 ms  median     0.2 ms
+as         mean     3.7 ms  median     3.3 ms
+ld         mean     2.3 ms  median     2.0 ms
+spike_l    mean    40.4 ms  median    38.4 ms
+spike_nol  mean    37.6 ms  median    36.1 ms
+sim0       mean   224.4 ms  median   219.3 ms
+sim1       mean    43.9 ms  median    42.2 ms
+sim2       mean    34.7 ms  median    33.1 ms
+spike without -l gives the same dump: 30/30; all sim builds agree with each other and Spike: 0/30
+
+Per-build check (speedchk.py, 6 programs): -O0 and -O1 agree with Spike on every dump; -O2 differs from Spike on
+every program (dumps 0-9 differ), i.e. the simulator is miscompiled at -O2. The 0/30 above is due to -O2.
+Bug-free Rocket (reference of driver/1081), local Docker (CI image), 30 random programs (base/ext), 2026-11-28.
