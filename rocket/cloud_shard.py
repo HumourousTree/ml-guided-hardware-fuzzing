@@ -80,7 +80,7 @@ def run_item(core: str, item: str, a) -> dict:
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--core", choices=re_.CORES, required=True)
-    ap.add_argument("--profile", choices=["base", "ext", "llm", "llmflash"], default="base")
+    ap.add_argument("--profile", choices=["base", "ext", "llm", "llmflash", "llmtgt", "llmctl"], default="base")
     ap.add_argument("--shard", type=int, default=0)
     ap.add_argument("--of", type=int, default=1)
     ap.add_argument("--seeds", type=int, default=5)

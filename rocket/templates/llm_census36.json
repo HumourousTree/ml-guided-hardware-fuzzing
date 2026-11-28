@@ -1,0 +1,1167 @@
+{
+ "model": "gemini-3.6-flash",
+ "requests": 3,
+ "rounds": [
+  {
+   "round": 1,
+   "proposed": 12,
+   "accepted": 4,
+   "census": {
+    "A": 0,
+    "C": 0,
+    "D": 32,
+    "F": 29,
+    "I": 48,
+    "M": 13,
+    "priv": 9
+   },
+   "exception_causes": [
+    "trap_breakpoint",
+    "trap_machine_ecall",
+    "trap_illegal_instruction"
+   ]
+  },
+  {
+   "round": 2,
+   "proposed": 12,
+   "accepted": 3,
+   "census": {
+    "A": 0,
+    "C": 8,
+    "D": 32,
+    "F": 30,
+    "I": 50,
+    "M": 13,
+    "priv": 9
+   },
+   "exception_causes": [
+    "trap_breakpoint",
+    "trap_machine_ecall",
+    "trap_illegal_instruction"
+   ]
+  },
+  {
+   "round": 3,
+   "proposed": 12,
+   "accepted": 5,
+   "census": {
+    "A": 0,
+    "C": 15,
+    "D": 32,
+    "F": 30,
+    "I": 50,
+    "M": 13,
+    "priv": 9
+   },
+   "exception_causes": [
+    "trap_breakpoint",
+    "trap_machine_ecall",
+    "trap_illegal_instruction"
+   ]
+  }
+ ],
+ "targets": null,
+ "census_before": {
+  "profile": "base",
+  "programs": 100,
+  "seed": 4242,
+  "core": "rocket",
+  "groups": {
+   "A": {
+    "executed": 0,
+    "total": 22,
+    "never": [
+     "amoadd.d",
+     "amoadd.w",
+     "amoand.d",
+     "amoand.w",
+     "amomax.d",
+     "amomax.w",
+     "amomaxu.d",
+     "amomaxu.w",
+     "amomin.d",
+     "amomin.w",
+     "amominu.d",
+     "amominu.w",
+     "amoor.d",
+     "amoor.w",
+     "amoswap.d",
+     "amoswap.w",
+     "amoxor.d",
+     "amoxor.w",
+     "lr.d",
+     "lr.w",
+     "sc.d",
+     "sc.w"
+    ]
+   },
+   "C": {
+    "executed": 0,
+    "total": 34,
+    "never": [
+     "c.add",
+     "c.addi",
+     "c.addi4spn",
+     "c.addw",
+     "c.and",
+     "c.andi",
+     "c.beqz",
+     "c.bnez",
+     "c.ebreak",
+     "c.fld",
+     "c.fldsp",
+     "c.fsd",
+     "c.fsdsp",
+     "c.j",
+     "c.jalr",
+     "c.jr",
+     "c.ld",
+     "c.ldsp",
+     "c.li",
+     "c.lui",
+     "c.lw",
+     "c.lwsp",
+     "c.mv",
+     "c.or",
+     "c.sd",
+     "c.sdsp",
+     "c.slli",
+     "c.srai",
+     "c.srli",
+     "c.sub",
+     "c.subw",
+     "c.sw",
+     "c.swsp",
+     "c.xor"
+    ]
+   },
+   "D": {
+    "executed": 23,
+    "total": 32,
+    "never": [
+     "fcvt.d.s",
+     "fcvt.s.d",
+     "fld",
+     "fmadd.d",
+     "fmsub.d",
+     "fnmadd.d",
+     "fnmsub.d",
+     "fsd",
+     "fsqrt.d"
+    ]
+   },
+   "F": {
+    "executed": 23,
+    "total": 30,
+    "never": [
+     "flw",
+     "fmadd.s",
+     "fmsub.s",
+     "fnmadd.s",
+     "fnmsub.s",
+     "fsqrt.s",
+     "fsw"
+    ]
+   },
+   "I": {
+    "executed": 48,
+    "total": 51,
+    "never": [
+     "fence",
+     "fence.i",
+     "jalr"
+    ]
+   },
+   "M": {
+    "executed": 13,
+    "total": 13,
+    "never": []
+   },
+   "priv": {
+    "executed": 6,
+    "total": 9,
+    "never": [
+     "ebreak",
+     "ecall",
+     "mret"
+    ]
+   }
+  },
+  "exception_causes": {},
+  "csrs_accessed": {
+   "frm": 179,
+   "mscratch": 136,
+   "fcsr": 129,
+   "mstatus": 100,
+   "fflags": 25
+  },
+  "instruction_counts": {
+   "sd": 9859,
+   "addi": 6511,
+   "slli": 6337,
+   "ld": 3252,
+   "fmv_d_x": 3213,
+   "fmv_x_d": 3204,
+   "addiw": 2701,
+   "lui": 2585,
+   "csrrs": 318,
+   "auipc": 234,
+   "csrrwi": 156,
+   "srlw": 115,
+   "jal": 100,
+   "addw": 98,
+   "sra": 95,
+   "slt": 95,
+   "xor": 95,
+   "sraw": 92,
+   "sll": 92,
+   "sub": 91,
+   "and": 90,
+   "or": 90,
+   "sllw": 84,
+   "sltu": 81,
+   "add": 81,
+   "srl": 80,
+   "subw": 78,
+   "ori": 73,
+   "slti": 67,
+   "sb": 67,
+   "lwu": 64,
+   "andi": 64,
+   "lh": 57,
+   "beq": 56,
+   "sh": 55,
+   "blt": 53,
+   "sw": 53,
+   "xori": 52,
+   "lbu": 52,
+   "bge": 52,
+   "lb": 51,
+   "lhu": 51,
+   "bgeu": 50,
+   "lw": 50,
+   "sltiu": 48,
+   "slliw": 46,
+   "remu": 42,
+   "sraiw": 39,
+   "bltu": 39,
+   "bne": 37,
+   "mulhsu": 34,
+   "srai": 34,
+   "divuw": 33,
+   "mulhu": 33,
+   "divu": 33,
+   "mulh": 32,
+   "csrrci": 31,
+   "srliw": 30,
+   "divw": 30,
+   "div": 30,
+   "remw": 29,
+   "rem": 28,
+   "remuw": 28,
+   "srli": 27,
+   "mulw": 27,
+   "mul": 25,
+   "csrrc": 24,
+   "csrrsi": 20,
+   "csrrw": 20,
+   "fadd_d": 14,
+   "fmul_d": 14,
+   "fadd_s": 14,
+   "fdiv_s": 13,
+   "fmul_s": 11,
+   "fsub_d": 11,
+   "fle_d": 10,
+   "fsub_s": 10,
+   "fdiv_d": 10,
+   "fcvt_l_s": 9,
+   "fsgnjx_s": 8,
+   "flt_s": 8,
+   "fcvt_s_l": 8,
+   "fmax_s": 7,
+   "feq_d": 7,
+   "fcvt_w_d": 7,
+   "fle_s": 7,
+   "fmv_w_x": 7,
+   "feq_s": 7,
+   "fmin_s": 6,
+   "fmv_x_w": 6,
+   "fcvt_d_w": 5,
+   "flt_d": 5,
+   "fmax_d": 5,
+   "fcvt_s_wu": 5,
+   "fclass_s": 5,
+   "fcvt_d_l": 5,
+   "fcvt_lu_s": 5,
+   "fsgnj_d": 4,
+   "fclass_d": 4,
+   "fsgnjn_s": 4,
+   "fsgnjx_d": 4,
+   "fcvt_lu_d": 4,
+   "fcvt_s_lu": 4,
+   "fcvt_w_s": 4,
+   "fcvt_wu_d": 4,
+   "fsgnjn_d": 3,
+   "fmin_d": 3,
+   "fcvt_s_w": 3,
+   "fcvt_d_lu": 3,
+   "fcvt_d_wu": 3,
+   "fcvt_l_d": 2,
+   "fsgnj_s": 2,
+   "fcvt_wu_s": 1
+  }
+ },
+ "census_after": {
+  "profile": "llm",
+  "programs": 100,
+  "seed": 4242,
+  "core": "rocket",
+  "groups": {
+   "A": {
+    "executed": 0,
+    "total": 22,
+    "never": [
+     "amoadd.d",
+     "amoadd.w",
+     "amoand.d",
+     "amoand.w",
+     "amomax.d",
+     "amomax.w",
+     "amomaxu.d",
+     "amomaxu.w",
+     "amomin.d",
+     "amomin.w",
+     "amominu.d",
+     "amominu.w",
+     "amoor.d",
+     "amoor.w",
+     "amoswap.d",
+     "amoswap.w",
+     "amoxor.d",
+     "amoxor.w",
+     "lr.d",
+     "lr.w",
+     "sc.d",
+     "sc.w"
+    ]
+   },
+   "C": {
+    "executed": 15,
+    "total": 34,
+    "never": [
+     "c.addi4spn",
+     "c.beqz",
+     "c.bnez",
+     "c.ebreak",
+     "c.fld",
+     "c.fldsp",
+     "c.fsd",
+     "c.fsdsp",
+     "c.j",
+     "c.jalr",
+     "c.jr",
+     "c.ld",
+     "c.ldsp",
+     "c.lw",
+     "c.lwsp",
+     "c.sd",
+     "c.sdsp",
+     "c.sw",
+     "c.swsp"
+    ]
+   },
+   "D": {
+    "executed": 32,
+    "total": 32,
+    "never": []
+   },
+   "F": {
+    "executed": 30,
+    "total": 30,
+    "never": []
+   },
+   "I": {
+    "executed": 50,
+    "total": 51,
+    "never": [
+     "fence.i"
+    ]
+   },
+   "M": {
+    "executed": 13,
+    "total": 13,
+    "never": []
+   },
+   "priv": {
+    "executed": 9,
+    "total": 9,
+    "never": []
+   }
+  },
+  "exception_causes": {
+   "trap_breakpoint": 52,
+   "trap_machine_ecall": 52,
+   "trap_illegal_instruction": 7
+  },
+  "csrs_accessed": {
+   "mepc": 433,
+   "mstatus": 400,
+   "mcause": 322,
+   "mtval": 263,
+   "frm": 159,
+   "fcsr": 124,
+   "mscratch": 116,
+   "mtvec": 100,
+   "mie": 100,
+   "fflags": 18
+  },
+  "instruction_counts": {
+   "sd": 10468,
+   "addi": 7140,
+   "slli": 6547,
+   "ld": 3358,
+   "fmv_x_d": 3208,
+   "fmv_d_x": 3205,
+   "addiw": 2823,
+   "lui": 2790,
+   "csrrs": 1407,
+   "auipc": 390,
+   "add": 383,
+   "csrrw": 338,
+   "fld": 297,
+   "c_li": 280,
+   "fsd": 241,
+   "flw": 236,
+   "xor": 232,
+   "sw": 162,
+   "lw": 161,
+   "bne": 150,
+   "sltiu": 147,
+   "csrrwi": 136,
+   "fence": 120,
+   "fcvt_s_d": 119,
+   "fcvt_d_s": 119,
+   "fmadd_d": 119,
+   "fsw": 118,
+   "c_slli": 117,
+   "c_srli": 117,
+   "c_srai": 117,
+   "c_andi": 117,
+   "c_addw": 114,
+   "c_subw": 114,
+   "csrrc": 112,
+   "mret": 111,
+   "c_lui": 106,
+   "c_mv": 106,
+   "c_addi": 106,
+   "c_add": 103,
+   "c_sub": 103,
+   "c_and": 103,
+   "c_or": 103,
+   "c_xor": 103,
+   "jal": 100,
+   "sll": 85,
+   "slt": 79,
+   "sub": 79,
+   "sltu": 74,
+   "addw": 74,
+   "sra": 71,
+   "or": 70,
+   "subw": 69,
+   "srlw": 68,
+   "srl": 67,
+   "and": 64,
+   "sraw": 63,
+   "fmadd_s": 63,
+   "fmsub_s": 63,
+   "fnmadd_s": 63,
+   "fnmsub_s": 63,
+   "fsqrt_s": 63,
+   "andi": 62,
+   "slti": 61,
+   "fsgnjn_s": 60,
+   "sb": 60,
+   "jalr": 60,
+   "lb": 59,
+   "fsgnj_s": 57,
+   "fsgnjx_s": 57,
+   "fmsub_d": 56,
+   "fnmadd_d": 56,
+   "fnmsub_d": 56,
+   "fsqrt_d": 56,
+   "sllw": 55,
+   "sh": 54,
+   "xori": 53,
+   "ebreak": 52,
+   "ecall": 52,
+   "ori": 52,
+   "lhu": 49,
+   "bgeu": 46,
+   "beq": 45,
+   "blt": 43,
+   "lwu": 43,
+   "lh": 42,
+   "slliw": 37,
+   "bltu": 36,
+   "remu": 35,
+   "srliw": 34,
+   "lbu": 33,
+   "csrrci": 33,
+   "bge": 32,
+   "divw": 32,
+   "remw": 32,
+   "rem": 32,
+   "mul": 31,
+   "srai": 29,
+   "mulw": 28,
+   "mulhu": 28,
+   "divu": 27,
+   "div": 27,
+   "divuw": 26,
+   "remuw": 24,
+   "mulh": 23,
+   "sraiw": 22,
+   "mulhsu": 19,
+   "srli": 18,
+   "fadd_s": 15,
+   "fmul_s": 14,
+   "fmv_w_x": 14,
+   "fsub_d": 13,
+   "fdiv_s": 11,
+   "fmul_d": 10,
+   "fdiv_d": 10,
+   "fadd_d": 10,
+   "fclass_s": 9,
+   "csrrsi": 9,
+   "fcvt_l_d": 8,
+   "fclass_d": 8,
+   "fmin_s": 7,
+   "fcvt_s_w": 7,
+   "fsgnjx_d": 7,
+   "fsub_s": 7,
+   "fle_s": 6,
+   "fcvt_l_s": 6,
+   "fsgnj_d": 5,
+   "flt_d": 5,
+   "fcvt_d_l": 5,
+   "fcvt_d_lu": 5,
+   "fcvt_wu_d": 5,
+   "fcvt_d_wu": 5,
+   "feq_d": 5,
+   "fcvt_d_w": 4,
+   "fsgnjn_d": 4,
+   "fle_d": 4,
+   "fcvt_w_d": 4,
+   "fcvt_s_wu": 4,
+   "fcvt_lu_d": 4,
+   "fmax_d": 4,
+   "fcvt_s_lu": 4,
+   "flt_s": 3,
+   "fmin_d": 3,
+   "fcvt_s_l": 3,
+   "feq_s": 3,
+   "fcvt_w_s": 2,
+   "fmv_x_w": 2,
+   "fcvt_wu_s": 2,
+   "fmax_s": 2,
+   "fcvt_lu_s": 1
+  }
+ },
+ "templates": [
+  {
+   "name": "r1_2_fp_double_fma_cvt",
+   "targets": [
+    "fld",
+    "fsd",
+    "fmadd.d",
+    "fmsub.d",
+    "fnmadd.d",
+    "fnmsub.d",
+    "fsqrt.d",
+    "fcvt.d.s",
+    "fcvt.s.d"
+   ],
+   "rvc": false,
+   "asm": [
+    "fld {fA}, {off:8}(x30)",
+    "fld {fB}, {off:8}(x30)",
+    "fmadd.d {fC}, {fA}, {fB}, {fA}",
+    "fmsub.d {fD}, {fC}, {fB}, {fA}",
+    "fnmadd.d {fE}, {fD}, {fC}, {fB}",
+    "fnmsub.d {fF}, {fE}, {fD}, {fC}",
+    "fsqrt.d {fA}, {fF}",
+    "fsd {fA}, {off:8}(x30)",
+    "fcvt.s.d {fB}, {fA}",
+    "fcvt.d.s {fC}, {fB}"
+   ]
+  },
+  {
+   "name": "r1_3_fp_single_fma_sqrt",
+   "targets": [
+    "flw",
+    "fsw",
+    "fmadd.s",
+    "fmsub.s",
+    "fnmadd.s",
+    "fnmsub.s",
+    "fsqrt.s"
+   ],
+   "rvc": false,
+   "asm": [
+    "flw {fA}, {off:4}(x30)",
+    "flw {fB}, {off:4}(x30)",
+    "fmadd.s {fC}, {fA}, {fB}, {fA}",
+    "fmsub.s {fD}, {fC}, {fB}, {fA}",
+    "fnmadd.s {fE}, {fD}, {fC}, {fB}",
+    "fnmsub.s {fF}, {fE}, {fD}, {fC}",
+    "fsqrt.s {fA}, {fF}",
+    "fsw {fA}, {off:4}(x30)"
+   ]
+  },
+  {
+   "name": "r1_5_priv_traps_ecall_ebreak",
+   "targets": [
+    "ebreak",
+    "ecall",
+    "exceptions"
+   ],
+   "rvc": false,
+   "asm": [
+    "ebreak",
+    "ecall"
+   ]
+  },
+  {
+   "name": "r1_10_fp_cvt_hazards",
+   "targets": [
+    "fcvt.d.s",
+    "fcvt.s.d",
+    "fmadd.d",
+    "fld",
+    "fsd"
+   ],
+   "rvc": false,
+   "asm": [
+    "fld {fA}, {off:8}(x30)",
+    "fcvt.s.d {fB}, {fA}",
+    "fcvt.d.s {fC}, {fB}",
+    "fmadd.d {fD}, {fA}, {fC}, {fA}",
+    "fsd {fD}, {off:8}(x30)"
+   ]
+  },
+  {
+   "name": "r2_4_fp_sign_injection_single",
+   "targets": [
+    "fsgnj.s"
+   ],
+   "rvc": false,
+   "asm": [
+    "flw {fA}, {off:4}(x30)",
+    "flw {fB}, {off:4}(x30)",
+    "fsgnj.s {fC}, {fA}, {fB}",
+    "fsgnjn.s {fD}, {fB}, {fC}",
+    "fsgnjx.s {fE}, {fC}, {fD}",
+    "fsw {fE}, {off:4}(x30)"
+   ]
+  },
+  {
+   "name": "r2_5_fence_and_jalr",
+   "targets": [
+    "fence",
+    "jalr"
+   ],
+   "rvc": false,
+   "asm": [
+    "fence iorw, iorw",
+    "fence r, rw",
+    "auipc {xA}, 0",
+    "jalr {xB}, 16({xA})",
+    "nop",
+    "nop",
+    "nop"
+   ]
+  },
+  {
+   "name": "r2_6_rvc_register_arithmetic",
+   "targets": [
+    "c.add",
+    "c.sub",
+    "c.addw",
+    "c.subw",
+    "c.and",
+    "c.or",
+    "c.xor"
+   ],
+   "rvc": true,
+   "asm": [
+    "c.li x8, {imm:-32:31}",
+    "c.li x9, {imm:-32:31}",
+    "c.add x8, x9",
+    "c.sub x8, x9",
+    "c.addw x10, x11",
+    "c.subw x10, x11",
+    "c.and x12, x13",
+    "c.or x14, x15",
+    "c.xor x8, x10"
+   ]
+  },
+  {
+   "name": "r3_0_rvc_immediates_shifts_logical",
+   "targets": [
+    "c.addi",
+    "c.lui",
+    "c.mv",
+    "c.slli",
+    "c.srli",
+    "c.srai",
+    "c.andi"
+   ],
+   "rvc": true,
+   "asm": [
+    "c.addi x5, {imm:-32:31}",
+    "c.lui x6, {imm:1:31}",
+    "c.mv x7, x5",
+    "c.slli x7, {imm:1:5}",
+    "c.srli x8, {imm:1:5}",
+    "c.srai x9, {imm:1:5}",
+    "c.andi x10, {imm:-32:31}"
+   ]
+  },
+  {
+   "name": "r3_2_rvc_data_region_loads_stores",
+   "targets": [
+    "c.lw",
+    "c.sw",
+    "c.ld",
+    "c.sd",
+    "c.fld",
+    "c.fsd"
+   ],
+   "rvc": false,
+   "asm": [
+    "addi x8, x30, {off:8}",
+    "lw x9, 0(x8)",
+    "sw x9, 4(x8)",
+    "ld x10, 0(x8)",
+    "sd x10, 0(x8)",
+    "fld f0, 0(x8)",
+    "fsd f0, 0(x8)"
+   ]
+  },
+  {
+   "name": "r3_3_rvc_stack_pointer_ops",
+   "targets": [
+    "c.addi4spn",
+    "c.lwsp",
+    "c.swsp",
+    "c.ldsp",
+    "c.sdsp",
+    "c.fldsp",
+    "c.fsdsp"
+   ],
+   "rvc": false,
+   "asm": [
+    "add {xA}, x2, x0",
+    "add x2, x30, x0",
+    "addi x8, x2, 16",
+    "lw x9, 0(x2)",
+    "sw x9, 4(x2)",
+    "ld x10, 8(x2)",
+    "sd x10, 8(x2)",
+    "fld f0, 16(x2)",
+    "fsd f0, 16(x2)",
+    "add x2, {xA}, x0"
+   ]
+  },
+  {
+   "name": "r3_9_rvc_arithmetic_immediate",
+   "targets": [
+    "c.addi",
+    "c.lui",
+    "c.mv",
+    "c.add",
+    "c.sub",
+    "c.and",
+    "c.or",
+    "c.xor"
+   ],
+   "rvc": true,
+   "asm": [
+    "c.li x8, {imm:-32:31}",
+    "c.lui x9, {imm:1:31}",
+    "c.mv x10, x8",
+    "c.addi x10, {imm:-32:31}",
+    "c.add x10, x9",
+    "c.sub x10, x8",
+    "c.and x10, x9",
+    "c.or x10, x8",
+    "c.xor x10, x9"
+   ]
+  },
+  {
+   "name": "r3_10_rvc_word_double_arithmetic",
+   "targets": [
+    "c.addw",
+    "c.subw",
+    "c.slli",
+    "c.srli",
+    "c.srai",
+    "c.andi"
+   ],
+   "rvc": true,
+   "asm": [
+    "c.li x8, {imm:-32:31}",
+    "c.li x9, {imm:-32:31}",
+    "c.addw x8, x9",
+    "c.subw x8, x9",
+    "c.slli x8, {imm:1:5}",
+    "c.srli x8, {imm:1:5}",
+    "c.srai x8, {imm:1:5}",
+    "c.andi x8, {imm:-32:31}"
+   ]
+  }
+ ],
+ "rejected": [
+  {
+   "name": "r1_0_amo_word_ops",
+   "reason": "the bug-free rocket disagrees with Spike (implementation-defined or a known core difference)",
+   "asm": [
+    "addi {xA}, x30, {off:4}",
+    "lr.w {xB}, ({xA})",
+    "sc.w {xC}, {xB}, ({xA})",
+    "amoadd.w {xD}, {xB}, ({xA})",
+    "amoxor.w {xE}, {xC}, ({xA})",
+    "amoswap.w {xF}, {xD}, ({xA})",
+    "amomax.w {xB}, {xE}, ({xA})",
+    "amomin.w {xC}, {xF}, ({xA})"
+   ],
+   "rvc": false
+  },
+  {
+   "name": "r1_1_amo_double_ops",
+   "reason": "the bug-free rocket disagrees with Spike (implementation-defined or a known core difference)",
+   "asm": [
+    "addi {xA}, x30, {off:8}",
+    "lr.d {xB}, ({xA})",
+    "sc.d {xC}, {xB}, ({xA})",
+    "amoadd.d {xD}, {xB}, ({xA})",
+    "amoand.d {xE}, {xC}, ({xA})",
+    "amoor.d {xF}, {xD}, ({xA})",
+    "amomaxu.d {xB}, {xE}, ({xA})",
+    "amominu.d {xC}, {xF}, ({xA})"
+   ],
+   "rvc": false
+  },
+  {
+   "name": "r1_4_fences_and_jalr",
+   "reason": "does not assemble: unrecognized opcode `fence.i', extension `zifencei' required",
+   "asm": [
+    "fence iorw, iorw",
+    "fence.i",
+    "auipc {xA}, 0",
+    "addi {xA}, {xA}, 16",
+    "jalr {xB}, 0({xA})",
+    "nop",
+    "nop"
+   ],
+   "rvc": false
+  },
+  {
+   "name": "r1_6_priv_mret_flow",
+   "reason": "the bug-free rocket hangs",
+   "asm": [
+    "auipc {xA}, 0",
+    "addi {xA}, {xA}, 16",
+    "csrw mepc, {xA}",
+    "mret",
+    "nop",
+    "nop"
+   ],
+   "rvc": false
+  },
+  {
+   "name": "r1_7_rvc_alu_control",
+   "reason": "does not assemble: illegal operands `c.addw x26,x4'",
+   "asm": [
+    "c.li {xA}, {imm:-32:31}",
+    "c.lui {xB}, {imm:1:31}",
+    "c.mv {xC}, {xA}",
+    "c.add {xC}, {xB}",
+    "c.addi {xA}, {imm:-32:31}",
+    "c.addw {xC}, {xA}",
+    "c.slli {xA}, {imm:1:5}",
+    "c.j {label:A}",
+    "c.nop",
+    "{label:A}:"
+   ],
+   "rvc": true
+  },
+  {
+   "name": "r1_8_rvc_sp_stack_mem",
+   "reason": "the bug-free rocket disagrees with Spike (implementation-defined or a known core difference)",
+   "asm": [
+    "c.mv x2, x30",
+    "c.sdsp {xA}, 0(x2)",
+    "c.ldsp {xB}, 0(x2)",
+    "c.swsp {xC}, 8(x2)",
+    "c.lwsp {xD}, 8(x2)",
+    "c.fsdsp {fA}, 16(x2)",
+    "c.fldsp {fB}, 16(x2)"
+   ],
+   "rvc": true
+  },
+  {
+   "name": "r1_9_rvc_indirect_jumps_ebreak",
+   "reason": "does not assemble: unrecognized opcode `c.jalr x4', extension `c' or `zca' required",
+   "asm": [
+    "auipc {xA}, 0",
+    "addi {xA}, {xA}, 10",
+    "c.jalr {xA}",
+    "c.ebreak"
+   ],
+   "rvc": false
+  },
+  {
+   "name": "r1_11_amo_max_min_unsigned",
+   "reason": "the bug-free rocket disagrees with Spike (implementation-defined or a known core difference)",
+   "asm": [
+    "addi {xA}, x30, {off:8}",
+    "amomaxu.w {xB}, {xC}, ({xA})",
+    "amominu.w {xD}, {xE}, ({xA})",
+    "amomax.d {xF}, {xB}, ({xA})",
+    "amomin.d {xC}, {xD}, ({xA})"
+   ],
+   "rvc": false
+  },
+  {
+   "name": "r2_8_rvc_jumps_and_branches",
+   "reason": "malformed (needs 1-10 asm lines)",
+   "asm": [
+    "c.j {label:A}",
+    "c.nop",
+    "{label:A}:",
+    "c.li x8, {imm:0:1}",
+    "c.beqz x8, {label:B}",
+    "c.nop",
+    "{label:B}:",
+    "c.bnez x8, {label:C}",
+    "c.nop",
+    "{label:C}:",
+    "auipc {xA}, 0",
+    "addi {xA}, {xA}, 10",
+    "c.jr {xA}",
+    "c.nop",
+    "c.nop"
+   ]
+  },
+  {
+   "name": "r2_0_amo_word_arithmetic",
+   "reason": "the bug-free rocket disagrees with Spike (implementation-defined or a known core difference)",
+   "asm": [
+    "addi {xA}, x30, {off:4}",
+    "amoadd.w {xB}, {xC}, ({xA})",
+    "amoxor.w {xD}, {xB}, ({xA})",
+    "amoswap.w {xE}, {xD}, ({xA})",
+    "amoor.w {xF}, {xE}, ({xA})",
+    "amoand.w {xB}, {xF}, ({xA})"
+   ],
+   "rvc": false
+  },
+  {
+   "name": "r2_1_amo_double_arithmetic",
+   "reason": "the bug-free rocket disagrees with Spike (implementation-defined or a known core difference)",
+   "asm": [
+    "addi {xA}, x30, {off:8}",
+    "amoadd.d {xB}, {xC}, ({xA})",
+    "amoxor.d {xD}, {xB}, ({xA})",
+    "amoswap.d {xE}, {xD}, ({xA})",
+    "amoor.d {xF}, {xE}, ({xA})",
+    "amoand.d {xB}, {xF}, ({xA})"
+   ],
+   "rvc": false
+  },
+  {
+   "name": "r2_2_amo_min_max_ops",
+   "reason": "the bug-free rocket disagrees with Spike (implementation-defined or a known core difference)",
+   "asm": [
+    "addi {xA}, x30, {off:8}",
+    "amomax.w {xB}, {xC}, ({xA})",
+    "amomaxu.w {xD}, {xB}, ({xA})",
+    "amomin.w {xE}, {xD}, ({xA})",
+    "amominu.w {xF}, {xE}, ({xA})",
+    "amomax.d {xB}, {xF}, ({xA})",
+    "amomaxu.d {xD}, {xB}, ({xA})",
+    "amomin.d {xE}, {xD}, ({xA})",
+    "amominu.d {xF}, {xE}, ({xA})"
+   ],
+   "rvc": false
+  },
+  {
+   "name": "r2_3_atomic_lr_sc_sequence",
+   "reason": "the bug-free rocket disagrees with Spike (implementation-defined or a known core difference)",
+   "asm": [
+    "addi {xA}, x30, {off:8}",
+    "lr.w {xB}, ({xA})",
+    "sc.w {xC}, {xB}, ({xA})",
+    "addi {xC}, x0, 0",
+    "lr.d {xD}, ({xA})",
+    "sc.d {xE}, {xD}, ({xA})",
+    "addi {xE}, x0, 0"
+   ],
+   "rvc": false
+  },
+  {
+   "name": "r2_7_rvc_immediates_and_shifts",
+   "reason": "does not assemble: illegal operands `c.lui x2,2'",
+   "asm": [
+    "c.li {xA}, {imm:-32:31}",
+    "c.lui {xB}, {imm:1:31}",
+    "c.mv {xC}, {xA}",
+    "c.addi {xA}, {imm:-32:31}",
+    "c.slli {xA}, {imm:1:5}",
+    "c.srli x8, {imm:1:5}",
+    "c.srai x9, {imm:1:5}",
+    "c.andi x10, {imm:-32:31}"
+   ],
+   "rvc": true
+  },
+  {
+   "name": "r2_9_rvc_data_loads_stores",
+   "reason": "does not assemble: unrecognized opcode `c.lw x9,0(x8)', extension `c' or `zca' required",
+   "asm": [
+    "addi x8, x30, {off:8}",
+    "c.lw x9, 0(x8)",
+    "c.sw x9, 4(x8)",
+    "c.ld x10, 0(x8)",
+    "c.sd x10, 0(x8)",
+    "c.fld f0, 0(x8)",
+    "c.fsd f0, 0(x8)"
+   ],
+   "rvc": false
+  },
+  {
+   "name": "r2_10_rvc_stack_memory_ops",
+   "reason": "does not assemble: unrecognized opcode `c.sdsp x1,0(x2)', extension `c' or `zca' required",
+   "asm": [
+    "add {xA}, x2, x0",
+    "add x2, x30, x0",
+    "c.sdsp {xB}, 0(x2)",
+    "c.ldsp {xC}, 0(x2)",
+    "c.swsp {xD}, 8(x2)",
+    "c.lwsp {xE}, 8(x2)",
+    "c.fsdsp {fA}, 16(x2)",
+    "c.fldsp {fB}, 16(x2)",
+    "add x2, {xA}, x0"
+   ],
+   "rvc": false
+  },
+  {
+   "name": "r2_11_rvc_addi4spn_op",
+   "reason": "does not assemble: illegal operands `c.addi4spn x8,16'",
+   "asm": [
+    "c.addi4spn x8, 16",
+    "c.addi4spn x9, 32",
+    "c.mv {xA}, x8",
+    "c.mv {xB}, x9"
+   ],
+   "rvc": true
+  },
+  {
+   "name": "r3_1_rvc_branches_and_jumps",
+   "reason": "malformed (needs 1-10 asm lines)",
+   "asm": [
+    "c.li x8, 0",
+    "c.beqz x8, {label:A}",
+    "c.nop",
+    "{label:A}:",
+    "c.li x8, 1",
+    "c.bnez x8, {label:B}",
+    "c.nop",
+    "{label:B}:",
+    "c.j {label:C}",
+    "c.nop",
+    "{label:C}:",
+    "jal x5, {label:D}",
+    "c.jr x5",
+    "{label:D}:"
+   ]
+  },
+  {
+   "name": "r3_4_rvc_exception_ebreak",
+   "reason": "does not assemble: unrecognized opcode `c.ebreak', extension `c' or `zca' required",
+   "asm": [
+    "c.ebreak"
+   ],
+   "rvc": false
+  },
+  {
+   "name": "r3_5_amo_word_aqrl_arithmetic",
+   "reason": "the bug-free rocket disagrees with Spike (implementation-defined or a known core difference)",
+   "asm": [
+    "addi {xA}, x30, {off:4}",
+    "amoadd.w.aqrl {xB}, {xC}, ({xA})",
+    "amoxor.w.aqrl {xD}, {xB}, ({xA})",
+    "amoswap.w.aqrl {xE}, {xD}, ({xA})",
+    "amoor.w.aqrl {xF}, {xE}, ({xA})",
+    "amoand.w.aqrl {xB}, {xF}, ({xA})"
+   ],
+   "rvc": false
+  },
+  {
+   "name": "r3_6_amo_double_aqrl_arithmetic",
+   "reason": "the bug-free rocket disagrees with Spike (implementation-defined or a known core difference)",
+   "asm": [
+    "addi {xA}, x30, {off:8}",
+    "amoadd.d.aqrl {xB}, {xC}, ({xA})",
+    "amoxor.d.aqrl {xD}, {xB}, ({xA})",
+    "amoswap.d.aqrl {xE}, {xD}, ({xA})",
+    "amoor.d.aqrl {xF}, {xE}, ({xA})",
+    "amoand.d.aqrl {xB}, {xF}, ({xA})"
+   ],
+   "rvc": false
+  },
+  {
+   "name": "r3_7_amo_min_max_aqrl_ops",
+   "reason": "the bug-free rocket disagrees with Spike (implementation-defined or a known core difference)",
+   "asm": [
+    "addi {xA}, x30, {off:8}",
+    "amomax.w.aqrl {xB}, {xC}, ({xA})",
+    "amomaxu.w.aqrl {xD}, {xB}, ({xA})",
+    "amomin.w.aqrl {xE}, {xD}, ({xA})",
+    "amominu.w.aqrl {xF}, {xE}, ({xA})",
+    "amomax.d.aqrl {xB}, {xF}, ({xA})",
+    "amomaxu.d.aqrl {xD}, {xB}, ({xA})",
+    "amomin.d.aqrl {xE}, {xD}, ({xA})",
+    "amominu.d.aqrl {xF}, {xE}, ({xA})"
+   ],
+   "rvc": false
+  },
+  {
+   "name": "r3_8_atomic_lr_sc_aqrl_sequence",
+   "reason": "the bug-free rocket disagrees with Spike (implementation-defined or a known core difference)",
+   "asm": [
+    "addi {xA}, x30, {off:8}",
+    "lr.w.aqrl {xB}, ({xA})",
+    "sc.w.aqrl {xC}, {xB}, ({xA})",
+    "addi {xC}, x0, 0",
+    "lr.d.aqrl {xD}, ({xA})",
+    "sc.d.aqrl {xE}, {xD}, ({xA})",
+    "addi {xE}, x0, 0"
+   ],
+   "rvc": false
+  },
+  {
+   "name": "r3_11_rvc_fp_interaction_hazard",
+   "reason": "does not assemble: unrecognized opcode `c.mv x9,x8', extension `c' or `zca' required",
+   "asm": [
+    "addi x8, x30, {off:8}",
+    "fld f0, 0(x8)",
+    "c.mv x9, x8",
+    "ld x10, 0(x9)",
+    "fsd f0, 8(x8)",
+    "sd x10, 16(x8)"
+   ],
+   "rvc": false
+  }
+ ]
+}

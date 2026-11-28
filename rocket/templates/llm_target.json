@@ -1,0 +1,1449 @@
+{
+ "model": "gemini-3.6-flash",
+ "requests": 3,
+ "rounds": [
+  {
+   "round": 1,
+   "proposed": 12,
+   "accepted": 5,
+   "census": {
+    "A": 0,
+    "C": 0,
+    "D": 31,
+    "F": 27,
+    "I": 48,
+    "M": 13,
+    "priv": 9
+   },
+   "exception_causes": [
+    "trap_breakpoint",
+    "trap_machine_ecall"
+   ]
+  },
+  {
+   "round": 2,
+   "proposed": 12,
+   "accepted": 9,
+   "census": {
+    "A": 0,
+    "C": 4,
+    "D": 32,
+    "F": 30,
+    "I": 50,
+    "M": 13,
+    "priv": 9
+   },
+   "exception_causes": [
+    "trap_breakpoint",
+    "trap_machine_ecall",
+    "trap_illegal_instruction"
+   ]
+  },
+  {
+   "round": 3,
+   "proposed": 12,
+   "accepted": 12,
+   "census": {
+    "A": 0,
+    "C": 4,
+    "D": 32,
+    "F": 30,
+    "I": 50,
+    "M": 13,
+    "priv": 9
+   },
+   "exception_causes": [
+    "trap_breakpoint",
+    "trap_machine_ecall",
+    "trap_illegal_instruction"
+   ]
+  }
+ ],
+ "targets": {
+  "rocket": {
+   "CSRFile": {
+    "unkilled_train_mutants": 107,
+    "signals": [
+     "reg_mtvec",
+     "reg_mepc",
+     "reg_sepc",
+     "reg_mie",
+     "reg_mip_ssip",
+     "reg_debug",
+     "reg_mcountinhibit",
+     "small_",
+     "large_",
+     "reg_dcsr_ebreaks"
+    ]
+   },
+   "Rocket": {
+    "unkilled_train_mutants": 94,
+    "signals": [
+     "bpu_io_xcpt_if",
+     "csr_io_interrupt_cause",
+     "ex_reg_cause",
+     "bpu_io_debug_if",
+     "csr_io_interrupt",
+     "ibuf_io_inst_0_bits_xcpt1_ae_inst",
+     "ibuf_io_inst_0_bits_xcpt1_gf_inst",
+     "ibuf_io_inst_0_bits_xcpt1_pf_inst",
+     "ibuf_io_inst_0_bits_xcpt0_ae_inst",
+     "ibuf_io_inst_0_bits_xcpt0_pf_inst"
+    ]
+   },
+   "MulDiv": {
+    "unkilled_train_mutants": 83,
+    "signals": [
+     "resHi",
+     "isHi",
+     "neg_out",
+     "state",
+     "count",
+     "divisorMSB_hi_11",
+     "dividendMSB_lo_4",
+     "divisorMSB_hi_8",
+     "divisorMSB_hi_4",
+     "divisorMSB_hi_13"
+    ]
+   },
+   "RVCExpander": {
+    "unkilled_train_mutants": 57,
+    "signals": [
+     "io_out_T_2",
+     "io_in",
+     "io_out_s_T_234",
+     "io_out_T_38_rs3",
+     "io_out_T_26_rs1",
+     "io_out_s_17_bits",
+     "io_out_T_50_rs1",
+     "io_out_s_T_115",
+     "io_out_s_jr_mv_rs3",
+     "io_out_T_34_rs3"
+    ]
+   },
+   "BreakpointUnit": {
+    "unkilled_train_mutants": 39,
+    "signals": [
+     "io_bp_0_address",
+     "r_T_4",
+     "io_bp_0_control_tmatch",
+     "en_T_2",
+     "io_bp_0_control_action",
+     "io_bp_0_control_x",
+     "r_T_26",
+     "io_ea",
+     "x_T_26",
+     "io_status_prv"
+    ]
+   },
+   "IBuf": {
+    "unkilled_train_mutants": 39,
+    "signals": [
+     "nBufValid",
+     "io_inst_0_ready",
+     "io_kill",
+     "bufMask",
+     "buf__xcpt_pf_inst",
+     "exp_io_rvc",
+     "buf__replay",
+     "io_imem_bits_xcpt_ae_inst",
+     "io_inst_0_bits_xcpt1_T_5",
+     "inst_T"
+    ]
+   }
+  },
+  "boom": {
+   "Rob": {
+    "unkilled_train_mutants": 74,
+    "signals": [
+     "rob_val_0",
+     "io_enq_valids_0",
+     "rob_val_31",
+     "rob_val_29",
+     "rob_val_26",
+     "rob_val_21",
+     "rob_val_20",
+     "rob_val_30",
+     "rob_val_28",
+     "rob_val_27"
+    ]
+   },
+   "CSRFile": {
+    "unkilled_train_mutants": 31,
+    "signals": [
+     "reg_mcountinhibit",
+     "large_1",
+     "small_1",
+     "large_3",
+     "reg_debug",
+     "reg_dcsr_step",
+     "large_",
+     "small_",
+     "large_2",
+     "reg_fflags"
+    ]
+   },
+   "BranchKillableQueue_3": {
+    "unkilled_train_mutants": 17,
+    "signals": [
+     "value_1",
+     "value",
+     "do_enq",
+     "uops_4_br_mask",
+     "uops_3_br_mask",
+     "uops_1_br_mask",
+     "uops_0_br_mask",
+     "uops_2_br_mask",
+     "valids_4",
+     "valids_3"
+    ]
+   },
+   "INToRecFN_1": {
+    "unkilled_train_mutants": 14,
+    "signals": [
+     "intAsRawFloat_extAbsIn",
+     "intAsRawFloat_adjustedNormDist_T_122",
+     "intAsRawFloat_adjustedNormDist_T_115"
+    ]
+   },
+   "IntToFP": {
+    "unkilled_train_mutants": 14,
+    "signals": []
+   },
+   "FPToFP": {
+    "unkilled_train_mutants": 12,
+    "signals": [
+     "narrower_io_exceptionFlags",
+     "io_out_b_exc",
+     "inPipe_bits_wflags",
+     "inPipe_valid",
+     "isnan2",
+     "inPipe_bits_in2"
+    ]
+   }
+  }
+ },
+ "census_before": {
+  "profile": "base",
+  "programs": 100,
+  "seed": 4242,
+  "core": "rocket",
+  "groups": {
+   "A": {
+    "executed": 0,
+    "total": 22,
+    "never": [
+     "amoadd.d",
+     "amoadd.w",
+     "amoand.d",
+     "amoand.w",
+     "amomax.d",
+     "amomax.w",
+     "amomaxu.d",
+     "amomaxu.w",
+     "amomin.d",
+     "amomin.w",
+     "amominu.d",
+     "amominu.w",
+     "amoor.d",
+     "amoor.w",
+     "amoswap.d",
+     "amoswap.w",
+     "amoxor.d",
+     "amoxor.w",
+     "lr.d",
+     "lr.w",
+     "sc.d",
+     "sc.w"
+    ]
+   },
+   "C": {
+    "executed": 0,
+    "total": 34,
+    "never": [
+     "c.add",
+     "c.addi",
+     "c.addi4spn",
+     "c.addw",
+     "c.and",
+     "c.andi",
+     "c.beqz",
+     "c.bnez",
+     "c.ebreak",
+     "c.fld",
+     "c.fldsp",
+     "c.fsd",
+     "c.fsdsp",
+     "c.j",
+     "c.jalr",
+     "c.jr",
+     "c.ld",
+     "c.ldsp",
+     "c.li",
+     "c.lui",
+     "c.lw",
+     "c.lwsp",
+     "c.mv",
+     "c.or",
+     "c.sd",
+     "c.sdsp",
+     "c.slli",
+     "c.srai",
+     "c.srli",
+     "c.sub",
+     "c.subw",
+     "c.sw",
+     "c.swsp",
+     "c.xor"
+    ]
+   },
+   "D": {
+    "executed": 23,
+    "total": 32,
+    "never": [
+     "fcvt.d.s",
+     "fcvt.s.d",
+     "fld",
+     "fmadd.d",
+     "fmsub.d",
+     "fnmadd.d",
+     "fnmsub.d",
+     "fsd",
+     "fsqrt.d"
+    ]
+   },
+   "F": {
+    "executed": 23,
+    "total": 30,
+    "never": [
+     "flw",
+     "fmadd.s",
+     "fmsub.s",
+     "fnmadd.s",
+     "fnmsub.s",
+     "fsqrt.s",
+     "fsw"
+    ]
+   },
+   "I": {
+    "executed": 48,
+    "total": 51,
+    "never": [
+     "fence",
+     "fence.i",
+     "jalr"
+    ]
+   },
+   "M": {
+    "executed": 13,
+    "total": 13,
+    "never": []
+   },
+   "priv": {
+    "executed": 6,
+    "total": 9,
+    "never": [
+     "ebreak",
+     "ecall",
+     "mret"
+    ]
+   }
+  },
+  "exception_causes": {},
+  "csrs_accessed": {
+   "frm": 179,
+   "mscratch": 136,
+   "fcsr": 129,
+   "mstatus": 100,
+   "fflags": 25
+  },
+  "instruction_counts": {
+   "sd": 9859,
+   "addi": 6511,
+   "slli": 6337,
+   "ld": 3252,
+   "fmv_d_x": 3213,
+   "fmv_x_d": 3204,
+   "addiw": 2701,
+   "lui": 2585,
+   "csrrs": 318,
+   "auipc": 234,
+   "csrrwi": 156,
+   "srlw": 115,
+   "jal": 100,
+   "addw": 98,
+   "sra": 95,
+   "slt": 95,
+   "xor": 95,
+   "sraw": 92,
+   "sll": 92,
+   "sub": 91,
+   "and": 90,
+   "or": 90,
+   "sllw": 84,
+   "sltu": 81,
+   "add": 81,
+   "srl": 80,
+   "subw": 78,
+   "ori": 73,
+   "slti": 67,
+   "sb": 67,
+   "lwu": 64,
+   "andi": 64,
+   "lh": 57,
+   "beq": 56,
+   "sh": 55,
+   "blt": 53,
+   "sw": 53,
+   "xori": 52,
+   "lbu": 52,
+   "bge": 52,
+   "lb": 51,
+   "lhu": 51,
+   "bgeu": 50,
+   "lw": 50,
+   "sltiu": 48,
+   "slliw": 46,
+   "remu": 42,
+   "sraiw": 39,
+   "bltu": 39,
+   "bne": 37,
+   "mulhsu": 34,
+   "srai": 34,
+   "divuw": 33,
+   "mulhu": 33,
+   "divu": 33,
+   "mulh": 32,
+   "csrrci": 31,
+   "srliw": 30,
+   "divw": 30,
+   "div": 30,
+   "remw": 29,
+   "rem": 28,
+   "remuw": 28,
+   "srli": 27,
+   "mulw": 27,
+   "mul": 25,
+   "csrrc": 24,
+   "csrrsi": 20,
+   "csrrw": 20,
+   "fadd_d": 14,
+   "fmul_d": 14,
+   "fadd_s": 14,
+   "fdiv_s": 13,
+   "fmul_s": 11,
+   "fsub_d": 11,
+   "fle_d": 10,
+   "fsub_s": 10,
+   "fdiv_d": 10,
+   "fcvt_l_s": 9,
+   "fsgnjx_s": 8,
+   "flt_s": 8,
+   "fcvt_s_l": 8,
+   "fmax_s": 7,
+   "feq_d": 7,
+   "fcvt_w_d": 7,
+   "fle_s": 7,
+   "fmv_w_x": 7,
+   "feq_s": 7,
+   "fmin_s": 6,
+   "fmv_x_w": 6,
+   "fcvt_d_w": 5,
+   "flt_d": 5,
+   "fmax_d": 5,
+   "fcvt_s_wu": 5,
+   "fclass_s": 5,
+   "fcvt_d_l": 5,
+   "fcvt_lu_s": 5,
+   "fsgnj_d": 4,
+   "fclass_d": 4,
+   "fsgnjn_s": 4,
+   "fsgnjx_d": 4,
+   "fcvt_lu_d": 4,
+   "fcvt_s_lu": 4,
+   "fcvt_w_s": 4,
+   "fcvt_wu_d": 4,
+   "fsgnjn_d": 3,
+   "fmin_d": 3,
+   "fcvt_s_w": 3,
+   "fcvt_d_lu": 3,
+   "fcvt_d_wu": 3,
+   "fcvt_l_d": 2,
+   "fsgnj_s": 2,
+   "fcvt_wu_s": 1
+  }
+ },
+ "census_after": {
+  "profile": "llm",
+  "programs": 100,
+  "seed": 4242,
+  "core": "rocket",
+  "groups": {
+   "A": {
+    "executed": 0,
+    "total": 22,
+    "never": [
+     "amoadd.d",
+     "amoadd.w",
+     "amoand.d",
+     "amoand.w",
+     "amomax.d",
+     "amomax.w",
+     "amomaxu.d",
+     "amomaxu.w",
+     "amomin.d",
+     "amomin.w",
+     "amominu.d",
+     "amominu.w",
+     "amoor.d",
+     "amoor.w",
+     "amoswap.d",
+     "amoswap.w",
+     "amoxor.d",
+     "amoxor.w",
+     "lr.d",
+     "lr.w",
+     "sc.d",
+     "sc.w"
+    ]
+   },
+   "C": {
+    "executed": 4,
+    "total": 34,
+    "never": [
+     "c.addi4spn",
+     "c.addw",
+     "c.and",
+     "c.andi",
+     "c.beqz",
+     "c.bnez",
+     "c.ebreak",
+     "c.fld",
+     "c.fldsp",
+     "c.fsd",
+     "c.fsdsp",
+     "c.j",
+     "c.jalr",
+     "c.jr",
+     "c.ld",
+     "c.ldsp",
+     "c.lui",
+     "c.lw",
+     "c.lwsp",
+     "c.or",
+     "c.sd",
+     "c.sdsp",
+     "c.slli",
+     "c.srai",
+     "c.srli",
+     "c.sub",
+     "c.subw",
+     "c.sw",
+     "c.swsp",
+     "c.xor"
+    ]
+   },
+   "D": {
+    "executed": 32,
+    "total": 32,
+    "never": []
+   },
+   "F": {
+    "executed": 30,
+    "total": 30,
+    "never": []
+   },
+   "I": {
+    "executed": 50,
+    "total": 51,
+    "never": [
+     "fence.i"
+    ]
+   },
+   "M": {
+    "executed": 13,
+    "total": 13,
+    "never": []
+   },
+   "priv": {
+    "executed": 9,
+    "total": 9,
+    "never": []
+   }
+  },
+  "exception_causes": {
+   "trap_breakpoint": 87,
+   "trap_machine_ecall": 87,
+   "trap_illegal_instruction": 11
+  },
+  "csrs_accessed": {
+   "mepc": 742,
+   "mcause": 644,
+   "mstatus": 579,
+   "mtval": 459,
+   "frm": 337,
+   "mscratch": 296,
+   "fflags": 212,
+   "fcsr": 211,
+   "mie": 192,
+   "mtvec": 100
+  },
+  "instruction_counts": {
+   "sd": 10389,
+   "addi": 7471,
+   "slli": 6655,
+   "ld": 3511,
+   "fmv_d_x": 3206,
+   "fmv_x_d": 3204,
+   "addiw": 2830,
+   "lui": 2816,
+   "csrrs": 2452,
+   "csrrw": 1033,
+   "auipc": 381,
+   "xor": 372,
+   "add": 319,
+   "bne": 265,
+   "sltiu": 225,
+   "mret": 185,
+   "jal": 151,
+   "csrrwi": 134,
+   "addw": 128,
+   "csrrc": 113,
+   "c_li": 112,
+   "c_addi": 112,
+   "c_add": 112,
+   "rem": 111,
+   "divu": 111,
+   "mulhu": 111,
+   "div": 109,
+   "remu": 107,
+   "mulhsu": 106,
+   "sub": 106,
+   "mulh": 103,
+   "and": 100,
+   "subw": 100,
+   "fadd_s": 98,
+   "or": 95,
+   "fcvt_s_lu": 90,
+   "fadd_d": 89,
+   "ebreak": 87,
+   "ecall": 87,
+   "blt": 83,
+   "flw": 83,
+   "fsw": 83,
+   "beq": 82,
+   "srlw": 80,
+   "lw": 79,
+   "sw": 77,
+   "sra": 76,
+   "srl": 72,
+   "sll": 72,
+   "sltu": 70,
+   "fcvt_d_lu": 67,
+   "slliw": 66,
+   "fcvt_lu_d": 65,
+   "sraw": 65,
+   "slt": 64,
+   "sllw": 63,
+   "srliw": 62,
+   "sraiw": 62,
+   "slti": 60,
+   "andi": 59,
+   "fcvt_d_s": 58,
+   "fmadd_d": 58,
+   "fmsub_d": 58,
+   "fcvt_s_d": 58,
+   "c_mv": 56,
+   "fld": 55,
+   "fsd": 55,
+   "fmsub_s": 55,
+   "fnmadd_s": 55,
+   "fnmsub_s": 55,
+   "divw": 54,
+   "jalr": 51,
+   "sb": 51,
+   "ori": 48,
+   "lb": 48,
+   "xori": 47,
+   "sh": 46,
+   "lhu": 46,
+   "lwu": 42,
+   "bgeu": 41,
+   "lh": 41,
+   "fence": 40,
+   "lbu": 35,
+   "bge": 34,
+   "fcvt_d_l": 33,
+   "mulw": 32,
+   "bltu": 32,
+   "mul": 30,
+   "fnmadd_d": 30,
+   "fnmsub_d": 30,
+   "fsqrt_d": 30,
+   "fmadd_s": 30,
+   "fsqrt_s": 30,
+   "srli": 29,
+   "remuw": 28,
+   "divuw": 27,
+   "srai": 25,
+   "remw": 24,
+   "csrrci": 22,
+   "csrrsi": 18,
+   "fmul_d": 13,
+   "fmul_s": 11,
+   "fsub_d": 11,
+   "fmv_w_x": 11,
+   "fdiv_s": 10,
+   "fsub_s": 9,
+   "fdiv_d": 8,
+   "fclass_d": 7,
+   "fcvt_s_w": 6,
+   "flt_d": 6,
+   "fclass_s": 6,
+   "fmax_s": 6,
+   "fcvt_s_wu": 6,
+   "flt_s": 5,
+   "fle_d": 5,
+   "fsgnjn_s": 5,
+   "fcvt_wu_d": 5,
+   "fsgnjx_d": 5,
+   "fcvt_w_d": 4,
+   "fcvt_l_d": 4,
+   "fle_s": 4,
+   "fmin_d": 4,
+   "fcvt_lu_s": 4,
+   "fmin_s": 4,
+   "fmax_d": 4,
+   "fsgnjn_d": 4,
+   "fcvt_l_s": 4,
+   "feq_s": 3,
+   "fcvt_w_s": 3,
+   "fcvt_d_w": 3,
+   "fcvt_s_l": 2,
+   "fsgnj_d": 2,
+   "fmv_x_w": 2,
+   "fcvt_wu_s": 2,
+   "fcvt_d_wu": 2,
+   "fsgnjx_s": 2,
+   "feq_d": 2,
+   "fsgnj_s": 1
+  }
+ },
+ "templates": [
+  {
+   "name": "r1_5_fp_fma_sqrt_conversions",
+   "targets": [
+    "fmadd.d",
+    "fmsub.d",
+    "fnmadd.d",
+    "fnmsub.d",
+    "fsqrt.d",
+    "fcvt.d.s",
+    "fcvt.s.d",
+    "fmadd.s",
+    "fmsub.s",
+    "fnmadd.s",
+    "fnmsub.s",
+    "fsqrt.s",
+    "FPToFP"
+   ],
+   "rvc": false,
+   "asm": [
+    "fcvt.d.s {fA}, {fB}",
+    "fmadd.d {fC}, {fA}, {fB}, {fD}",
+    "fmsub.d {fE}, {fC}, {fA}, {fB}",
+    "fnmadd.d {fF}, {fE}, {fC}, {fA}",
+    "fnmsub.d {fG}, {fF}, {fE}, {fC}",
+    "fsqrt.d {fH}, {fC}",
+    "fcvt.s.d {fI}, {fH}",
+    "fmadd.s {fJ}, {fI}, {fB}, {fC}",
+    "fsqrt.s {fK}, {fJ}"
+   ]
+  },
+  {
+   "name": "r1_6_fp_load_store_int_conversion",
+   "targets": [
+    "flw",
+    "fsw",
+    "fld",
+    "fsd",
+    "INToRecFN_1",
+    "IntToFP"
+   ],
+   "rvc": false,
+   "asm": [
+    "addi {xA}, x30, {off:8}",
+    "fld {fA}, 0({xA})",
+    "flw {fB}, 4({xA})",
+    "fcvt.d.l {fC}, {xB}",
+    "fcvt.s.lu {fD}, {xC}",
+    "fadd.d {fE}, {fA}, {fC}",
+    "fsd {fE}, 0({xA})",
+    "fsw {fD}, 4({xA})"
+   ]
+  },
+  {
+   "name": "r1_8_priv_exceptions_ebreak_ecall",
+   "targets": [
+    "ebreak",
+    "ecall",
+    "mret",
+    "mepc",
+    "mcause",
+    "mtval",
+    "mscratch",
+    "CSRFile",
+    "BreakpointUnit"
+   ],
+   "rvc": false,
+   "asm": [
+    "csrr {xA}, mstatus",
+    "csrr {xB}, mepc",
+    "csrw mscratch, {xA}",
+    "ebreak",
+    "csrr {xC}, mcause",
+    "csrr {xD}, mtval",
+    "ecall",
+    "csrr {xE}, mcause"
+   ]
+  },
+  {
+   "name": "r1_9_muldiv_overflow_corner_cases",
+   "targets": [
+    "MulDiv",
+    "div",
+    "rem",
+    "divu",
+    "remu",
+    "mulh",
+    "mulhu",
+    "mulhsu",
+    "divw"
+   ],
+   "rvc": false,
+   "asm": [
+    "li {xA}, -1",
+    "li {xB}, -9223372036854775808",
+    "div {xC}, {xB}, {xA}",
+    "rem {xD}, {xB}, {xA}",
+    "divu {xE}, {xB}, {xA}",
+    "remu {xF}, {xB}, {xA}",
+    "mulh {xG}, {xB}, {xB}",
+    "mulhu {xH}, {xB}, {xB}",
+    "mulhsu {xI}, {xB}, {xA}",
+    "divw {xJ}, {xB}, {xA}"
+   ]
+  },
+  {
+   "name": "r1_10_csr_fcsr_mstatus_control",
+   "targets": [
+    "fcsr",
+    "fflags",
+    "frm",
+    "mstatus",
+    "mie",
+    "mscratch",
+    "CSRFile"
+   ],
+   "rvc": false,
+   "asm": [
+    "csrr {xA}, mstatus",
+    "csrr {xB}, mie",
+    "csrr {xC}, fcsr",
+    "fsflags {xD}",
+    "fsrm {xE}",
+    "csrrw {xF}, fflags, {xA}",
+    "csrrw {xG}, frm, {xB}",
+    "csrrw {xH}, mscratch, {xC}"
+   ]
+  },
+  {
+   "name": "r2_0_fp_single_fma_operations",
+   "targets": [
+    "fmsub.s",
+    "fnmadd.s",
+    "fnmsub.s",
+    "FPToFP"
+   ],
+   "rvc": false,
+   "asm": [
+    "fmsub.s {fA}, {fB}, {fC}, {fD}",
+    "fnmadd.s {fE}, {fA}, {fB}, {fC}",
+    "fnmsub.s {fF}, {fE}, {fD}, {fB}",
+    "fadd.s {fG}, {fF}, {fA}"
+   ]
+  },
+  {
+   "name": "r2_1_fp_double_unsigned_conv",
+   "targets": [
+    "fcvt.d.lu",
+    "IntToFP",
+    "INToRecFN_1"
+   ],
+   "rvc": false,
+   "asm": [
+    "addi {xA}, x30, {off:8}",
+    "ld {xB}, 0({xA})",
+    "fcvt.d.lu {fA}, {xB}",
+    "fcvt.lu.d {xC}, {fA}",
+    "fcvt.s.lu {fB}, {xB}"
+   ]
+  },
+  {
+   "name": "r2_4_fence_jalr_pipeline_hazards",
+   "targets": [
+    "fence",
+    "jalr",
+    "IBuf",
+    "BranchKillableQueue_3",
+    "Rob"
+   ],
+   "rvc": false,
+   "asm": [
+    "fence",
+    "jal {xA}, {label:A}",
+    "nop",
+    "{label:A}:",
+    "fence",
+    "la {xB}, {label:B}",
+    "jalr {xC}, {xB}, 0",
+    "nop",
+    "{label:B}:"
+   ]
+  },
+  {
+   "name": "r2_5_muldiv_extreme_operands",
+   "targets": [
+    "MulDiv",
+    "div",
+    "rem",
+    "divu",
+    "remu",
+    "mulh",
+    "mulhu",
+    "mulhsu",
+    "divw"
+   ],
+   "rvc": false,
+   "asm": [
+    "addi {xA}, x30, {off:8}",
+    "ld {xB}, 0({xA})",
+    "li {xC}, -1",
+    "div {xD}, {xB}, {xC}",
+    "rem {xE}, {xB}, {xC}",
+    "divu {xF}, {xB}, {xC}",
+    "remu {xG}, {xB}, {xC}",
+    "mulh {xH}, {xB}, {xC}",
+    "mulhu {xI}, {xB}, {xC}",
+    "mulhsu {xJ}, {xB}, {xC}"
+   ]
+  },
+  {
+   "name": "r2_6_priv_traps_and_csrs",
+   "targets": [
+    "ebreak",
+    "ecall",
+    "mepc",
+    "mcause",
+    "mtval",
+    "mscratch",
+    "CSRFile",
+    "BreakpointUnit"
+   ],
+   "rvc": false,
+   "asm": [
+    "csrr {xA}, mstatus",
+    "csrr {xB}, mepc",
+    "csrw mscratch, {xA}",
+    "ebreak",
+    "csrr {xC}, mcause",
+    "csrr {xD}, mtval",
+    "ecall",
+    "csrr {xE}, mcause"
+   ]
+  },
+  {
+   "name": "r2_7_csr_fp_status_control",
+   "targets": [
+    "fcsr",
+    "fflags",
+    "frm",
+    "mstatus",
+    "mie",
+    "mscratch",
+    "CSRFile"
+   ],
+   "rvc": false,
+   "asm": [
+    "csrr {xA}, mstatus",
+    "csrr {xB}, mie",
+    "csrr {xC}, fcsr",
+    "fsflags {xD}",
+    "fsrm {xE}",
+    "csrrw {xF}, fflags, {xA}",
+    "csrrw {xG}, frm, {xB}",
+    "csrrw {xH}, mscratch, {xC}"
+   ]
+  },
+  {
+   "name": "r2_8_fp_pipeline_conversions",
+   "targets": [
+    "FPToFP",
+    "INToRecFN_1",
+    "IntToFP",
+    "fcvt.d.s",
+    "fcvt.s.d",
+    "fmadd.d",
+    "fmsub.d"
+   ],
+   "rvc": false,
+   "asm": [
+    "addi {xA}, x30, {off:8}",
+    "flw {fA}, 0({xA})",
+    "fcvt.d.s {fB}, {fA}",
+    "fmadd.d {fC}, {fB}, {fB}, {fB}",
+    "fmsub.d {fD}, {fC}, {fB}, {fB}",
+    "fcvt.s.d {fE}, {fD}",
+    "fsw {fE}, 4({xA})"
+   ]
+  },
+  {
+   "name": "r2_9_rvc_dense_arithmetic",
+   "targets": [
+    "c.li",
+    "c.addi",
+    "c.add",
+    "c.mv",
+    "RVCExpander",
+    "Rob"
+   ],
+   "rvc": true,
+   "asm": [
+    "c.li {xA}, {imm:-32:31}",
+    "c.li {xB}, {imm:-32:31}",
+    "c.addi {xA}, {imm:-32:31}",
+    "c.add {xA}, {xB}",
+    "c.mv {xC}, {xA}",
+    "c.addi {xC}, {imm:-32:31}",
+    "c.add {xB}, {xC}"
+   ]
+  },
+  {
+   "name": "r2_10_branch_queue_forward_jumps",
+   "targets": [
+    "BranchKillableQueue_3",
+    "Rob",
+    "Rocket"
+   ],
+   "rvc": false,
+   "asm": [
+    "addi {xA}, x30, {off:8}",
+    "ld {xB}, 0({xA})",
+    "beq {xB}, x0, {label:A}",
+    "addi {xC}, {xB}, 1",
+    "{label:A}:",
+    "bne {xC}, {xB}, {label:B}",
+    "addi {xD}, {xC}, 2",
+    "{label:B}:",
+    "blt {xB}, {xC}, {label:C}",
+    "{label:C}:"
+   ]
+  },
+  {
+   "name": "r3_0_fp_single_fma_operations",
+   "targets": [
+    "fmsub.s",
+    "fnmadd.s",
+    "fnmsub.s",
+    "FPToFP"
+   ],
+   "rvc": false,
+   "asm": [
+    "fmsub.s {fA}, {fB}, {fC}, {fD}",
+    "fnmadd.s {fE}, {fA}, {fB}, {fC}",
+    "fnmsub.s {fF}, {fE}, {fD}, {fB}",
+    "fadd.s {fG}, {fF}, {fA}"
+   ]
+  },
+  {
+   "name": "r3_1_fp_double_unsigned_conv",
+   "targets": [
+    "fcvt.d.lu",
+    "IntToFP",
+    "INToRecFN_1"
+   ],
+   "rvc": false,
+   "asm": [
+    "ld {xA}, {off:8}(x30)",
+    "fcvt.d.lu {fA}, {xA}",
+    "fcvt.lu.d {xB}, {fA}",
+    "fcvt.s.lu {fB}, {xA}",
+    "fadd.d {fC}, {fA}, {fA}"
+   ]
+  },
+  {
+   "name": "r3_2_muldiv_extreme_operands",
+   "targets": [
+    "MulDiv",
+    "div",
+    "rem",
+    "divu",
+    "remu",
+    "mulh",
+    "mulhu",
+    "mulhsu"
+   ],
+   "rvc": false,
+   "asm": [
+    "ld {xA}, {off:8}(x30)",
+    "li {xB}, -1",
+    "div {xC}, {xA}, {xB}",
+    "rem {xD}, {xA}, {xB}",
+    "divu {xE}, {xA}, {xB}",
+    "remu {xF}, {xA}, {xB}",
+    "mulh {xG}, {xA}, {xB}",
+    "mulhu {xH}, {xA}, {xB}",
+    "mulhsu {xI}, {xA}, {xB}"
+   ]
+  },
+  {
+   "name": "r3_3_jalr_forward_jump_hazards",
+   "targets": [
+    "jalr",
+    "IBuf",
+    "BranchKillableQueue_3",
+    "Rob"
+   ],
+   "rvc": false,
+   "asm": [
+    "jal {xA}, {label:A}",
+    "nop",
+    "{label:A}:",
+    "la {xB}, {label:B}",
+    "jalr {xC}, {xB}, 0",
+    "nop",
+    "{label:B}:"
+   ]
+  },
+  {
+   "name": "r3_4_priv_traps_and_csrs",
+   "targets": [
+    "ebreak",
+    "ecall",
+    "mepc",
+    "mcause",
+    "mtval",
+    "mscratch",
+    "CSRFile",
+    "BreakpointUnit"
+   ],
+   "rvc": false,
+   "asm": [
+    "csrr {xA}, mstatus",
+    "csrr {xB}, mepc",
+    "csrw mscratch, {xA}",
+    "ebreak",
+    "csrr {xC}, mcause",
+    "csrr {xD}, mtval",
+    "ecall",
+    "csrr {xE}, mcause"
+   ]
+  },
+  {
+   "name": "r3_5_csr_fp_status_control",
+   "targets": [
+    "fcsr",
+    "fflags",
+    "frm",
+    "mstatus",
+    "mie",
+    "mscratch",
+    "CSRFile"
+   ],
+   "rvc": false,
+   "asm": [
+    "csrr {xA}, mstatus",
+    "csrr {xB}, mie",
+    "csrr {xC}, fcsr",
+    "fsflags {xD}",
+    "fsrm {xE}",
+    "csrrw {xF}, fflags, {xA}",
+    "csrrw {xG}, frm, {xB}",
+    "csrrw {xH}, mscratch, {xC}"
+   ]
+  },
+  {
+   "name": "r3_6_branch_queue_forward_jumps",
+   "targets": [
+    "BranchKillableQueue_3",
+    "Rob",
+    "Rocket"
+   ],
+   "rvc": false,
+   "asm": [
+    "ld {xA}, {off:8}(x30)",
+    "beq {xA}, x0, {label:A}",
+    "addi {xB}, {xA}, 1",
+    "{label:A}:",
+    "bne {xB}, {xA}, {label:B}",
+    "addi {xC}, {xB}, 2",
+    "{label:B}:",
+    "blt {xA}, {xB}, {label:C}",
+    "{label:C}:"
+   ]
+  },
+  {
+   "name": "r3_7_memory_load_store_hazards",
+   "targets": [
+    "IBuf",
+    "Rob",
+    "Rocket"
+   ],
+   "rvc": false,
+   "asm": [
+    "ld {xA}, {off:8}(x30)",
+    "sd {xA}, {off:8}(x30)",
+    "ld {xB}, {off:8}(x30)",
+    "lw {xC}, {off:4}(x30)",
+    "sw {xC}, {off:4}(x30)",
+    "add {xD}, {xB}, {xC}"
+   ]
+  },
+  {
+   "name": "r3_8_rvc_expander_word_alu",
+   "targets": [
+    "RVCExpander",
+    "IBuf"
+   ],
+   "rvc": false,
+   "asm": [
+    "addi {xA}, x0, {imm:-16:15}",
+    "addi {xB}, x0, {imm:-16:15}",
+    "add {xC}, {xA}, {xB}",
+    "sub {xD}, {xC}, {xA}",
+    "and {xE}, {xC}, {xB}",
+    "or {xF}, {xD}, {xE}",
+    "xor {xG}, {xF}, {xA}",
+    "slli {xH}, {xG}, {imm:1:5}"
+   ]
+  },
+  {
+   "name": "r3_9_compressed_safe_alu",
+   "targets": [
+    "c.li",
+    "c.addi",
+    "c.mv",
+    "c.add",
+    "RVCExpander",
+    "Rob"
+   ],
+   "rvc": true,
+   "asm": [
+    "c.li {xA}, {imm:-32:31}",
+    "c.li {xB}, {imm:-32:31}",
+    "c.addi {xA}, {imm:-32:31}",
+    "c.add {xA}, {xB}",
+    "c.mv {xC}, {xA}",
+    "c.addi {xC}, {imm:-32:31}",
+    "c.add {xB}, {xC}"
+   ]
+  },
+  {
+   "name": "r3_10_rv64_word_alu_ops",
+   "targets": [
+    "addw",
+    "subw",
+    "slliw",
+    "sraiw",
+    "srliw",
+    "Rob"
+   ],
+   "rvc": false,
+   "asm": [
+    "ld {xA}, {off:8}(x30)",
+    "addw {xB}, {xA}, {xA}",
+    "subw {xC}, {xB}, {xA}",
+    "slliw {xD}, {xC}, {imm:1:5}",
+    "sraiw {xE}, {xD}, {imm:1:5}",
+    "srliw {xF}, {xE}, {imm:1:5}",
+    "addw {xG}, {xF}, {xD}"
+   ]
+  },
+  {
+   "name": "r3_11_fp_mem_double_single",
+   "targets": [
+    "fld",
+    "fsd",
+    "flw",
+    "fsw",
+    "FPToFP",
+    "IntToFP"
+   ],
+   "rvc": false,
+   "asm": [
+    "fld {fA}, {off:8}(x30)",
+    "flw {fB}, {off:4}(x30)",
+    "fadd.d {fC}, {fA}, {fA}",
+    "fsd {fC}, {off:8}(x30)",
+    "fadd.s {fD}, {fB}, {fB}",
+    "fsw {fD}, {off:4}(x30)"
+   ]
+  }
+ ],
+ "rejected": [
+  {
+   "name": "r1_11_compressed_jumps",
+   "reason": "malformed (needs 1-10 asm lines)",
+   "asm": [
+    "la {xA}, {label:A}",
+    "c.jr {xA}",
+    "nop",
+    "{label:A}:",
+    "la {xB}, {label:B}",
+    "c.jalr {xB}",
+    "nop",
+    "{label:B}:",
+    "c.j {label:C}",
+    "nop",
+    "{label:C}:"
+   ]
+  },
+  {
+   "name": "r1_0_amo_lr_sc_sequence",
+   "reason": "the bug-free rocket disagrees with Spike (implementation-defined or a known core difference)",
+   "asm": [
+    "addi {xA}, x30, {off:8}",
+    "lr.d {xB}, ({xA})",
+    "sc.d {xC}, {xB}, ({xA})",
+    "lr.w {xD}, ({xA})",
+    "sc.w {xE}, {xD}, ({xA})",
+    "amoswap.d {xF}, {xB}, ({xA})",
+    "amoadd.d {xG}, {xC}, ({xA})",
+    "amoxor.d {xH}, {xD}, ({xA})"
+   ],
+   "rvc": false
+  },
+  {
+   "name": "r1_1_amo_minmax_logic_ops",
+   "reason": "the bug-free rocket disagrees with Spike (implementation-defined or a known core difference)",
+   "asm": [
+    "addi {xA}, x30, {off:8}",
+    "amomax.d {xB}, {xC}, ({xA})",
+    "amomaxu.d {xD}, {xE}, ({xA})",
+    "amomin.d {xF}, {xG}, ({xA})",
+    "amominu.d {xH}, {xI}, ({xA})",
+    "amomax.w {xJ}, {xC}, ({xA})",
+    "amomaxu.w {xK}, {xE}, ({xA})",
+    "amomin.w {xL}, {xF}, ({xA})",
+    "amominu.w {xM}, {xG}, ({xA})",
+    "amoand.w {xN}, {xH}, ({xA})"
+   ],
+   "rvc": false
+  },
+  {
+   "name": "r1_2_compressed_alu_basic",
+   "reason": "does not assemble: illegal operands `c.sub x3,x26'",
+   "asm": [
+    "c.li {xA}, {imm:-32:31}",
+    "c.lui {xB}, {imm:1:31}",
+    "c.mv {xC}, {xA}",
+    "c.addi {xA}, {imm:-32:31}",
+    "c.add {xB}, {xA}",
+    "c.sub {xB}, {xC}",
+    "c.and {xB}, {xA}",
+    "c.or {xB}, {xC}",
+    "c.xor {xB}, {xA}"
+   ],
+   "rvc": true
+  },
+  {
+   "name": "r1_3_compressed_branches_shifts",
+   "reason": "does not assemble: illegal operands `c.andi x4,-11'",
+   "asm": [
+    "c.li {xA}, {imm:-16:15}",
+    "c.slli {xA}, {imm:1:5}",
+    "c.andi {xA}, {imm:-16:15}",
+    "c.beqz {xA}, {label:A}",
+    "c.addi {xB}, {imm:1:10}",
+    "{label:A}:",
+    "c.bnez {xA}, {label:B}",
+    "c.addi {xC}, {imm:1:10}",
+    "{label:B}:"
+   ],
+   "rvc": true
+  },
+  {
+   "name": "r1_4_compressed_loads_stores",
+   "reason": "does not assemble: unrecognized opcode `c.ld x3,0(x4)', extension `c' or `zca' required",
+   "asm": [
+    "addi {xA}, x30, {off:8}",
+    "c.ld {xB}, 0({xA})",
+    "c.sd {xB}, 0({xA})",
+    "c.lw {xC}, 0({xA})",
+    "c.sw {xC}, 4({xA})",
+    "c.fld {fA}, 0({xA})",
+    "c.fsd {fA}, 0({xA})"
+   ],
+   "rvc": false
+  },
+  {
+   "name": "r1_7_fence_and_indirect_jumps",
+   "reason": "does not assemble: unrecognized opcode `fence.i', extension `zifencei' required",
+   "asm": [
+    "fence",
+    "fence.i",
+    "jal {xA}, {label:A}",
+    "nop",
+    "{label:A}:",
+    "la {xB}, {label:B}",
+    "jalr {xC}, {xB}, 0",
+    "nop",
+    "{label:B}:"
+   ],
+   "rvc": false
+  },
+  {
+   "name": "r2_2_compressed_alu_universal",
+   "reason": "does not assemble: illegal operands `c.lui x2,20'",
+   "asm": [
+    "c.li {xA}, {imm:-32:31}",
+    "c.lui {xB}, {imm:1:31}",
+    "c.mv {xC}, {xA}",
+    "c.addi {xA}, {imm:-32:31}",
+    "c.add {xB}, {xC}"
+   ],
+   "rvc": true
+  },
+  {
+   "name": "r2_3_compressed_indirect_jumps",
+   "reason": "does not assemble: unrecognized opcode `c.jalr x4', extension `c' or `zca' required",
+   "asm": [
+    "la {xA}, {label:A}",
+    "c.jalr {xA}",
+    "nop",
+    "{label:A}:",
+    "la {xB}, {label:B}",
+    "c.jr {xB}",
+    "nop",
+    "{label:B}:",
+    "c.j {label:C}",
+    "{label:C}:"
+   ],
+   "rvc": false
+  },
+  {
+   "name": "r2_11_memory_forwarding_hazards",
+   "reason": "the bug-free rocket disagrees with Spike (implementation-defined or a known core difference)",
+   "asm": [
+    "addi {xA}, x30, {off:8}",
+    "sd {xB}, 0({xA})",
+    "ld {xC}, 0({xA})",
+    "add {xD}, {xC}, {xB}",
+    "sw {xD}, 8({xA})",
+    "lw {xE}, 8({xA})",
+    "sub {xF}, {xE}, {xD}"
+   ],
+   "rvc": false
+  }
+ ]
+}

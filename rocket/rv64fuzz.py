@@ -68,9 +68,13 @@ MSTATUS_BITS = [0x2000, 0x4000, 0x6000, 0x80]   # FS and MPIE only: MPRV/MPP wou
 # FS bits are only ever set (a no-op on FS = Dirty), never cleared: with the FPU off, Spike traps FP instructions and FP-CSR
 # accesses that the bug-free Rocket executes in some cases (16 false alarms in the first ext campaign, all caught by replay;
 # results archived in logs/archive/rocket_ext_v1).
-PROFILES = ("base", "ext", "llm", "llmflash")
+PROFILES = ("base", "ext", "llm", "llmflash", "llmtgt", "llmctl")
 # template file per LLM profile (llm: gemini-3.5-flash-lite, llmflash: gemini-3-flash-preview; same architecture, stronger model)
-TEMPLATE_FILES = {"llm": "llm.json", "llmflash": "llm_flash.json"}
+# llmtgt: gemini-3-flash-preview templates aimed at the modules where training-split factory mutants survive (module and
+# signal names only; rocket/llm_templates.py --target, gemini-3.6-flash); llmctl: its control, the same model and rounds
+# from the ISA census only
+TEMPLATE_FILES = {"llm": "llm.json", "llmflash": "llm_flash.json", "llmtgt": "llm_target.json", "llmctl": "llm_census36.json"}
+LLM_PROFILES = tuple(TEMPLATE_FILES)
 # Profile "llm" (Step 2): the base instruction mix plus validated templates written by an LLM from the ISA census
 # (rocket/isa_census.py, rocket/llm_templates.py), on the ext harness (trap handler, x28/x29 reserved, FS never off) but
 # without any of the hand-designed ext classes.
@@ -143,7 +147,7 @@ def gen_program(rng: random.Random, length: int, fp: bool = True, profile: str =
     random stream are exactly as before."""
     body_given = body
     subst = subst or {}
-    traps = profile in ("ext", "llm", "llmflash")                       # the ext harness (trap handler, reserved x28/x29)
+    traps = profile == "ext" or profile in LLM_PROFILES                       # the ext harness (trap handler, reserved x28/x29)
     ext_mix = profile == "ext"                              # the hand-designed ext instruction classes
     top = 27 if traps else 29                               # traps: x28/x29 belong to the trap handler
     rd = lambda: f"x{rng.randint(1, top)}"                 # never x30 (data pointer) or x31 (dump pointer)
@@ -277,7 +281,7 @@ def gen_program(rng: random.Random, length: int, fp: bool = True, profile: str =
         # generator rule (no fdiv.d) and no square root, which those generators never emit. Without this, a model
         # body could use instructions the generators are barred from (found 2026-11-28: 21 of 25 BOOM mutants first
         # killed by model samples needed fsqrt/fdiv.d).
-        q = (template_subst or subst) if profile in ("llm", "llmflash") else \
+        q = (template_subst or subst) if profile in LLM_PROFILES else \
             {**subst, **{k: v for k, v in (template_subst or {}).items() if k.startswith("fsqrt")}}
         body = apply_subst([l.strip() for l in body_given if l.strip()], q)
     raw_body = list(body)

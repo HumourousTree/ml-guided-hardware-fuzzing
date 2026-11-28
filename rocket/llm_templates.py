@@ -44,10 +44,8 @@ Harness facts (fixed; templates must respect them):
 
 Measured gaps of the current generator ({programs} programs, decoded from Spike's execution log):
 {census}
-
-Write up to {k} NEW templates that make the generator exercise what is never executed, including instruction
-combinations and corner cases likely to expose processor bugs (hazards between dependent instructions, unusual operand
-values, exceptions). Each template is 1 to 10 assembly lines in GNU syntax with these placeholders:
+{targets}
+Write up to {k} NEW templates that {goal}. Each template is 1 to 10 assembly lines in GNU syntax with these placeholders:
   {{xA}} .. {{xZ}}   integer registers (the same letter = the same register within one template instance)
   {{fA}} .. {{fZ}}   FP registers
   {{imm:LO:HI}}      a random integer in [LO, HI]
@@ -58,6 +56,44 @@ Set "rvc": true only for templates of compressed instructions (c.*) that cannot 
 {rejected}
 Reply with JSON only:
 {{"templates": [{{"name": "...", "targets": ["instruction or behaviour", ...], "rvc": false, "asm": ["...", "..."]}}]}}"""
+
+
+GOAL_CENSUS = ("make the generator exercise what is never executed, including instruction\ncombinations and corner cases "
+               "likely to expose processor bugs (hazards between dependent instructions, unusual operand\nvalues, exceptions)")
+GOAL_TARGET = ("drive the hardware modules listed above into unusual states and make a fault there reach the compared\n"
+               "state (registers, fcsr, the CSRs listed, the data region): hazards and back-to-back dependences that exercise "
+               "the\nmodule, corner-case operands, CSR and exception sequences that reach it")
+
+
+def target_text(cores=("rocket", "boom"), top: int = 6, signals: int = 10) -> tuple[str, dict]:
+    """Module-targeted prompt section (--target): per core, the modules with the most TRAINING-split factory mutants
+    that no pool program kills (data/labels kill matrices + data/mutants locations), with the signal names those
+    mutants touch. Only module and signal names are given: no published bug, no dev mutant, no fault itself."""
+    import collections
+    import gzip
+    lines, info = ["", "Hardware modules where injected faults (swapped signals, changed conditions) are not yet detected by any "
+                   "program of the current generators, with the internal signals involved (Chisel-generated names):"], {}
+    for core in cores:
+        uk_mod, sig = collections.Counter(), collections.defaultdict(collections.Counter)
+        for kind in ("driver", "multiplexer"):
+            loc = json.loads((ROOT / "data" / "mutants" / f"{core}_{kind}_locations.json").read_text())["locations"]
+            killed, train = collections.Counter(), set()
+            with gzip.open(ROOT / "data" / "labels" / f"{core}_{kind}_labels.jsonl.gz", "rt") as f:
+                for l in f:
+                    r = json.loads(l)
+                    if r["split"] == "train":
+                        train.add(str(r["mutant"])); killed[str(r["mutant"])] += bool(r["killed"])
+            for m in train:
+                if killed[m] == 0 and loc.get(m, {}).get("modules"):
+                    mod = loc[m]["modules"][0]
+                    uk_mod[mod] += 1
+                    sig[mod].update(s for s in loc[m].get("signals", []) if s != "reset")
+        info[core] = {m: {"unkilled_train_mutants": n, "signals": [s for s, _ in sig[m].most_common(signals)]}
+                      for m, n in uk_mod.most_common(top)}
+        lines.append(f"{core.capitalize()}:")
+        for m, v in info[core].items():
+            lines.append(f"- {m} ({v['unkilled_train_mutants']} undetected): {', '.join(v['signals']) or '-'}")
+    return "\n".join(lines) + "\n", info
 
 
 def census_text(c: dict) -> str:
@@ -149,7 +185,10 @@ def main():
     ap.add_argument("--jobs", type=int, default=4)
     ap.add_argument("--out", default=str(ROOT / "rocket" / "templates" / "llm.json"))
     ap.add_argument("--resume", action="store_true", help="continue from --out (more rounds, same history)")
+    ap.add_argument("--target", action="store_true",
+                    help="module-targeted: also list the modules with undetected training mutants (profile llmtgt)")
     a = ap.parse_args()
+    targets, tinfo = target_text() if a.target else ("", None)
     out = Path(a.out); out.parent.mkdir(parents=True, exist_ok=True)
     accepted, rejected, rounds, requests = [], [], [], 0
     if a.resume and out.exists():          # continue a previous run: keep its templates, rejections and census
@@ -166,7 +205,8 @@ def main():
     for r in range(first, first + a.rounds):
         rej_txt = ("\nPreviously rejected templates (do not repeat these mistakes):\n" +
                    "\n".join(f"- {x['name']}: {x['reason']}" for x in rejected[-15:]) + "\n") if rejected else ""
-        prompt = PROMPT.format(programs=a.census_programs, census=census_text(cur), k=a.per_round, rejected=rej_txt)
+        prompt = PROMPT.format(programs=a.census_programs, census=census_text(cur), k=a.per_round, rejected=rej_txt,
+                               targets=targets, goal=GOAL_TARGET if a.target else GOAL_CENSUS)
         tpls, used = ask(a.model, prompt); requests += 1
         print(f"round {r}: {len(tpls)} templates from {used}", flush=True)
         fresh = []
@@ -187,7 +227,8 @@ def main():
                        "census": {g: v["executed"] for g, v in cur["groups"].items()},
                        "exception_causes": list(cur["exception_causes"])})
         print(json.dumps(rounds[-1]), flush=True)
-        out.write_text(json.dumps({"model": a.model, "requests": requests, "rounds": rounds, "census_before": before,
+        out.write_text(json.dumps({"model": a.model, "requests": requests, "rounds": rounds, "targets": tinfo,
+                                   "census_before": before,
                                    "census_after": cur, "templates": accepted, "rejected": rejected}, indent=1))
     print(f"{len(accepted)} templates accepted, {len(rejected)} rejected, {requests} LLM requests -> {out}")
 

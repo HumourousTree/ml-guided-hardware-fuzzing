@@ -4,7 +4,7 @@
 """
 import glob, json, os, re, sys, collections
 repo, gdir, prof = sys.argv[1:4]
-suf = {"base": "", "ext": "_ext", "llmflash": "_llmflash"}[prof]
+suf = {"base": "", "ext": "_ext", "llmflash": "_llmflash", "llmtgt": "_llmtgt", "llmctl": "_llmctl"}[prof]
 filt = os.path.join(repo, "results/v0.4/bench/boom")
 pub = json.load(open(os.path.join(repo, "docs/encarsia_published.json")))["boom"]
 bugs = [("driver", d) for d in sorted(pub["driver_dirs"])] + [("multiplexer", d) for d in sorted(pub["multiplexer_dirs"])]
