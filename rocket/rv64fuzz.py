@@ -386,10 +386,33 @@ def build_elf(asm: str, work: Path) -> Path:
     return work / "p.elf"
 
 
+# The epilogue's stop request (store 0 to STOP) followed within a few commits by the store of 1 to tohost.
+_SPIKE_DONE = re.compile(rb"mem 0x0*60000000 0x0+\n(?:[^\n]*\n){0,8}?[^\n]*mem 0x[0-9a-f]+ 0x0*1\n")
+
+
 def run_spike(elf: Path, timeout: int = 30) -> list[int] | None:
-    p = subprocess.run(["spike", "--isa=rv64gc", "-m0x80000000:0x800000,0x60000000:0x1000", "-l", "--log-commits", str(elf)],
-                       env=ENV, capture_output=True, text=True, timeout=timeout)
-    vals = [int(m.group(1), 16) for m in re.finditer(r"mem 0x0*60000010 0x([0-9a-f]+)", p.stderr)]
+    """Spike's register dumps (stores to DUMP in its commit log). Spike polls tohost only every ~5,000 steps, so after
+    the epilogue writes tohost it logs ~5,000 iterations of the final `j 1b` (about 3/4 of its time). The log is read as
+    it is written and Spike is stopped once the tohost store appears, which is exactly the point at which Spike itself
+    would exit without executing anything but that loop: the dumps are the same, and a program that never writes
+    tohost still runs into the timeout (subprocess.TimeoutExpired, as before)."""
+    p = subprocess.Popen(["spike", "--isa=rv64gc", "-m0x80000000:0x800000,0x60000000:0x1000", "-l", "--log-commits", str(elf)],
+                         env=ENV, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+    buf, deadline = bytearray(), time.monotonic() + timeout
+    try:
+        while True:
+            chunk = p.stderr.read1(1 << 16)
+            if not chunk:
+                break
+            buf += chunk
+            if _SPIKE_DONE.search(buf, max(0, len(buf) - len(chunk) - 2048)):
+                break
+            if time.monotonic() > deadline:
+                raise subprocess.TimeoutExpired(p.args, timeout)
+    finally:
+        p.kill()
+        p.wait()
+    vals = [int(m.group(1), 16) for m in re.finditer(rb"mem 0x0*60000010 0x([0-9a-f]+)", buf)]
     return vals or None
 
 
