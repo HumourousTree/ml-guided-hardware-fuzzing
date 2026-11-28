@@ -98,7 +98,28 @@ def apply_subst(lines: list[str], tsubst) -> list[str]:
     return out
 
 
-def expand_template(tpl: dict, rng: random.Random, top: int, uid: int, tsubst=None) -> list[str]:
+FRM_WRITE = re.compile(r"^\s*(fsrm|fscsr)\s+(?:(x\d+)\s*,\s*)?x\d+\s*$|^\s*csrr([wsc])\s+(x\d+)\s*,\s*(frm|fcsr)\s*,\s*x\d+\s*$")
+
+
+def frm_safe(line: str, rng: random.Random) -> str:
+    """BOOM (keep_frm_valid): a template line that writes frm/fcsr from a register could set an invalid rounding mode,
+    which BOOM does not trap on and Spike does (rocket/check_frm.py). Such a write becomes an immediate write of a
+    valid mode (frm) or of 0..31 (fcsr: the 5-bit immediate reaches only fflags, so frm becomes 0); reads and set/clear
+    of fflags are unchanged. Template files without such lines draw no extra random numbers (found 2026-11-28:
+    `fsrm x8; fcvt.s.lu` failed BOOM calibration in profile llmtgt)."""
+    m = FRM_WRITE.match(line)
+    if not m:
+        return line
+    if m.group(1):                               # fsrm/fscsr [rd,] rs
+        rd = m.group(2) or "x0"
+        return f"fsrmi {rd}, {rng.randint(0, 4)}" if m.group(1) == "fsrm" else f"csrrwi {rd}, fcsr, {rng.randint(0, 31)}"
+    op, rd, csr = m.group(3), m.group(4), m.group(5)
+    if op == "c" or (op == "s" and csr == "fcsr"):  # clearing bits of frm/fcsr, or setting fcsr bits: may still be
+        return f"csrr {rd}, {csr}"                 # invalid; keep the read
+    return f"csrrwi {rd}, {csr}, {rng.randint(0, 4) if csr == 'frm' else rng.randint(0, 31)}"
+
+
+def expand_template(tpl: dict, rng: random.Random, top: int, uid: int, tsubst=None, keep_frm_valid: bool = False) -> list[str]:
     """One instance of a template: named registers {xA}.. (writable, consistent within the instance), {fA}.., {imm:LO:HI},
     {off:ALIGN} (offset into the 256-byte data region at x30), {label:A} (unique label). Compressed templates (rvc=True)
     are assembled with RVC enabled, all others without (the trap handler skips 4-byte instructions)."""
@@ -118,6 +139,8 @@ def expand_template(tpl: dict, rng: random.Random, top: int, uid: int, tsubst=No
             return str(rng.randrange(0, DATA_DWORDS * 8 - 8 + 1, al))
         return f"T{uid}_{k[6:]}"
     lines = apply_subst([TEMPLATE_RE.sub(sub, l) for l in tpl["asm"]], tsubst)
+    if keep_frm_valid:
+        lines = [frm_safe(l, rng) for l in lines]
     if tpl.get("rvc"):
         return [".option push", ".option rvc"] + lines + [".option pop"]
     return lines
@@ -233,7 +256,7 @@ def gen_program(rng: random.Random, length: int, fp: bool = True, profile: str =
                     body.append(f"{rng.choice(['csrrwi', 'csrrsi', 'csrrci'])} {rd() if rng.random() < .7 else 'x0'}, "
                                 f"{csr}, {rng.randint(0, 31)}")
         elif c == "tpl":
-            body += expand_template(rng.choice(templates), rng, top, lab, template_subst); lab += 1
+            body += expand_template(rng.choice(templates), rng, top, lab, template_subst, keep_frm_valid); lab += 1
         elif c == "rvc":
             k, r = rng.random(), RVC_REG(rng)
             if k < .3:
