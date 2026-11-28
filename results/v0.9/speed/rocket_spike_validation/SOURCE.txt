@@ -1,0 +1,3 @@
+Rocket base, 5 seeds, -O1 simulators, Spike stopped at the tohost store (rv64fuzz.run_spike, commit fed839a): run 46133449441,
+against run 46122923685 (-O1, full Spike runs, same generator stream). All 150 runs identical in every counter and first
+detection; calibrations clean. 0.065 vs 0.129 s per program (2.0x); with -O1, 5.8x faster than the -O0 run 46119438532.

@@ -1070,6 +1070,9 @@ def section_covmin(logs, M, md):
             p = "SpeedRocket" if core == "rocket" else "SpeedBoom"
             M[p + "Ozero"], M[p + "Oone"] = f"{v['O0_s_per_program']:.2f}", f"{v['O1_s_per_program']:.2f}"
             M[p + "Factor"] = f"{v['speedup']:.1f}"
+            if "spike_early_stop_s_per_program" in v:          # + Spike stopped at the tohost store (identical campaign)
+                M[p + "Now"] = f"{v['spike_early_stop_s_per_program']:.3f}"
+                M[p + "Total"] = f"{v['total_speedup']:.1f}"
     # checkpointed oracle K=1 against the end-state oracle at -O1 on the same stream: macros CkRocket*
     K, KB = ROOT / "results" / "v0.9" / "checkpoint" / "rocket_ck1", ROOT / "results" / "v0.9" / "speed" / "rocket_O1_validation"
     if K.exists() and KB.exists():

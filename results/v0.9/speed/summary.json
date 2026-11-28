@@ -6,7 +6,10 @@
   "speedup": 2.94,
   "identical": true,
   "runs_O0": "46119438532",
-  "runs_O1": "46122923685"
+  "runs_O1": "46122923685",
+  "spike_early_stop_s_per_program": 0.0648,
+  "runs_spike_early_stop": "46133449441",
+  "total_speedup": 5.86
  },
  "boom": {
   "runs": 150,

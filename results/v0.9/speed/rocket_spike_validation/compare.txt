@@ -1,0 +1,4 @@
+runs 150; bugs detected A 10 B 10; only A [] only B []
+seed detections A 50 B 50
+both detect 50 seeds: B earlier 0, later 0, same 50; identical first detecting program 50
+seconds per program A 0.129 B 0.065 (B/A 0.50); total fuzzing seconds A 25857 B 12955

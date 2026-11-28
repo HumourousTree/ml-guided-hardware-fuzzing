@@ -140,7 +140,10 @@ All three are paired comparisons against a base campaign on the same random stre
   corpus + block mutation. The same 10 Rocket bugs and 50 detecting seeds, 7 seeds later, 4.9x slower. No gain
   (`results/v0.9/coverage/`).
 - **-O1 simulators** (now the default of `build_dut.sh`): identical campaigns, 2.9x (Rocket) and 3.2x (BOOM) faster per
-  program. Spike (about 40 ms per program) is now the largest single cost on Rocket (`results/v0.9/speed/`).
+  program (`results/v0.9/speed/`).
+- **Spike early stop**: Spike checks tohost only every ~5,000 steps and logged that many idle loop iterations per
+  program; `run_spike` now stops it at the tohost store. Identical campaign, Rocket 0.129 -> 0.065 s per program
+  (0.380 s at the start: 5.9x in total).
 - **Checkpointed oracle** (`BENCHFUZZ_CHECKPOINT=K`): registers dumped after every K blocks. Sound, but on Rocket at K=1
   no new bug and no earlier detection, and it loses `driver/673`, a divide/write-after-write hazard that the dump in
   between hides by stalling on the divide's result. Inserted observation code changes the timing it observes; a

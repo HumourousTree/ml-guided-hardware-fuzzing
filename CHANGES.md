@@ -158,6 +158,10 @@ Not done: anything needing an LLM (semantic/hybrid generation, pass@k) - no API 
   At -O1, 150-run campaigns on both cores are identical to -O0 in every counter, first detecting program and calibration:
   Rocket 0.380 -> 0.129 s per program (2.9x), BOOM 0.778 -> 0.244 s (3.2x). -O1 is now the default; -O2 miscompiles
   Rocket. The BOOM -O0 run also reproduces the paper's local BOOM base logs exactly (`results/v0.9/speed/`).
+- **Spike early stop** (`rv64fuzz.run_spike`): Spike polls tohost only every ~5,000 steps, so it logged ~5,000 iterations
+  of the final `j 1b` per program (3/4 of its time). The log is now streamed and Spike is stopped at the tohost store,
+  where it would exit anyway. 400 programs give identical dumps (31 -> 13 ms); a full Rocket campaign (run
+  46133449441) is identical to the -O1 run and takes 0.065 s per program (2.0x; 5.9x with -O1 against the start of the day).
 - **Checkpointed oracle** (#4, `BENCHFUZZ_CHECKPOINT=K`): x1..x30 dumped after every K generator blocks and compared
   with Spike's commit log; sound (calibrations clean) but no gain. Rocket K=1, paired: no new bug, no seed earlier,
   3.1x the time per program, and driver 673 lost (5/5 seeds -> 0/5): its hazard needs a divide and a back-to-back write
