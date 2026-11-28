@@ -14,13 +14,14 @@ on:
       calibrate: {description: "calibration programs per reference", required: true, default: "500"}
       shards: {description: "parallel runners (1-20)", required: true, default: "20"}
       quirks: {description: "filter: substitute known core-vs-Spike differences; gate: test them, re-checking every mismatch on the bug-free core", required: false, default: filter, type: choice, options: [filter, gate]}
+      sim_opt: {description: "C++ optimisation of the simulators (0 = Cascade's setting; 1 is 5x faster and matched -O0 bit for bit; -O2 miscompiles)", required: false, default: "0", type: choice, options: ["0", "1"]}
       coverage: {description: "coverage feedback: none, or toggle1 (toggle coverage of 1-bit signals of the bug-free core; corpus + block mutation)", required: false, default: none, type: choice, options: [none, toggle1]}
 
 permissions:
   contents: read
 
 concurrency:
-  group: encarsia-${{ inputs.core }}-${{ inputs.profile }}-${{ inputs.quirks }}-${{ inputs.coverage }}
+  group: encarsia-${{ inputs.core }}-${{ inputs.profile }}-${{ inputs.quirks }}-${{ inputs.coverage }}-O${{ inputs.sim_opt }}
   cancel-in-progress: false
 
 jobs:
@@ -70,6 +71,7 @@ jobs:
     env:
       BENCHFUZZ_QUIRKS: ${{ inputs.quirks }}
       BENCHFUZZ_COVERAGE: ${{ inputs.coverage != 'none' && inputs.coverage || '' }}
+      SIM_OPT: ${{ inputs.sim_opt }}
     steps:
       - uses: actions/checkout@v4
       - name: Run shard
@@ -81,7 +83,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: shard-${{ inputs.core }}-${{ inputs.profile }}-${{ inputs.quirks }}-${{ inputs.coverage }}-${{ matrix.shard }}
+          name: shard-${{ inputs.core }}-${{ inputs.profile }}-${{ inputs.quirks }}-${{ inputs.coverage }}-O${{ inputs.sim_opt }}-${{ matrix.shard }}
           path: logs/bench/${{ inputs.core }}/
           if-no-files-found: warn
 
@@ -96,7 +98,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
-        with: {pattern: "shard-${{ inputs.core }}-${{ inputs.profile }}-${{ inputs.quirks }}-${{ inputs.coverage }}-*", path: shards}
+        with: {pattern: "shard-${{ inputs.core }}-${{ inputs.profile }}-${{ inputs.quirks }}-${{ inputs.coverage }}-O${{ inputs.sim_opt }}-*", path: shards}
       - name: Merge and validate
         env:
           BENCHFUZZ_QUIRKS: ${{ inputs.quirks }}
@@ -107,5 +109,5 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: merged-${{ inputs.core }}-${{ inputs.profile }}-${{ inputs.quirks }}-${{ inputs.coverage }}
+          name: merged-${{ inputs.core }}-${{ inputs.profile }}-${{ inputs.quirks }}-${{ inputs.coverage }}-O${{ inputs.sim_opt }}
           path: logs/bench/${{ inputs.core }}/
