@@ -1,0 +1,4 @@
+BOOM base, 5 seeds, -O1 simulators: run 46124661434, against -O0 run 46124658586 (same commit e19aebd, same generator stream).
+All 150 runs identical in every counter and first detection (program text); all 15 calibrations clean (0 mismatches, 0 non-terminations).
+0.244 vs 0.778 s per program (3.2x); total fuzzing time 29338 s vs 93547 s.
+The -O0 run is also identical (counters and first detecting programs) to the local BOOM base logs of 2026-11-26 used by the paper.

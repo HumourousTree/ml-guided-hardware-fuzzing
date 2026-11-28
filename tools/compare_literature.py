@@ -1063,6 +1063,36 @@ def section_covmin(logs, M, md):
             M["MinRocketOneMinimal"] = sum(bool(x["one_minimal"]) for x in d)
             M["MinRocketTestsMedian"] = fmt(st.median(x["tests"] for x in d), 0)
             M["MinRocketEmptyBugs"] = len({(x["bug_kind"], x["dir"]) for x in d if x["min_body_lines"] == 0})
+    # simulator -O1 against -O0 (identical campaigns, results/v0.9/speed/summary.json): macros SpeedRocket*, SpeedBoom*
+    sf = ROOT / "results" / "v0.9" / "speed" / "summary.json"
+    if sf.exists():
+        for core, v in json.loads(sf.read_text()).items():
+            p = "SpeedRocket" if core == "rocket" else "SpeedBoom"
+            M[p + "Ozero"], M[p + "Oone"] = f"{v['O0_s_per_program']:.2f}", f"{v['O1_s_per_program']:.2f}"
+            M[p + "Factor"] = f"{v['speedup']:.1f}"
+    # checkpointed oracle K=1 against the end-state oracle at -O1 on the same stream: macros CkRocket*
+    K, KB = ROOT / "results" / "v0.9" / "checkpoint" / "rocket_ck1", ROOT / "results" / "v0.9" / "speed" / "rocket_O1_validation"
+    if K.exists() and KB.exists():
+        def plain(d, sfx):
+            out = {}
+            for f in d.glob(f"*_seed?{sfx}.json"):
+                r = json.loads(f.read_text())
+                fd = r.get("first_detection")
+                out[(r["kind"], r["dir"], r["seed"])] = (fd["n_programs"] if fd else None, r["programs"], r["seconds"])
+            return out
+        k, b = plain(K, "_ck1"), plain(KB, "")
+        keys = sorted(set(k) & set(b))
+        bk = lambda X: {(x[0], x[1]) for x in keys if X[x][0] is not None}
+        pairs = [(b[x][0], k[x][0]) for x in keys if b[x][0] and k[x][0]]
+        M["CkRocketRuns"], M["CkRocketBugs"], M["CkRocketBaseBugs"] = len(keys), len(bk(k)), len(bk(b))
+        M["CkRocketOnly"], M["CkRocketLost"] = len(bk(k) - bk(b)), len(bk(b) - bk(k))
+        M["CkRocketSeedDet"], M["CkRocketBaseSeedDet"] = sum(k[x][0] is not None for x in keys), sum(b[x][0] is not None for x in keys)
+        M["CkRocketEarlier"], M["CkRocketLater"] = sum(y < x for x, y in pairs), sum(y > x for x, y in pairs)
+        tk = sum(k[x][2] for x in keys) / sum(k[x][1] for x in keys)
+        tb = sum(b[x][2] for x in keys) / sum(b[x][1] for x in keys)
+        M["CkRocketSlowdown"] = f"{tk / tb:.1f}"
+        md.append(f"\n## Checkpointed oracle on Rocket (K=1, paired, {len(keys)} runs)\n\nbugs {len(bk(k))} vs {len(bk(b))}, "
+                  f"lost {sorted(bk(b) - bk(k))}; {tk:.3f} vs {tb:.3f} s/program\n")
     return ""
 
 

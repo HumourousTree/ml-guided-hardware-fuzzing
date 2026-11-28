@@ -417,7 +417,11 @@ def checkpoint_every() -> int:
     address as the epilogue (x31, the dump pointer, holds 0x6000 throughout the body and is restored). Spike's commit log
     and the testbench both record every dump in order, so a register that is wrong at any checkpoint is a detection even
     if a later instruction overwrites it: the end-state oracle becomes a checkpointed one. Branches only jump forward
-    within their own block, so no checkpoint is skipped. The random draws are unchanged (seeds give the same bodies)."""
+    within their own block, so no checkpoint is skipped. The random draws are unchanged (seeds give the same bodies).
+    Not a detection gain (results/v0.9/checkpoint): the dumps are instructions, so they change the timing they observe.
+    On Rocket at K=1 they found no new bug, and they masked driver 673, a hazard between a divide and a back-to-back
+    write of the same register, because a dump read of the register in between stalls until the divide completes.
+    A non-intrusive per-retirement check needs a passive commit trace (a trace port / FPGA hash), not inserted code."""
     k = int(os.environ.get("BENCHFUZZ_CHECKPOINT", "0") or 0)
     assert k >= 0, k
     return k

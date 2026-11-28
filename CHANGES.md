@@ -149,6 +149,21 @@ Not done: anything needing an LLM (semantic/hybrid generation, pass@k) - no API 
   program from the campaign stream and runs hierarchical delta debugging over generator blocks, then lines, with the
   replay rule as the test. Rocket, 43 detections: 43 -> 1 body line (median, max 4), all replay-confirmed and 1-minimal,
   median 13 tests; three bugs need no body instruction (`results/v0.9/minimize/`).
+- **Coverage feedback** (#2, `BENCHFUZZ_COVERAGE=toggle1`, `build_dut.sh COVERAGE=`, `rv64fuzz.mutate`, `tools/cov_compare.py`):
+  toggle coverage of the 1-bit signals of the bug-free core (line coverage saturates; the coverage build sets spurious
+  fcsr flags, so it only measures, gating uses the plain reference), corpus of programs with new points, block-level
+  mutation. Paired with a base run on the same stream (Rocket, 150 runs): the same 10 bugs and 50 detecting seeds, never
+  earlier, 7 seeds later, 4.9x the time per program. No gain (`results/v0.9/coverage/`).
+- **Simulator -O1** (`build_dut.sh SIM_OPT`, workflow `sim_opt`): the simulators were compiled at -O0 (Cascade's setting).
+  At -O1, 150-run campaigns on both cores are identical to -O0 in every counter, first detecting program and calibration:
+  Rocket 0.380 -> 0.129 s per program (2.9x), BOOM 0.778 -> 0.244 s (3.2x). -O1 is now the default; -O2 miscompiles
+  Rocket. The BOOM -O0 run also reproduces the paper's local BOOM base logs exactly (`results/v0.9/speed/`).
+- **Checkpointed oracle** (#4, `BENCHFUZZ_CHECKPOINT=K`): x1..x30 dumped after every K generator blocks and compared
+  with Spike's commit log; sound (calibrations clean) but no gain. Rocket K=1, paired: no new bug, no seed earlier,
+  3.1x the time per program, and driver 673 lost (5/5 seeds -> 0/5): its hazard needs a divide and a back-to-back write
+  of the same register, and the dump between them reads the register and stalls until the divide is done (probe
+  effect). Per-retirement checking must observe passively (commit trace; FPGA hash), not insert code
+  (`results/v0.9/checkpoint/`). Off by default.
 - Local toolchain: Docker in WSL with the CI image (`ghcr.io/.../encarsia-env`), so labelling and mutant
   regeneration can run on the laptop as well as on GitHub Actions.
 

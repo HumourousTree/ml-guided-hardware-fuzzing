@@ -1,0 +1,557 @@
+{
+ "driver_1094_seed0_ck1.json": {
+  "golden": "golden_driver_a057aba6",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "nontermination",
+  "differing": [],
+  "confirmed": true
+ },
+ "driver_1094_seed1_ck1.json": {
+  "golden": "golden_driver_a057aba6",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "nontermination",
+  "differing": [],
+  "confirmed": true
+ },
+ "driver_1094_seed2_ck1.json": {
+  "golden": "golden_driver_a057aba6",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "nontermination",
+  "differing": [
+   "data125",
+   "data155",
+   "data185"
+  ],
+  "confirmed": true
+ },
+ "driver_1094_seed3_ck1.json": {
+  "golden": "golden_driver_a057aba6",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "mismatch",
+  "differing": [
+   "data717",
+   "data747",
+   "data777",
+   "data807",
+   "data819",
+   "data837"
+  ],
+  "confirmed": true
+ },
+ "driver_1094_seed4_ck1.json": {
+  "golden": "golden_driver_a057aba6",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "nontermination",
+  "differing": [],
+  "confirmed": true
+ },
+ "multiplexer_408_seed0_ck1.json": {
+  "golden": "golden_multiplexer",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "nontermination",
+  "differing": [],
+  "confirmed": true
+ },
+ "multiplexer_408_seed1_ck1.json": {
+  "golden": "golden_multiplexer",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "nontermination",
+  "differing": [],
+  "confirmed": true
+ },
+ "multiplexer_408_seed2_ck1.json": {
+  "golden": "golden_multiplexer",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "nontermination",
+  "differing": [],
+  "confirmed": true
+ },
+ "multiplexer_408_seed3_ck1.json": {
+  "golden": "golden_multiplexer",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "nontermination",
+  "differing": [],
+  "confirmed": true
+ },
+ "multiplexer_408_seed4_ck1.json": {
+  "golden": "golden_multiplexer",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "nontermination",
+  "differing": [],
+  "confirmed": true
+ },
+ "multiplexer_718_seed0_ck1.json": {
+  "golden": "golden_multiplexer",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "nontermination",
+  "differing": [],
+  "confirmed": true
+ },
+ "multiplexer_718_seed1_ck1.json": {
+  "golden": "golden_multiplexer",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "nontermination",
+  "differing": [],
+  "confirmed": true
+ },
+ "multiplexer_718_seed2_ck1.json": {
+  "golden": "golden_multiplexer",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "nontermination",
+  "differing": [],
+  "confirmed": true
+ },
+ "multiplexer_718_seed3_ck1.json": {
+  "golden": "golden_multiplexer",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "nontermination",
+  "differing": [],
+  "confirmed": true
+ },
+ "multiplexer_718_seed4_ck1.json": {
+  "golden": "golden_multiplexer",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "nontermination",
+  "differing": [],
+  "confirmed": true
+ },
+ "driver_863_seed0_ck1.json": {
+  "golden": "golden_driver_2f09f728",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "mismatch",
+  "differing": [
+   "data425",
+   "data455",
+   "data467",
+   "data485",
+   "data497",
+   "data515"
+  ],
+  "confirmed": true
+ },
+ "driver_863_seed1_ck1.json": {
+  "golden": "golden_driver_2f09f728",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "mismatch",
+  "differing": [
+   "data231",
+   "data261",
+   "data291",
+   "data321",
+   "data351",
+   "data381"
+  ],
+  "confirmed": true
+ },
+ "driver_863_seed2_ck1.json": {
+  "golden": "golden_driver_2f09f728",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "mismatch",
+  "differing": [
+   "data102",
+   "data132",
+   "data162",
+   "data192",
+   "data222",
+   "data252"
+  ],
+  "confirmed": true
+ },
+ "driver_863_seed3_ck1.json": {
+  "golden": "golden_driver_2f09f728",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "mismatch",
+  "differing": [
+   "data368",
+   "data398",
+   "data428",
+   "data458",
+   "data488",
+   "data518"
+  ],
+  "confirmed": true
+ },
+ "driver_863_seed4_ck1.json": {
+  "golden": "golden_driver_2f09f728",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "mismatch",
+  "differing": [
+   "x22",
+   "f21",
+   "data17",
+   "data47",
+   "data75",
+   "data77"
+  ],
+  "confirmed": true
+ },
+ "driver_144_seed0_ck1.json": {
+  "golden": "golden_driver_7ecc6b9f",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "mismatch",
+  "differing": [
+   "x13",
+   "f12",
+   "data8",
+   "data36",
+   "data38",
+   "data60"
+  ],
+  "confirmed": true
+ },
+ "driver_144_seed1_ck1.json": {
+  "golden": "golden_driver_7ecc6b9f",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "mismatch",
+  "differing": [
+   "f1",
+   "f31",
+   "data27",
+   "data57",
+   "data87",
+   "data117"
+  ],
+  "confirmed": true
+ },
+ "driver_144_seed2_ck1.json": {
+  "golden": "golden_driver_7ecc6b9f",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "mismatch",
+  "differing": [
+   "data705",
+   "data735",
+   "data765",
+   "data795"
+  ],
+  "confirmed": true
+ },
+ "driver_144_seed3_ck1.json": {
+  "golden": "golden_driver_7ecc6b9f",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "mismatch",
+  "differing": [
+   "data609",
+   "data639",
+   "data669",
+   "data699",
+   "data729"
+  ],
+  "confirmed": true
+ },
+ "driver_144_seed4_ck1.json": {
+  "golden": "golden_driver_7ecc6b9f",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "mismatch",
+  "differing": [
+   "data672",
+   "data702",
+   "data732",
+   "data762",
+   "data792",
+   "data822"
+  ],
+  "confirmed": true
+ },
+ "driver_293_seed0_ck1.json": {
+  "golden": "golden_driver_d0f80213",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "mismatch",
+  "differing": [
+   "data508",
+   "data602",
+   "data632",
+   "data647",
+   "data662",
+   "data677"
+  ],
+  "confirmed": true
+ },
+ "driver_293_seed1_ck1.json": {
+  "golden": "golden_driver_d0f80213",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "mismatch",
+  "differing": [
+   "data68",
+   "data98",
+   "data128",
+   "data158",
+   "data188",
+   "data218"
+  ],
+  "confirmed": true
+ },
+ "driver_293_seed2_ck1.json": {
+  "golden": "golden_driver_d0f80213",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "mismatch",
+  "differing": [
+   "data22",
+   "data52",
+   "data82",
+   "data112",
+   "data616",
+   "data646"
+  ],
+  "confirmed": true
+ },
+ "driver_293_seed3_ck1.json": {
+  "golden": "golden_driver_d0f80213",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "mismatch",
+  "differing": [
+   "data632",
+   "data662",
+   "data692",
+   "data722",
+   "data752",
+   "data782"
+  ],
+  "confirmed": true
+ },
+ "driver_293_seed4_ck1.json": {
+  "golden": "golden_driver_d0f80213",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "mismatch",
+  "differing": [
+   "data13",
+   "data693",
+   "data723",
+   "data753",
+   "data783",
+   "data802"
+  ],
+  "confirmed": true
+ },
+ "multiplexer_285_seed0_ck1.json": {
+  "golden": "golden_multiplexer",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "mismatch",
+  "differing": [
+   "data429",
+   "data459",
+   "data988"
+  ],
+  "confirmed": true
+ },
+ "multiplexer_285_seed1_ck1.json": {
+  "golden": "golden_multiplexer",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "mismatch",
+  "differing": [
+   "data1018"
+  ],
+  "confirmed": true
+ },
+ "multiplexer_285_seed2_ck1.json": {
+  "golden": "golden_multiplexer",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "mismatch",
+  "differing": [
+   "data988"
+  ],
+  "confirmed": true
+ },
+ "multiplexer_285_seed3_ck1.json": {
+  "golden": "golden_multiplexer",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "mismatch",
+  "differing": [
+   "data1168"
+  ],
+  "confirmed": true
+ },
+ "multiplexer_285_seed4_ck1.json": {
+  "golden": "golden_multiplexer",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "mismatch",
+  "differing": [
+   "data1078"
+  ],
+  "confirmed": true
+ },
+ "driver_347_seed0_ck1.json": {
+  "golden": "golden_driver_d0f80213",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "mismatch",
+  "differing": [
+   "data6",
+   "data36",
+   "data66",
+   "data96",
+   "data126",
+   "data156"
+  ],
+  "confirmed": true
+ },
+ "driver_347_seed1_ck1.json": {
+  "golden": "golden_driver_d0f80213",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "mismatch",
+  "differing": [
+   "data47",
+   "data77",
+   "data79",
+   "data109",
+   "data139",
+   "data160"
+  ],
+  "confirmed": true
+ },
+ "driver_347_seed2_ck1.json": {
+  "golden": "golden_driver_d0f80213",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "mismatch",
+  "differing": [
+   "data446",
+   "data476",
+   "data506",
+   "data536",
+   "data566",
+   "data596"
+  ],
+  "confirmed": true
+ },
+ "driver_347_seed3_ck1.json": {
+  "golden": "golden_driver_d0f80213",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "mismatch",
+  "differing": [
+   "data97",
+   "data430",
+   "data460",
+   "data490",
+   "data520",
+   "data550"
+  ],
+  "confirmed": true
+ },
+ "driver_347_seed4_ck1.json": {
+  "golden": "golden_driver_d0f80213",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "mismatch",
+  "differing": [
+   "data211",
+   "data241",
+   "data271",
+   "data301",
+   "data331",
+   "data361"
+  ],
+  "confirmed": true
+ },
+ "driver_361_seed0_ck1.json": {
+  "golden": "golden_driver_d0f80213",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "mismatch",
+  "differing": [
+   "x1",
+   "x2",
+   "x3",
+   "x4",
+   "x5",
+   "x6"
+  ],
+  "confirmed": true
+ },
+ "driver_361_seed1_ck1.json": {
+  "golden": "golden_driver_d0f80213",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "mismatch",
+  "differing": [
+   "x1",
+   "x2",
+   "x3",
+   "x4",
+   "x5",
+   "x6"
+  ],
+  "confirmed": true
+ },
+ "driver_361_seed2_ck1.json": {
+  "golden": "golden_driver_d0f80213",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "mismatch",
+  "differing": [
+   "x1",
+   "x3",
+   "x4",
+   "x5",
+   "x6",
+   "x7"
+  ],
+  "confirmed": true
+ },
+ "driver_361_seed3_ck1.json": {
+  "golden": "golden_driver_d0f80213",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "mismatch",
+  "differing": [
+   "x1",
+   "x3",
+   "x4",
+   "x5",
+   "x6",
+   "x7"
+  ],
+  "confirmed": true
+ },
+ "driver_361_seed4_ck1.json": {
+  "golden": "golden_driver_d0f80213",
+  "golden_matches_spike": true,
+  "bug_differs": true,
+  "kind": "mismatch",
+  "differing": [
+   "x1",
+   "x2",
+   "x3",
+   "x5",
+   "x6",
+   "x7"
+  ],
+  "confirmed": true
+ }
+}

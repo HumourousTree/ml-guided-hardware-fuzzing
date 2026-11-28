@@ -1,0 +1,20 @@
+{
+ "rocket": {
+  "runs": 150,
+  "O0_s_per_program": 0.3797,
+  "O1_s_per_program": 0.1292,
+  "speedup": 2.94,
+  "identical": true,
+  "runs_O0": "46119438532",
+  "runs_O1": "46122923685"
+ },
+ "boom": {
+  "runs": 150,
+  "O0_s_per_program": 0.7778,
+  "O1_s_per_program": 0.2439,
+  "speedup": 3.19,
+  "identical": true,
+  "runs_O0": "46124658586",
+  "runs_O1": "46124661434"
+ }
+}

@@ -14,8 +14,8 @@ on:
       calibrate: {description: "calibration programs per reference", required: true, default: "500"}
       shards: {description: "parallel runners (1-20)", required: true, default: "20"}
       quirks: {description: "filter: substitute known core-vs-Spike differences; gate: test them, re-checking every mismatch on the bug-free core", required: false, default: filter, type: choice, options: [filter, gate]}
-      sim_opt: {description: "C++ optimisation of the simulators: auto = the core's validated default (Rocket -O1, BOOM -O0); 0 = Cascade's setting; 1 = -O1 (-O2 miscompiles)", required: false, default: auto, type: choice, options: [auto, "0", "1"]}
-      checkpoint: {description: "checkpointed oracle: dump x1..x30 after every K generator blocks (0 = end state only)", required: false, default: "0"}
+      sim_opt: {description: "C++ optimisation of the simulators: auto = the core's validated default (-O1 on both cores); 0 = Cascade's setting; 1 = -O1 (-O2 miscompiles)", required: false, default: auto, type: choice, options: [auto, "0", "1"]}
+      checkpoint: {description: "checkpointed oracle: dump x1..x30 after every K generator blocks (0 = end state only; intrusive: the dumps perturb timing and masked a Rocket bug, results/v0.9/checkpoint)", required: false, default: "0"}
       coverage: {description: "coverage feedback: none, or toggle1 (toggle coverage of 1-bit signals of the bug-free core; corpus + block mutation)", required: false, default: none, type: choice, options: [none, toggle1]}
 
 permissions:

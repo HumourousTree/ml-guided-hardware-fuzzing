@@ -1,0 +1,10 @@
+runs 150; bugs detected A 10 B 9; only A [('driver', 673)] only B []
+seed detections A 50 B 45
+both detect 45 seeds: B earlier 0, later 1, same 44; identical first detecting program 0
+seconds per program A 0.129 B 0.406 (B/A 3.14); total fuzzing seconds A 25857 B 85291
+  differs ('driver', 144, 3) A 2 B 3 
+  differs ('driver', 673, 0) A 4 B None 
+  differs ('driver', 673, 1) A 2 B None 
+  differs ('driver', 673, 2) A 1 B None 
+  differs ('driver', 673, 3) A 1 B None 
+  differs ('driver', 673, 4) A 9 B None 

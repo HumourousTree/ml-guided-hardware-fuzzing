@@ -133,6 +133,19 @@ mismatch detection; hangs cost the 400,000-cycle timeout per test). Three bugs n
 instruction (e.g. `or x10, x10, x14` for `driver/863`, `fmul.d f7, f15, f2, dyn` for conditional 285, which corrupts
 `fcsr`). Table: `results/v0.9/minimize/SUMMARY.md`.
 
+## Coverage feedback, simulator speed and checkpoints (2026-11-28)
+
+All three are paired comparisons against a base campaign on the same random stream (`tools/cov_compare.py`).
+- **Coverage feedback** (`BENCHFUZZ_COVERAGE=toggle1`): toggle coverage of the 1-bit signals of the bug-free core,
+  corpus + block mutation. The same 10 Rocket bugs and 50 detecting seeds, 7 seeds later, 4.9x slower. No gain
+  (`results/v0.9/coverage/`).
+- **-O1 simulators** (now the default of `build_dut.sh`): identical campaigns, 2.9x (Rocket) and 3.2x (BOOM) faster per
+  program. Spike (about 40 ms per program) is now the largest single cost on Rocket (`results/v0.9/speed/`).
+- **Checkpointed oracle** (`BENCHFUZZ_CHECKPOINT=K`): registers dumped after every K blocks. Sound, but on Rocket at K=1
+  no new bug and no earlier detection, and it loses `driver/673`, a divide/write-after-write hazard that the dump in
+  between hides by stalling on the divide's result. Inserted observation code changes the timing it observes; a
+  per-retirement oracle has to be passive (`results/v0.9/checkpoint/SUMMARY.md`).
+
 ## Results (2026-11-05)
 
 Replay-confirmed detecting seeds out of 5 (median programs to the detection). Published: Encarsia Tables 8-10, 24 h.
