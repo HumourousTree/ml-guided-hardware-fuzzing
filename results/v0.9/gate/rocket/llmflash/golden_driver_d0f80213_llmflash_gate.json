@@ -1,0 +1,1 @@
+{"seed": 777, "length": 40, "fp": true, "profile": "llmflash", "core": "rocket", "quirks": {}, "quirk_mode": "gate", "checkpoint": 0, "programs": 500, "mismatches": 0, "nonterminating": 0, "spike_failures": 0, "first_detection": null, "t_start": 1795860891.6596768, "seconds": 18.0, "golden": "golden_driver_d0f80213"}

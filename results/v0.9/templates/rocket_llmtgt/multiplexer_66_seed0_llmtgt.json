@@ -1,0 +1,1 @@
+{"seed": 0, "length": 40, "fp": true, "profile": "llmtgt", "core": "rocket", "quirks": {}, "quirk_mode": "filter", "checkpoint": 0, "programs": 2000, "mismatches": 0, "nonterminating": 0, "spike_failures": 0, "first_detection": null, "t_start": 1795861631.9601505, "seconds": 299.3, "kind": "multiplexer", "dir": 66, "budget_programs": 2000}

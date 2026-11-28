@@ -1,0 +1,1600 @@
+{
+ "rocket_driver": {
+  "train": {
+   "n": 340,
+   "a": 140,
+   "b": 143,
+   "a_only": 4,
+   "b_only": 7
+  },
+  "train-other": {
+   "n": 46,
+   "a": 42,
+   "b": 42,
+   "a_only": 0,
+   "b_only": 0
+  },
+  "train-targeted": {
+   "n": 294,
+   "a": 98,
+   "b": 101,
+   "a_only": 4,
+   "b_only": 7
+  },
+  "dev": {
+   "n": 60,
+   "a": 27,
+   "b": 27,
+   "a_only": 3,
+   "b_only": 3
+  },
+  "dev-other": {
+   "n": 5,
+   "a": 5,
+   "b": 5,
+   "a_only": 0,
+   "b_only": 0
+  },
+  "dev-targeted": {
+   "n": 55,
+   "a": 22,
+   "b": 22,
+   "a_only": 3,
+   "b_only": 3
+  },
+  "modules": {
+   "PlusArgTimeout|train": {
+    "n": 1,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "MulDiv|train": {
+    "n": 53,
+    "a": 24,
+    "b": 22,
+    "a_only": 3,
+    "b_only": 1
+   },
+   "ALU|train": {
+    "n": 45,
+    "a": 42,
+    "b": 42,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "ALU|dev": {
+    "n": 5,
+    "a": 5,
+    "b": 5,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "BreakpointUnit|train": {
+    "n": 40,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "CSRFile|train": {
+    "n": 45,
+    "a": 8,
+    "b": 7,
+    "a_only": 1,
+    "b_only": 0
+   },
+   "IBuf|train": {
+    "n": 58,
+    "a": 31,
+    "b": 31,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "IBuf|dev": {
+    "n": 10,
+    "a": 5,
+    "b": 5,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RVCExpander|train": {
+    "n": 47,
+    "a": 15,
+    "b": 21,
+    "a_only": 0,
+    "b_only": 6
+   },
+   "Rocket|train": {
+    "n": 51,
+    "a": 19,
+    "b": 19,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "MulDiv|dev": {
+    "n": 10,
+    "a": 6,
+    "b": 6,
+    "a_only": 1,
+    "b_only": 1
+   },
+   "RVCExpander|dev": {
+    "n": 7,
+    "a": 3,
+    "b": 5,
+    "a_only": 0,
+    "b_only": 2
+   },
+   "Rocket|dev": {
+    "n": 10,
+    "a": 7,
+    "b": 5,
+    "a_only": 2,
+    "b_only": 0
+   },
+   "BreakpointUnit|dev": {
+    "n": 10,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "CSRFile|dev": {
+    "n": 8,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   }
+  }
+ },
+ "rocket_multiplexer": {
+  "train": {
+   "n": 336,
+   "a": 79,
+   "b": 83,
+   "a_only": 8,
+   "b_only": 12
+  },
+  "train-targeted": {
+   "n": 334,
+   "a": 79,
+   "b": 83,
+   "a_only": 8,
+   "b_only": 12
+  },
+  "dev": {
+   "n": 59,
+   "a": 15,
+   "b": 15,
+   "a_only": 0,
+   "b_only": 0
+  },
+  "dev-targeted": {
+   "n": 58,
+   "a": 15,
+   "b": 15,
+   "a_only": 0,
+   "b_only": 0
+  },
+  "dev-other": {
+   "n": 1,
+   "a": 0,
+   "b": 0,
+   "a_only": 0,
+   "b_only": 0
+  },
+  "train-other": {
+   "n": 2,
+   "a": 0,
+   "b": 0,
+   "a_only": 0,
+   "b_only": 0
+  },
+  "modules": {
+   "CSRFile|train": {
+    "n": 84,
+    "a": 8,
+    "b": 7,
+    "a_only": 1,
+    "b_only": 0
+   },
+   "CSRFile|dev": {
+    "n": 14,
+    "a": 2,
+    "b": 2,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "IBuf|train": {
+    "n": 23,
+    "a": 10,
+    "b": 10,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "MulDiv|train": {
+    "n": 96,
+    "a": 41,
+    "b": 41,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RVCExpander|train": {
+    "n": 46,
+    "a": 0,
+    "b": 12,
+    "a_only": 0,
+    "b_only": 12
+   },
+   "Rocket|train": {
+    "n": 85,
+    "a": 20,
+    "b": 13,
+    "a_only": 7,
+    "b_only": 0
+   },
+   "Rocket|dev": {
+    "n": 14,
+    "a": 2,
+    "b": 2,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "MulDiv|dev": {
+    "n": 16,
+    "a": 8,
+    "b": 8,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "IBuf|dev": {
+    "n": 7,
+    "a": 3,
+    "b": 3,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "?|dev": {
+    "n": 1,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RVCExpander|dev": {
+    "n": 7,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "?|train": {
+    "n": 2,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   }
+  }
+ },
+ "boom_driver": {
+  "train": {
+   "n": 340,
+   "a": 172,
+   "b": 166,
+   "a_only": 13,
+   "b_only": 7
+  },
+  "train-other": {
+   "n": 313,
+   "a": 165,
+   "b": 160,
+   "a_only": 12,
+   "b_only": 7
+  },
+  "train-targeted": {
+   "n": 27,
+   "a": 7,
+   "b": 6,
+   "a_only": 1,
+   "b_only": 0
+  },
+  "dev": {
+   "n": 60,
+   "a": 31,
+   "b": 30,
+   "a_only": 2,
+   "b_only": 1
+  },
+  "dev-other": {
+   "n": 56,
+   "a": 29,
+   "b": 29,
+   "a_only": 1,
+   "b_only": 1
+  },
+  "dev-targeted": {
+   "n": 4,
+   "a": 2,
+   "b": 1,
+   "a_only": 1,
+   "b_only": 0
+  },
+  "modules": {
+   "IssueUnitCollapsing|train": {
+    "n": 4,
+    "a": 2,
+    "b": 2,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "Arbiter_16|train": {
+    "n": 7,
+    "a": 5,
+    "b": 3,
+    "a_only": 2,
+    "b_only": 0
+   },
+   "Mul54|train": {
+    "n": 4,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "DivSqrtRecF64ToRaw_mulAddZ31|train": {
+    "n": 4,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "FPToFP|train": {
+    "n": 4,
+    "a": 2,
+    "b": 2,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RecFNToIN_1|train": {
+    "n": 7,
+    "a": 0,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 1
+   },
+   "MulAddRecFNPipe_1|train": {
+    "n": 4,
+    "a": 4,
+    "b": 4,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "MulAddRecFNToRaw_preMul_1|train": {
+    "n": 5,
+    "a": 5,
+    "b": 5,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RoundAnyRawFNToRecFN_2|train": {
+    "n": 3,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "DivUnit|train": {
+    "n": 4,
+    "a": 4,
+    "b": 4,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "INToRecFN_1|train": {
+    "n": 7,
+    "a": 2,
+    "b": 1,
+    "a_only": 1,
+    "b_only": 0
+   },
+   "PipelinedMulUnit|train": {
+    "n": 10,
+    "a": 5,
+    "b": 5,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "ALU|train": {
+    "n": 5,
+    "a": 5,
+    "b": 5,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "split_rob_debug_inst_mem_ext|train": {
+    "n": 6,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "Arbiter_19|train": {
+    "n": 4,
+    "a": 2,
+    "b": 2,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RegisterReadDecode_2|train": {
+    "n": 4,
+    "a": 2,
+    "b": 2,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "BasicDispatcher|train": {
+    "n": 4,
+    "a": 3,
+    "b": 3,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "IssueSlot_8|train": {
+    "n": 8,
+    "a": 4,
+    "b": 4,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RenameBusyTable|train": {
+    "n": 3,
+    "a": 2,
+    "b": 2,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "FpPipeline|train": {
+    "n": 4,
+    "a": 2,
+    "b": 1,
+    "a_only": 1,
+    "b_only": 0
+   },
+   "IssueUnitCollapsing|dev": {
+    "n": 2,
+    "a": 2,
+    "b": 2,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "DivSqrtRecF64ToRaw_mulAddZ31|dev": {
+    "n": 1,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "FMADecoder|dev": {
+    "n": 1,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "MulAddRecFNToRaw_postMul|train": {
+    "n": 4,
+    "a": 2,
+    "b": 3,
+    "a_only": 0,
+    "b_only": 1
+   },
+   "MulDiv|train": {
+    "n": 3,
+    "a": 2,
+    "b": 2,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "INToRecFN_1|dev": {
+    "n": 1,
+    "a": 1,
+    "b": 0,
+    "a_only": 1,
+    "b_only": 0
+   },
+   "CSRFile|train": {
+    "n": 4,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RegisterReadDecode_2|dev": {
+    "n": 2,
+    "a": 2,
+    "b": 2,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RenameStage_1|dev": {
+    "n": 1,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RegisterRead|train": {
+    "n": 6,
+    "a": 3,
+    "b": 3,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "IssueSlot|train": {
+    "n": 5,
+    "a": 4,
+    "b": 5,
+    "a_only": 0,
+    "b_only": 1
+   },
+   "BranchKillableQueue_4|train": {
+    "n": 2,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RoundRawFNToRecFN_2|train": {
+    "n": 4,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "FPUUnit|train": {
+    "n": 7,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RoundAnyRawFNToRecFN_4|dev": {
+    "n": 1,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RecFNToIN|train": {
+    "n": 4,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RoundAnyRawFNToRecFN_3|train": {
+    "n": 6,
+    "a": 2,
+    "b": 3,
+    "a_only": 1,
+    "b_only": 2
+   },
+   "MulAddRecFNPipe|train": {
+    "n": 8,
+    "a": 7,
+    "b": 7,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "MulAddRecFNToRaw_preMul|train": {
+    "n": 4,
+    "a": 4,
+    "b": 3,
+    "a_only": 1,
+    "b_only": 0
+   },
+   "IntToFPUnit|train": {
+    "n": 3,
+    "a": 2,
+    "b": 2,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RoundAnyRawFNToRecFN|dev": {
+    "n": 1,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "PipelinedMultiplier|train": {
+    "n": 5,
+    "a": 4,
+    "b": 4,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "ALUExeUnit|dev": {
+    "n": 1,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "rob_debug_inst_mem_ext|train": {
+    "n": 6,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "Rob|train": {
+    "n": 9,
+    "a": 3,
+    "b": 3,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "Arbiter_18|train": {
+    "n": 4,
+    "a": 3,
+    "b": 3,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "IssueUnitCollapsing_1|train": {
+    "n": 4,
+    "a": 2,
+    "b": 2,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RenameFreeList_1|train": {
+    "n": 6,
+    "a": 2,
+    "b": 2,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "BranchMaskGenerationLogic|train": {
+    "n": 3,
+    "a": 2,
+    "b": 1,
+    "a_only": 1,
+    "b_only": 0
+   },
+   "RegisterReadDecode|dev": {
+    "n": 1,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "FPUExeUnit|dev": {
+    "n": 4,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "FDivSqrtUnit|dev": {
+    "n": 1,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "FPToInt|train": {
+    "n": 4,
+    "a": 3,
+    "b": 3,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "ALUExeUnit_1|dev": {
+    "n": 1,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "IntToFPUnit|dev": {
+    "n": 2,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RoundAnyRawFNToRecFN|train": {
+    "n": 5,
+    "a": 4,
+    "b": 4,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "ALUExeUnit|train": {
+    "n": 5,
+    "a": 4,
+    "b": 4,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "rob_debug_inst_mem_ext|dev": {
+    "n": 1,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RegisterReadDecode|train": {
+    "n": 6,
+    "a": 3,
+    "b": 3,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "FPUExeUnit|train": {
+    "n": 4,
+    "a": 4,
+    "b": 3,
+    "a_only": 1,
+    "b_only": 0
+   },
+   "FDivSqrtUnit|train": {
+    "n": 3,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "CompareRecFN|train": {
+    "n": 3,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "MulAddRecFNToRaw_postMul_1|train": {
+    "n": 4,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "ALUExeUnit_1|train": {
+    "n": 5,
+    "a": 3,
+    "b": 3,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "MemAddrCalcUnit|train": {
+    "n": 3,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RegisterFileSynthesizable_1|train": {
+    "n": 5,
+    "a": 2,
+    "b": 2,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RoundAnyRawFNToRecFN_7|train": {
+    "n": 3,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "FPToInt|dev": {
+    "n": 3,
+    "a": 2,
+    "b": 2,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "IntToFP|dev": {
+    "n": 2,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "BoomCore|train": {
+    "n": 3,
+    "a": 3,
+    "b": 3,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "DecodeUnit|train": {
+    "n": 3,
+    "a": 2,
+    "b": 2,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "MulAddRecFNPipe|dev": {
+    "n": 1,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RegisterRead_1|train": {
+    "n": 4,
+    "a": 3,
+    "b": 3,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "DivSqrtRecF64|train": {
+    "n": 3,
+    "a": 0,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 1
+   },
+   "RoundAnyRawFNToRecFN_7|dev": {
+    "n": 1,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "FPUFMAPipe_1|dev": {
+    "n": 1,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "UOPCodeFPUDecoder|dev": {
+    "n": 1,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "ALUUnit|dev": {
+    "n": 1,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "rob_debug_inst_mem|train": {
+    "n": 4,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RegisterFileSynthesizable_1|dev": {
+    "n": 1,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RenameMapTable_1|dev": {
+    "n": 3,
+    "a": 2,
+    "b": 1,
+    "a_only": 1,
+    "b_only": 0
+   },
+   "RegisterFileSynthesizable|dev": {
+    "n": 4,
+    "a": 2,
+    "b": 2,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "FPUFMAPipe_1|train": {
+    "n": 1,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "UOPCodeFPUDecoder|train": {
+    "n": 4,
+    "a": 4,
+    "b": 4,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "ALUUnit|train": {
+    "n": 4,
+    "a": 2,
+    "b": 2,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "rob_debug_inst_mem|dev": {
+    "n": 1,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "FPU|train": {
+    "n": 3,
+    "a": 2,
+    "b": 2,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "MulAddRecFNPipe_1|dev": {
+    "n": 1,
+    "a": 0,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 1
+   },
+   "RoundRawFNToRecFN|train": {
+    "n": 1,
+    "a": 0,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 1
+   },
+   "IssueSlot_8|dev": {
+    "n": 1,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RegisterFileSynthesizable|train": {
+    "n": 1,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "Arbiter_19|dev": {
+    "n": 1,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "BasicDispatcher|dev": {
+    "n": 1,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RenameStage|dev": {
+    "n": 1,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "FpPipeline|dev": {
+    "n": 1,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "DivSqrtRecF64_mulAddZ31|dev": {
+    "n": 2,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RecFNToRecFN_1|train": {
+    "n": 1,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RoundRawFNToRecFN_1|train": {
+    "n": 4,
+    "a": 4,
+    "b": 3,
+    "a_only": 1,
+    "b_only": 0
+   },
+   "FMADecoder|train": {
+    "n": 3,
+    "a": 2,
+    "b": 2,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RenameStage_1|train": {
+    "n": 2,
+    "a": 2,
+    "b": 2,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RenameFreeList|train": {
+    "n": 2,
+    "a": 2,
+    "b": 2,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "DivSqrtRecF64_mulAddZ31|train": {
+    "n": 5,
+    "a": 2,
+    "b": 2,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RoundAnyRawFNToRecFN_5|train": {
+    "n": 2,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RecFNToIN_1|dev": {
+    "n": 3,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RoundAnyRawFNToRecFN_1|train": {
+    "n": 1,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "ALU|dev": {
+    "n": 1,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "IssueUnitCollapsing_2|train": {
+    "n": 4,
+    "a": 3,
+    "b": 1,
+    "a_only": 2,
+    "b_only": 0
+   },
+   "RenameFreeList|dev": {
+    "n": 1,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RecFNToRecFN|train": {
+    "n": 4,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "BranchKillableQueue_3|train": {
+    "n": 3,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "INToRecFN|dev": {
+    "n": 1,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RegisterReadDecode_1|train": {
+    "n": 4,
+    "a": 3,
+    "b": 3,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "IssueUnitCollapsing_2|dev": {
+    "n": 1,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RenameBusyTable_1|train": {
+    "n": 5,
+    "a": 4,
+    "b": 3,
+    "a_only": 1,
+    "b_only": 0
+   },
+   "UOPCodeFDivDecoder|train": {
+    "n": 5,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "FPUFMAPipe|train": {
+    "n": 3,
+    "a": 2,
+    "b": 2,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "BranchKillableQueue_3|dev": {
+    "n": 1,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "INToRecFN|train": {
+    "n": 4,
+    "a": 2,
+    "b": 2,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RenameMapTable|train": {
+    "n": 4,
+    "a": 2,
+    "b": 1,
+    "a_only": 1,
+    "b_only": 0
+   },
+   "BranchKillableQueue_5|train": {
+    "n": 3,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "MulAddRecFNToRaw_preMul|dev": {
+    "n": 2,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RegisterRead|dev": {
+    "n": 1,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RenameMapTable|dev": {
+    "n": 1,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RoundAnyRawFNToRecFN_4|train": {
+    "n": 2,
+    "a": 2,
+    "b": 2,
+    "a_only": 0,
+    "b_only": 0
+   }
+  }
+ },
+ "boom_multiplexer": {
+  "train": {
+   "n": 340,
+   "a": 52,
+   "b": 51,
+   "a_only": 6,
+   "b_only": 5
+  },
+  "train-other": {
+   "n": 181,
+   "a": 35,
+   "b": 35,
+   "a_only": 4,
+   "b_only": 4
+  },
+  "train-targeted": {
+   "n": 159,
+   "a": 17,
+   "b": 16,
+   "a_only": 2,
+   "b_only": 1
+  },
+  "dev": {
+   "n": 60,
+   "a": 11,
+   "b": 10,
+   "a_only": 1,
+   "b_only": 0
+  },
+  "dev-other": {
+   "n": 34,
+   "a": 8,
+   "b": 7,
+   "a_only": 1,
+   "b_only": 0
+  },
+  "dev-targeted": {
+   "n": 26,
+   "a": 3,
+   "b": 3,
+   "a_only": 0,
+   "b_only": 0
+  },
+  "modules": {
+   "ALUUnit|train": {
+    "n": 6,
+    "a": 3,
+    "b": 3,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "BoomCore|train": {
+    "n": 9,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "BranchKillableQueue_4|train": {
+    "n": 11,
+    "a": 0,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 1
+   },
+   "BranchMaskGenerationLogic|train": {
+    "n": 9,
+    "a": 2,
+    "b": 0,
+    "a_only": 2,
+    "b_only": 0
+   },
+   "?|train": {
+    "n": 13,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "CSRFile|train": {
+    "n": 29,
+    "a": 2,
+    "b": 2,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "FDivSqrtUnit|train": {
+    "n": 11,
+    "a": 4,
+    "b": 5,
+    "a_only": 0,
+    "b_only": 1
+   },
+   "FpPipeline|train": {
+    "n": 7,
+    "a": 1,
+    "b": 0,
+    "a_only": 1,
+    "b_only": 0
+   },
+   "INToRecFN_1|train": {
+    "n": 8,
+    "a": 1,
+    "b": 0,
+    "a_only": 1,
+    "b_only": 0
+   },
+   "IssueUnitCollapsing|train": {
+    "n": 7,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "IssueUnitCollapsing_2|dev": {
+    "n": 2,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "MulAddRecFNToRaw_postMul_1|train": {
+    "n": 8,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RenameFreeList|train": {
+    "n": 9,
+    "a": 3,
+    "b": 3,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "Rob|train": {
+    "n": 83,
+    "a": 12,
+    "b": 13,
+    "a_only": 0,
+    "b_only": 1
+   },
+   "Rob|dev": {
+    "n": 16,
+    "a": 3,
+    "b": 3,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RoundAnyRawFNToRecFN_2|train": {
+    "n": 12,
+    "a": 5,
+    "b": 5,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RoundAnyRawFNToRecFN_3|train": {
+    "n": 8,
+    "a": 1,
+    "b": 3,
+    "a_only": 0,
+    "b_only": 2
+   },
+   "ALUUnit|dev": {
+    "n": 2,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "IntToFP|train": {
+    "n": 14,
+    "a": 1,
+    "b": 0,
+    "a_only": 1,
+    "b_only": 0
+   },
+   "IssueUnitCollapsing|dev": {
+    "n": 4,
+    "a": 2,
+    "b": 2,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "IssueUnitCollapsing_2|train": {
+    "n": 8,
+    "a": 2,
+    "b": 2,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "BoomCore|dev": {
+    "n": 4,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "BranchKillableQueue_3|dev": {
+    "n": 1,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "?|dev": {
+    "n": 2,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "FPToFP|train": {
+    "n": 11,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "IssueUnitCollapsing_1|train": {
+    "n": 7,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "MulAddRecFNToRaw_postMul|train": {
+    "n": 9,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "MulDiv|train": {
+    "n": 9,
+    "a": 4,
+    "b": 4,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RenameFreeList_1|train": {
+    "n": 9,
+    "a": 3,
+    "b": 3,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RoundAnyRawFNToRecFN_7|train": {
+    "n": 6,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "BranchKillableQueue_3|train": {
+    "n": 14,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "IntToFP|dev": {
+    "n": 1,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RoundAnyRawFNToRecFN_7|dev": {
+    "n": 3,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "BranchKillableQueue_5|dev": {
+    "n": 2,
+    "a": 1,
+    "b": 0,
+    "a_only": 1,
+    "b_only": 0
+   },
+   "INToRecFN_1|dev": {
+    "n": 3,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RenameFreeList_1|dev": {
+    "n": 2,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "BranchKillableQueue_5|train": {
+    "n": 4,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "IssueUnitCollapsing_1|dev": {
+    "n": 1,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "CSRFile|dev": {
+    "n": 4,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RenameFreeList|dev": {
+    "n": 1,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "FpPipeline|dev": {
+    "n": 1,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "MulAddRecFNToRaw_postMul_1|dev": {
+    "n": 2,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RoundAnyRawFNToRecFN_2|dev": {
+    "n": 2,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "BranchKillableQueue_4|dev": {
+    "n": 2,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RoundAnyRawFNToRecFN_4|train": {
+    "n": 7,
+    "a": 2,
+    "b": 2,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "DivSqrtRecF64ToRaw_mulAddZ31|dev": {
+    "n": 2,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "INToRecFN|train": {
+    "n": 7,
+    "a": 1,
+    "b": 0,
+    "a_only": 1,
+    "b_only": 0
+   },
+   "DivSqrtRecF64ToRaw_mulAddZ31|train": {
+    "n": 5,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "RoundAnyRawFNToRecFN_4|dev": {
+    "n": 1,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "FPToFP|dev": {
+    "n": 1,
+    "a": 0,
+    "b": 0,
+    "a_only": 0,
+    "b_only": 0
+   },
+   "MulDiv|dev": {
+    "n": 1,
+    "a": 1,
+    "b": 1,
+    "a_only": 0,
+    "b_only": 0
+   }
+  }
+ }
+}

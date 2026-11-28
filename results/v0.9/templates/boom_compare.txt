@@ -1,0 +1,26 @@
+bug                       base    llmflash      llmctl      llmtgt  published
+M1  dri/27                5/5         5/5         5/5         5/5  Cascade,DifuzzRTL,ProcessorFuzz
+M2  dri/56                5/5         5/5         5/5         5/5  Cascade,DifuzzRTL,ProcessorFuzz
+M3  dri/137               0/5         0/5         1/5         0/5  
+M4  dri/148               5/5         5/5         5/5         5/5  DifuzzRTL,ProcessorFuzz
+M5  dri/228               5/5         5/5         5/5         5/5  DifuzzRTL,ProcessorFuzz
+M6  dri/589               5/5         5/5         5/5         5/5  Cascade
+M7  dri/604               5/5         5/5         5/5         5/5  Cascade
+M8  dri/657               5/5         5/5         5/5         5/5  Cascade,DifuzzRTL,ProcessorFuzz
+M9  dri/741               5/5         5/5         5/5         5/5  Cascade
+M10 dri/787               5/5         5/5         5/5         5/5  Cascade,DifuzzRTL,ProcessorFuzz
+M11 dri/954               5/5         5/5         5/5         5/5  Cascade,DifuzzRTL,ProcessorFuzz
+M14 dri/1073              5/5         5/5         5/5         5/5  Cascade
+M15 dri/1236              5/5         5/5         5/5         5/5  Cascade,DifuzzRTL,ProcessorFuzz
+C1  mul/3                 5/5         5/5         5/5         5/5  Cascade,DifuzzRTL,ProcessorFuzz
+C2  mul/6                 5/5         5/5         5/5         5/5  Cascade,DifuzzRTL,ProcessorFuzz
+C4  mul/160               0/5         5/5         5/5         5/5  
+C7  mul/187               5/5         5/5         5/5         5/5  Cascade,DifuzzRTL,ProcessorFuzz
+C11 mul/517               5/5         5/5         5/5         5/5  Cascade,DifuzzRTL,ProcessorFuzz
+C12 mul/530               5/5         5/5         5/5         5/5  Cascade,DifuzzRTL,ProcessorFuzz
+C15 mul/975               5/5         5/5         5/5         5/5  DifuzzRTL,ProcessorFuzz
+bugs found: base 18, llmflash 19, llmctl 20, llmtgt 19
+  base: only this profile []; missed by all published fuzzers []
+  llmflash: only this profile []; missed by all published fuzzers [('multiplexer', 160)]
+  llmctl: only this profile [('driver', 137)]; missed by all published fuzzers [('driver', 137), ('multiplexer', 160)]
+  llmtgt: only this profile []; missed by all published fuzzers [('multiplexer', 160)]

@@ -1,0 +1,1 @@
+GitHub Actions run 46138529808, encarsia-campaign.yml core=boom profile=llmtgt, 5 seeds, commit 3997eae (frm_safe). Merge calibration passed.

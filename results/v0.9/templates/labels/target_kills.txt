@@ -1,0 +1,169 @@
+== rocket driver: 400 mutants; columns n / llmtgt / llmctl / llmtgt-only / llmctl-only
+  IBuf                        train T   58   31   31    0    0
+  MulDiv                      train T   53   24   22    3    1
+  Rocket                      train T   51   19   19    0    0
+  RVCExpander                 train T   47   15   21    0    6
+  ALU                         train     45   42   42    0    0
+  CSRFile                     train T   45    8    7    1    0
+  BreakpointUnit              train T   40    1    1    0    0
+  BreakpointUnit              dev   T   10    1    1    0    0
+  IBuf                        dev   T   10    5    5    0    0
+  MulDiv                      dev   T   10    6    6    1    1
+  Rocket                      dev   T   10    7    5    2    0
+  CSRFile                     dev   T    8    0    0    0    0
+  RVCExpander                 dev   T    7    3    5    0    2
+  ALU                         dev        5    5    5    0    0
+  TOTAL dev                      60   27   27    3    3
+  TOTAL dev-other                 5    5    5    0    0
+  TOTAL dev-targeted             55   22   22    3    3
+  TOTAL train                   340  140  143    4    7
+  TOTAL train-other              46   42   42    0    0
+  TOTAL train-targeted          294   98  101    4    7
+== rocket multiplexer: 395 mutants; columns n / llmtgt / llmctl / llmtgt-only / llmctl-only
+  MulDiv                      train T   96   41   41    0    0
+  Rocket                      train T   85   20   13    7    0
+  CSRFile                     train T   84    8    7    1    0
+  RVCExpander                 train T   46    0   12    0   12
+  IBuf                        train T   23   10   10    0    0
+  MulDiv                      dev   T   16    8    8    0    0
+  CSRFile                     dev   T   14    2    2    0    0
+  Rocket                      dev   T   14    2    2    0    0
+  IBuf                        dev   T    7    3    3    0    0
+  RVCExpander                 dev   T    7    0    0    0    0
+  TOTAL dev                      59   15   15    0    0
+  TOTAL dev-other                 1    0    0    0    0
+  TOTAL dev-targeted             58   15   15    0    0
+  TOTAL train                   336   79   83    8   12
+  TOTAL train-other               2    0    0    0    0
+  TOTAL train-targeted          334   79   83    8   12
+== boom driver: 400 mutants; columns n / llmtgt / llmctl / llmtgt-only / llmctl-only
+  PipelinedMulUnit            train     10    5    5    0    0
+  Rob                         train T    9    3    3    0    0
+  IssueSlot_8                 train      8    4    4    0    0
+  MulAddRecFNPipe             train      8    7    7    0    0
+  Arbiter_16                  train      7    5    3    2    0
+  FPUUnit                     train      7    1    1    0    0
+  INToRecFN_1                 train T    7    2    1    1    0
+  RecFNToIN_1                 train      7    0    1    0    1
+  RegisterRead                train      6    3    3    0    0
+  RegisterReadDecode          train      6    3    3    0    0
+  RenameFreeList_1            train      6    2    2    0    0
+  RoundAnyRawFNToRecFN_3      train      6    2    3    1    2
+  rob_debug_inst_mem_ext      train      6    0    0    0    0
+  split_rob_debug_inst_mem_exttrain      6    0    0    0    0
+  ALU                         train      5    5    5    0    0
+  ALUExeUnit                  train      5    4    4    0    0
+  ALUExeUnit_1                train      5    3    3    0    0
+  DivSqrtRecF64_mulAddZ31     train      5    2    2    0    0
+  IssueSlot                   train      5    4    5    0    1
+  MulAddRecFNToRaw_preMul_1   train      5    5    5    0    0
+  PipelinedMultiplier         train      5    4    4    0    0
+  RegisterFileSynthesizable_1 train      5    2    2    0    0
+  RenameBusyTable_1           train      5    4    3    1    0
+  RoundAnyRawFNToRecFN        train      5    4    4    0    0
+  UOPCodeFDivDecoder          train      5    1    1    0    0
+  ALUUnit                     train      4    2    2    0    0
+  Arbiter_18                  train      4    3    3    0    0
+  Arbiter_19                  train      4    2    2    0    0
+  BasicDispatcher             train      4    3    3    0    0
+  CSRFile                     train T    4    0    0    0    0
+  DivSqrtRecF64ToRaw_mulAddZ31train      4    1    1    0    0
+  DivUnit                     train      4    4    4    0    0
+  FPToFP                      train T    4    2    2    0    0
+  FPToInt                     train      4    3    3    0    0
+  FPUExeUnit                  dev        4    0    0    0    0
+  FPUExeUnit                  train      4    4    3    1    0
+  FpPipeline                  train      4    2    1    1    0
+  INToRecFN                   train      4    2    2    0    0
+  IssueUnitCollapsing         train      4    2    2    0    0
+  IssueUnitCollapsing_1       train      4    2    2    0    0
+  IssueUnitCollapsing_2       train      4    3    1    2    0
+  Mul54                       train      4    0    0    0    0
+  MulAddRecFNPipe_1           train      4    4    4    0    0
+  MulAddRecFNToRaw_postMul    train      4    2    3    0    1
+  MulAddRecFNToRaw_postMul_1  train      4    1    1    0    0
+  MulAddRecFNToRaw_preMul     train      4    4    3    1    0
+  RecFNToIN                   train      4    1    1    0    0
+  RecFNToRecFN                train      4    1    1    0    0
+  RegisterFileSynthesizable   dev        4    2    2    0    0
+  RegisterReadDecode_1        train      4    3    3    0    0
+  RegisterReadDecode_2        train      4    2    2    0    0
+  RegisterRead_1              train      4    3    3    0    0
+  RenameMapTable              train      4    2    1    1    0
+  RoundRawFNToRecFN_1         train      4    4    3    1    0
+  RoundRawFNToRecFN_2         train      4    1    1    0    0
+  UOPCodeFPUDecoder           train      4    4    4    0    0
+  rob_debug_inst_mem          train      4    0    0    0    0
+  BoomCore                    train      3    3    3    0    0
+  BranchKillableQueue_3       train T    3    0    0    0    0
+  BranchKillableQueue_5       train      3    1    1    0    0
+  BranchMaskGenerationLogic   train      3    2    1    1    0
+  CompareRecFN                train      3    1    1    0    0
+  DecodeUnit                  train      3    2    2    0    0
+  DivSqrtRecF64               train      3    0    1    0    1
+  FDivSqrtUnit                train      3    0    0    0    0
+  FMADecoder                  train      3    2    2    0    0
+  FPToInt                     dev        3    2    2    0    0
+  FPU                         train      3    2    2    0    0
+  FPUFMAPipe                  train      3    2    2    0    0
+  IntToFPUnit                 train      3    2    2    0    0
+  MemAddrCalcUnit             train      3    0    0    0    0
+  MulDiv                      train      3    2    2    0    0
+  RecFNToIN_1                 dev        3    0    0    0    0
+  RenameBusyTable             train      3    2    2    0    0
+  RenameMapTable_1            dev        3    2    1    1    0
+  RoundAnyRawFNToRecFN_2      train      3    0    0    0    0
+  RoundAnyRawFNToRecFN_7      train      3    1    1    0    0
+  IntToFP                     dev   T    2    1    1    0    0
+  BranchKillableQueue_3       dev   T    1    0    0    0    0
+  INToRecFN_1                 dev   T    1    1    0    1    0
+  TOTAL dev                      60   31   30    2    1
+  TOTAL dev-other                56   29   29    1    1
+  TOTAL dev-targeted              4    2    1    1    0
+  TOTAL train                   340  172  166   13    7
+  TOTAL train-other             313  165  160   12    7
+  TOTAL train-targeted           27    7    6    1    0
+== boom multiplexer: 400 mutants; columns n / llmtgt / llmctl / llmtgt-only / llmctl-only
+  Rob                         train T   83   12   13    0    1
+  CSRFile                     train T   29    2    2    0    0
+  Rob                         dev   T   16    3    3    0    0
+  BranchKillableQueue_3       train T   14    0    0    0    0
+  IntToFP                     train T   14    1    0    1    0
+  ?                           train     13    0    0    0    0
+  RoundAnyRawFNToRecFN_2      train     12    5    5    0    0
+  BranchKillableQueue_4       train     11    0    1    0    1
+  FDivSqrtUnit                train     11    4    5    0    1
+  FPToFP                      train T   11    1    1    0    0
+  BoomCore                    train      9    0    0    0    0
+  BranchMaskGenerationLogic   train      9    2    0    2    0
+  MulAddRecFNToRaw_postMul    train      9    0    0    0    0
+  MulDiv                      train      9    4    4    0    0
+  RenameFreeList              train      9    3    3    0    0
+  RenameFreeList_1            train      9    3    3    0    0
+  INToRecFN_1                 train T    8    1    0    1    0
+  IssueUnitCollapsing_2       train      8    2    2    0    0
+  MulAddRecFNToRaw_postMul_1  train      8    1    1    0    0
+  RoundAnyRawFNToRecFN_3      train      8    1    3    0    2
+  FpPipeline                  train      7    1    0    1    0
+  INToRecFN                   train      7    1    0    1    0
+  IssueUnitCollapsing         train      7    1    1    0    0
+  IssueUnitCollapsing_1       train      7    1    1    0    0
+  RoundAnyRawFNToRecFN_4      train      7    2    2    0    0
+  ALUUnit                     train      6    3    3    0    0
+  RoundAnyRawFNToRecFN_7      train      6    0    0    0    0
+  DivSqrtRecF64ToRaw_mulAddZ31train      5    0    0    0    0
+  BoomCore                    dev        4    0    0    0    0
+  BranchKillableQueue_5       train      4    1    1    0    0
+  CSRFile                     dev   T    4    0    0    0    0
+  IssueUnitCollapsing         dev        4    2    2    0    0
+  INToRecFN_1                 dev   T    3    0    0    0    0
+  RoundAnyRawFNToRecFN_7      dev        3    1    1    0    0
+  BranchKillableQueue_3       dev   T    1    0    0    0    0
+  FPToFP                      dev   T    1    0    0    0    0
+  IntToFP                     dev   T    1    0    0    0    0
+  TOTAL dev                      60   11   10    1    0
+  TOTAL dev-other                34    8    7    1    0
+  TOTAL dev-targeted             26    3    3    0    0
+  TOTAL train                   340   52   51    6    5
+  TOTAL train-other             181   35   35    4    4
+  TOTAL train-targeted          159   17   16    2    1

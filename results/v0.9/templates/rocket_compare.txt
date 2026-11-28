@@ -1,0 +1,24 @@
+bug                       base         ext    llmflash      llmctl      llmtgt  published
+M1  dri/144               5/5         5/5         5/5         5/5         5/5  Cascade
+M2  dri/293               5/5         5/5         5/5         5/5         5/5  Cascade,DifuzzRTL,ProcessorFuzz
+M3  dri/347               5/5         5/5         5/5         5/5         5/5  Cascade,DifuzzRTL,ProcessorFuzz
+M4  dri/361               5/5         5/5         5/5         5/5         5/5  Cascade,DifuzzRTL,ProcessorFuzz
+M5  dri/640               0/5         5/5         5/5         5/5         5/5  
+M6  dri/673               5/5         5/5         5/5         5/5         5/5  Cascade
+M7  dri/767               0/5         5/5         5/5         5/5         5/5  
+M8  dri/774               0/5         5/5         5/5         5/5         0/5  
+M9  dri/804               0/5         5/5         3/5         5/5         0/5  
+M10 dri/826               0/5         5/5         5/5         5/5         5/5  
+M12 dri/858               0/5         5/5         0/5         0/5         0/5  
+M13 dri/863               5/5         5/5         5/5         5/5         5/5  Cascade,DifuzzRTL,ProcessorFuzz
+M15 dri/1094              5/5         5/5         5/5         5/5         5/5  Cascade,DifuzzRTL,ProcessorFuzz
+C6  mul/277               0/5         5/5         5/5         5/5         5/5  Cascade,DifuzzRTL,ProcessorFuzz
+C7  mul/285               5/5         5/5         5/5         5/5         5/5  DifuzzRTL,ProcessorFuzz
+C12 mul/408               5/5         5/5         5/5         5/5         5/5  Cascade,DifuzzRTL,ProcessorFuzz
+C15 mul/718               5/5         5/5         5/5         5/5         5/5  Cascade,DifuzzRTL,ProcessorFuzz
+bugs found: base 10, ext 17, llmflash 16, llmctl 16, llmtgt 14
+  base: only this profile []; missed by all published fuzzers []
+  ext: only this profile [('driver', 858)]; missed by all published fuzzers [('driver', 640), ('driver', 767), ('driver', 774), ('driver', 804), ('driver', 826), ('driver', 858)]
+  llmflash: only this profile []; missed by all published fuzzers [('driver', 640), ('driver', 767), ('driver', 774), ('driver', 804), ('driver', 826)]
+  llmctl: only this profile []; missed by all published fuzzers [('driver', 640), ('driver', 767), ('driver', 774), ('driver', 804), ('driver', 826)]
+  llmtgt: only this profile []; missed by all published fuzzers [('driver', 640), ('driver', 767), ('driver', 826)]

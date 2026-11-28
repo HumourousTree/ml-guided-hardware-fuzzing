@@ -1,0 +1,1 @@
+GitHub Actions runs 46133483826 (base), 46133491295 (ext), 46133498123 (llmflash): encarsia-campaign.yml core=rocket quirks=gate, 5 seeds, commit fed839a. Filter-mode comparison: logs/bench/rocket (results/v0.4/bench/rocket).

@@ -1,0 +1,11 @@
+{
+ "mutants_labelled": 395,
+ "build_errors": 0,
+ "mutants_killed_by_any": 106,
+ "mutants_killed_by_none": 289,
+ "rows": 94800,
+ "kill_rate_by_profile": {
+  "llmtgt": 0.106,
+  "llmctl": 0.1266
+ }
+}
