@@ -168,6 +168,16 @@ Not done: anything needing an LLM (semantic/hybrid generation, pass@k) - no API 
   of the same register, and the dump between them reads the register and stalls until the divide is done (probe
   effect). Per-retirement checking must observe passively (commit trace; FPGA hash), not insert code
   (`results/v0.9/checkpoint/`). Off by default.
+- **Module-targeted LLM templates** (`llm_templates.py --target`, profiles `llmtgt` and control `llmctl`,
+  `tools/profile_compare.py`, `tools/template_scripts/target_kills.py`): the prompt names the modules holding the most
+  unkilled training mutants and their signals. No gain: published bugs Rocket 14 vs 16 (control), BOOM 19 vs 20; held-out
+  dev mutants in the targeted modules 42 vs 41 killed. No template configures debug triggers; BreakpointUnit, BOOM Rob and
+  the branch queues stay unkilled. The control finds BOOM M3 on 1/5 seeds in filter mode (`results/v0.9/templates/`).
+- `rv64fuzz.frm_safe`: template lines that write `frm`/`fcsr` from a register get a valid rounding mode (BOOM does not
+  trap on an invalid one, Spike does; BOOM llmtgt calibration failed on all 15 references). Other profiles unchanged.
+- Gate mode on Rocket (base/ext/llmflash, 5 seeds): identical to filter mode at equal budget, 0 reference disagreements
+  in 473k programs, 215/215 detections confirmed (`results/v0.9/gate/rocket/`; `compare_literature.py` macros
+  `GateRocket*`, `Tpl*`).
 - Local toolchain: Docker in WSL with the CI image (`ghcr.io/.../encarsia-env`), so labelling and mutant
   regeneration can run on the laptop as well as on GitHub Actions.
 

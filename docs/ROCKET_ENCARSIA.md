@@ -281,3 +281,30 @@ generator templates; each is statically checked and validated on Spike and the b
   rejected by replay. On BOOM, templates get FP division/sqrt replaced (`QUIRKS["boom"]["template_subst"]`); the first
   BOOM llm run without that filter is archived in `logs/archive/boom_llm_v1_no_template_filter/`.
 * gemini-3.5-flash returned no answer: on this key it draws on gemini-3.6-flash's 20/day free quota.
+
+### Module-targeted templates (2026-11-29; `results/v0.9/templates/SUMMARY.md`)
+
+`llm_templates.py --target` adds to the prompt the modules that hold the most training-split mutants no profile kills
+(Rocket: CSRFile, Rocket, MulDiv, RVCExpander, BreakpointUnit, IBuf; BOOM: Rob, CSRFile, branch queues, FP conversion),
+with their signal names (`llmtgt`, 26 templates, gemini-3.6-flash, 3 requests). The control `llmctl` (12 templates) uses
+the same model and budget with the original instruction-coverage prompt.
+
+* Published bugs (replay-confirmed, 5 seeds; `tools/profile_compare.py`): Rocket llmtgt 14 vs llmctl 16 (llmtgt misses
+  M8 and M9), BOOM 19 vs 20 (llmctl finds M3 on 1/5 seeds in filter mode, the only filter-mode run that does).
+* Mutant kills (label-mutants, 120 programs per profile, 400 mutants per core and kind;
+  `tools/template_scripts/target_kills.py`): on held-out dev mutants in the targeted modules llmtgt kills 42, llmctl 41
+  (Rocket 22/22 and 15/15, BOOM 2/1 and 3/3). Gains in Rocket's pipeline module (+7 train mux mutants) are cancelled by
+  losses in RVCExpander (-18; the control writes more compressed-instruction templates). BreakpointUnit (1/40),
+  BOOM Rob (12 vs 13 of 83) and BranchKillableQueue_3 (0) stay unkilled: no template writes `tselect`/`tdata`.
+* Conclusion (negative): naming modules turns into instructions that already reach them, not into the configuration
+  (debug triggers, ROB-full and branch-kill timing) the surviving mutants need.
+* BOOM llmtgt first failed calibration on all 15 references: three templates wrote `frm` from a register (invalid
+  rounding mode; BOOM does not trap, Spike does; minimised to `fsrm x8; fcvt.s.lu f11, x7`). Template lines now get the
+  generator's valid-`frm` rewrite (`rv64fuzz.frm_safe`, 3997eae); programs of every other profile are byte-identical.
+
+### Gate mode on Rocket (2026-11-29; `results/v0.9/gate/rocket/`)
+
+Runs 46133483826 / 46133491295 / 46133498123 (base / ext / llmflash, 5 seeds): at the filter runs' budget, the same
+bugs, detecting seeds and first detecting programs as filter mode in every profile (10 / 17 / 16); 0 reference
+disagreements in 473k programs; 215/215 detections replay-confirmed. The gate llmflash run had 2,000 programs per seed
+(filter: 400) and also finds M9 (driver 804) on the two seeds the filter run misses, at programs 517 and 1,581.

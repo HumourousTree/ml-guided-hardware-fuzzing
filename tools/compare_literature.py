@@ -1162,6 +1162,59 @@ def section_gate(logs, M, md):
     return "\n".join(lines) + "\n\\bottomrule\\end{tabular}"
 
 
+def section_templates(logs, M, md):
+    """Module-targeted LLM templates (llmtgt) vs the equal-budget control (llmctl), results/v0.9/templates: published bugs
+    per core (replay-confirmed; macros Tpl*) and held-out dev mutants killed in the targeted modules (labels/). Also gate
+    mode on Rocket (results/v0.9/gate/rocket, macros GateRocket*) against the filtered runs in logs/bench/rocket."""
+    from profile_compare import load as pc_load
+    T = ROOT / "results" / "v0.9" / "templates"
+    pub_all = json.loads((ROOT / "docs" / "encarsia_published.json").read_text())
+
+    def bug_list(core):
+        pub = pub_all[core]
+        return [("driver", d) for d in sorted(pub["driver_dirs"])] + [("multiplexer", d) for d in sorted(pub["multiplexer_dirs"])]
+    if T.exists():
+        for core, P in (("rocket", "Rocket"), ("boom", "Boom")):
+            for prof, tag in (("llmtgt", "Tgt"), ("llmctl", "Ctl")):
+                d = T / f"{core}_{prof}"
+                if d.exists():
+                    r = pc_load(d, "_" + prof, bug_list(core))
+                    M[f"Tpl{P}{tag}"] = sum(any(x is not None for x in v) for v in r.values())
+        kj = T / "labels" / "target_kills.json"
+        if kj.exists():
+            k = json.loads(kj.read_text())
+            dev = [v["dev-targeted"] for v in k.values() if "dev-targeted" in v]
+            M["TplDevMutants"], M["TplDevTgt"], M["TplDevCtl"] = (sum(c[x] for c in dev) for x in ("n", "a", "b"))
+            md.append(f"## Module-targeted templates\n- published: Rocket {M.items.get('TplRocketTgt')} vs "
+                      f"{M.items.get('TplRocketCtl')}, BOOM {M.items.get('TplBoomTgt')} vs {M.items.get('TplBoomCtl')}; "
+                      f"dev targeted kills {M.items['TplDevTgt']} vs {M.items['TplDevCtl']} of {M.items['TplDevMutants']}")
+    G, F = ROOT / "results" / "v0.9" / "gate" / "rocket", logs / "bench" / "rocket"
+    if G.exists() and F.exists():
+        bugs = bug_list("rocket")
+        same, progs, skipped, dets, conf_n = True, 0, 0, 0, 0
+        for p in ("base", "ext", "llmflash"):
+            sfx = "" if p == "base" else "_" + p
+            if not (G / p).exists():
+                continue
+            f_, g_ = pc_load(F, sfx, bugs), pc_load(G / p, sfx + "_gate", bugs)
+            for (k_, d_), fs in f_.items():                 # compare at the filter run's budget (gate llmflash ran 2,000)
+                for s_, (x, y) in enumerate(zip(fs, g_[(k_, d_)])):
+                    n = json.loads((F / f"{k_}_{d_}_seed{s_}{sfx}.json").read_text())["programs"]
+                    same &= x == (y if y is not None and y <= n else None)
+            gconf = load(G / p / "confirmations.json") or {}
+            for f in (G / p).glob(f"*_seed?{sfx}_gate.json"):
+                r = json.loads(f.read_text())
+                progs += r["programs"]; skipped += r.get("reference_disagreements", 0)
+                if r.get("first_detection"):
+                    dets += 1; conf_n += bool(gconf.get(f.name, {}).get("confirmed"))
+        M["GateRocketSame"] = "identical" if same else "different"
+        M["GateRocketKPrograms"], M["GateRocketDisagree"] = f"{progs / 1000:.0f}k", skipped
+        M["GateRocketDetConfirmed"], M["GateRocketDetections"] = conf_n, dets
+        md.append(f"## Gate mode on Rocket\n- detecting seeds {M.items['GateRocketSame']} to filter; {skipped} reference "
+                  f"disagreements in {progs} programs; {conf_n}/{dets} confirmed")
+    return ""
+
+
 def section_real_bug(M, md):
     v = load(ROOT / "hw_design" / "real_bugs" / "picorv32_fence_rd" / "verification.json")
     if not v:
@@ -1311,6 +1364,7 @@ def main():
     tabs["llmgen"] = section_llmgen(logs, M, md)
     tabs["gate"] = section_gate(logs, M, md)
     section_covmin(logs, M, md)
+    section_templates(logs, M, md)
     from llm_figures import all_figures
     all_figures(logs, figs, plt, save, ROOT, at_programs)
     tabs["lit_testcases"], tabs["lit_encarsia"] = section_literature(json.loads(Path(a.lit).read_text()), logs, M, md, figs, plt, cov, bugagg)
